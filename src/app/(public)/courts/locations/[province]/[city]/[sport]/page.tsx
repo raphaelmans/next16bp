@@ -21,6 +21,7 @@ import {
 
 type CourtsCitySportPageProps = {
   params: Promise<{ province: string; city: string; sport: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 const appUrl = getCanonicalOrigin();
@@ -139,6 +140,7 @@ export async function generateMetadata({
 
 export default async function CourtsCitySportPage({
   params,
+  searchParams,
 }: CourtsCitySportPageProps) {
   const resolvedParams = await params;
   const context = await resolveSportPageContext(resolvedParams);
@@ -385,6 +387,7 @@ export default async function CourtsCitySportPage({
           sportId: context.sport.id,
         }}
         initialLocationLabel={`${context.city.displayName}, ${context.province.displayName}`}
+        searchParams={searchParams}
       />
     </>
   );

@@ -252,12 +252,18 @@ export const reservationRouter = router({
    */
   getDetail: protectedProcedure
     .input(z.object({ reservationId: S.ids.reservationId }))
-    .query(async ({ input }) => {
+    .query(async ({ input, ctx }) => {
       try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
         const reservationService = makeReservationService();
-        return await reservationService.getReservationDetail(
+        const detail = await reservationService.getReservationDetail(
           input.reservationId,
         );
+        if (detail.reservation.playerId !== profile.id) {
+          throw new NotReservationOwnerError();
+        }
+        return detail;
       } catch (error) {
         handleReservationError(error);
       }

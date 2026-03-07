@@ -9,6 +9,7 @@ import {
   formatDateShort,
   formatTimeRange,
 } from "@/common/format";
+import { getPlayerReservationPaymentPath } from "@/common/reservation-links";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -37,7 +38,7 @@ export function ReservationListItem({ reservation }: ReservationListItemProps) {
     !isGroup &&
     ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"].includes(status);
   const detailHref = appRoutes.reservations.detail(id);
-  const paymentHref = appRoutes.reservations.payment(id);
+  const paymentHref = getPlayerReservationPaymentPath(id);
 
   return (
     <Card className={cn("p-4", status === "EXPIRED" && "opacity-60")}>

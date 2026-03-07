@@ -8,7 +8,7 @@
 
 - [ ] 2.1 Add a server wrapper for the public courts discovery page that parses the current filter state, prefetches the first Tier 1 page, and renders a hydration boundary.
 - [ ] 2.2 Apply the same prefetch and hydration flow to province and city discovery entry routes that render the shared courts discovery page.
-- [ ] 2.3 Ensure the client discovery list consumes hydrated Tier 1 data without showing an initial list loading state for the first page.
+- [ ] 2.3 Ensure the client discovery surface consumes hydrated Tier 1 data without showing an initial list loading state for the first page and keeps list and map on the same Tier 1 dataset.
 
 ## 3. Client Pagination and Progressive Tier 2 Loading
 

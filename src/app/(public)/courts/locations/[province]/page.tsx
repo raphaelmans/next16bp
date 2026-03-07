@@ -17,6 +17,7 @@ import {
 
 type CourtsProvincePageProps = {
   params: Promise<{ province: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
 const appUrl = getCanonicalOrigin();
@@ -62,6 +63,7 @@ export async function generateMetadata({
 
 export default async function CourtsProvincePage({
   params,
+  searchParams,
 }: CourtsProvincePageProps) {
   const { province: provinceSlug } = await params;
   const provinces = await getPHProvincesCities();
@@ -241,6 +243,7 @@ export default async function CourtsProvincePage({
       <DiscoveryCourtsPage
         initialFilters={{ province: province.slug }}
         initialLocationLabel={province.displayName}
+        searchParams={searchParams}
       />
     </>
   );

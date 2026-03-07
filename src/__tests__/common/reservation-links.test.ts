@@ -3,6 +3,8 @@ import {
   getPlayerReservationAbsoluteUrl,
   getPlayerReservationLoginRedirectPath,
   getPlayerReservationPath,
+  getPlayerReservationPaymentPath,
+  parsePlayerReservationStep,
 } from "@/common/reservation-links";
 
 describe("reservation links", () => {
@@ -12,7 +14,7 @@ describe("reservation links", () => {
         reservationId: "res-1",
         status: "AWAITING_PAYMENT",
       }),
-    ).toBe("/reservations/res-1/payment");
+    ).toBe("/reservations/res-1?step=payment");
   });
 
   it("routes non-awaiting statuses to reservation detail", () => {
@@ -34,7 +36,7 @@ describe("reservation links", () => {
         status: "AWAITING_PAYMENT",
         origin: "https://kudoscourts.com",
       }),
-    ).toBe("https://kudoscourts.com/reservations/res-1/payment");
+    ).toBe("https://kudoscourts.com/reservations/res-1?step=payment");
   });
 
   it("builds login redirect urls using the status-aware route", () => {
@@ -43,6 +45,18 @@ describe("reservation links", () => {
         reservationId: "res-1",
         status: "AWAITING_PAYMENT",
       }),
-    ).toBe("/login?redirect=%2Freservations%2Fres-1%2Fpayment");
+    ).toBe("/login?redirect=%2Freservations%2Fres-1%3Fstep%3Dpayment");
+  });
+
+  it("builds explicit payment paths on the canonical route", () => {
+    expect(getPlayerReservationPaymentPath("res-1")).toBe(
+      "/reservations/res-1?step=payment",
+    );
+  });
+
+  it("parses the only supported player reservation step", () => {
+    expect(parsePlayerReservationStep("payment")).toBe("payment");
+    expect(parsePlayerReservationStep("overview")).toBeUndefined();
+    expect(parsePlayerReservationStep(undefined)).toBeUndefined();
   });
 });

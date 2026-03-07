@@ -3,27 +3,19 @@
 import {
   mutationOptions,
   type QueriesResults,
-  queryOptions,
   type UseMutateFunction,
   type UseMutationOptions,
   type UseMutationResult,
-  type UseQueryOptions,
   type UseQueryResult,
   useMutation,
   useQueries,
   useQuery,
 } from "@tanstack/react-query";
 import type { AppError } from "@/common/errors/app-error";
-import { buildTrpcQueryKey } from "@/common/trpc-client-call";
-
-type FeatureQueryKey = ReturnType<typeof buildTrpcQueryKey>;
+import type { FeatureQueryOptions } from "@/common/feature-query-options";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
 type QueryPath = readonly string[];
-
-type FeatureQueryOptions<TQueryFnData, TData = TQueryFnData> = Omit<
-  UseQueryOptions<TQueryFnData, AppError, TData, FeatureQueryKey>,
-  "queryKey" | "queryFn"
->;
 
 type FeatureMutationOptions<TData, TVariables, TOnMutateResult> = Omit<
   UseMutationOptions<TData, AppError, TVariables, TOnMutateResult>,
@@ -46,22 +38,7 @@ type MutationMutateFor<TData, TVariables, TOnMutateResult> = MutationResultFor<
 type MutationMutateAsyncFor<TData, TVariables, TOnMutateResult> =
   MutationResultFor<TData, TVariables, TOnMutateResult>["mutateAsync"];
 
-export const createFeatureQueryOptions = <
-  TPath extends QueryPath,
-  TInput,
-  TQueryFnData,
-  TData = TQueryFnData,
->(
-  path: TPath,
-  queryFn: (input?: TInput) => Promise<TQueryFnData>,
-  input?: TInput,
-  options?: FeatureQueryOptions<TQueryFnData, TData>,
-): UseQueryOptions<TQueryFnData, AppError, TData, FeatureQueryKey> =>
-  queryOptions<TQueryFnData, AppError, TData, FeatureQueryKey>({
-    queryKey: buildTrpcQueryKey(path, input),
-    queryFn: () => queryFn(input),
-    ...(options ?? {}),
-  });
+export { createFeatureQueryOptions } from "@/common/feature-query-options";
 
 export function useFeatureQuery<
   TPath extends QueryPath,

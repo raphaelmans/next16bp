@@ -12,9 +12,12 @@ import {
 } from "@/components/ui/select";
 import type {
   ClaimStatusFilter,
+  CourtSortBy,
+  CourtSource,
   CourtStatus,
   CourtType,
   FeaturedFilter,
+  SortOrder,
 } from "@/features/admin/hooks";
 
 type Option = { label: string; value: string };
@@ -31,6 +34,9 @@ type AdminPlacesFiltersProps = {
   provinceFilter: string;
   cityFilter: string;
   claimStatusFilter: ClaimStatusFilter | "all";
+  sourceFilter: CourtSource | "all";
+  sortBy: CourtSortBy;
+  sortOrder: SortOrder;
   search: string;
   provinceOptions: Option[];
   cityOptions: Option[];
@@ -44,6 +50,9 @@ type AdminPlacesFiltersProps = {
   onProvinceFilterChange: (value: string) => void;
   onCityFilterChange: (value: string) => void;
   onClaimStatusFilterChange: (value: ClaimStatusFilter | "all") => void;
+  onSourceFilterChange: (value: CourtSource | "all") => void;
+  onSortByChange: (value: CourtSortBy) => void;
+  onSortOrderChange: (value: SortOrder) => void;
   onSearchChange: (value: string) => void;
 };
 
@@ -59,6 +68,7 @@ export function AdminPlacesFilters({
   provinceFilter,
   cityFilter,
   claimStatusFilter,
+  sourceFilter,
   search,
   provinceOptions,
   cityOptions,
@@ -72,6 +82,11 @@ export function AdminPlacesFilters({
   onProvinceFilterChange,
   onCityFilterChange,
   onClaimStatusFilterChange,
+  onSourceFilterChange,
+  sortBy,
+  sortOrder,
+  onSortByChange,
+  onSortOrderChange,
   onSearchChange,
 }: AdminPlacesFiltersProps) {
   return (
@@ -191,6 +206,50 @@ export function AdminPlacesFilters({
             <SelectItem value="claim_pending">Claim Pending</SelectItem>
             <SelectItem value="claimed">Claimed</SelectItem>
             <SelectItem value="removal_requested">Removal Requested</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={sourceFilter}
+          onValueChange={(value) =>
+            onSourceFilterChange(value as CourtSource | "all")
+          }
+        >
+          <SelectTrigger className="w-[170px]">
+            <SelectValue placeholder="All Sources" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="all">All Sources</SelectItem>
+            <SelectItem value="user_submitted">User Submitted</SelectItem>
+            <SelectItem value="admin_curated">Admin Curated</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={sortBy}
+          onValueChange={(value) => onSortByChange(value as CourtSortBy)}
+        >
+          <SelectTrigger className="w-[150px]">
+            <SelectValue placeholder="Sort by" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="createdAt">Created Date</SelectItem>
+            <SelectItem value="name">Name</SelectItem>
+            <SelectItem value="city">City</SelectItem>
+            <SelectItem value="status">Status</SelectItem>
+          </SelectContent>
+        </Select>
+
+        <Select
+          value={sortOrder}
+          onValueChange={(value) => onSortOrderChange(value as SortOrder)}
+        >
+          <SelectTrigger className="w-[120px]">
+            <SelectValue placeholder="Order" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="asc">Ascending</SelectItem>
+            <SelectItem value="desc">Descending</SelectItem>
           </SelectContent>
         </Select>
 

@@ -6,6 +6,7 @@ import {
   findCityByName,
   findCityByNameAcrossProvinces,
   findCityBySlug,
+  findCityBySlugAcrossProvinces,
   findProvinceByName,
   findProvinceBySlug,
 } from "@/common/ph-location-data";
@@ -45,7 +46,9 @@ export const resolveLocationSlugs = (
   let resolvedProvince = matchedProvince;
 
   if (!matchedCity && cityValue) {
-    const acrossMatch = findCityByNameAcrossProvinces(provinces, cityValue);
+    const acrossMatch =
+      findCityBySlugAcrossProvinces(provinces, cityValue) ??
+      findCityByNameAcrossProvinces(provinces, cityValue);
     if (acrossMatch) {
       resolvedProvince = resolvedProvince ?? acrossMatch.province;
       matchedCity = acrossMatch.city;

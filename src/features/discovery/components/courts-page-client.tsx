@@ -1,6 +1,14 @@
 "use client";
 
-import { Suspense, useMemo } from "react";
+import {
+  Fragment,
+  Suspense,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
@@ -29,10 +37,14 @@ import {
 import {
   buildDiscoveryPlaceCard,
   useModDiscoveryFilters,
-  useModDiscoveryPlaceCardDetails,
   useModDiscoveryPlaceSummaries,
+  useModDiscoveryProgressivePlaceCardDetails,
   useModPlaceBookmarkBatch,
 } from "@/features/discovery/hooks";
+import {
+  DISCOVERY_VISIBLE_CHUNK_SIZE,
+  type DiscoveryResolvedLocationState,
+} from "@/features/discovery/query-options";
 
 type PaginationItemModel =
   | { type: "page"; page: number }
@@ -47,6 +59,7 @@ type LocationDefaults = {
 interface CourtsPageClientProps {
   initialFilters?: LocationDefaults;
   initialLocationLabel?: string;
+  initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
 const buildPaginationItems = (
@@ -86,12 +99,14 @@ const buildPaginationItems = (
 export default function CourtsPageClient({
   initialFilters,
   initialLocationLabel,
+  initialResolvedLocation,
 }: CourtsPageClientProps) {
   return (
     <Suspense fallback={<CourtsPageSkeleton />}>
       <CourtsPageContent
         initialFilters={initialFilters}
         initialLocationLabel={initialLocationLabel}
+        initialResolvedLocation={initialResolvedLocation}
       />
     </Suspense>
   );
@@ -100,11 +115,13 @@ export default function CourtsPageClient({
 interface CourtsPageContentProps {
   initialFilters?: LocationDefaults;
   initialLocationLabel?: string;
+  initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
 function CourtsPageContent({
   initialFilters,
   initialLocationLabel,
+  initialResolvedLocation,
 }: CourtsPageContentProps) {
   const filters = useModDiscoveryFilters();
   const hasLocationDefaults = Boolean(
@@ -135,6 +152,7 @@ function CourtsPageContent({
     verificationTier: filters.verification ?? undefined,
     page: filters.page,
     limit: filters.limit,
+    initialResolvedLocation,
   });
 
   const placeSummaries = data?.places ?? [];
@@ -142,8 +160,56 @@ function CourtsPageContent({
     () => placeSummaries.map((place) => place.id),
     [placeSummaries],
   );
-  const { mediaById, metaById, isMediaLoading, isMetaLoading } =
-    useModDiscoveryPlaceCardDetails(placeIds, effectiveSportId ?? undefined);
+  const [visibleChunkCount, setVisibleChunkCount] = useState(1);
+  const chunkSentinelRefs = useRef<Array<HTMLDivElement | null>>([]);
+  const totalChunks = Math.max(
+    1,
+    Math.ceil(placeIds.length / DISCOVERY_VISIBLE_CHUNK_SIZE),
+  );
+
+  useEffect(() => {
+    if (filters.view === "map") {
+      setVisibleChunkCount(Math.max(1, totalChunks));
+      return;
+    }
+
+    setVisibleChunkCount(1);
+  }, [filters.view, totalChunks]);
+
+  useEffect(() => {
+    if (filters.view !== "list") {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          const index = Number(entry.target.getAttribute("data-chunk-index"));
+          if (!Number.isFinite(index)) continue;
+          setVisibleChunkCount((current) => Math.max(current, index + 2));
+        }
+      },
+      {
+        rootMargin: "200px 0px",
+      },
+    );
+
+    for (const sentinel of chunkSentinelRefs.current) {
+      if (sentinel) {
+        observer.observe(sentinel);
+      }
+    }
+
+    return () => observer.disconnect();
+  }, [filters.view]);
+
+  const { mediaById, metaById, mediaLoadingIds, metaLoadingIds } =
+    useModDiscoveryProgressivePlaceCardDetails(
+      placeIds,
+      effectiveSportId ?? undefined,
+      visibleChunkCount,
+    );
   const {
     bookmarkedSet,
     toggleBookmark,
@@ -185,10 +251,34 @@ function CourtsPageContent({
   const startIndex = total === 0 ? 0 : (page - 1) * limit + 1;
   const endIndex = Math.min(page * limit, total);
   const { data: provincesCities } = usePHProvincesCitiesQuery();
+  const placeChunks = useMemo(() => {
+    const chunks: Array<typeof places> = [];
+    for (
+      let index = 0;
+      index < places.length;
+      index += DISCOVERY_VISIBLE_CHUNK_SIZE
+    ) {
+      chunks.push(places.slice(index, index + DISCOVERY_VISIBLE_CHUNK_SIZE));
+    }
+    return chunks;
+  }, [places]);
 
   const locationLabel = useMemo(() => {
     if (!provincesCities) {
-      return initialLocationLabel ?? effectiveCity ?? effectiveProvince ?? null;
+      const matchesInitialLocation =
+        effectiveProvince === initialResolvedLocation?.provinceSlug &&
+        effectiveCity === initialResolvedLocation?.citySlug;
+
+      return (
+        initialLocationLabel ??
+        (matchesInitialLocation
+          ? (initialResolvedLocation?.cityName ??
+            initialResolvedLocation?.provinceName)
+          : null) ??
+        effectiveCity ??
+        effectiveProvince ??
+        null
+      );
     }
 
     const province = effectiveProvince
@@ -201,7 +291,13 @@ function CourtsPageContent({
       : null;
 
     return city?.displayName ?? province?.displayName ?? null;
-  }, [effectiveCity, effectiveProvince, initialLocationLabel, provincesCities]);
+  }, [
+    effectiveCity,
+    effectiveProvince,
+    initialLocationLabel,
+    initialResolvedLocation,
+    provincesCities,
+  ]);
 
   return (
     <Container>
@@ -219,6 +315,12 @@ function CourtsPageContent({
           </div>
 
           <div className="flex items-center gap-3">
+            <Link
+              href={appRoutes.submitCourt.base}
+              className="text-sm font-medium text-primary hover:underline whitespace-nowrap"
+            >
+              Know a court? Add it!
+            </Link>
             <PlaceFiltersSheet
               amenities={filters.amenities ?? undefined}
               province={effectiveProvince ?? undefined}
@@ -268,18 +370,35 @@ function CourtsPageContent({
         ) : places.length > 0 ? (
           <>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {places.map((place) => (
-                <PlaceCard
-                  key={place.id}
-                  place={place}
-                  isMediaLoading={isMediaLoading}
-                  isMetaLoading={isMetaLoading}
-                  isBookmarked={bookmarkedSet.has(place.id)}
-                  isBookmarkPending={
-                    isBookmarkPending && pendingPlaceId === place.id
-                  }
-                  onBookmarkToggle={() => toggleBookmark(place.id)}
-                />
+              {placeChunks.map((chunk, chunkIndex) => (
+                <Fragment
+                  key={`${chunk[0]?.id ?? "start"}-${chunk[chunk.length - 1]?.id ?? "end"}`}
+                >
+                  {chunk.map((place) => (
+                    <PlaceCard
+                      key={place.id}
+                      place={place}
+                      isMediaLoading={mediaLoadingIds.has(place.id)}
+                      isMetaLoading={metaLoadingIds.has(place.id)}
+                      isBookmarked={bookmarkedSet.has(place.id)}
+                      isBookmarkPending={
+                        isBookmarkPending && pendingPlaceId === place.id
+                      }
+                      onBookmarkToggle={() => toggleBookmark(place.id)}
+                    />
+                  ))}
+                  {chunkIndex < placeChunks.length - 1 &&
+                  filters.view === "list" ? (
+                    <div
+                      ref={(node) => {
+                        chunkSentinelRefs.current[chunkIndex] = node;
+                      }}
+                      data-chunk-index={chunkIndex}
+                      className="col-span-full h-px"
+                      aria-hidden="true"
+                    />
+                  ) : null}
+                </Fragment>
               ))}
             </div>
 

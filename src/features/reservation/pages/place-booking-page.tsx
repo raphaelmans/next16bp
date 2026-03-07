@@ -24,6 +24,7 @@ import {
   formatDuration,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
+import { getPlayerReservationPaymentPath } from "@/common/reservation-links";
 import { getZonedDate, getZonedStartOfDayIso } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import { Container } from "@/components/layout";
@@ -64,6 +65,7 @@ import { OrderSummary } from "@/features/reservation/components/order-summary";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
 import { ProfileSetupModal } from "@/features/reservation/components/profile-setup-modal";
 import {
+  useModReservationPageWarmup,
   useMutCreateReservationForAnyCourt,
   useMutCreateReservationForCourt,
   useMutCreateReservationGroup,
@@ -313,6 +315,7 @@ export default function PlaceBookingPage({
   ]);
   const { data: profile, isLoading: isLoadingProfile } = useQueryProfile();
   const pendingBooking = usePendingBooking(placeIdOrSlug);
+  const { warmupReservationPage } = useModReservationPageWarmup();
 
   React.useEffect(() => {
     if (!startTime && pendingBooking.data?.startTime) {
@@ -686,7 +689,32 @@ export default function PlaceBookingPage({
           }
         }
 
-        router.push(appRoutes.reservations.detail(groupResult.items[0].id));
+        const groupReservationId = groupResult.items[0]?.id;
+        if (!groupReservationId) {
+          toast.error(
+            "Reservation group created without a primary reservation.",
+          );
+          return;
+        }
+        const payableItem = groupResult.items.find(
+          (item) =>
+            item.totalPriceCents > 0 && item.status === "AWAITING_PAYMENT",
+        );
+
+        try {
+          await warmupReservationPage({
+            reservationId: groupReservationId,
+            paymentInfoReservationId: payableItem?.id,
+          });
+        } catch {
+          // Best-effort warmup; navigation should continue.
+        }
+
+        router.push(
+          payableItem
+            ? getPlayerReservationPaymentPath(groupReservationId)
+            : appRoutes.reservations.detail(groupReservationId),
+        );
       } catch (_error) {
         // toast handled by mutation hooks
       }
@@ -760,9 +788,17 @@ export default function PlaceBookingPage({
 
       clearPendingBooking();
       const requiresPayment = result.status === "AWAITING_PAYMENT";
+      try {
+        await warmupReservationPage({
+          reservationId: result.id,
+          paymentInfoReservationId: requiresPayment ? result.id : undefined,
+        });
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
       router.push(
         requiresPayment
-          ? appRoutes.reservations.payment(result.id)
+          ? getPlayerReservationPaymentPath(result.id)
           : appRoutes.reservations.detail(result.id),
       );
     } catch (_error) {

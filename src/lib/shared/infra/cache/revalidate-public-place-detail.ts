@@ -3,10 +3,19 @@ import "server-only";
 import { revalidatePath } from "next/cache";
 import { appRoutes } from "@/common/app-routes";
 import { logger } from "@/lib/shared/infra/logger";
+import { revalidatePublicDiscoveryTier1 } from "./revalidate-public-discovery";
 
 type RevalidatePublicPlaceDetailPathsInput = {
   placeId: string;
   placeSlug?: string | null;
+  previousLocation?: {
+    province?: string | null;
+    city?: string | null;
+  };
+  nextLocation?: {
+    province?: string | null;
+    city?: string | null;
+  };
   requestId?: string;
 };
 
@@ -25,6 +34,8 @@ const addPublicPlacePaths = (paths: Set<string>, placeSlugOrId: string) => {
 export async function revalidatePublicPlaceDetailPaths({
   placeId,
   placeSlug,
+  previousLocation,
+  nextLocation,
   requestId,
 }: RevalidatePublicPlaceDetailPathsInput): Promise<void> {
   try {
@@ -54,12 +65,21 @@ export async function revalidatePublicPlaceDetailPaths({
     if (!slugToUse) {
       revalidateAllPublicPlaceDetailPages(requestId);
     }
+
+    await revalidatePublicDiscoveryTier1({
+      placeId: normalizedPlaceId,
+      previousLocation,
+      nextLocation,
+      requestId,
+    });
   } catch (error) {
     logger.warn(
       {
         event: "cache.revalidate_public_place_detail.failed",
         placeId,
         placeSlug: placeSlug ?? null,
+        previousLocation: previousLocation ?? null,
+        nextLocation: nextLocation ?? null,
         requestId,
         error,
       },

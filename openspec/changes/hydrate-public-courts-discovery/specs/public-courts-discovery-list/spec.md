@@ -48,6 +48,10 @@ The public courts discovery list SHALL render Tier 1 summary cards immediately a
 ### Requirement: Tier 1 discovery summaries support location-scoped server caching and revalidation
 Tier 1 summary data for the public courts discovery list SHALL support server-side caching and on-demand revalidation scoped to discovery list data, province, and city so location-focused browsing can reuse warm results and relevant write paths can invalidate affected caches.
 
+#### Scenario: Base and location-scoped discovery routes use the same cache window
+- **WHEN** the server caches Tier 1 discovery summaries for the base `/courts` route and for province or city-scoped discovery routes
+- **THEN** all of those Tier 1 discovery routes use the same configured server cache TTL
+
 #### Scenario: Reusing a cached location-scoped discovery page
 - **WHEN** a user revisits the same discovery route and filter state within the configured Tier 1 cache window
 - **THEN** the server may serve cached Tier 1 summary data for that location instead of recomputing it on every request
@@ -59,3 +63,14 @@ Tier 1 summary data for the public courts discovery list SHALL support server-si
 #### Scenario: A venue changes its province or city
 - **WHEN** a write operation moves a venue from one discovery location scope to another
 - **THEN** revalidation covers both the previous and the new location-scoped Tier 1 discovery cache entries
+
+### Requirement: List and map views share the same Tier 1 discovery dataset
+The public courts discovery list SHALL treat list and map as two presentations of the same Tier 1 hydrated query result so switching views does not require a second Tier 1 data source.
+
+#### Scenario: Switching from list view to map view
+- **WHEN** a user changes the discovery view from list to map for the current filter state
+- **THEN** the map view derives its markers from the same hydrated Tier 1 result used by the list view
+
+#### Scenario: Switching from map view to list view
+- **WHEN** a user changes the discovery view from map to list for the current filter state
+- **THEN** the list view reuses the active Tier 1 result instead of fetching a separate view-specific Tier 1 dataset

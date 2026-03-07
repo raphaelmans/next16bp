@@ -20,6 +20,8 @@ export type ClaimStatusFilter =
   | "removal_requested";
 export type FeaturedFilter = "all" | "featured" | "not_featured";
 
+export type CourtSource = "user_submitted" | "admin_curated";
+
 export interface AdminCourt {
   id: string;
   slug?: string | null;
@@ -33,6 +35,7 @@ export interface AdminCourt {
   organizationName?: string;
   claimStatus?: ClaimStatusFilter;
   featuredRank?: number;
+  source: CourtSource;
   createdAt: string;
   updatedAt: string;
 }
@@ -80,6 +83,9 @@ export interface AdminCourtDetail {
   }>;
 }
 
+export type CourtSortBy = "name" | "city" | "createdAt" | "status";
+export type SortOrder = "asc" | "desc";
+
 interface UseAdminCourtsOptions {
   type?: CourtType | "all";
   status?: CourtStatus | "all";
@@ -88,6 +94,8 @@ interface UseAdminCourtsOptions {
   claimStatus?: ClaimStatusFilter | "all";
   featured?: FeaturedFilter;
   search?: string;
+  sortBy?: CourtSortBy;
+  sortOrder?: SortOrder;
   page?: number;
   limit?: number;
 }
@@ -135,6 +143,7 @@ const toAdminCourt = (
     updatedAt: string | Date;
   },
   organizationName?: string | null,
+  submittedByUserId?: string | null,
 ): AdminCourt => ({
   id: place.id,
   slug: place.slug ?? null,
@@ -147,6 +156,7 @@ const toAdminCourt = (
   organizationName: organizationName ?? undefined,
   claimStatus: toClaimStatusFilter(place.claimStatus),
   featuredRank: place.featuredRank ?? 0,
+  source: submittedByUserId ? "user_submitted" : "admin_curated",
   createdAt: toIsoString(place.createdAt),
   updatedAt: toIsoString(place.updatedAt),
 });
@@ -155,6 +165,7 @@ type AdminCourtPlace = Parameters<typeof toAdminCourt>[0];
 type AdminCourtListItem = {
   place: AdminCourtPlace;
   organizationName: string | null;
+  submittedByUserId: string | null;
 };
 
 export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
@@ -166,6 +177,8 @@ export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
     claimStatus,
     featured,
     search,
+    sortBy = "createdAt",
+    sortOrder = "desc",
     page = 1,
     limit = 10,
   } = options;
@@ -197,6 +210,8 @@ export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
       claimStatus: claimStatusInput,
       featured: featuredInput,
       search: search || undefined,
+      sortBy,
+      sortOrder,
     },
     { staleTime: 5_000 },
   );
@@ -204,7 +219,7 @@ export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
   const total = query.data?.total ?? 0;
   const courts =
     query.data?.items.map((item: AdminCourtListItem) =>
-      toAdminCourt(item.place, item.organizationName),
+      toAdminCourt(item.place, item.organizationName, item.submittedByUserId),
     ) ?? [];
 
   return {

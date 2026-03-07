@@ -19,6 +19,8 @@ import { courtAddonRouter } from "@/lib/modules/court-addon/court-addon.router";
 import { courtBlockRouter } from "@/lib/modules/court-block/court-block.router";
 import { courtHoursRouter } from "@/lib/modules/court-hours/court-hours.router";
 import { courtRateRuleRouter } from "@/lib/modules/court-rate-rule/court-rate-rule.router";
+import { adminSubmissionRouter } from "@/lib/modules/court-submission/admin/admin-submission.router";
+import { courtSubmissionRouter } from "@/lib/modules/court-submission/court-submission.router";
 import { guestProfileRouter } from "@/lib/modules/guest-profile/guest-profile.router";
 import { healthRouter } from "@/lib/modules/health/health.router";
 import { notificationDeliveryAdminRouter } from "@/lib/modules/notification-delivery/admin/notification-delivery-admin.router";
@@ -53,6 +55,7 @@ export const appRouter = router({
   auth: authRouter,
   court: courtRouter,
   courtManagement: courtManagementRouter,
+  courtSubmission: courtSubmissionRouter,
   courtAddon: courtAddonRouter,
   courtBlock: courtBlockRouter,
   guestProfile: guestProfileRouter,
@@ -93,6 +96,7 @@ export const appRouter = router({
     organization: organizationAdminRouter,
     placeVerification: placeVerificationAdminRouter,
     notificationDelivery: notificationDeliveryAdminRouter,
+    courtSubmission: adminSubmissionRouter,
   }),
 });
 

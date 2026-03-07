@@ -93,6 +93,14 @@ export const placeManagementRouter = router({
       try {
         const service = makePlaceManagementService();
         const place = await service.createPlace(ctx.userId, input);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: place.id,
+          placeSlug: place.slug,
+          nextLocation: {
+            province: place.province,
+            city: place.city,
+          },
+        });
         return redactPlaceLocale(place);
       } catch (error) {
         handlePlaceManagementError(error);
@@ -103,10 +111,19 @@ export const placeManagementRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceManagementService();
+        const existing = await service.getPlaceById(ctx.userId, input.placeId);
         const place = await service.updatePlace(ctx.userId, input);
         await revalidatePublicPlaceDetailPaths({
           placeId: place.id,
           placeSlug: place.slug,
+          previousLocation: {
+            province: existing.place.province,
+            city: existing.place.city,
+          },
+          nextLocation: {
+            province: place.province,
+            city: place.city,
+          },
         });
         return redactPlaceLocale(place);
       } catch (error) {
@@ -123,6 +140,10 @@ export const placeManagementRouter = router({
         await revalidatePublicPlaceDetailPaths({
           placeId: input.placeId,
           placeSlug: existing.place.slug,
+          previousLocation: {
+            province: existing.place.province,
+            city: existing.place.city,
+          },
         });
         return { success: true };
       } catch (error) {

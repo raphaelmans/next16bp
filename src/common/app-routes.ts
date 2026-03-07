@@ -108,6 +108,14 @@ export const appRoutes = {
     base: "/dashboard",
     options: { type: "protected" as const },
   },
+  submitCourt: {
+    base: "/submit-court",
+    options: { type: "protected" as const },
+  },
+  mySubmissions: {
+    base: "/my-submissions",
+    options: { type: "protected" as const },
+  },
   savedVenues: {
     base: "/saved-venues",
     options: { type: "protected" as const },
@@ -116,8 +124,6 @@ export const appRoutes = {
     base: "/reservations",
     options: { type: "protected" as const },
     detail: (reservationId: string) => `/reservations/${reservationId}`,
-    payment: (reservationId: string) =>
-      `/reservations/${reservationId}/payment`,
   },
   openPlay: {
     base: "/open-play",
@@ -211,6 +217,9 @@ export const appRoutes = {
     },
     venues: {
       base: "/admin/venues",
+    },
+    submissions: {
+      base: "/admin/submissions",
     },
     placeVerification: {
       base: "/admin/verification",

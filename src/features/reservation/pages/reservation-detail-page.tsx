@@ -1,8 +1,13 @@
 "use client";
 
-import { RefreshCw } from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { differenceInMinutes, format } from "date-fns";
+import { CheckCircle, MessageSquare, RefreshCw } from "lucide-react";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { parseAsStringLiteral, useQueryState } from "nuqs";
+import { useEffect, useMemo, useState } from "react";
+import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import {
   formatCurrency,
@@ -10,22 +15,52 @@ import {
   formatTime,
   formatTimeRange,
 } from "@/common/format";
+import {
+  getPlayerReservationDetailPath,
+  getPlayerReservationPaymentPath,
+  PLAYER_RESERVATION_STEP_QUERY_PARAM,
+  type PlayerReservationStep,
+  playerReservationSteps,
+} from "@/common/reservation-links";
+import { toast } from "@/common/toast";
+import { StandardFormProvider } from "@/components/form";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Container } from "@/components/layout";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
 import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
+import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
+import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
+import {
+  PaymentProofForm,
+  type PaymentProofFormValues,
+  paymentProofFormSchema,
+} from "@/features/reservation/components/payment-proof-form";
 import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
+import { ReservationDetailSkeleton } from "@/features/reservation/components/skeletons/reservation-detail-skeleton";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
+import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
+import {
+  canShowReservationPaymentStep,
+  getReservationPageDisplayStep,
+} from "@/features/reservation/helpers";
 import {
   useModReservationInvalidation,
+  useModReservationPageWarmup,
   useModReservationRealtimePlayerStream,
+  useMutAddPaymentProof,
+  useMutMarkPayment,
+  useMutMarkPaymentLinked,
+  useMutUploadPaymentProof,
   useQueryReservationDetail,
   useQueryReservationLinkedDetail,
+  useQueryReservationPaymentInfo,
 } from "@/features/reservation/hooks";
 
 interface ReservationEvent {
@@ -41,28 +76,62 @@ const RESERVATION_DETAIL_REFETCH_INTERVAL_MS = 15_000;
 
 type ReservationDetailPageProps = {
   reservationId: string;
+  initialStep?: PlayerReservationStep;
 };
 
 export default function ReservationDetailPage({
   reservationId,
+  initialStep,
 }: ReservationDetailPageProps) {
-  const id = reservationId;
+  const router = useRouter();
   const [showCancelDialog, setShowCancelDialog] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const { invalidateReservationDetail } = useModReservationInvalidation();
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
+  const { invalidateReservationPage } = useModReservationInvalidation();
+  const { warmupReservationPage } = useModReservationPageWarmup();
+  const [stepParam, setStepParam] = useQueryState(
+    PLAYER_RESERVATION_STEP_QUERY_PARAM,
+    parseAsStringLiteral(playerReservationSteps).withOptions({
+      history: "push",
+    }),
+  );
+  const requestedStep = stepParam ?? initialStep ?? null;
+
+  const form = useForm<PaymentProofFormValues>({
+    resolver: zodResolver(paymentProofFormSchema),
+    mode: "onChange",
+    defaultValues: {
+      referenceNumber: "",
+      notes: "",
+      proofFile: null,
+    },
+  });
+
+  const {
+    reset,
+    formState: { isSubmitting: formSubmitting },
+  } = form;
 
   const {
     data: reservationDetail,
     isLoading: isLoadingReservation,
     isFetching: isFetchingReservation,
-  } = useQueryReservationDetail(id, RESERVATION_DETAIL_REFETCH_INTERVAL_MS);
+  } = useQueryReservationDetail(
+    reservationId,
+    RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
+  );
 
-  const { data: groupData } = useQueryReservationLinkedDetail(
+  const {
+    data: groupData,
+    isLoading: isLoadingLinkedDetail,
+    isFetching: isFetchingLinkedDetail,
+  } = useQueryReservationLinkedDetail(
     reservationId,
     RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
   );
   const realtimeReservationIds = [
-    id,
+    reservationId,
     ...(groupData?.items.map((item) => item.reservationId) ?? []),
   ];
 
@@ -80,24 +149,192 @@ export default function ReservationDetailPage({
   const organizationRecord = reservationDetail?.organization ?? null;
   const organizationProfile = reservationDetail?.organizationProfile ?? null;
 
+  const isGroupReservation = Boolean(groupData && groupData.items.length > 1);
+  const payableAwaitingItems = useMemo(() => {
+    if (!groupData) return [];
+    return groupData.items.filter(
+      (item) => item.totalPriceCents > 0 && item.status === "AWAITING_PAYMENT",
+    );
+  }, [groupData]);
+
+  const paymentInfoReservationId = useMemo(() => {
+    if (!reservation) return undefined;
+    if (isGroupReservation) {
+      return payableAwaitingItems[0]?.reservationId;
+    }
+    return reservation.status === "AWAITING_PAYMENT"
+      ? reservationId
+      : undefined;
+  }, [isGroupReservation, payableAwaitingItems, reservation, reservationId]);
+
+  const groupExpiresInMinutes = useMemo(() => {
+    const expiries = payableAwaitingItems
+      .map((item) =>
+        item.expiresAtIso ? new Date(item.expiresAtIso).getTime() : null,
+      )
+      .filter((value): value is number => value !== null && value > Date.now());
+    if (expiries.length === 0) return 15;
+    const nextExpiry = Math.min(...expiries);
+    return Math.max(1, Math.round((nextExpiry - Date.now()) / 60_000));
+  }, [payableAwaitingItems]);
+
+  const canShowPaymentStep = canShowReservationPaymentStep({
+    status: reservation?.status,
+    isGroupReservation,
+    hasPayableAwaitingItems: payableAwaitingItems.length > 0,
+  });
+  const activeStep = getReservationPageDisplayStep({
+    requestedStep,
+    status: reservation?.status,
+    isGroupReservation,
+    hasPayableAwaitingItems: payableAwaitingItems.length > 0,
+  });
+
+  const { data: paymentInfo, isLoading: isLoadingPaymentInfo } =
+    useQueryReservationPaymentInfo(
+      paymentInfoReservationId ?? "",
+      activeStep === "payment" && Boolean(paymentInfoReservationId),
+    );
+
+  const addPaymentProof = useMutAddPaymentProof();
+  const uploadPaymentProof = useMutUploadPaymentProof();
+  const markPayment = useMutMarkPayment();
+  const markPaymentLinked = useMutMarkPaymentLinked();
+
+  useEffect(() => {
+    if (reservation?.expiresAt) {
+      setIsExpired(new Date(reservation.expiresAt) < new Date());
+    }
+  }, [reservation?.expiresAt]);
+
+  useEffect(() => {
+    if (!reservation || requestedStep !== "payment" || canShowPaymentStep) {
+      return;
+    }
+
+    router.replace(getPlayerReservationDetailPath({ reservationId }));
+  }, [canShowPaymentStep, requestedStep, reservation, reservationId, router]);
+
   const handleRefresh = async () => {
-    if (!id) return;
+    if (!reservationId) return;
     setIsRefreshing(true);
     try {
-      await invalidateReservationDetail({ reservationId: id });
+      await invalidateReservationPage({
+        reservationId,
+        paymentInfoReservationId,
+      });
     } finally {
       setIsRefreshing(false);
     }
   };
 
-  const isLoading = isLoadingReservation;
+  const handleOpenChat = (source: string) => {
+    window.dispatchEvent(
+      new CustomEvent("reservation-chat:open", {
+        detail: {
+          kind: "player",
+          reservationId,
+          source,
+        },
+      }),
+    );
+  };
+
+  const handleOpenChatFromBanner = () => {
+    handleOpenChat("reservation-status-banner");
+  };
+
+  const handleGoToPayment = async () => {
+    await setStepParam("payment");
+  };
+
+  const handleGoToOverview = async () => {
+    await setStepParam(null);
+  };
+
+  const handleMarkPaid = async (values: PaymentProofFormValues) => {
+    try {
+      const referenceNumber = values.referenceNumber?.trim() ?? "";
+      const notes = values.notes?.trim() ?? "";
+      const proofFile =
+        values.proofFile instanceof File ? values.proofFile : null;
+
+      if (!proofFile && notes && !referenceNumber) {
+        toast.error("Reference number required when adding notes");
+        return;
+      }
+
+      if (proofFile) {
+        const formData = new FormData();
+        formData.append("reservationId", reservationId);
+        formData.append("image", proofFile, proofFile.name);
+        if (referenceNumber) {
+          formData.append("referenceNumber", referenceNumber);
+        }
+        if (notes) {
+          formData.append("notes", notes);
+        }
+
+        await uploadPaymentProof.mutateAsync(formData);
+      } else if (referenceNumber) {
+        await addPaymentProof.mutateAsync({
+          reservationId,
+          referenceNumber: referenceNumber || undefined,
+          notes: notes || undefined,
+        });
+      }
+
+      await markPayment.mutateAsync({ reservationId, termsAccepted: true });
+
+      try {
+        await warmupReservationPage({ reservationId });
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
+
+      reset({
+        referenceNumber: values.referenceNumber ?? "",
+        notes: values.notes ?? "",
+        proofFile: null,
+      });
+      setTermsAccepted(false);
+      router.replace(getPlayerReservationDetailPath({ reservationId }));
+    } catch {
+      toast.error("Failed to submit payment");
+    }
+  };
+
+  const handleGroupPaymentSubmit = async () => {
+    if (!termsAccepted) {
+      toast.error("Please accept the terms to continue");
+      return;
+    }
+
+    try {
+      await markPaymentLinked.mutateAsync({
+        reservationId,
+        termsAccepted: true,
+      });
+
+      try {
+        await warmupReservationPage({ reservationId });
+      } catch {
+        // Best-effort warmup; navigation should continue.
+      }
+
+      setTermsAccepted(false);
+      router.replace(getPlayerReservationDetailPath({ reservationId }));
+    } catch {
+      // handled in mutation hook
+    }
+  };
+
+  const isLoading = isLoadingReservation || isLoadingLinkedDetail;
 
   if (isLoading) {
     return (
       <Container className="py-6">
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Spinner className="h-8 w-8 text-muted-foreground" />
-        </div>
+        <ReservationDetailSkeleton />
       </Container>
     );
   }
@@ -159,7 +396,6 @@ export default function ReservationDetailPage({
   };
 
   const isFreeSlot = transformedTimeSlot.priceCents === 0;
-
   const cancellationCutoffMinutes =
     effectiveReservationPolicy?.cancellationCutoffMinutes ?? 0;
   const cancellationCutoffTime = new Date(transformedTimeSlot.startTime);
@@ -208,19 +444,16 @@ export default function ReservationDetailPage({
   const formatEventTimestamp = (timestamp: Date | string) =>
     `${formatDateShort(timestamp)} · ${formatTime(timestamp)}`;
 
-  const handleOpenChatFromBanner = () => {
-    window.dispatchEvent(
-      new CustomEvent("reservation-chat:open", {
-        detail: {
-          kind: "player",
-          reservationId: reservation.id,
-          source: "reservation-status-banner",
-        },
-      }),
-    );
-  };
+  const isChatEnabledForReservationStatus =
+    reservation.status === "CREATED" ||
+    reservation.status === "AWAITING_PAYMENT" ||
+    reservation.status === "PAYMENT_MARKED_BY_USER" ||
+    reservation.status === "CONFIRMED";
 
-  if (reservation.status === "EXPIRED") {
+  const isPaymentExpired =
+    reservation.status === "EXPIRED" || (reservation ? isExpired : false);
+
+  if (reservation.status === "EXPIRED" || isPaymentExpired) {
     return (
       <Container className="py-6">
         <ReservationExpired
@@ -234,13 +467,35 @@ export default function ReservationDetailPage({
     );
   }
 
+  const isPaymentSubmitting =
+    markPayment.isPending ||
+    uploadPaymentProof.isPending ||
+    addPaymentProof.isPending ||
+    formSubmitting;
+  const isPaymentPanelBusy =
+    activeStep === "payment" &&
+    (isFetchingReservation || isFetchingLinkedDetail || isLoadingPaymentInfo);
+  const isSubmitDisabled =
+    isPaymentSubmitting ||
+    isPaymentPanelBusy ||
+    !termsAccepted ||
+    isExpired ||
+    !canShowPaymentStep;
+  const expiresInMinutes = reservation.expiresAt
+    ? Math.max(
+        1,
+        differenceInMinutes(new Date(reservation.expiresAt), new Date()),
+      )
+    : 15;
+
   return (
     <Container className="py-6">
       <PageHeader
-        title="Reservation Details"
+        title="Reservation"
+        description="Track status, payment, venue details, and owner updates without leaving this page."
         breadcrumbs={[
           { label: "My Reservations", href: appRoutes.reservations.base },
-          { label: "Details" },
+          { label: "Reservation" },
         ]}
         backHref={appRoutes.reservations.base}
         actions={
@@ -268,127 +523,403 @@ export default function ReservationDetailPage({
         onMessageOwner={handleOpenChatFromBanner}
       />
 
+      {canShowPaymentStep ? (
+        <Card className="mt-6 overflow-hidden border-primary/15 bg-[linear-gradient(135deg,hsl(var(--primary)/0.08),transparent_45%,hsl(var(--warning)/0.10))]">
+          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
+            <div className="space-y-2">
+              <div className="flex flex-wrap items-center gap-2">
+                <Badge variant={activeStep === "payment" ? "paid" : "outline"}>
+                  {activeStep === "payment"
+                    ? "Payment Workspace"
+                    : "Reservation Overview"}
+                </Badge>
+                <Badge variant="warning">Payment Required</Badge>
+              </div>
+              <div className="space-y-1">
+                <p className="font-heading text-lg font-semibold tracking-tight">
+                  Keep this reservation on one surface.
+                </p>
+                <p className="max-w-2xl text-sm text-muted-foreground">
+                  Review the slot, switch to payment when you&apos;re ready, and
+                  stay here while the owner confirms the result.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 rounded-2xl border bg-background/90 p-1 shadow-sm">
+              <Button
+                type="button"
+                variant={activeStep === "overview" ? "default" : "ghost"}
+                className="min-w-28 rounded-xl"
+                onClick={() => {
+                  void handleGoToOverview();
+                }}
+              >
+                Overview
+              </Button>
+              <Button
+                type="button"
+                variant={activeStep === "payment" ? "default" : "ghost"}
+                className="min-w-28 rounded-xl"
+                onClick={() => {
+                  void handleGoToPayment();
+                }}
+              >
+                Payment
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : null}
+
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
         <div className="lg:col-span-2 space-y-6">
-          <BookingDetailsCard
-            court={court}
-            timeSlot={transformedTimeSlot}
-            venueHref={venueHref}
-          />
+          {activeStep === "payment" ? (
+            <>
+              <BookingDetailsCard
+                court={court}
+                timeSlot={transformedTimeSlot}
+                venueHref={venueHref}
+              />
 
-          {organizationForDisplay && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Court Owner</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="font-medium">{organizationForDisplay.name}</p>
-              </CardContent>
-            </Card>
-          )}
+              {reservation.expiresAt ? (
+                <CountdownTimer
+                  expiresAt={reservation.expiresAt}
+                  onExpire={() => setIsExpired(true)}
+                />
+              ) : null}
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Activity</CardTitle>
-            </CardHeader>
-            <CardContent>
-              {events.length === 0 ? (
-                <p className="text-sm text-muted-foreground">
-                  No activity yet.
-                </p>
-              ) : (
-                <div className="space-y-4">
-                  {events.map((event, index) => {
-                    const isLast = index === events.length - 1;
-                    const label =
-                      activityLabels[event.toStatus] ??
-                      `Status updated to ${event.toStatus}`;
-                    const note = event.notes ?? activityNotes[event.toStatus];
-                    const dotClassName =
-                      event.toStatus === "CONFIRMED"
-                        ? "bg-success"
-                        : event.toStatus === "CANCELLED" ||
-                            event.toStatus === "EXPIRED"
-                          ? "bg-destructive"
-                          : "bg-primary";
-
-                    return (
-                      <div key={event.id} className="flex gap-3">
-                        <div className="flex flex-col items-center">
+              {isGroupReservation ? (
+                <>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Payable Items</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-3">
+                      {payableAwaitingItems.length === 0 ? (
+                        <p className="text-sm text-muted-foreground">
+                          This reservation group does not have payable items
+                          awaiting payment.
+                        </p>
+                      ) : (
+                        payableAwaitingItems.map((item) => (
                           <div
-                            className={`h-2 w-2 rounded-full ${dotClassName}`}
-                          />
-                          {!isLast && <div className="w-px flex-1 bg-border" />}
-                        </div>
-                        <div className={isLast ? "" : "pb-4"}>
-                          <div className="flex flex-wrap items-center gap-2">
-                            <p className="font-medium">{label}</p>
-                            <span className="text-xs uppercase text-muted-foreground">
-                              {event.triggeredByRole}
-                            </span>
-                          </div>
-                          <p className="text-sm text-muted-foreground">
-                            {formatEventTimestamp(event.createdAt)}
-                          </p>
-                          {note && (
-                            <p className="text-sm text-muted-foreground">
-                              {note}
+                            key={item.reservationId}
+                            className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
+                          >
+                            <div>
+                              <p className="font-medium">
+                                {item.place.name} - {item.court.label}
+                              </p>
+                              <p className="text-sm text-muted-foreground">
+                                {formatDateShort(item.startTimeIso)} ·{" "}
+                                {formatTimeRange(
+                                  item.startTimeIso,
+                                  item.endTimeIso,
+                                )}
+                              </p>
+                            </div>
+                            <p className="font-medium">
+                              {formatCurrency(
+                                item.totalPriceCents,
+                                item.currency,
+                              )}
                             </p>
+                          </div>
+                        ))
+                      )}
+                    </CardContent>
+                  </Card>
+
+                  {isPaymentPanelBusy ? (
+                    <Card>
+                      <CardHeader>
+                        <Skeleton className="h-6 w-40" />
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <Skeleton className="h-14 w-full rounded-xl" />
+                        <Skeleton className="h-24 w-full rounded-xl" />
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <PaymentInfoCard
+                      paymentMethods={paymentInfo?.methods}
+                      expiresInMinutes={groupExpiresInMinutes}
+                    />
+                  )}
+
+                  {isChatEnabledForReservationStatus ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      onClick={() => handleOpenChat("reservation-payment")}
+                    >
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Message Owner
+                    </Button>
+                  ) : null}
+
+                  <TermsCheckbox
+                    checked={termsAccepted}
+                    onCheckedChange={setTermsAccepted}
+                  />
+
+                  <Button
+                    className="w-full"
+                    size="lg"
+                    disabled={
+                      !termsAccepted ||
+                      markPaymentLinked.isPending ||
+                      isPaymentPanelBusy
+                    }
+                    onClick={handleGroupPaymentSubmit}
+                  >
+                    {markPaymentLinked.isPending ? (
+                      <Spinner />
+                    ) : (
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                    )}
+                    {markPaymentLinked.isPending
+                      ? "Submitting"
+                      : "Submit Group Payment"}
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Amount Due</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex items-center justify-between gap-4">
+                      <div>
+                        <p className="text-sm text-muted-foreground">
+                          {format(
+                            new Date(reservation.startTime),
+                            "EEEE, MMMM d, yyyy",
                           )}
+                        </p>
+                        <p className="font-medium">
+                          {formatTimeRange(
+                            reservation.startTime,
+                            reservation.endTime,
+                          )}
+                        </p>
+                      </div>
+                      <p className="text-2xl font-heading font-bold text-primary">
+                        {amount}
+                      </p>
+                    </CardContent>
+                  </Card>
+
+                  {isPaymentPanelBusy ? (
+                    <Card>
+                      <CardHeader>
+                        <Skeleton className="h-6 w-40" />
+                      </CardHeader>
+                      <CardContent className="space-y-4">
+                        <Skeleton className="h-14 w-full rounded-xl" />
+                        <Skeleton className="h-24 w-full rounded-xl" />
+                      </CardContent>
+                    </Card>
+                  ) : (
+                    <PaymentInfoCard
+                      paymentMethods={paymentInfo?.methods}
+                      expiresInMinutes={expiresInMinutes}
+                    />
+                  )}
+
+                  {isChatEnabledForReservationStatus ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => handleOpenChat("reservation-payment")}
+                    >
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      Message Owner
+                    </Button>
+                  ) : null}
+
+                  <StandardFormProvider
+                    form={form}
+                    onSubmit={handleMarkPaid}
+                    className="space-y-6"
+                  >
+                    <PaymentProofForm />
+
+                    <TermsCheckbox
+                      checked={termsAccepted}
+                      onCheckedChange={setTermsAccepted}
+                    />
+
+                    <Button
+                      type="submit"
+                      disabled={isSubmitDisabled}
+                      className="w-full"
+                      size="lg"
+                    >
+                      {isPaymentSubmitting ? (
+                        <Spinner />
+                      ) : (
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                      )}
+                      {isPaymentSubmitting ? "Confirming" : "I Have Paid"}
+                    </Button>
+
+                    <p className="text-xs text-muted-foreground text-center">
+                      By clicking &quot;I Have Paid&quot;, you confirm that you
+                      have completed the payment to the court owner. The owner
+                      will verify your payment and confirm your reservation.
+                    </p>
+
+                    <div className="text-center">
+                      <Button
+                        type="button"
+                        variant="link"
+                        className="text-muted-foreground"
+                        onClick={() => {
+                          void handleGoToOverview();
+                        }}
+                      >
+                        Cancel and view reservation
+                      </Button>
+                    </div>
+                  </StandardFormProvider>
+                </>
+              )}
+            </>
+          ) : (
+            <>
+              <BookingDetailsCard
+                court={court}
+                timeSlot={transformedTimeSlot}
+                venueHref={venueHref}
+              />
+
+              {organizationForDisplay ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Court Owner</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="font-medium">{organizationForDisplay.name}</p>
+                  </CardContent>
+                </Card>
+              ) : null}
+
+              <Card>
+                <CardHeader>
+                  <CardTitle>Activity</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {events.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">
+                      No activity yet.
+                    </p>
+                  ) : (
+                    <div className="space-y-4">
+                      {events.map((event, index) => {
+                        const isLast = index === events.length - 1;
+                        const label =
+                          activityLabels[event.toStatus] ??
+                          `Status updated to ${event.toStatus}`;
+                        const note =
+                          event.notes ?? activityNotes[event.toStatus];
+                        const dotClassName =
+                          event.toStatus === "CONFIRMED"
+                            ? "bg-success"
+                            : event.toStatus === "CANCELLED" ||
+                                event.toStatus === "EXPIRED"
+                              ? "bg-destructive"
+                              : "bg-primary";
+
+                        return (
+                          <div key={event.id} className="flex gap-3">
+                            <div className="flex flex-col items-center">
+                              <div
+                                className={`h-2 w-2 rounded-full ${dotClassName}`}
+                              />
+                              {!isLast ? (
+                                <div className="w-px flex-1 bg-border" />
+                              ) : null}
+                            </div>
+                            <div className={isLast ? "" : "pb-4"}>
+                              <div className="flex flex-wrap items-center gap-2">
+                                <p className="font-medium">{label}</p>
+                                <span className="text-xs uppercase text-muted-foreground">
+                                  {event.triggeredByRole}
+                                </span>
+                              </div>
+                              <p className="text-sm text-muted-foreground">
+                                {formatEventTimestamp(event.createdAt)}
+                              </p>
+                              {note ? (
+                                <p className="text-sm text-muted-foreground">
+                                  {note}
+                                </p>
+                              ) : null}
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+
+              {groupData ? (
+                <Card>
+                  <CardHeader>
+                    <CardTitle>Group Items</CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    {groupData.items.map((item) => (
+                      <div
+                        key={item.reservationId}
+                        className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
+                      >
+                        <div>
+                          <p className="font-medium">
+                            <Link
+                              href={appRoutes.places.detail(
+                                item.place.slug ?? item.place.id,
+                              )}
+                              className="hover:underline"
+                            >
+                              {item.place.name} - {item.court.label}
+                            </Link>
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {formatDateShort(item.startTimeIso)} ·{" "}
+                            {formatTimeRange(
+                              item.startTimeIso,
+                              item.endTimeIso,
+                            )}
+                          </p>
+                        </div>
+                        <div className="text-right space-y-1">
+                          <KudosStatusBadge
+                            status={item.status as ReservationStatus}
+                            size="sm"
+                          />
+                          <p className="font-medium">
+                            {formatCurrency(
+                              item.totalPriceCents,
+                              item.currency,
+                            )}
+                          </p>
                         </div>
                       </div>
-                    );
-                  })}
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
-          {groupData && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Group Items</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-3">
-                {groupData.items.map((item) => (
-                  <div
-                    key={item.reservationId}
-                    className="rounded-lg border p-3 flex flex-wrap items-start justify-between gap-3"
-                  >
-                    <div>
-                      <p className="font-medium">
-                        <Link
-                          href={appRoutes.places.detail(
-                            item.place.slug ?? item.place.id,
-                          )}
-                          className="hover:underline"
-                        >
-                          {item.place.name} - {item.court.label}
-                        </Link>
-                      </p>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDateShort(item.startTimeIso)} ·{" "}
-                        {formatTimeRange(item.startTimeIso, item.endTimeIso)}
-                      </p>
-                    </div>
-                    <div className="text-right space-y-1">
-                      <KudosStatusBadge
-                        status={item.status as ReservationStatus}
-                        size="sm"
-                      />
-                      <p className="font-medium">
-                        {formatCurrency(item.totalPriceCents, item.currency)}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
+                    ))}
+                  </CardContent>
+                </Card>
+              ) : null}
+            </>
           )}
         </div>
 
         <div className="space-y-4">
-          {groupData && (
+          {groupData ? (
             <Card>
               <CardHeader>
                 <CardTitle>Summary</CardTitle>
@@ -411,24 +942,20 @@ export default function ReservationDetailPage({
                     )}
                   </span>
                 </div>
-                {groupData.items.some(
-                  (item) =>
-                    item.totalPriceCents > 0 &&
-                    item.status === "AWAITING_PAYMENT",
-                ) && (
+                {payableAwaitingItems.length > 0 && activeStep !== "payment" ? (
                   <div className="pt-2">
                     <Button asChild className="w-full">
                       <Link
-                        href={appRoutes.reservations.payment(reservation.id)}
+                        href={getPlayerReservationPaymentPath(reservation.id)}
                       >
                         Complete Payment
                       </Link>
                     </Button>
                   </div>
-                )}
+                ) : null}
               </CardContent>
             </Card>
-          )}
+          ) : null}
 
           <ReservationActionsCard
             reservationId={reservation.id}

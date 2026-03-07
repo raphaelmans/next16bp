@@ -50,6 +50,7 @@ export function useQueryNotificationInbox(
     {
       enabled,
       staleTime: 15_000,
+      refetchInterval: 15_000,
     },
   ) as ReturnType<typeof useFeatureQuery> & {
     data:

@@ -101,6 +101,21 @@ export interface IAdminApi {
   mutAdminNotificationDeliveryEnqueueWebPushTest: ProcedureFn<
     TrpcClientApi["admin"]["notificationDelivery"]["enqueueWebPushTest"]["mutate"]
   >;
+  queryAdminSubmissionList: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["list"]["query"]
+  >;
+  mutAdminSubmissionApprove: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["approve"]["mutate"]
+  >;
+  mutAdminSubmissionReject: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["reject"]["mutate"]
+  >;
+  mutAdminSubmissionBanUser: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["ban"]["mutate"]
+  >;
+  mutAdminSubmissionUnbanUser: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["unban"]["mutate"]
+  >;
 }
 
 export type AdminApiDeps = {
@@ -450,6 +465,61 @@ export class AdminApi {
       ["admin", "notificationDelivery", "enqueueWebPushTest"],
       (clientApi) =>
         clientApi.admin.notificationDelivery.enqueueWebPushTest.mutate,
+      input,
+      this.toAppError,
+    );
+
+  queryAdminSubmissionList: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["list"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["admin", "courtSubmission", "list"],
+      (clientApi) => clientApi.admin.courtSubmission.list.query,
+      input,
+      this.toAppError,
+    );
+
+  mutAdminSubmissionApprove: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["approve"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["admin", "courtSubmission", "approve"],
+      (clientApi) => clientApi.admin.courtSubmission.approve.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutAdminSubmissionReject: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["reject"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["admin", "courtSubmission", "reject"],
+      (clientApi) => clientApi.admin.courtSubmission.reject.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutAdminSubmissionBanUser: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["ban"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["admin", "courtSubmission", "ban"],
+      (clientApi) => clientApi.admin.courtSubmission.ban.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutAdminSubmissionUnbanUser: ProcedureFn<
+    TrpcClientApi["admin"]["courtSubmission"]["unban"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["admin", "courtSubmission", "unban"],
+      (clientApi) => clientApi.admin.courtSubmission.unban.mutate,
       input,
       this.toAppError,
     );

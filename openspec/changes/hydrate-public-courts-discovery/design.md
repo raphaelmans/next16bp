@@ -55,6 +55,20 @@ Tier 1 summary data will be cached on the server with a one-week TTL and tagged 
 Alternative considered:
 - Rely on client-side staleTime only. Rejected because it does not reduce first-request server work and does not satisfy the desired SSR-plus-revalidation architecture.
 
+### Use the same one-week Tier 1 TTL for base and location-scoped discovery routes
+
+The base `/courts` route and province/city discovery routes will use the same one-week Tier 1 server cache TTL. Consistency is more important than tuning a separate base-route freshness window because correctness is enforced by tag-based revalidation from write paths, not by relying on TTL differences between routes.
+
+Alternative considered:
+- Use a shorter TTL for the base `/courts` route because it is broader. Rejected because it adds a second caching policy, increases reasoning complexity, and creates avoidable inconsistency between otherwise identical Tier 1 discovery semantics.
+
+### Share one hydrated Tier 1 dataset between list and map views
+
+List and map views will read from the exact same Tier 1 hydrated query result. View mode remains presentation state only, with thin view-specific composition on top of the shared dataset for cards and markers.
+
+Alternative considered:
+- Maintain separate Tier 1 query ownership for list and map. Rejected because it duplicates prefetch and caching logic, increases the chance of view divergence, and provides no product benefit for this surface.
+
 ## Risks / Trade-offs
 
 - [Shared queryOptions drift between server and client] → Centralize Tier 1 query primitives in one server-safe module and keep client hooks as thin wrappers.
@@ -62,13 +76,14 @@ Alternative considered:
 - [Tier 2 visible batching becomes too granular] → Use chunked batching keyed by visible groups rather than element-by-element fetches.
 - [Revalidation misses a location move] → Revalidation helpers must accept previous and next province/city scopes and invalidate both when location membership changes.
 - [One-week TTL serves stale summaries too long without mutations] → Use tag-based on-demand revalidation from write paths for correctness and reserve the long TTL for cache reuse, not data freshness guarantees by itself.
+- [Map and list derive inconsistent presentation from shared data] → Keep one canonical Tier 1 shape and restrict view-specific logic to pure composition helpers.
 
 ## Migration Plan
 
 1. Extract server-safe Tier 1 discovery query primitives and normalization helpers.
 2. Add a server-side Tier 1 accessor with `unstable_cache` and discovery cache tags.
 3. Wrap public courts discovery routes in server prefetch plus hydration boundary flow.
-4. Update the client discovery list to consume hydrated Tier 1 data, use client pagination with previous-page retention, and prefetch the next page.
+4. Update the client discovery surface so list and map both consume the same hydrated Tier 1 data, use client pagination with previous-page retention, and prefetch the next page.
 5. Refactor Tier 2 card enrichment to visible-batch progressive loading.
 6. Add discovery list revalidation helpers and wire them into relevant write paths.
 7. Validate with lint and manual smoke for `/courts` plus province/city list entry routes.
@@ -78,5 +93,4 @@ Rollback strategy:
 
 ## Open Questions
 
-- Whether the base `/courts` page should receive the same one-week server cache TTL as province/city routes or use a shorter TTL because it is broader and likely changes more often.
-- Whether map view should share the exact same Tier 1 hydrated query result as list view or maintain a view-specific composition layer over the same data.
+- None for the initial implementation slice.

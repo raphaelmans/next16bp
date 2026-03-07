@@ -2,6 +2,7 @@ import {
   and,
   asc,
   count,
+  desc,
   eq,
   gt,
   ilike,
@@ -12,6 +13,7 @@ import {
 import {
   type CourtRecord,
   court,
+  courtSubmission,
   type InsertCourt,
   type InsertPlace,
   type InsertPlaceAmenity,
@@ -38,6 +40,7 @@ import type { AdminCourtFiltersDTO } from "../dtos";
 export interface AdminPlaceListItem {
   place: PlaceRecord;
   organizationName: string | null;
+  submittedByUserId: string | null;
 }
 
 export interface AdminPlaceDetails {
@@ -385,15 +388,27 @@ export class AdminCourtRepository implements IAdminCourtRepository {
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
+    const sortColumnMap = {
+      name: place.name,
+      city: place.city,
+      createdAt: place.createdAt,
+      status: place.isActive,
+    } as const;
+    const sortColumn = sortColumnMap[filters.sortBy ?? "createdAt"];
+    const orderFn = filters.sortOrder === "asc" ? asc : desc;
+
     const rows = await client
       .select({
         place,
         organizationName: organization.name,
+        submittedByUserId: courtSubmission.submittedByUserId,
         total: sql<number>`count(*) over()`,
       })
       .from(place)
       .leftJoin(organization, eq(place.organizationId, organization.id))
+      .leftJoin(courtSubmission, eq(place.id, courtSubmission.placeId))
       .where(whereClause)
+      .orderBy(orderFn(sortColumn))
       .limit(filters.limit)
       .offset(filters.offset);
 
@@ -401,6 +416,7 @@ export class AdminCourtRepository implements IAdminCourtRepository {
       items: rows.map((row) => ({
         place: row.place,
         organizationName: row.organizationName ?? null,
+        submittedByUserId: row.submittedByUserId ?? null,
       })),
       total: rows.length > 0 ? Number(rows[0].total) : 0,
     };

@@ -4,6 +4,7 @@ export {
   useQueryNotificationInbox,
   useQueryNotificationUnreadCount,
 } from "./hooks/use-notification-inbox";
+export { useNotificationRealtime } from "./hooks/use-notification-realtime";
 export {
   type UseWebPushResult,
   useModWebPush,

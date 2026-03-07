@@ -401,7 +401,10 @@ describe("reservationRouter", () => {
     // Arrange
     const caller = createCaller();
     mockReservationService.getReservationDetail.mockResolvedValue({
-      reservation: { id: TEST_IDS.reservationId1 },
+      reservation: {
+        id: TEST_IDS.reservationId1,
+        playerId: TEST_IDS.profileId,
+      },
       events: [],
       place: { id: TEST_IDS.placeId },
     });
@@ -418,6 +421,26 @@ describe("reservationRouter", () => {
     expect(mockReservationService.getReservationDetail).toHaveBeenCalledWith(
       TEST_IDS.reservationId1,
     );
+  });
+
+  it("getDetail reservation owned by another player -> maps to FORBIDDEN", async () => {
+    // Arrange
+    const caller = createCaller();
+    mockReservationService.getReservationDetail.mockResolvedValue({
+      reservation: {
+        id: TEST_IDS.reservationId1,
+        playerId: "bbbbbbbb-bbbb-4bbb-8bbb-bbbbbbbbbbbb",
+      },
+      events: [],
+      place: { id: TEST_IDS.placeId },
+    });
+
+    // Act + Assert
+    await expect(
+      caller.getDetail({
+        reservationId: TEST_IDS.reservationId1,
+      }),
+    ).rejects.toMatchObject({ code: "FORBIDDEN" });
   });
 
   it("getLinkedDetail valid payload -> calls getReservationLinkedDetail", async () => {

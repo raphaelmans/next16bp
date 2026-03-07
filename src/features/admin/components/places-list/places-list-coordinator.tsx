@@ -1,6 +1,9 @@
 "use client";
 
 import {
+  ArrowDown,
+  ArrowUp,
+  ArrowUpDown,
   ChevronDown,
   Copy,
   Edit,
@@ -36,6 +39,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Spinner } from "@/components/ui/spinner";
 import {
   DropdownMenu,
@@ -65,9 +69,12 @@ import {
 import {
   type AdminCourt,
   type ClaimStatusFilter,
+  type CourtSortBy,
+  type CourtSource,
   type CourtStatus,
   type CourtType,
   type FeaturedFilter,
+  type SortOrder,
   useModAdminCourts,
   useMutDeleteAdminPlace,
   useMutToggleCourtStatus,
@@ -75,6 +82,42 @@ import {
 } from "@/features/admin/hooks";
 import { cn } from "@/lib/utils";
 import { AdminPlacesFilters } from "./admin-places-filters";
+
+function SortableHead({
+  column,
+  currentSort,
+  currentOrder,
+  onSort,
+  children,
+}: {
+  column: CourtSortBy;
+  currentSort: CourtSortBy;
+  currentOrder: SortOrder;
+  onSort: (column: CourtSortBy) => void;
+  children: React.ReactNode;
+}) {
+  const isActive = currentSort === column;
+  return (
+    <TableHead>
+      <button
+        type="button"
+        className="inline-flex items-center gap-1 hover:text-foreground"
+        onClick={() => onSort(column)}
+      >
+        {children}
+        {isActive ? (
+          currentOrder === "asc" ? (
+            <ArrowUp className="h-3 w-3" />
+          ) : (
+            <ArrowDown className="h-3 w-3" />
+          )
+        ) : (
+          <ArrowUpDown className="h-3 w-3 opacity-40" />
+        )}
+      </button>
+    </TableHead>
+  );
+}
 
 interface AdminPlacesListProps {
   title: string;
@@ -106,12 +149,18 @@ export function AdminPlacesList({
   >("all");
   const [featuredFilter, setFeaturedFilter] =
     React.useState<FeaturedFilter>("all");
+  const [sourceFilter, setSourceFilter] = React.useState<CourtSource | "all">(
+    "all",
+  );
+  const [sortBy, setSortBy] = React.useState<CourtSortBy>("createdAt");
+  const [sortOrder, setSortOrder] = React.useState<SortOrder>("desc");
   const [search, setSearch] = React.useState("");
   const debouncedSearch = useDebouncedValue(search, 2000);
   const [page, setPage] = React.useState(1);
   const [expandedPlaceId, setExpandedPlaceId] = React.useState<string | null>(
     null,
   );
+  const [selectedIds, setSelectedIds] = React.useState<Set<string>>(new Set());
   const [deleteDialogOpen, setDeleteDialogOpen] = React.useState(false);
   const [deleteConfirmValue, setDeleteConfirmValue] = React.useState("");
   const [deleteTarget, setDeleteTarget] = React.useState<AdminCourt | null>(
@@ -171,9 +220,17 @@ export function AdminPlacesList({
     claimStatus: claimStatusFilter,
     featured: featuredFilter,
     search: debouncedSearch || undefined,
+    sortBy,
+    sortOrder,
     page,
     limit: 10,
   });
+
+  const filteredCourts = React.useMemo(() => {
+    if (!courtsData?.courts) return [];
+    if (sourceFilter === "all") return courtsData.courts;
+    return courtsData.courts.filter((court) => court.source === sourceFilter);
+  }, [courtsData?.courts, sourceFilter]);
 
   const toggleStatusMutation = useMutToggleCourtStatus();
   const deletePlaceMutation = useMutDeleteAdminPlace();
@@ -229,7 +286,59 @@ export function AdminPlacesList({
     }
   };
 
-  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${featuredFilter}-${debouncedSearch}`;
+  const handleSort = (column: CourtSortBy) => {
+    if (sortBy === column) {
+      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(column);
+      setSortOrder("asc");
+    }
+    setPage(1);
+  };
+
+  const allSelected =
+    filteredCourts.length > 0 &&
+    filteredCourts.every((c) => selectedIds.has(c.id));
+
+  const handleToggleSelect = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const handleSelectAll = () => {
+    if (allSelected) {
+      setSelectedIds(new Set());
+    } else {
+      setSelectedIds(new Set(filteredCourts.map((c) => c.id)));
+    }
+  };
+
+  const handleBulkActivate = () => {
+    for (const id of selectedIds) {
+      toggleStatusMutation.mutate({ courtId: id, status: "active" });
+    }
+    setSelectedIds(new Set());
+  };
+
+  const handleBulkDeactivate = () => {
+    for (const id of selectedIds) {
+      toggleStatusMutation.mutate({ courtId: id, status: "inactive" });
+    }
+    setSelectedIds(new Set());
+  };
+
+  const handleBulkDelete = () => {
+    for (const id of selectedIds) {
+      deletePlaceMutation.mutate({ placeId: id });
+    }
+    setSelectedIds(new Set());
+  };
+
+  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${featuredFilter}-${sourceFilter}-${debouncedSearch}`;
 
   React.useEffect(() => {
     if (!filterKey) {
@@ -296,6 +405,12 @@ export function AdminPlacesList({
         }}
         onCityFilterChange={setCityFilter}
         onClaimStatusFilterChange={setClaimStatusFilter}
+        sourceFilter={sourceFilter}
+        onSourceFilterChange={setSourceFilter}
+        sortBy={sortBy}
+        sortOrder={sortOrder}
+        onSortByChange={setSortBy}
+        onSortOrderChange={setSortOrder}
         onSearchChange={setSearch}
       />
 
@@ -306,7 +421,7 @@ export function AdminPlacesList({
           <Skeleton className="h-16 w-full" />
           <Skeleton className="h-16 w-full" />
         </div>
-      ) : !courtsData || courtsData.courts.length === 0 ? (
+      ) : !courtsData || filteredCourts.length === 0 ? (
         <div className="text-center py-12">
           <p className="text-muted-foreground">
             No {entityName.toLowerCase()}s found
@@ -314,21 +429,84 @@ export function AdminPlacesList({
         </div>
       ) : (
         <>
+          {selectedIds.size > 0 && (
+            <div className="flex items-center gap-3 rounded-md border bg-muted/50 px-4 py-2">
+              <span className="text-sm font-medium">
+                {selectedIds.size} selected
+              </span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBulkActivate}
+                disabled={toggleStatusMutation.isPending}
+              >
+                <Power className="mr-1 h-3 w-3" />
+                Activate
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleBulkDeactivate}
+                disabled={toggleStatusMutation.isPending}
+              >
+                <Power className="mr-1 h-3 w-3" />
+                Deactivate
+              </Button>
+              <Button
+                variant="destructive"
+                size="sm"
+                onClick={handleBulkDelete}
+                disabled={deletePlaceMutation.isPending}
+              >
+                <Trash2 className="mr-1 h-3 w-3" />
+                Delete
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setSelectedIds(new Set())}
+              >
+                Clear
+              </Button>
+            </div>
+          )}
           <div className="rounded-md border">
             <Table>
               <TableHeader>
                 <TableRow>
+                  <TableHead className="w-[40px] px-2">
+                    <Checkbox
+                      checked={allSelected}
+                      onCheckedChange={handleSelectAll}
+                      aria-label="Select all"
+                    />
+                  </TableHead>
                   <TableHead className="w-[44px]" />
-                  <TableHead>{entityName}</TableHead>
+                  <SortableHead
+                    column="name"
+                    currentSort={sortBy}
+                    currentOrder={sortOrder}
+                    onSort={handleSort}
+                  >
+                    {entityName}
+                  </SortableHead>
                   <TableHead>Type</TableHead>
+                  <TableHead>Source</TableHead>
                   <TableHead>Owner</TableHead>
-                  <TableHead>Status</TableHead>
+                  <SortableHead
+                    column="status"
+                    currentSort={sortBy}
+                    currentOrder={sortOrder}
+                    onSort={handleSort}
+                  >
+                    Status
+                  </SortableHead>
                   <TableHead>Featured</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {courtsData.courts.map((place) => {
+                {filteredCourts.map((place) => {
                   const isExpanded = expandedPlaceId === place.id;
                   const details = isExpanded ? expandedDetailsQuery.data : null;
                   const isDetailsLoading =
@@ -345,6 +523,13 @@ export function AdminPlacesList({
                           isExpanded && "bg-muted/30",
                         )}
                       >
+                        <TableCell className="px-2 align-top">
+                          <Checkbox
+                            checked={selectedIds.has(place.id)}
+                            onCheckedChange={() => handleToggleSelect(place.id)}
+                            aria-label={`Select ${place.name}`}
+                          />
+                        </TableCell>
                         <TableCell className="p-2 align-top">
                           <Button
                             variant="ghost"
@@ -396,6 +581,20 @@ export function AdminPlacesList({
                             }
                           >
                             {place.type.toUpperCase()}
+                          </Badge>
+                        </TableCell>
+                        <TableCell>
+                          <Badge
+                            variant={
+                              place.source === "user_submitted"
+                                ? "outline"
+                                : "secondary"
+                            }
+                            className="text-[10px]"
+                          >
+                            {place.source === "user_submitted"
+                              ? "User Submitted"
+                              : "Admin Curated"}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -495,7 +694,7 @@ export function AdminPlacesList({
 
                       {isExpanded && (
                         <TableRow className="bg-muted/30">
-                          <TableCell colSpan={7} className="p-0">
+                          <TableCell colSpan={9} className="p-0">
                             <div className="border-t">
                               <div className="px-5 py-4">
                                 <div className="flex flex-wrap items-center justify-between gap-3">

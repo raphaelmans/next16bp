@@ -26,6 +26,10 @@ export const metadata: Metadata = {
   },
 };
 
-export default function CourtsPage() {
-  return <DiscoveryCourtsPage />;
+type CourtsPageProps = {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+};
+
+export default function CourtsPage({ searchParams }: CourtsPageProps) {
+  return <DiscoveryCourtsPage searchParams={searchParams} />;
 }

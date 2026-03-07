@@ -109,6 +109,11 @@ export const AdminCourtFiltersSchema = z.object({
   province: S.place.province.optional(),
   city: S.place.city.optional(),
   search: S.place.searchQuery.optional(),
+  sortBy: z
+    .enum(["name", "city", "createdAt", "status"])
+    .optional()
+    .default("createdAt"),
+  sortOrder: z.enum(["asc", "desc"]).optional().default("desc"),
   limit: S.pagination.limit.default(20),
   offset: S.pagination.offset.default(0),
 });

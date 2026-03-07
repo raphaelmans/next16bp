@@ -342,9 +342,7 @@ export default function OwnerPlacesPage() {
                       {place.name}
                     </CardTitle>
                     <CardDescription>
-                      {[place.address, place.city]
-                        .filter(Boolean)
-                        .join(", ")}
+                      {[place.address, place.city].filter(Boolean).join(", ")}
                     </CardDescription>
                     <CardAction>
                       <Badge variant={statusVariant}>
@@ -424,9 +422,7 @@ export default function OwnerPlacesPage() {
                         asChild
                       >
                         <Link
-                          href={appRoutes.places.detail(
-                            place.slug ?? place.id,
-                          )}
+                          href={appRoutes.places.detail(place.slug ?? place.id)}
                           title="View public page"
                         >
                           <ExternalLink className="h-4 w-4" />

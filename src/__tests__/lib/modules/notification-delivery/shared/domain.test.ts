@@ -21,7 +21,7 @@ describe("notification content reservation links", () => {
       throw new Error(content.error);
     }
 
-    expect(content.push.url).toBe("/reservations/res-1/payment");
+    expect(content.push.url).toBe("/reservations/res-1?step=payment");
   });
 
   it("uses the detail route for confirmed events", () => {
@@ -123,7 +123,7 @@ describe("notification content reservation links", () => {
       throw new Error(confirmedContent.error);
     }
 
-    expect(awaitingContent.push.url).toBe("/reservations/res-1/payment");
+    expect(awaitingContent.push.url).toBe("/reservations/res-1?step=payment");
     expect(confirmedContent.push.url).toBe("/reservations/res-1");
   });
 

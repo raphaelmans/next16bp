@@ -1,4 +1,4 @@
-import CourtsPageClient from "@/features/discovery/components/courts-page-client";
+import { DiscoveryHydratedCourtsPage } from "@/features/discovery/server/public-courts-discovery";
 
 type LocationDefaults = {
   province?: string;
@@ -9,16 +9,19 @@ type LocationDefaults = {
 interface DiscoveryCourtsPageProps {
   initialFilters?: LocationDefaults;
   initialLocationLabel?: string;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }
 
-export function DiscoveryCourtsPage({
+export async function DiscoveryCourtsPage({
   initialFilters,
   initialLocationLabel,
+  searchParams,
 }: DiscoveryCourtsPageProps) {
   return (
-    <CourtsPageClient
+    <DiscoveryHydratedCourtsPage
       initialFilters={initialFilters}
       initialLocationLabel={initialLocationLabel}
+      searchParams={searchParams ? await searchParams : undefined}
     />
   );
 }

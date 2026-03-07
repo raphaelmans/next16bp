@@ -759,6 +759,7 @@ export function useMutAddPaymentProof() {
 
       await Promise.all([
         utils.reservation.getDetail.invalidate({ reservationId }),
+        utils.reservation.getLinkedDetail.invalidate({ reservationId }),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
       ]);
@@ -814,6 +815,9 @@ export function useMutUploadPaymentProof() {
         typeof reservationId === "string" && reservationId.length > 0
           ? utils.reservation.getDetail.invalidate({ reservationId })
           : Promise.resolve(),
+        typeof reservationId === "string" && reservationId.length > 0
+          ? utils.reservation.getLinkedDetail.invalidate({ reservationId })
+          : Promise.resolve(),
         utils.reservation.getMy.invalidate(),
         utils.reservation.getMyWithDetails.invalidate(),
       ]);
@@ -831,18 +835,52 @@ export function useModReservationInvalidation() {
     ...args: Parameters<typeof cache.reservation.getDetail.invalidate>
   ) => cache.reservation.getDetail.invalidate(...args);
 
+  const invalidateReservationPage = async (input: {
+    reservationId: string;
+    paymentInfoReservationId?: string;
+  }) =>
+    Promise.all([
+      cache.reservation.getDetail.invalidate({
+        reservationId: input.reservationId,
+      }),
+      cache.reservation.getLinkedDetail.invalidate({
+        reservationId: input.reservationId,
+      }),
+      input.paymentInfoReservationId
+        ? cache.reservation.getPaymentInfo.invalidate({
+            reservationId: input.paymentInfoReservationId,
+          })
+        : Promise.resolve(),
+    ]);
+
   return {
     invalidateReservationDetail,
+    invalidateReservationPage,
   };
 }
 
-export function useModReservationPostPaymentWarmup() {
+export function useModReservationPageWarmup() {
   const cache = trpc.useUtils();
 
   return {
-    warmupAfterPayment: async (reservationId: string) =>
+    warmupReservationPage: async (input: {
+      reservationId: string;
+      paymentInfoReservationId?: string;
+    }) =>
       Promise.all([
-        cache.reservation.getDetail.fetch({ reservationId }),
+        cache.reservation.getDetail.fetch({
+          reservationId: input.reservationId,
+        }),
+        cache.reservation.getLinkedDetail.fetch({
+          reservationId: input.reservationId,
+        }),
+        input.paymentInfoReservationId
+          ? cache.reservation.getPaymentInfo
+              .fetch({
+                reservationId: input.paymentInfoReservationId,
+              })
+              .catch(() => undefined)
+          : Promise.resolve(),
         cache.reservation.getMyWithDetails.fetch({ limit: 10, offset: 0 }),
       ]),
   };

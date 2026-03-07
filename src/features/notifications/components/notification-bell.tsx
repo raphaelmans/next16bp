@@ -28,6 +28,7 @@ import {
   useModWebPush,
   useMutNotificationMarkAllAsRead,
   useMutNotificationMarkAsRead,
+  useNotificationRealtime,
   useQueryNotificationInbox,
   useQueryNotificationUnreadCount,
 } from "../hooks";
@@ -84,11 +85,13 @@ export function NotificationBell({
     new Set(),
   );
   const [optimisticMarkAll, setOptimisticMarkAll] = React.useState(false);
+  const authQuery = trpc.auth.me.useQuery(undefined, { retry: false });
+  useNotificationRealtime(authQuery.data?.id ?? null);
   const unreadCountQuery = useQueryNotificationUnreadCount();
-  const notificationInboxQuery = useQueryNotificationInbox(
-    { limit: 20, offset: 0 },
-    { enabled: open },
-  );
+  const notificationInboxQuery = useQueryNotificationInbox({
+    limit: 20,
+    offset: 0,
+  });
   const markAsReadMutation = useMutNotificationMarkAsRead();
   const markAllAsReadMutation = useMutNotificationMarkAllAsRead();
   const utils = trpc.useUtils();

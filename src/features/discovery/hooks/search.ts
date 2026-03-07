@@ -1,6 +1,11 @@
 "use client";
 
-import { useMemo } from "react";
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
+import { useEffect, useMemo } from "react";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
   useFeatureMutation,
@@ -20,6 +25,13 @@ import {
   mapPlaceSummary,
   type PlaceSummary,
 } from "@/features/discovery/helpers";
+import {
+  buildDiscoveryPlaceListSummaryQueryInput,
+  createDiscoveryPlaceSummariesQueryOptions,
+  DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
+  DISCOVERY_TIER1_STALE_TIME_MS,
+  type DiscoveryResolvedLocationState,
+} from "@/features/discovery/query-options";
 import { getDiscoveryApi } from "../api.runtime";
 import { useModDiscoveryAvailabilityRealtimeSync } from "../realtime";
 
@@ -156,6 +168,7 @@ interface UseDiscoveryOptions {
     | "unverified_reservable";
   page?: number;
   limit?: number;
+  initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
 export interface DiscoveryPlaceSummary {
@@ -312,13 +325,33 @@ export function useModDiscoveryPlaceSummaries(
     amenities,
     verificationTier,
     page = 1,
-    limit = 12,
+    limit = DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
+    initialResolvedLocation,
   } = options;
-  const offset = (page - 1) * limit;
   const { data: provincesCities } = usePHProvincesCitiesQuery();
+  const queryClient = useQueryClient();
 
   const resolvedLocation = useMemo(() => {
-    if (!provincesCities) return null;
+    if (!provincesCities) {
+      const matchesInitialLocation =
+        province === initialResolvedLocation?.provinceSlug &&
+        city === initialResolvedLocation?.citySlug;
+
+      return {
+        province:
+          (matchesInitialLocation
+            ? initialResolvedLocation?.provinceName
+            : undefined) ??
+          province ??
+          undefined,
+        city:
+          (matchesInitialLocation
+            ? initialResolvedLocation?.cityName
+            : undefined) ??
+          city ??
+          undefined,
+      };
+    }
 
     const resolvedProvince = province
       ? findProvinceBySlug(provincesCities, province)
@@ -330,35 +363,99 @@ export function useModDiscoveryPlaceSummaries(
       : null;
 
     return {
-      province: resolvedProvince?.name,
-      city: resolvedCity?.name,
+      province: resolvedProvince?.name ?? province ?? undefined,
+      city: resolvedCity?.name ?? city ?? undefined,
     };
-  }, [city, province, provincesCities]);
+  }, [city, initialResolvedLocation, province, provincesCities]);
 
-  const query = useFeatureQuery(
-    ["place", "listSummary"],
-    discoveryApi.queryPlaceListSummary,
-    {
+  const currentQueryInput = useMemo(
+    () =>
+      buildDiscoveryPlaceListSummaryQueryInput({
+        q,
+        provinceName: resolvedLocation?.province,
+        cityName: resolvedLocation?.city,
+        sportId,
+        amenities,
+        verificationTier,
+        limit,
+        page,
+      }),
+    [
+      amenities,
+      limit,
+      page,
       q,
-      province: resolvedLocation?.province ?? undefined,
-      city: resolvedLocation?.city ?? undefined,
+      resolvedLocation?.city,
+      resolvedLocation?.province,
+      sportId,
+      verificationTier,
+    ],
+  );
+
+  const query = useQuery(
+    createDiscoveryPlaceSummariesQueryOptions(
+      discoveryApi.queryPlaceListSummary,
+      currentQueryInput,
+      {
+        staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
+        placeholderData: keepPreviousData,
+      },
+    ),
+  );
+
+  const transformedData: DiscoverySummaryResult | undefined = useMemo(
+    () =>
+      query.data
+        ? {
+            places: query.data.items.map(mapPlaceSummaryItem),
+            total: query.data.total,
+            page,
+            limit,
+            hasMore:
+              currentQueryInput.offset + query.data.items.length <
+              query.data.total,
+          }
+        : undefined,
+    [currentQueryInput.offset, limit, page, query.data],
+  );
+
+  useEffect(() => {
+    if (!transformedData?.hasMore) {
+      return;
+    }
+
+    const nextQueryInput = buildDiscoveryPlaceListSummaryQueryInput({
+      q,
+      provinceName: resolvedLocation?.province,
+      cityName: resolvedLocation?.city,
       sportId,
       amenities,
       verificationTier,
       limit,
-      offset,
-    },
-  );
+      page: page + 1,
+    });
 
-  const transformedData: DiscoverySummaryResult | undefined = query.data
-    ? {
-        places: query.data.items.map(mapPlaceSummaryItem),
-        total: query.data.total,
-        page,
-        limit,
-        hasMore: offset + query.data.items.length < query.data.total,
-      }
-    : undefined;
+    void queryClient.prefetchQuery(
+      createDiscoveryPlaceSummariesQueryOptions(
+        discoveryApi.queryPlaceListSummary,
+        nextQueryInput,
+        {
+          staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
+        },
+      ),
+    );
+  }, [
+    amenities,
+    limit,
+    page,
+    q,
+    queryClient,
+    resolvedLocation?.city,
+    resolvedLocation?.province,
+    sportId,
+    transformedData?.hasMore,
+    verificationTier,
+  ]);
 
   return {
     ...query,
