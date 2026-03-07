@@ -906,10 +906,7 @@ export class AvailabilityService implements IAvailabilityService {
   private isPlaceBookable(
     verification: PlaceVerificationRecord | null,
   ): boolean {
-    if (!verification) return false;
-    return (
-      verification.status === "VERIFIED" && verification.reservationsEnabled
-    );
+    return verification?.reservationsEnabled ?? false;
   }
 
   private isReservationBlocking(reservation: ReservationRecord): boolean {

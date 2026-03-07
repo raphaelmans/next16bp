@@ -1,7 +1,6 @@
 "use client";
 
 import { AlertTriangle } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -29,6 +28,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -222,8 +222,8 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
             </CardHeader>
             <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
               <p>
-                Verify {place.name} to unlock reservations and build trust with
-                players.
+                Verify {place.name} to build trust with players while keeping
+                your reservation settings flexible.
               </p>
               <Button asChild>
                 <Link

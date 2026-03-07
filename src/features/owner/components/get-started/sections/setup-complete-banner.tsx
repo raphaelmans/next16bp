@@ -15,7 +15,7 @@ export function SetupCompleteBanner() {
           <div className="flex-1 space-y-1">
             <p className="font-heading font-semibold">You&apos;re all set!</p>
             <p className="text-sm text-muted-foreground">
-              Your venue is verified and confirmed to accept bookings on
+              Your venue is set up and your verified badge is live on
               KudosCourts.
             </p>
           </div>

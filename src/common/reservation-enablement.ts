@@ -78,10 +78,7 @@ export function getReservationEnablement(
 
   return {
     canShowPublicBooking:
-      isReservable &&
-      verificationStatus === "VERIFIED" &&
-      reservationsEnabled &&
-      input.hasPaymentMethods !== false,
+      isReservable && reservationsEnabled && input.hasPaymentMethods !== false,
     issues,
   };
 }

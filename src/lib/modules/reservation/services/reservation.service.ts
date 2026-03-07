@@ -417,13 +417,7 @@ export class ReservationService implements IReservationService {
       placeId,
       ctx,
     );
-    if (!verification) {
-      throw new PlaceNotBookableError(placeId);
-    }
-    if (
-      verification.status !== "VERIFIED" ||
-      !verification.reservationsEnabled
-    ) {
+    if (!verification?.reservationsEnabled) {
       throw new PlaceNotBookableError(placeId);
     }
   }

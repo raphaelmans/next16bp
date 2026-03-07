@@ -108,7 +108,7 @@ function makeReservationService(overrides?: {
   organization?: { id: string; ownerUserId: string } | null;
   profile?: ProfileStub | null;
   placeVerification?: {
-    status: "VERIFIED" | "PENDING";
+    status: "UNVERIFIED" | "VERIFIED" | "PENDING" | "REJECTED";
     reservationsEnabled: boolean;
   } | null;
   groupExists?: boolean;
@@ -526,6 +526,28 @@ describe("ReservationService.createReservationForCourt", () => {
     expect(result.totalPriceCents).toBe(1800);
     expect(reservationRepository.create).toHaveBeenCalledTimes(1);
     expect(reservationEventRepository.create).toHaveBeenCalledTimes(1);
+  });
+
+  it("creates reservation for pending venues when reservations are enabled", async () => {
+    const { service, reservationRepository } = makeReservationService({
+      placeVerification: {
+        status: "PENDING",
+        reservationsEnabled: true,
+      },
+    });
+
+    const result = await service.createReservationForCourt(
+      "user-1",
+      "profile-1",
+      {
+        courtId: TEST_IDS.courtId1,
+        startTime: hoursFromNowIso(2),
+        durationMinutes: 60,
+      },
+    );
+
+    expect(result.courtId).toBe(TEST_IDS.courtId1);
+    expect(reservationRepository.create).toHaveBeenCalledTimes(1);
   });
 
   it("rejects when court is no longer available", async () => {

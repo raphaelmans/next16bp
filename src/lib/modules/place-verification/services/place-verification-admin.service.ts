@@ -275,14 +275,21 @@ export class PlaceVerificationAdminService {
         ctx,
       );
 
+      const verification = await this.placeVerificationRepository.findByPlaceId(
+        request.placeId,
+        ctx,
+      );
+
       await this.placeVerificationRepository.upsert(
         {
           placeId: request.placeId,
           status: "REJECTED",
           verifiedAt: null,
           verifiedByUserId: null,
-          reservationsEnabled: false,
-          reservationsEnabledAt: null,
+          reservationsEnabled: verification?.reservationsEnabled ?? false,
+          reservationsEnabledAt: verification?.reservationsEnabled
+            ? (verification.reservationsEnabledAt ?? new Date())
+            : null,
         },
         ctx,
       );

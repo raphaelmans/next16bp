@@ -27,6 +27,7 @@ const toPaymentMethodRecord = (
 
 const createHarness = (options?: {
   verificationStatus?: PlaceVerificationRecord["status"];
+  verification?: PlaceVerificationRecord | null;
   paymentMethods?: OrganizationPaymentMethodRecord[];
 }) => {
   const place = toPlaceRecord({
@@ -37,11 +38,14 @@ const createHarness = (options?: {
     id: ORGANIZATION_ID,
     ownerUserId: OWNER_USER_ID,
   });
-  const verification = toVerificationRecord({
-    placeId: PLACE_ID,
-    status: options?.verificationStatus ?? "VERIFIED",
-    reservationsEnabled: false,
-  });
+  const verification =
+    options && Object.hasOwn(options, "verification")
+      ? (options.verification ?? null)
+      : toVerificationRecord({
+          placeId: PLACE_ID,
+          status: options?.verificationStatus ?? "VERIFIED",
+          reservationsEnabled: false,
+        });
   const paymentMethods = options?.paymentMethods ?? [];
 
   const placeRepositoryFns = {
@@ -52,7 +56,16 @@ const createHarness = (options?: {
   };
   const placeVerificationRepositoryFns = {
     findByPlaceId: vi.fn(async () => verification),
-    update: vi.fn(async () => verification),
+    upsert: vi.fn(async (value) =>
+      toVerificationRecord({
+        placeId: PLACE_ID,
+        status: value.status,
+        reservationsEnabled: value.reservationsEnabled,
+        reservationsEnabledAt: value.reservationsEnabledAt,
+        verifiedAt: value.verifiedAt ?? null,
+        verifiedByUserId: value.verifiedByUserId ?? null,
+      }),
+    ),
   };
   const organizationPaymentMethodRepositoryFns = {
     findByOrganizationId: vi.fn(async () => paymentMethods),
@@ -93,7 +106,7 @@ describe("PlaceVerificationService.toggleReservations", () => {
       harness.organizationPaymentMethodRepositoryFns.findByOrganizationId,
     ).toHaveBeenCalledWith(ORGANIZATION_ID);
     expect(
-      harness.placeVerificationRepositoryFns.update,
+      harness.placeVerificationRepositoryFns.upsert,
     ).not.toHaveBeenCalled();
   });
 
@@ -116,13 +129,68 @@ describe("PlaceVerificationService.toggleReservations", () => {
     expect(
       harness.organizationPaymentMethodRepositoryFns.findByOrganizationId,
     ).toHaveBeenCalledWith(ORGANIZATION_ID);
-    expect(harness.placeVerificationRepositoryFns.update).toHaveBeenCalledWith(
-      PLACE_ID,
-      {
-        reservationsEnabled: true,
-        reservationsEnabledAt: expect.any(Date),
-      },
-    );
+    expect(harness.placeVerificationRepositoryFns.upsert).toHaveBeenCalledWith({
+      placeId: PLACE_ID,
+      status: "VERIFIED",
+      verifiedAt: null,
+      verifiedByUserId: null,
+      reservationsEnabled: true,
+      reservationsEnabledAt: expect.any(Date),
+    });
+  });
+
+  it("creates an unverified verification record when enabling reservations without an existing row", async () => {
+    const harness = createHarness({
+      verification: null,
+      paymentMethods: [
+        toPaymentMethodRecord({
+          id: "pm-1",
+          organizationId: ORGANIZATION_ID,
+          isActive: true,
+        }),
+      ],
+    });
+
+    await harness.service.toggleReservations(OWNER_USER_ID, {
+      placeId: PLACE_ID,
+      enabled: true,
+    });
+
+    expect(harness.placeVerificationRepositoryFns.upsert).toHaveBeenCalledWith({
+      placeId: PLACE_ID,
+      status: "UNVERIFIED",
+      verifiedAt: null,
+      verifiedByUserId: null,
+      reservationsEnabled: true,
+      reservationsEnabledAt: expect.any(Date),
+    });
+  });
+
+  it("preserves non-verified status when enabling reservations", async () => {
+    const harness = createHarness({
+      verificationStatus: "PENDING",
+      paymentMethods: [
+        toPaymentMethodRecord({
+          id: "pm-1",
+          organizationId: ORGANIZATION_ID,
+          isActive: true,
+        }),
+      ],
+    });
+
+    await harness.service.toggleReservations(OWNER_USER_ID, {
+      placeId: PLACE_ID,
+      enabled: true,
+    });
+
+    expect(harness.placeVerificationRepositoryFns.upsert).toHaveBeenCalledWith({
+      placeId: PLACE_ID,
+      status: "PENDING",
+      verifiedAt: null,
+      verifiedByUserId: null,
+      reservationsEnabled: true,
+      reservationsEnabledAt: expect.any(Date),
+    });
   });
 
   it("does not require payment methods when disabling reservations", async () => {
@@ -136,12 +204,13 @@ describe("PlaceVerificationService.toggleReservations", () => {
     expect(
       harness.organizationPaymentMethodRepositoryFns.findByOrganizationId,
     ).not.toHaveBeenCalled();
-    expect(harness.placeVerificationRepositoryFns.update).toHaveBeenCalledWith(
-      PLACE_ID,
-      {
-        reservationsEnabled: false,
-        reservationsEnabledAt: null,
-      },
-    );
+    expect(harness.placeVerificationRepositoryFns.upsert).toHaveBeenCalledWith({
+      placeId: PLACE_ID,
+      status: "VERIFIED",
+      verifiedAt: null,
+      verifiedByUserId: null,
+      reservationsEnabled: false,
+      reservationsEnabledAt: null,
+    });
   });
 });

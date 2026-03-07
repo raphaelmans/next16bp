@@ -17,8 +17,8 @@ export function SetupHelpCard() {
         <div>
           <p className="font-medium">What is verification?</p>
           <p className="text-muted-foreground">
-            Upload proof of ownership to get a verified badge and unlock online
-            reservations.
+            Upload proof of ownership to get a verified badge while keeping
+            players informed during booking.
           </p>
         </div>
         <Separator />

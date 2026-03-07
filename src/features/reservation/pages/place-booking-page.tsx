@@ -50,6 +50,7 @@ import {
 } from "@/features/court-addons";
 import type { SelectedAddon } from "@/features/court-addons/schemas";
 import { getDiscoveryApi } from "@/features/discovery/api.runtime";
+import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import {
   useModPlaceAvailability,
   useModPlaceDetail,
@@ -192,11 +193,13 @@ export default function PlaceBookingPage({
   const resolvedPlaceId = place?.id;
   const placeSlugOrId = place?.slug ?? place?.id ?? placeIdOrSlug;
   const placeTimeZone = place?.timeZone ?? "Asia/Manila";
-  const verificationStatus = place?.verification?.status ?? "UNVERIFIED";
-  const reservationsEnabled = place?.verification?.reservationsEnabled ?? false;
-  const isVerified = verificationStatus === "VERIFIED";
-  const showBooking =
-    place?.placeType === "RESERVABLE" && isVerified && reservationsEnabled;
+  const verificationDisplay = getPlaceVerificationDisplay({
+    placeType: place?.placeType,
+    verificationStatus: place?.verification?.status,
+    reservationsEnabled: place?.verification?.reservationsEnabled,
+    hasPaymentMethods: place?.hasPaymentMethods,
+  });
+  const showBooking = verificationDisplay.showBooking;
   const bookingDate = React.useMemo(
     () => (startTime ? getZonedDate(startTime, placeTimeZone) : undefined),
     [startTime, placeTimeZone],
@@ -777,7 +780,7 @@ export default function PlaceBookingPage({
         <div className="text-center space-y-3">
           <h1 className="text-2xl font-bold">Bookings not available</h1>
           <p className="text-muted-foreground">
-            This venue is not accepting reservations yet.
+            This venue is not accepting online reservations right now.
           </p>
           <Link
             href={appRoutes.places.detail(placeSlugOrId)}
@@ -855,8 +858,8 @@ export default function PlaceBookingPage({
         currency,
       }
     : {
-        startTime: selectedSlot!.startTime,
-        endTime: endTime ?? selectedSlot!.endTime,
+        startTime: selectedSlot?.startTime ?? new Date().toISOString(),
+        endTime: endTime ?? selectedSlot?.endTime ?? new Date().toISOString(),
         priceCents: totalPrice,
         currency,
       };
@@ -871,6 +874,20 @@ export default function PlaceBookingPage({
           </p>
         </div>
       </div>
+
+      {verificationDisplay.showBookingVerificationUi && (
+        <div className="mt-4 rounded-lg border border-dashed px-4 py-3 text-sm">
+          <div className="flex items-center gap-2 font-medium text-foreground">
+            <ShieldCheck className="h-4 w-4 text-warning" />
+            {verificationDisplay.verificationMessage}
+          </div>
+          {verificationDisplay.verificationDescription ? (
+            <p className="mt-2 text-xs text-muted-foreground">
+              {verificationDisplay.verificationDescription}
+            </p>
+          ) : null}
+        </div>
+      )}
 
       {!profileComplete && (
         <div className="mt-4 flex items-center justify-between gap-3 rounded-lg border border-warning/40 bg-warning/10 px-4 py-3 text-sm">

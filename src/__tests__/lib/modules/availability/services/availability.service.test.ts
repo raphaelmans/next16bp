@@ -33,7 +33,10 @@ const toCourtAddonRecord = (
   value: Partial<CourtAddonRecord>,
 ): CourtAddonRecord => value as CourtAddonRecord;
 
-const createHarness = () => {
+const createHarness = (options?: {
+  verificationStatus?: PlaceVerificationRecord["status"];
+  reservationsEnabled?: boolean;
+}) => {
   const court = toCourtRecord({
     id: COURT_ID,
     label: "Court 1",
@@ -48,8 +51,8 @@ const createHarness = () => {
   });
   const verification = toVerificationRecord({
     placeId: PLACE_ID,
-    status: "VERIFIED",
-    reservationsEnabled: true,
+    status: options?.verificationStatus ?? "VERIFIED",
+    reservationsEnabled: options?.reservationsEnabled ?? true,
   });
 
   const courtRepositoryFns = {
@@ -113,6 +116,23 @@ const getFutureDateIso = () =>
 describe("AvailabilityService addon selection validation", () => {
   it("getForCourt rejects selected add-ons that are not valid for the booking context", async () => {
     const harness = createHarness();
+    const payload: GetAvailabilityForCourtDTO = {
+      courtId: COURT_ID,
+      date: getFutureDateIso(),
+      durationMinutes: 60,
+      selectedAddons: [{ addonId: "invalid-addon", quantity: 1 }],
+    };
+
+    await expect(harness.service.getForCourt(payload)).rejects.toBeInstanceOf(
+      InvalidAvailabilityAddonSelectionError,
+    );
+  });
+
+  it("getForCourt still resolves add-on validation for pending venues when reservations are enabled", async () => {
+    const harness = createHarness({
+      verificationStatus: "PENDING",
+      reservationsEnabled: true,
+    });
     const payload: GetAvailabilityForCourtDTO = {
       courtId: COURT_ID,
       date: getFutureDateIso(),

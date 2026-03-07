@@ -90,8 +90,8 @@ export function getPlaceVerificationDisplay(
   const isCurated = placeType === "CURATED";
   const isVerified = verificationStatus === "VERIFIED";
   const showBooking = enablement.canShowPublicBooking;
-  const showVerificationBadge = showBooking;
-  const showBookingVerificationUi = !showBooking && !isCurated;
+  const showVerificationBadge = isVerified;
+  const showBookingVerificationUi = !isCurated && (!showBooking || !isVerified);
 
   const hasVerificationRequiredIssue = hasIssue("VERIFICATION_REQUIRED");
   const hasVerificationPendingIssue = hasIssue("VERIFICATION_PENDING");
@@ -100,7 +100,13 @@ export function getPlaceVerificationDisplay(
   const hasNoPaymentMethodIssue = hasIssue("NO_PAYMENT_METHOD");
 
   const verificationMessage = showBooking
-    ? "Verified for reservations"
+    ? isVerified
+      ? "Verified for reservations"
+      : hasVerificationPendingIssue
+        ? "Booking available while verification is pending"
+        : hasVerificationRejectedIssue
+          ? "Booking available while verification needs updates"
+          : "Booking available before verification"
     : hasVerificationPendingIssue
       ? "Verification pending"
       : hasVerificationRejectedIssue
@@ -114,13 +120,19 @@ export function getPlaceVerificationDisplay(
               : "Booking not available yet";
 
   const verificationDescription = showBooking
-    ? ""
+    ? isVerified
+      ? ""
+      : hasVerificationPendingIssue
+        ? "You can still book this venue while the verification review is in progress."
+        : hasVerificationRejectedIssue
+          ? "You can still book this venue, but the owner still needs to update verification documents."
+          : "You can still book this venue even though verification has not been completed yet."
     : hasVerificationPendingIssue
-      ? "This venue is awaiting review. Online bookings become available after approval."
+      ? "Verification is still under review. If booking is enabled, players will see a warning until review is complete."
       : hasVerificationRejectedIssue
-        ? "Verification needs updates from the owner before bookings can open."
+        ? "Verification needs updates. If booking is enabled, players will see a warning until the owner resubmits."
         : hasVerificationRequiredIssue
-          ? "This venue must be verified and reservations enabled by the owner before online bookings become available."
+          ? "This venue is not verified yet. If booking is enabled, players will see a warning until verification is submitted."
           : hasReservationsDisabledIssue
             ? "The owner has not yet enabled online reservations for this venue."
             : hasNoPaymentMethodIssue
@@ -128,7 +140,11 @@ export function getPlaceVerificationDisplay(
               : "Online booking is not available for this venue yet.";
 
   const verificationStatusVariant: PlaceVerificationStatusVariant = showBooking
-    ? "success"
+    ? isVerified
+      ? "success"
+      : hasVerificationRejectedIssue
+        ? "destructive"
+        : "warning"
     : hasVerificationRejectedIssue
       ? "destructive"
       : hasVerificationPendingIssue ||

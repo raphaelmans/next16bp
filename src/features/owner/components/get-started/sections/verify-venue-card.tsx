@@ -36,7 +36,7 @@ export function VerifyVenueCard({
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                {placeName} is verified and confirmed for reservations.
+                {placeName} is verified and marked as trusted for players.
               </p>
               <div className="pt-2">
                 <Button variant="outline" onClick={onVerifyClick}>
@@ -128,7 +128,8 @@ export function VerifyVenueCard({
                 <Badge>Required</Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Upload proof of ownership to unlock online reservations.
+                Upload proof of ownership to improve your venue status and add a
+                verified badge.
               </p>
             </div>
             <Button onClick={onVerifyClick} disabled={!hasVenue}>

@@ -11,7 +11,6 @@ import {
   ToggleRight,
   XCircle,
 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -22,6 +21,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import {
   buildPlaceVerificationFormData,
   type PlaceVerificationStatus,
@@ -49,7 +49,7 @@ const STATUS_CONFIG: Record<
 > = {
   UNVERIFIED: {
     label: "Not verified",
-    helper: "Submit documents to unlock bookings.",
+    helper: "Submit documents to add a verified badge for players.",
     icon: AlertCircle,
     badgeVariant: "secondary",
     toneClass: "text-muted-foreground",
@@ -219,7 +219,7 @@ export function PlaceVerificationPanel({
               Venue verification
             </CardTitle>
             <p className="text-sm text-muted-foreground">
-              Verify {placeName} to unlock reservations and build trust.
+              Verify {placeName} to build trust while you manage reservations.
             </p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -257,7 +257,7 @@ export function PlaceVerificationPanel({
           </Alert>
         )}
 
-        {isVerified && (
+        {reservationCapable && (
           <div className="rounded-lg border border-border/70 bg-card p-4">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <div className="space-y-1">
@@ -270,7 +270,11 @@ export function PlaceVerificationPanel({
                   Reservations {reservationsEnabled ? "enabled" : "disabled"}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Toggle to start accepting bookings from players.
+                  {isVerified
+                    ? "Toggle to start accepting bookings from players."
+                    : reservationsEnabled
+                      ? "Bookings are live. Players will see a verification warning until review is complete."
+                      : "Toggle to accept bookings now. Players will see a verification warning until review is complete."}
                 </p>
               </div>
               <Button

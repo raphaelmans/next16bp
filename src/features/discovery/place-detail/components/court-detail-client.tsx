@@ -565,7 +565,7 @@ export default function CourtDetailClient({
   if (!showBooking) {
     const heading =
       placeType === "RESERVABLE"
-        ? "Bookings not available yet"
+        ? "Booking unavailable right now"
         : "Not bookable yet";
     const description =
       placeType === "RESERVABLE"

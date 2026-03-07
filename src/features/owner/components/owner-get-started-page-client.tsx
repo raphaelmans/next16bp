@@ -261,7 +261,7 @@ const FREE_FEATURES = [
   {
     id: "verified",
     title: "Verified Badge",
-    description: "Build trust with players and unlock online reservations.",
+    description: "Build trust with players through a verified badge.",
     icon: ShieldCheck,
     color: "primary" as const,
   },

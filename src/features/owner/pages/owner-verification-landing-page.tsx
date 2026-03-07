@@ -90,7 +90,8 @@ export default function OwnerVerificationLandingPage() {
               Venue Verification
             </h1>
             <p className="text-muted-foreground">
-              Submit verification documents for each venue to unlock bookings.
+              Submit verification documents for each venue to add trust signals
+              for players.
             </p>
           </div>
 

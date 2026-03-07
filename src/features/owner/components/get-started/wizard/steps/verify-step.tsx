@@ -25,7 +25,8 @@ export function VerifyStep({ status, onStepComplete }: VerifyStepProps) {
           <div className="flex-1">
             <p className="font-medium">Venue verified</p>
             <p className="text-sm text-muted-foreground">
-              {status.primaryPlaceName} is verified and ready for bookings.
+              {status.primaryPlaceName} is verified and marked as trusted for
+              players.
             </p>
           </div>
           <CheckCircle2 className="h-5 w-5 text-primary" />

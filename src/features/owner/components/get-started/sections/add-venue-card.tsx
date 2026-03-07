@@ -32,8 +32,8 @@ export function AddVenueCard({
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Next, submit verification to unlock bookings. You can add more
-                venues from your dashboard.
+                Next, submit verification to add trust signals for players. You
+                can add more venues from your dashboard.
               </p>
               <div className="pt-2">
                 <Button variant="outline" asChild>

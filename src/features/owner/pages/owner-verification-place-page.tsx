@@ -1,7 +1,6 @@
 "use client";
 
 import { ShieldCheck } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
@@ -9,6 +8,7 @@ import { AppShell } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -134,8 +134,8 @@ export default function OwnerVerificationPlacePage({
               <CardTitle>Verification overview</CardTitle>
             </CardHeader>
             <CardContent className="text-sm text-muted-foreground">
-              Verify {place.name} to unlock reservations and show players this
-              venue is trusted.
+              Verify {place.name} to show players this venue is trusted while
+              you keep reservations under your control.
             </CardContent>
           </Card>
 

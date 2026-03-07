@@ -102,7 +102,7 @@ const ownerMessages: Record<EmptyStateReason, { title: string; body: string }> =
   {
     reservations_disabled: {
       title: "Reservations are disabled",
-      body: "Your venue is verified but reservations are currently turned off. Enable reservations in the venue verification panel to start accepting bookings.",
+      body: "Reservations are currently turned off. Enable them in the venue verification panel to start accepting bookings.",
     },
     no_schedule: {
       title: "No schedule hours configured",

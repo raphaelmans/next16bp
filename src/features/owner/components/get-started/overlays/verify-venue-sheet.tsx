@@ -35,7 +35,8 @@ export function VerifyVenueSheet({
         <SheetHeader>
           <SheetTitle>Verify {placeName}</SheetTitle>
           <SheetDescription>
-            Upload proof of ownership to unlock online reservations.
+            Upload proof of ownership to improve your venue status and add a
+            verified badge.
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">

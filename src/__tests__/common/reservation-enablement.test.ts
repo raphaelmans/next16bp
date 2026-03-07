@@ -40,4 +40,34 @@ describe("getReservationEnablement", () => {
 
     expect(result.canShowPublicBooking).toBe(true);
   });
+
+  it("keeps public booking enabled for pending venues when reservations are enabled", () => {
+    const result = getReservationEnablement({
+      placeType: "RESERVABLE",
+      verificationStatus: "PENDING",
+      reservationsEnabled: true,
+      hasPaymentMethods: true,
+    });
+
+    expect(result.canShowPublicBooking).toBe(true);
+    expect(result.issues).toContainEqual({
+      code: "VERIFICATION_PENDING",
+      tone: "warning",
+    });
+  });
+
+  it("keeps public booking enabled for rejected venues when reservations are enabled", () => {
+    const result = getReservationEnablement({
+      placeType: "RESERVABLE",
+      verificationStatus: "REJECTED",
+      reservationsEnabled: true,
+      hasPaymentMethods: true,
+    });
+
+    expect(result.canShowPublicBooking).toBe(true);
+    expect(result.issues).toContainEqual({
+      code: "VERIFICATION_REJECTED",
+      tone: "destructive",
+    });
+  });
 });

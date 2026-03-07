@@ -66,19 +66,19 @@ describe("mapAvailabilityOptionsToSlots", () => {
   const cases = [
     {
       label: "maps BOOKED status to lowercase booked",
-      options: [crossMidnightOptions[1]!],
+      options: crossMidnightOptions.slice(1, 2),
       durationMinutes: 60,
       expected: { status: "booked" },
     },
     {
       label: "maps AVAILABLE status to lowercase available",
-      options: [crossMidnightOptions[0]!],
+      options: crossMidnightOptions.slice(0, 1),
       durationMinutes: 60,
       expected: { status: "available" },
     },
     {
       label: "preserves startTime and endTime from options",
-      options: [crossMidnightOptions[1]!],
+      options: crossMidnightOptions.slice(1, 2),
       durationMinutes: 60,
       expected: {
         startTime: "2026-03-05T15:00:00.000Z",
@@ -87,7 +87,9 @@ describe("mapAvailabilityOptionsToSlots", () => {
     },
     {
       label: "defaults currency to PHP when null",
-      options: [{ ...crossMidnightOptions[0]!, currency: null }],
+      options: crossMidnightOptions
+        .slice(0, 1)
+        .map((option) => ({ ...option, currency: null })),
       durationMinutes: 60,
       expected: { currency: "PHP" },
     },
@@ -170,7 +172,7 @@ describe("groupSlotsByDayKey", () => {
     expect(mar5Slots).toBeDefined();
     // 10 PM and 11 PM PHT are both on Mar 5
     expect(mar5Slots).toHaveLength(2);
-    expect(mar5Slots![1]!.status).toBe("booked"); // 11 PM
+    expect(mar5Slots?.[1]?.status).toBe("booked"); // 11 PM
   });
 
   it("groups midnight and 1 AM PHT slots under Mar 6 day key", () => {
@@ -181,9 +183,9 @@ describe("groupSlotsByDayKey", () => {
     expect(mar6Slots).toBeDefined();
     // 12 AM, 1 AM, 2 AM PHT on Mar 6
     expect(mar6Slots).toHaveLength(3);
-    expect(mar6Slots![0]!.status).toBe("booked"); // 12 AM
-    expect(mar6Slots![1]!.status).toBe("booked"); // 1 AM
-    expect(mar6Slots![2]!.status).toBe("available"); // 2 AM
+    expect(mar6Slots?.[0]?.status).toBe("booked"); // 12 AM
+    expect(mar6Slots?.[1]?.status).toBe("booked"); // 1 AM
+    expect(mar6Slots?.[2]?.status).toBe("available"); // 2 AM
   });
 
   it("sorts slots within each day by startTime ascending", () => {
@@ -192,7 +194,7 @@ describe("groupSlotsByDayKey", () => {
 
     for (const [, daySlots] of byDay) {
       for (let i = 1; i < daySlots.length; i++) {
-        expect(daySlots[i]!.startTime >= daySlots[i - 1]!.startTime).toBe(true);
+        expect(daySlots[i]?.startTime >= daySlots[i - 1]?.startTime).toBe(true);
       }
     }
   });
@@ -209,14 +211,14 @@ describe("buildSlotsByDayKey", () => {
     // Verify Mar 5 has the 11 PM booked slot
     const mar5 = byDay.get("2026-03-05");
     expect(mar5).toBeDefined();
-    const bookedOnMar5 = mar5!.filter((s) => s.status === "booked");
+    const bookedOnMar5 = mar5?.filter((s) => s.status === "booked") ?? [];
     expect(bookedOnMar5).toHaveLength(1);
-    expect(bookedOnMar5[0]!.startTime).toBe("2026-03-05T15:00:00.000Z");
+    expect(bookedOnMar5[0]?.startTime).toBe("2026-03-05T15:00:00.000Z");
 
     // Verify Mar 6 has midnight and 1 AM booked
     const mar6 = byDay.get("2026-03-06");
     expect(mar6).toBeDefined();
-    const bookedOnMar6 = mar6!.filter((s) => s.status === "booked");
+    const bookedOnMar6 = mar6?.filter((s) => s.status === "booked") ?? [];
     expect(bookedOnMar6).toHaveLength(2);
   });
 });
@@ -249,6 +251,40 @@ describe("getPlaceVerificationDisplay", () => {
 
     expect(result.showBooking).toBe(true);
     expect(result.verificationMessage).toBe("Verified for reservations");
+  });
+
+  it("keeps booking visible for pending venues and shows a warning message", () => {
+    const result = getPlaceVerificationDisplay({
+      placeType: "RESERVABLE",
+      verificationStatus: "PENDING",
+      reservationsEnabled: true,
+      hasPaymentMethods: true,
+    });
+
+    expect(result.showBooking).toBe(true);
+    expect(result.showBookingVerificationUi).toBe(true);
+    expect(result.showVerificationBadge).toBe(false);
+    expect(result.verificationMessage).toBe(
+      "Booking available while verification is pending",
+    );
+    expect(result.verificationStatusVariant).toBe("warning");
+  });
+
+  it("keeps booking visible for rejected venues and shows a warning message", () => {
+    const result = getPlaceVerificationDisplay({
+      placeType: "RESERVABLE",
+      verificationStatus: "REJECTED",
+      reservationsEnabled: true,
+      hasPaymentMethods: true,
+    });
+
+    expect(result.showBooking).toBe(true);
+    expect(result.showBookingVerificationUi).toBe(true);
+    expect(result.showVerificationBadge).toBe(false);
+    expect(result.verificationMessage).toBe(
+      "Booking available while verification needs updates",
+    );
+    expect(result.verificationStatusVariant).toBe("destructive");
   });
 
   it("prioritizes verification status messaging ahead of payment messaging", () => {

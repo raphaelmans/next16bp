@@ -23,10 +23,8 @@ import type {
 import {
   NoPaymentMethodError,
   NotPlaceOwnerError,
-  PlaceNotBookableError,
   PlaceVerificationAlreadyPendingError,
   PlaceVerificationDocumentsRequiredError,
-  PlaceVerificationNotFoundError,
 } from "../errors/place-verification.errors";
 import type {
   IPlaceVerificationRepository,
@@ -272,13 +270,6 @@ export class PlaceVerificationService implements IPlaceVerificationService {
     const verification = await this.placeVerificationRepository.findByPlaceId(
       data.placeId,
     );
-    if (!verification) {
-      throw new PlaceVerificationNotFoundError(data.placeId);
-    }
-
-    if (data.enabled && verification.status !== "VERIFIED") {
-      throw new PlaceNotBookableError(data.placeId);
-    }
 
     if (data.enabled) {
       const paymentMethods =
@@ -293,7 +284,11 @@ export class PlaceVerificationService implements IPlaceVerificationService {
       }
     }
 
-    await this.placeVerificationRepository.update(data.placeId, {
+    await this.placeVerificationRepository.upsert({
+      placeId: data.placeId,
+      status: verification?.status ?? "UNVERIFIED",
+      verifiedAt: verification?.verifiedAt ?? null,
+      verifiedByUserId: verification?.verifiedByUserId ?? null,
       reservationsEnabled: data.enabled,
       reservationsEnabledAt: data.enabled ? new Date() : null,
     });
