@@ -18,13 +18,13 @@ import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
   useModOwnerCourtFilter,
   useModOwnerPlaceFilter,
-  useModReservationAlerts,
   useMutAcceptReservation,
   useMutConfirmReservation,
   useMutRejectReservation,
   useQueryOwnerCourts,
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
+  useQueryOwnerReservationAlertsProjection,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -68,10 +68,13 @@ export function ReservationAlertsPanel({
       : appRoutes.organization.reservationsActive;
   }, [courtId, placeId]);
 
-  const alertsQuery = useModReservationAlerts(effectiveOrganizationId, {
-    placeId: placeId || undefined,
-    courtId: courtId || undefined,
-  });
+  const alertsQuery = useQueryOwnerReservationAlertsProjection(
+    effectiveOrganizationId,
+    {
+      placeId: placeId || undefined,
+      courtId: courtId || undefined,
+    },
+  );
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();

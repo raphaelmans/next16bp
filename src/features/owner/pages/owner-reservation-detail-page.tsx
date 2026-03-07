@@ -23,11 +23,11 @@ import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
   useModOwnerReservationRealtimeStream,
-  useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
   useMutRejectReservation,
   useQueryOwnerOrganization,
+  useQueryOwnerReservationEntity,
   useQueryOwnerReservationHistory,
   useQueryReservationLinkedDetail,
 } from "@/features/owner/hooks";
@@ -100,15 +100,14 @@ export default function OwnerReservationDetailPage({
     isLoading: orgLoading,
   } = useQueryOwnerOrganization();
 
-  const { data: reservations = [], isLoading } = useModOwnerReservations(
+  const { data: reservation, isLoading } = useQueryOwnerReservationEntity(
     organization?.id ?? null,
-    { reservationId },
+    reservationId,
   );
 
   const { data: history = [], isLoading: historyLoading } =
     useQueryOwnerReservationHistory({ reservationId });
 
-  const reservation = reservations[0];
   useModOwnerReservationRealtimeStream({
     enabled: Boolean(organization?.id && reservationId),
     reservationIds: [reservationId],

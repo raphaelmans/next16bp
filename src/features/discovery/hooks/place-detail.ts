@@ -7,9 +7,14 @@ import {
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
 import type { PricingBreakdown } from "@/common/pricing-breakdown";
+import {
+  normalizeAvailabilityCourtDayInput,
+  normalizeAvailabilityPlaceSportDayInput,
+} from "@/common/query-keys";
 import { getZonedStartOfDayIso, toUtcISOString } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
 import { getDiscoveryApi } from "../api.runtime";
+import { useModDiscoveryAvailabilityRealtimeSync } from "../realtime";
 
 const discoveryApi = getDiscoveryApi();
 
@@ -527,13 +532,13 @@ export function useModPlaceAvailability({
   const courtQuery = useFeatureQuery(
     ["availability", "getForCourt"],
     discoveryApi.queryAvailabilityGetForCourt,
-    {
+    normalizeAvailabilityCourtDayInput({
       courtId: courtId ?? "",
       date: dateIso,
       durationMinutes: safeDuration,
       includeUnavailable,
       selectedAddons,
-    },
+    }),
     {
       enabled:
         !!courtId &&
@@ -541,14 +546,57 @@ export function useModPlaceAvailability({
         safeDuration > 0 &&
         mode === "court" &&
         !!place?.id,
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
       placeholderData: (prev) => prev,
     },
   );
+  useModDiscoveryAvailabilityRealtimeSync({
+    enabled:
+      !!courtId &&
+      !!date &&
+      safeDuration > 0 &&
+      mode === "court" &&
+      !!place?.id,
+    courtDayInput: {
+      courtId: courtId ?? "",
+      date: dateIso,
+      durationMinutes: safeDuration,
+      includeUnavailable,
+      selectedAddons,
+    },
+  });
 
   const placeQuery = useFeatureQuery(
     ["availability", "getForPlaceSport"],
     discoveryApi.queryAvailabilityGetForPlaceSport,
+    normalizeAvailabilityPlaceSportDayInput({
+      placeId: place?.id ?? "",
+      sportId: sportId ?? "",
+      date: dateIso,
+      durationMinutes: safeDuration,
+      includeUnavailable,
+      includeCourtOptions,
+      selectedAddons,
+    }),
     {
+      enabled:
+        !!place?.id &&
+        !!sportId &&
+        !!date &&
+        safeDuration > 0 &&
+        mode === "any",
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      placeholderData: (prev) => prev,
+    },
+  );
+  useModDiscoveryAvailabilityRealtimeSync({
+    enabled:
+      !!place?.id && !!sportId && !!date && safeDuration > 0 && mode === "any",
+    placeSportDayInput: {
       placeId: place?.id ?? "",
       sportId: sportId ?? "",
       date: dateIso,
@@ -557,16 +605,7 @@ export function useModPlaceAvailability({
       includeCourtOptions,
       selectedAddons,
     },
-    {
-      enabled:
-        !!place?.id &&
-        !!sportId &&
-        !!date &&
-        safeDuration > 0 &&
-        mode === "any",
-      placeholderData: (prev) => prev,
-    },
-  );
+  });
 
   const activeQuery = mode === "court" ? courtQuery : placeQuery;
   const responseData = activeQuery.data;

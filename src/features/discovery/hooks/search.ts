@@ -12,10 +12,16 @@ import {
   findProvinceBySlug,
 } from "@/common/ph-location-data";
 import {
+  normalizeAvailabilityCourtDayInput,
+  normalizeAvailabilityCourtRangeInput,
+  normalizeAvailabilityPlaceSportRangeInput,
+} from "@/common/query-keys";
+import {
   mapPlaceSummary,
   type PlaceSummary,
 } from "@/features/discovery/helpers";
 import { getDiscoveryApi } from "../api.runtime";
+import { useModDiscoveryAvailabilityRealtimeSync } from "../realtime";
 
 const discoveryApi = getDiscoveryApi();
 
@@ -76,11 +82,21 @@ export function useQueryDiscoveryAvailabilityForCourt(
   input: DiscoveryAvailabilityForCourtInput,
   enabled: boolean,
 ) {
+  const normalizedInput = normalizeAvailabilityCourtDayInput(input);
+  useModDiscoveryAvailabilityRealtimeSync({
+    enabled,
+    courtDayInput: normalizedInput,
+  });
   return useFeatureQuery(
     ["availability", "getForCourt"],
     discoveryApi.queryAvailabilityGetForCourt,
-    input,
-    { enabled },
+    normalizedInput,
+    {
+      enabled,
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+    },
   );
 }
 
@@ -88,11 +104,21 @@ export function useQueryDiscoveryAvailabilityForCourtRange(
   input: DiscoveryAvailabilityForCourtRangeInput,
   enabled: boolean,
 ) {
+  const normalizedInput = normalizeAvailabilityCourtRangeInput(input);
+  useModDiscoveryAvailabilityRealtimeSync({
+    enabled,
+    courtRangeInput: normalizedInput,
+  });
   return useFeatureQuery(
     ["availability", "getForCourtRange"],
     discoveryApi.queryAvailabilityGetForCourtRange,
-    input,
-    { enabled },
+    normalizedInput,
+    {
+      enabled,
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+    },
   );
 }
 
@@ -100,11 +126,21 @@ export function useQueryDiscoveryAvailabilityForPlaceSportRange(
   input: DiscoveryAvailabilityForPlaceSportRangeInput,
   enabled: boolean,
 ) {
+  const normalizedInput = normalizeAvailabilityPlaceSportRangeInput(input);
+  useModDiscoveryAvailabilityRealtimeSync({
+    enabled,
+    placeSportRangeInput: normalizedInput,
+  });
   return useFeatureQuery(
     ["availability", "getForPlaceSportRange"],
     discoveryApi.queryAvailabilityGetForPlaceSportRange,
-    input,
-    { enabled },
+    normalizedInput,
+    {
+      enabled,
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+    },
   );
 }
 

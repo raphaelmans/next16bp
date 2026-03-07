@@ -5,7 +5,7 @@ export const OWNER_GET_STARTED_FAQS = [
     id: "is-free",
     question: "Is KudosCourts really free?",
     answer:
-      "The essentials are free: reservation inbox, Availability Studio, court management, guest profiles, team access with roles and permissions, multi-channel notifications, verified badge, and P2P payment coordination. No subscription fee for core setup.",
+      "The essentials are free: reservation inbox, Availability Studio, court management, guest profiles, team access with roles and permissions, multi-channel notifications, analytics dashboards, verified badge, and P2P payment coordination. No subscription fee for core setup.",
   },
   {
     id: "payments",
@@ -54,12 +54,6 @@ export const OWNER_GET_STARTED_FAQS = [
     question: "How do notifications work?",
     answer:
       "Notifications are delivered through five channels: in-app inbox, web push, mobile push, email, and SMS. Each team member manages their own notification preferences and can opt in to reservation alerts per venue.",
-  },
-  {
-    id: "business-plus",
-    question: "What is Business Plus?",
-    answer:
-      "Business Plus is an upcoming premium tier with analytics, unlimited in-app chat, SEO and AI search visibility tools, and integrations.",
   },
   {
     id: "availability-studio",

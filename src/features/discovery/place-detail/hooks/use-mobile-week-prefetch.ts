@@ -1,6 +1,10 @@
 "use client";
 
 import * as React from "react";
+import {
+  normalizeAvailabilityCourtRangeInput,
+  normalizeAvailabilityPlaceSportRangeInput,
+} from "@/common/query-keys";
 import { getZonedDayRangeForInstant, toUtcISOString } from "@/common/time-zone";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
 import type { RouterInputs } from "@/trpc/types";
@@ -117,7 +121,7 @@ export function useModMobileWeekPrefetch({
     const prefetchWeek = async () => {
       try {
         if (selectionMode === "any") {
-          const input = {
+          const input = normalizeAvailabilityPlaceSportRangeInput({
             placeId,
             sportId: selectedSportId ?? "",
             startDate,
@@ -125,19 +129,19 @@ export function useModMobileWeekPrefetch({
             durationMinutes,
             includeUnavailable: true,
             includeCourtOptions: false,
-          };
+          });
 
           if (!utils.availability.getForPlaceSportRange.getData(input)) {
             await utils.availability.getForPlaceSportRange.fetch(input);
           }
         } else {
-          const input = {
+          const input = normalizeAvailabilityCourtRangeInput({
             courtId: selectedCourtId ?? "",
             startDate,
             endDate,
             durationMinutes,
             includeUnavailable: true,
-          };
+          });
 
           if (!utils.availability.getForCourtRange.getData(input)) {
             await utils.availability.getForCourtRange.fetch(input);

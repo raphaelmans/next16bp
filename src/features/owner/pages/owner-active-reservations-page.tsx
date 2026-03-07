@@ -36,13 +36,13 @@ import {
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
   useModOwnerReservationRealtimeStream,
-  useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
   useMutRejectReservation,
   useQueryOwnerCourts,
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
+  useQueryOwnerReservationSummaries,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -106,7 +106,7 @@ export default function OwnerActiveReservationsPage() {
     data: reservations = [],
     isLoading,
     isFetching,
-  } = useModOwnerReservations(organization?.id ?? null, {
+  } = useQueryOwnerReservationSummaries(organization?.id ?? null, {
     placeId: placeId || undefined,
     courtId: courtId || undefined,
     status: "all",

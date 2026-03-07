@@ -4,6 +4,7 @@ import * as React from "react";
 import { trpc } from "@/trpc/client";
 
 export * from "./analytics";
+export * from "./availability-sync";
 export * from "./bookings-import";
 export * from "./court-addons";
 export * from "./court-hours";

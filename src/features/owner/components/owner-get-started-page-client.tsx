@@ -1,7 +1,9 @@
 "use client";
 
 import {
+  Activity,
   ArrowRight,
+  BarChart3,
   Bell,
   Building2,
   CheckCircle,
@@ -301,18 +303,10 @@ const BETA_FEATURES = [
   {
     id: "chat",
     title: "In-App Chat",
-    description:
-      "Message players inside the booking context. Limited in free tier — unlimited with Business Plus.",
+    description: "Message players inside the booking context.",
     icon: MessageSquare,
-    badge: "Beta · Limited",
+    badge: "Beta",
   },
-];
-
-const BUSINESS_PLUS_FEATURES = [
-  "Analytics dashboards — occupancy, revenue, booking patterns",
-  "Unlimited in-app chat — no message limits, enhanced coordination",
-  'SEO & AI search visibility — rank for "courts in [your city]" searches',
-  "Integrations — connect with your existing tools and channels",
 ];
 
 const STEPS = [
@@ -352,13 +346,6 @@ const STEPS = [
 
 const PERKS = [
   {
-    id: "business-plus",
-    emoji: "⭐",
-    title: "6 months of Business Plus — free",
-    description:
-      "Automatically included when the premium tier launches. Analytics, unlimited chat, SEO tools, and integrations.",
-  },
-  {
     id: "featured",
     emoji: "📍",
     title: "3 months featured placement",
@@ -373,6 +360,12 @@ const PERKS = [
       "We work closely with you to ensure reliability. Your feedback shapes the platform directly.",
   },
 ];
+
+const HEATMAP_CELLS = [
+  [20, 30, 50, 40, 60, 80, 90],
+  [10, 25, 45, 55, 70, 85, 75],
+  [15, 35, 60, 50, 75, 95, 80],
+].flatMap((row, ri) => row.map((v, ci) => ({ key: `r${ri}c${ci}`, v })));
 
 const colorMap = {
   primary: { bg: "bg-primary/10", text: "text-primary" },
@@ -1013,37 +1006,133 @@ export default function OwnersGetStartedPage() {
       </section>
 
       {/* ----------------------------------------------------------------- */}
-      {/* BUSINESS PLUS                                                      */}
+      {/* ANALYTICS                                                          */}
       {/* ----------------------------------------------------------------- */}
       <section className="py-10 sm:py-14">
         <Container size="xl">
-          <Card className="border-border/60">
-            <CardContent className="flex flex-col gap-6 p-6 sm:flex-row sm:items-start sm:p-8">
-              <div className="flex-1 space-y-3">
-                <Badge
-                  variant="outline"
-                  className="border-primary/30 text-primary"
-                >
-                  Coming Soon
-                </Badge>
-                <h3 className="font-heading text-xl font-bold tracking-tight">
-                  Business Plus
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  For venues that want more operational depth. Everything in the
-                  essentials stay free — Business Plus adds premium tools.
-                </p>
-              </div>
-              <div className="flex-1 space-y-2">
-                {BUSINESS_PLUS_FEATURES.map((feat) => (
-                  <div key={feat} className="flex items-start gap-2">
-                    <CheckCircle className="h-4 w-4 shrink-0 text-primary mt-0.5" />
-                    <p className="text-sm text-muted-foreground">{feat}</p>
+          <div className="space-y-2 text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+              Analytics
+            </p>
+            <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
+              Know how your venue performs.
+            </h2>
+            <p className="mx-auto max-w-xl text-muted-foreground">
+              Three dashboards built in — revenue, utilization, and operations.
+              No spreadsheets needed.
+            </p>
+          </div>
+
+          <div className="mx-auto mt-8 grid max-w-5xl gap-4 md:grid-cols-3">
+            {/* Revenue */}
+            <Card className="border-border/60 bg-card hover:border-border hover:shadow-md transition-all">
+              <CardHeader className="space-y-1.5 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Wallet className="h-4 w-4" />
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <CardTitle className="font-heading text-base">
+                    Revenue
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-sm">
+                  Total earnings, average booking value, and daily trends with
+                  period-over-period comparison.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-end gap-1 h-16" aria-hidden>
+                  {[35, 50, 40, 65, 55, 80, 70, 90, 60, 75, 85, 95].map((h) => (
+                    <div
+                      key={h}
+                      className="flex-1 rounded-sm bg-primary/20"
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Per court & day-of-week</span>
+                  <span className="font-medium text-primary">+12%</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Utilization */}
+            <Card className="border-border/60 bg-card hover:border-border hover:shadow-md transition-all">
+              <CardHeader className="space-y-1.5 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <BarChart3 className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="font-heading text-base">
+                    Utilization
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-sm">
+                  Court occupancy rates, peak vs. off-peak usage, and a day×hour
+                  heatmap.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="grid grid-cols-7 gap-0.5 h-16" aria-hidden>
+                  {HEATMAP_CELLS.map((cell) => (
+                    <div
+                      key={cell.key}
+                      className="rounded-[2px]"
+                      style={{
+                        backgroundColor: `hsl(var(--primary) / ${cell.v / 100})`,
+                      }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Heatmap by day & hour</span>
+                  <span className="font-medium text-primary">72% peak</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Operations */}
+            <Card className="border-border/60 bg-card hover:border-border hover:shadow-md transition-all">
+              <CardHeader className="space-y-1.5 pb-3">
+                <div className="flex items-center gap-2">
+                  <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                    <Activity className="h-4 w-4" />
+                  </div>
+                  <CardTitle className="font-heading text-base">
+                    Operations
+                  </CardTitle>
+                </div>
+                <CardDescription className="text-sm">
+                  Response times, cancellation rates, lead time distribution,
+                  and booking volume by hour.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <div className="flex items-end gap-1 h-16" aria-hidden>
+                  {[90, 70, 45, 25, 15, 8].map((h) => (
+                    <div
+                      key={h}
+                      className="flex-1 rounded-sm bg-primary/15"
+                      style={{ height: `${h}%` }}
+                    />
+                  ))}
+                </div>
+                <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
+                  <span>Response time distribution</span>
+                  <span className="font-medium text-primary">~12 min</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mx-auto mt-6 max-w-5xl rounded-xl border border-primary/20 bg-primary/5 px-5 py-4 text-center">
+            <p className="text-sm text-muted-foreground">
+              All dashboards are{" "}
+              <strong className="text-foreground">included free</strong> —
+              filter by date range, compare periods, and drill down by court.
+            </p>
+          </div>
         </Container>
       </section>
 

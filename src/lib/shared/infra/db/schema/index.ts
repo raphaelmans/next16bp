@@ -3,6 +3,7 @@
  * Import individual table schemas here as they are created.
  */
 
+export * from "./availability-change-event";
 // Bookings import tables
 export * from "./bookings-import-job";
 export * from "./bookings-import-row";

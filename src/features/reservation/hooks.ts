@@ -6,16 +6,16 @@ import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect, useMemo, useRef } from "react";
 import { appRoutes } from "@/common/app-routes";
 import {
-  createFeatureQueryOptions,
   useFeatureMutation,
-  useFeatureQueries,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { normalizePlayerReservationSummaryScopeInput } from "@/common/query-keys";
 import { toast } from "@/common/toast";
 import { buildTrpcQueryKey } from "@/common/trpc-client-call";
 import { trpc } from "@/trpc/client";
 import { getReservationApi } from "./api.runtime";
 import { getReservationRealtimeApi } from "./realtime-api.runtime";
+import { useModReservationSync } from "./sync";
 
 const reservationApi = getReservationApi();
 const reservationRealtimeApi = getReservationRealtimeApi();
@@ -30,7 +30,7 @@ const reservationRealtimeApi = getReservationRealtimeApi();
  */
 export function useMutCancelReservation() {
   const router = useRouter();
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationCancel, {
     onSuccess: async (_data, variables) => {
@@ -38,17 +38,7 @@ export function useMutCancelReservation() {
         .reservationId;
       toast.success("Reservation cancelled successfully");
 
-      await Promise.all([
-        utils.reservation.getById.invalidate({
-          reservationId,
-        }),
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        utils.reservationChat.getSession.invalidate({
-          reservationId,
-        }),
-      ]);
+      await syncPlayerReservationChange({ reservationId });
 
       router.push(appRoutes.reservations.base);
     },
@@ -66,7 +56,7 @@ export function useMutCancelReservation() {
 // ============================================================================
 
 export function useMutCreateReservationForAnyCourt() {
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationCreateForAnyCourt, {
     onSuccess: async (data) => {
@@ -77,12 +67,7 @@ export function useMutCreateReservationForAnyCourt() {
             ? "Reservation accepted! Please complete payment."
             : "Reservation confirmed!";
       toast.success(message);
-      await Promise.all([
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        utils.reservationChat.getSession.invalidate({ reservationId: data.id }),
-      ]);
+      await syncPlayerReservationChange({ reservationId: data.id });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create reservation");
@@ -91,16 +76,12 @@ export function useMutCreateReservationForAnyCourt() {
 }
 
 export function useMutCreateReservationGroup() {
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationOverview } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationCreateGroup, {
     onSuccess: async () => {
       toast.success("Multi-court reservation request sent!");
-      await Promise.all([
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-      ]);
+      await syncPlayerReservationOverview();
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create multi-court reservation");
@@ -113,7 +94,7 @@ export function useMutCreateReservationGroup() {
 // ============================================================================
 
 export function useMutCreateReservationForCourt() {
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationCreateForCourt, {
     onSuccess: async (data) => {
@@ -124,12 +105,7 @@ export function useMutCreateReservationForCourt() {
             ? "Reservation accepted! Please complete payment."
             : "Reservation confirmed!";
       toast.success(message);
-      await Promise.all([
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        utils.reservationChat.getSession.invalidate({ reservationId: data.id }),
-      ]);
+      await syncPlayerReservationChange({ reservationId: data.id });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to create reservation");
@@ -146,7 +122,7 @@ export function useMutCreateReservationForCourt() {
  * Connected to reservation.markPayment tRPC endpoint
  */
 export function useMutMarkPayment() {
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationMarkPayment, {
     onSuccess: async (data, variables) => {
@@ -164,20 +140,7 @@ export function useMutMarkPayment() {
         },
       );
 
-      await Promise.all([
-        utils.reservation.getById.invalidate({
-          reservationId,
-        }),
-        utils.reservation.getDetail.invalidate({
-          reservationId,
-        }),
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        utils.reservationChat.getSession.invalidate({
-          reservationId,
-        }),
-      ]);
+      await syncPlayerReservationChange({ reservationId });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to submit payment");
@@ -186,7 +149,7 @@ export function useMutMarkPayment() {
 }
 
 export function useMutMarkPaymentLinked() {
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(reservationApi.mutReservationMarkPaymentLinked, {
     onSuccess: async (data, variables) => {
@@ -200,19 +163,11 @@ export function useMutMarkPaymentLinked() {
         data as { reservations: { id: string }[] }
       ).reservations.map((r) => r.id);
 
-      await Promise.all([
-        utils.reservation.getLinkedDetail.invalidate({
-          reservationId,
-        }),
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        ...reservationIds.flatMap((reservationId) => [
-          utils.reservation.getDetail.invalidate({ reservationId }),
-          utils.reservation.getById.invalidate({ reservationId }),
-          utils.reservationChat.getSession.invalidate({ reservationId }),
-        ]),
-      ]);
+      await syncPlayerReservationChange({
+        reservationId,
+        reservationIds,
+        includeLinkedDetail: true,
+      });
     },
     onError: (error) => {
       toast.error(error.message || "Failed to submit group payment");
@@ -443,15 +398,16 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
   const { tab = "upcoming", page = 1, limit = 100, enabled = true } = options;
   const offset = (page - 1) * limit;
   const status = getStatusFilter(tab);
+  const queryInput = normalizePlayerReservationSummaryScopeInput({
+    status,
+    limit,
+    offset,
+  });
 
   const query = useFeatureQuery(
     ["reservation", "getMyWithDetails"],
     reservationApi.queryReservationGetMyWithDetails,
-    {
-      status,
-      limit,
-      offset,
-    },
+    queryInput,
     { enabled },
   );
 
@@ -532,67 +488,41 @@ export function useModMyReservations(options: UseMyReservationsOptions = {}) {
   };
 }
 
+export function useQueryMyReservationSummaries(
+  options: UseMyReservationsOptions = {},
+) {
+  return useModMyReservations(options);
+}
+
 /**
  * Hook to get reservation counts by tab
  * This fetches counts for each tab to display badges
  */
 export function useQueryReservationCounts() {
-  const [allQuery, confirmedQuery, cancelledQuery, expiredQuery] =
-    useFeatureQueries([
-      createFeatureQueryOptions(
-        ["reservation", "getMyWithDetails"],
-        reservationApi.queryReservationGetMyWithDetails,
-        {
-          limit: 100,
-          offset: 0,
-        },
-      ),
-      createFeatureQueryOptions(
-        ["reservation", "getMyWithDetails"],
-        reservationApi.queryReservationGetMyWithDetails,
-        {
-          status: "CONFIRMED",
-          limit: 100,
-          offset: 0,
-        },
-      ),
-      createFeatureQueryOptions(
-        ["reservation", "getMyWithDetails"],
-        reservationApi.queryReservationGetMyWithDetails,
-        {
-          status: "CANCELLED",
-          limit: 100,
-          offset: 0,
-        },
-      ),
-      createFeatureQueryOptions(
-        ["reservation", "getMyWithDetails"],
-        reservationApi.queryReservationGetMyWithDetails,
-        {
-          status: "EXPIRED",
-          limit: 100,
-          offset: 0,
-        },
-      ),
-    ] as const);
+  const allQuery = useFeatureQuery(
+    ["reservation", "getMyWithDetails"],
+    reservationApi.queryReservationGetMyWithDetails,
+    {
+      limit: 100,
+      offset: 0,
+    },
+  );
 
   const now = new Date();
 
   const allAggregated = aggregateGroupedItems(allQuery.data ?? []);
-  const confirmedAggregated = aggregateGroupedItems(confirmedQuery.data ?? []);
-  const cancelledAggregated = aggregateGroupedItems(cancelledQuery.data ?? []);
-  const expiredAggregated = aggregateGroupedItems(expiredQuery.data ?? []);
-
   const pendingCount = allAggregated.filter((item) =>
     isPendingReservation(item),
   ).length;
-  const upcomingCount = confirmedAggregated.filter((item) =>
+  const upcomingCount = allAggregated.filter((item) =>
     isUpcomingReservation(item, now),
   ).length;
-  const pastCount = confirmedAggregated.filter((item) =>
+  const pastCount = allAggregated.filter((item) =>
     isPastReservation(item, now),
   ).length;
-  const cancelledCount = cancelledAggregated.length + expiredAggregated.length;
+  const cancelledCount = allAggregated.filter((item) =>
+    isCancelledReservation(item),
+  ).length;
 
   return {
     data: {
@@ -601,11 +531,7 @@ export function useQueryReservationCounts() {
       past: pastCount,
       cancelled: cancelledCount,
     },
-    isLoading:
-      allQuery.isLoading ||
-      confirmedQuery.isLoading ||
-      cancelledQuery.isLoading ||
-      expiredQuery.isLoading,
+    isLoading: allQuery.isLoading,
   };
 }
 
@@ -779,7 +705,7 @@ export function useModReservationRealtimePlayerStream(
   options: UseReservationRealtimePlayerStreamOptions = {},
 ) {
   const { reservationIds, enabled = true } = options;
-  const utils = trpc.useUtils();
+  const { syncPlayerReservationChange } = useModReservationSync();
   const processedEventIdsRef = useRef<string[]>([]);
 
   const reservationIdsKey = useMemo(
@@ -810,28 +736,17 @@ export function useModReservationRealtimePlayerStream(
           );
         }
 
-        void Promise.all([
-          utils.reservation.getById.invalidate({
-            reservationId: event.reservationId,
-          }),
-          utils.reservation.getDetail.invalidate({
-            reservationId: event.reservationId,
-          }),
-          utils.reservation.getLinkedDetail.invalidate(),
-          utils.reservation.getMy.invalidate(),
-          utils.reservation.getMyWithDetails.invalidate(),
-          utils.reservationChat.getThreadMetas.invalidate(),
-          utils.reservationChat.getSession.invalidate({
-            reservationId: event.reservationId,
-          }),
-        ]);
+        void syncPlayerReservationChange({
+          reservationId: event.reservationId,
+          includeLinkedDetail: true,
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [enabled, reservationIdsKey, utils]);
+  }, [enabled, reservationIdsKey, syncPlayerReservationChange]);
 }
 
 export function useMutAddPaymentProof() {

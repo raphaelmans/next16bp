@@ -1,6 +1,6 @@
 "use client";
 
-import { Check } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Empty,
@@ -118,17 +118,31 @@ export function NotificationInbox(props: {
                 <button
                   key={item.id}
                   type="button"
-                  className="w-full text-left rounded-lg hover:bg-muted/50 transition-colors duration-150"
-                  onClick={() => onItemClick(item)}
+                  className={cn(
+                    "group w-full text-left rounded-lg transition-colors duration-150",
+                    !isRead || item.href
+                      ? "hover:bg-muted/50 cursor-pointer"
+                      : "cursor-default",
+                  )}
+                  onClick={() => {
+                    if (!isRead) {
+                      onMarkAsRead(item);
+                    } else if (item.href) {
+                      onItemClick(item);
+                    }
+                  }}
                 >
                   <Item
                     size="sm"
                     variant="default"
                     className={cn(
-                      "w-full cursor-pointer border-l-2",
+                      "w-full border-l-2",
                       isRead
                         ? "border-l-transparent"
                         : "border-l-primary bg-primary/[0.04]",
+                      isRead &&
+                        item.href &&
+                        "group-active:scale-[0.98] transition-transform duration-100",
                     )}
                   >
                     <ItemContent>
@@ -145,19 +159,6 @@ export function NotificationInbox(props: {
                           <span className="text-xs text-muted-foreground">
                             {formatRelativeTime(item.createdAt)}
                           </span>
-                          {!isRead ? (
-                            <button
-                              type="button"
-                              className="inline-flex h-6 w-6 items-center justify-center rounded-full text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                onMarkAsRead(item);
-                              }}
-                              aria-label="Mark as read"
-                            >
-                              <Check className="h-3 w-3" />
-                            </button>
-                          ) : null}
                         </div>
                       </ItemHeader>
                       <div className="flex items-start gap-2">
@@ -167,6 +168,19 @@ export function NotificationInbox(props: {
                         <ItemDescription className="line-clamp-2">
                           {item.body ?? "Open notification"}
                         </ItemDescription>
+                        {item.href ? (
+                          <button
+                            type="button"
+                            className="ml-auto inline-flex items-center self-center"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onItemClick(item);
+                            }}
+                            aria-label="Go to notification"
+                          >
+                            <ChevronRight className="text-muted-foreground h-4 w-4 shrink-0 [@media(hover:hover)]:group-hover:translate-x-0.5 transition-transform duration-150" />
+                          </button>
+                        ) : null}
                       </div>
                     </ItemContent>
                   </Item>

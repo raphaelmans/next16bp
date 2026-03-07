@@ -30,11 +30,11 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   OwnerNavbar,
@@ -91,7 +91,13 @@ import {
 import { useIs2xlUp } from "@/features/owner/components/booking-studio/use-is-2xl-up";
 import { useManageBlock } from "@/features/owner/components/booking-studio/use-manage-block";
 import {
+  appendAvailabilityBlock,
+  reconcileAvailabilityBlockInRange,
+  removeAvailabilityBlock,
+  replaceAvailabilityBlock,
+  updateAvailabilityBlockRange,
   useModCourtHours,
+  useModOwnerAvailabilityReservationSync,
   useModOwnerCourtFilter,
   useModOwnerCourtStudioTransport,
   useModOwnerInvalidation,
@@ -333,6 +339,9 @@ function OwnerAvailabilityStudioInner() {
 
   const blocksQuery = useQueryOwnerCourtBlocksForRange(blocksQueryInput, {
     enabled: Boolean(courtId),
+    staleTime: 30_000,
+    refetchOnWindowFocus: true,
+    refetchOnReconnect: true,
     placeholderData: keepPreviousData,
   });
 
@@ -347,8 +356,19 @@ function OwnerAvailabilityStudioInner() {
 
   const reservationsQuery = useQueryOwnerActiveReservationsForCourtRange(
     reservationsQueryInput,
-    { enabled: Boolean(courtId), placeholderData: keepPreviousData },
+    {
+      enabled: Boolean(courtId),
+      staleTime: 30_000,
+      refetchOnWindowFocus: true,
+      refetchOnReconnect: true,
+      placeholderData: keepPreviousData,
+    },
   );
+
+  useModOwnerAvailabilityReservationSync({
+    enabled: Boolean(courtId),
+    reservationsQueryInput,
+  });
 
   const [isRefreshingAvailability, setIsRefreshingAvailability] =
     React.useState(false);
@@ -544,7 +564,7 @@ function OwnerAvailabilityStudioInner() {
       };
 
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        old ? [...old, optimisticBlock] : [optimisticBlock],
+        appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -575,12 +595,8 @@ function OwnerAvailabilityStudioInner() {
         serverBlock,
         context?.optimisticId,
       );
-      utils.courtBlock.listForCourtRange.setData(
-        blocksQueryInput,
-        (old) =>
-          old?.map((block) =>
-            block.id === context?.optimisticId ? nextBlock : block,
-          ) ?? [nextBlock],
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -615,7 +631,7 @@ function OwnerAvailabilityStudioInner() {
       };
 
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        old ? [...old, optimisticBlock] : [optimisticBlock],
+        appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -646,12 +662,8 @@ function OwnerAvailabilityStudioInner() {
         serverBlock,
         context?.optimisticId,
       );
-      utils.courtBlock.listForCourtRange.setData(
-        blocksQueryInput,
-        (old) =>
-          old?.map((block) =>
-            block.id === context?.optimisticId ? nextBlock : block,
-          ) ?? [nextBlock],
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -668,9 +680,8 @@ function OwnerAvailabilityStudioInner() {
       const previousBlocks =
         utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
 
-      utils.courtBlock.listForCourtRange.setData(
-        blocksQueryInput,
-        (old) => old?.filter((block) => block.id !== variables.blockId) ?? [],
+      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+        removeAvailabilityBlock(old, variables.blockId),
       );
       updatePendingBlockId(variables.blockId, 1);
 
@@ -722,12 +733,14 @@ function OwnerAvailabilityStudioInner() {
         const blockEnd = new Date(serverBlock.endTime);
         const isInRange = blockStart < rangeEnd && blockEnd > rangeStart;
 
-        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) => {
-          const existing = old ?? [];
-          const filtered = existing.filter((block) => block.id !== blockId);
-          if (!isInRange) return filtered;
-          return [...filtered, serverBlock];
-        });
+        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
+          reconcileAvailabilityBlockInRange(
+            old,
+            blockId,
+            serverBlock,
+            isInRange,
+          ),
+        );
         toast.success("Block updated");
       } catch (error) {
         const latestVersion = rangeUpdateVersions.current.get(blockId);
@@ -1452,11 +1465,10 @@ function OwnerAvailabilityStudioInner() {
       const nextEndIso = toUtcISOString(next.endTime);
 
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        old?.map((b) =>
-          b.id === args.blockId
-            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
-            : b,
-        ),
+        updateAvailabilityBlockRange(old, args.blockId, {
+          startTime: nextStartIso,
+          endTime: nextEndIso,
+        }),
       );
     },
     [blocksQueryInput, computeNextResizeRange, utils],
@@ -1486,11 +1498,10 @@ function OwnerAvailabilityStudioInner() {
       });
 
       utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        old?.map((b) =>
-          b.id === args.blockId
-            ? { ...b, startTime: nextStartIso, endTime: nextEndIso }
-            : b,
-        ),
+        updateAvailabilityBlockRange(old, args.blockId, {
+          startTime: nextStartIso,
+          endTime: nextEndIso,
+        }),
       );
 
       if (!isOptimisticBlockId(args.blockId)) {

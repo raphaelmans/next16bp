@@ -160,6 +160,11 @@ function makeOwnerService(overrides?: {
     enqueuePlayerReservationRejected: vi.fn().mockResolvedValue(undefined),
     enqueuePlayerReservationGroupRejected: vi.fn().mockResolvedValue(undefined),
   };
+  const availabilityChangeEventService = {
+    emitReservationBooked: vi.fn().mockResolvedValue(undefined),
+    emitReservationReleased: vi.fn().mockResolvedValue(undefined),
+    emitCourtBlockReleased: vi.fn().mockResolvedValue(undefined),
+  };
 
   const expireStaleReservationsUseCase = {
     executeForOrganization: vi.fn().mockResolvedValue(undefined),
@@ -217,6 +222,7 @@ function makeOwnerService(overrides?: {
     } as never,
     expireStaleReservationsUseCase as never,
     notificationDeliveryService as never,
+    availabilityChangeEventService as never,
     undefined,
     undefined,
     undefined,

@@ -14,8 +14,8 @@ import {
 } from "@/components/ui/empty";
 import {
   type ReservationListView,
-  useModMyReservations,
   useModReservationsTabs,
+  useQueryMyReservationSummaries,
 } from "../hooks";
 import { ReservationListItem } from "./reservation-list-item";
 import { ReservationListSkeleton } from "./skeletons";
@@ -54,7 +54,7 @@ export function ReservationList({ tab, isActive }: ReservationListProps) {
   const { tab: activeTab } = useModReservationsTabs();
   const effectiveTab = tab ?? activeTab;
   const isEnabled = isActive ?? effectiveTab === activeTab;
-  const { data, isLoading, isError } = useModMyReservations({
+  const { data, isLoading, isError } = useQueryMyReservationSummaries({
     tab: effectiveTab,
     enabled: isEnabled,
   });

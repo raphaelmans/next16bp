@@ -147,6 +147,10 @@ const createHarness = (options?: {
     enqueueOwnerReservationCreated: vi.fn(async () => undefined),
     enqueueOwnerReservationPaymentMarked: vi.fn(async () => undefined),
   };
+  const availabilityChangeEventServiceFns = {
+    emitReservationBooked: vi.fn(async () => undefined),
+    emitReservationReleased: vi.fn(async () => undefined),
+  };
 
   const service = new ReservationService(
     reservationRepositoryFns as unknown as ReservationServiceDeps[0],
@@ -168,6 +172,7 @@ const createHarness = (options?: {
     courtPriceOverrideRepositoryFns as unknown as ReservationServiceDeps[16],
     { run } as unknown as ReservationServiceDeps[17],
     notificationDeliveryServiceFns as unknown as ReservationServiceDeps[18],
+    availabilityChangeEventServiceFns as unknown as ReservationServiceDeps[19],
   );
 
   return {

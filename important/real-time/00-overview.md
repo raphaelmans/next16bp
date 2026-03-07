@@ -1,0 +1,49 @@
+# Real-Time Architecture
+
+Last updated: 2026-03-07
+
+## Goal
+Capture the current modular real-time architecture after the reservation-first and availability event work.
+
+## High-Level Split
+
+The app intentionally uses two event-driven patterns:
+
+- `Reservation` domain: `event notification`
+  - Realtime event says reservation state changed
+  - Client invalidates scoped canonical queries
+  - Server remains authoritative for shaped reservation projections
+
+- `Availability` domain: `event-carried state transfer`
+  - Realtime event carries slot/bookability state
+  - Client patches matching court-scoped availability caches directly
+  - Aggregate place-sport availability still invalidates/refetches when exact patching is unsafe
+
+## Core Modules
+
+- Reservation sync helper: `src/features/reservation/sync.ts`
+- Availability query keys: `src/common/query-keys/availability.ts`
+- Reservation query keys: `src/common/query-keys/reservation.ts`
+- Discovery realtime consumer: `src/features/discovery/realtime.ts`
+- Owner optimistic availability helpers: `src/features/owner/hooks/availability-sync.ts`
+- Reservation realtime client: `src/common/clients/reservation-realtime-client/index.ts`
+- Availability realtime client: `src/common/clients/availability-realtime-client/index.ts`
+
+## Current Behavior
+
+- Reservation pages, alerts, dashboard, chat context, and inbox sync via scoped invalidation.
+- Court-scoped discovery availability patches directly from `availability_change_event`.
+- Owner availability views use optimistic local patching plus scoped reservation-range invalidation.
+- Place-sport aggregate discovery availability still uses scoped invalidation/refetch.
+- Availability queries use focus/reconnect recovery as drift protection.
+
+## Current Limitation
+
+`place-sport` aggregate availability is not fully direct-patched from realtime.
+
+Reason:
+- those aggregate queries do not currently carry enough per-court option detail to recompute aggregate state safely from a single-court event
+
+Result:
+- court-day and court-range are fast-patched
+- place-sport aggregates refetch authoritatively

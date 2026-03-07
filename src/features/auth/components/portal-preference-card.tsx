@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, Home } from "lucide-react";
+import { Building2, Check, Home } from "lucide-react";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { toast } from "@/common/toast";
@@ -36,13 +36,13 @@ const portalOptions: Array<{
   {
     value: "player",
     title: "Player",
-    description: "Open to player home and discovery by default.",
+    description: "Player home and discovery",
     icon: Home,
   },
   {
     value: "organization",
     title: "Organization",
-    description: "Open to organization dashboard and operations by default.",
+    description: "Dashboard and operations",
     icon: Building2,
   },
 ];
@@ -85,9 +85,9 @@ export function PortalPreferenceCard({
             Choose which view opens when you launch the app
           </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-3">
-          <Skeleton className="h-16 w-full" />
-          <Skeleton className="h-16 w-full" />
+        <CardContent className="grid gap-3 sm:grid-cols-2">
+          <Skeleton className="h-[88px] w-full rounded-lg" />
+          <Skeleton className="h-[88px] w-full rounded-lg" />
         </CardContent>
       </Card>
     );
@@ -118,25 +118,39 @@ export function PortalPreferenceCard({
                 key={option.value}
                 htmlFor={inputId}
                 className={cn(
-                  "flex cursor-pointer items-start gap-3 rounded-lg border p-4 transition-colors",
+                  "relative flex cursor-pointer flex-col items-center gap-2 rounded-lg border-2 px-4 py-5 text-center transition-all",
                   isSelected
-                    ? "border-primary bg-primary/5"
-                    : "hover:bg-muted/40",
-                  mutation.isPending && "opacity-80",
+                    ? "border-primary bg-primary/5 shadow-sm"
+                    : "border-transparent bg-muted/30 hover:bg-muted/50",
+                  mutation.isPending && "pointer-events-none opacity-70",
                 )}
               >
                 <RadioGroupItem
                   id={inputId}
                   value={option.value}
                   disabled={mutation.isPending}
-                  className="mt-0.5"
+                  className="sr-only"
                 />
-                <div className="space-y-1">
-                  <div className="flex items-center gap-2 text-sm font-heading font-semibold">
-                    <Icon className="h-4 w-4" />
-                    <span>{option.title}</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground">
+                {isSelected && (
+                  <span className="absolute top-2 right-2 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    <Check className="h-3 w-3" />
+                  </span>
+                )}
+                <span
+                  className={cn(
+                    "flex h-10 w-10 items-center justify-center rounded-full",
+                    isSelected
+                      ? "bg-primary/10 text-primary"
+                      : "bg-muted text-muted-foreground",
+                  )}
+                >
+                  <Icon className="h-5 w-5" />
+                </span>
+                <div>
+                  <p className="text-sm font-heading font-semibold">
+                    {option.title}
+                  </p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
                     {option.description}
                   </p>
                 </div>

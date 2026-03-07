@@ -2,6 +2,7 @@
 
 import {
   Clock,
+  ExternalLink,
   Image as ImageIcon,
   Plus,
   Settings2,
@@ -19,8 +20,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
@@ -317,114 +320,123 @@ export default function OwnerPlacesPage() {
           </Card>
         ) : (
           <div className="grid gap-4 md:grid-cols-2">
-            {places.map((place) => (
-              <Card key={place.id} className="border shadow-sm">
-                <CardContent className="p-5 space-y-4">
-                  <div className="flex flex-wrap items-start justify-between gap-3">
-                    <div>
-                      <h2 className="font-heading font-semibold text-lg">
-                        {place.name}
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {place.address}
-                      </p>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {place.city}
-                      </p>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <Badge
-                        variant={
-                          place.verificationStatus === "VERIFIED"
-                            ? "success"
-                            : place.verificationStatus === "PENDING"
-                              ? "warning"
-                              : place.verificationStatus === "REJECTED"
-                                ? "destructive"
-                                : "secondary"
-                        }
-                        className="gap-1"
-                      >
-                        {place.verificationStatus === "VERIFIED" && (
-                          <ShieldCheck className="h-3 w-3" />
-                        )}
-                        {place.verificationStatus === "PENDING" && (
-                          <Clock className="h-3 w-3" />
-                        )}
-                        {place.verificationStatus === "REJECTED" && (
-                          <XCircle className="h-3 w-3" />
-                        )}
-                        {place.verificationStatus === "UNVERIFIED" && (
-                          <ShieldCheck className="h-3 w-3" />
-                        )}
-                        {place.verificationStatus ?? "UNVERIFIED"}
+            {places.map((place) => {
+              const status = place.verificationStatus ?? "UNVERIFIED";
+              const statusIcon = {
+                VERIFIED: <ShieldCheck className="h-3 w-3" />,
+                PENDING: <Clock className="h-3 w-3" />,
+                REJECTED: <XCircle className="h-3 w-3" />,
+                UNVERIFIED: <ShieldCheck className="h-3 w-3" />,
+              }[status];
+              const statusVariant = {
+                VERIFIED: "success",
+                PENDING: "warning",
+                REJECTED: "destructive",
+                UNVERIFIED: "secondary",
+              }[status] as "success" | "warning" | "destructive" | "secondary";
+
+              return (
+                <Card key={place.id}>
+                  <CardHeader>
+                    <CardTitle className="font-heading text-lg">
+                      {place.name}
+                    </CardTitle>
+                    <CardDescription>
+                      {[place.address, place.city]
+                        .filter(Boolean)
+                        .join(", ")}
+                    </CardDescription>
+                    <CardAction>
+                      <Badge variant={statusVariant}>
+                        {statusIcon}
+                        {status}
                       </Badge>
-                      {place.verificationStatus === "VERIFIED" && (
+                    </CardAction>
+                  </CardHeader>
+
+                  <CardContent className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
+                    <span>{place.courtCount} courts</span>
+                    <span className="text-border">•</span>
+                    <span>
+                      {place.sports.length > 0
+                        ? place.sports.map((s) => s.name).join(", ")
+                        : "No sports yet"}
+                    </span>
+                    {place.verificationStatus === "VERIFIED" && (
+                      <>
+                        <span className="text-border">•</span>
                         <Badge
                           variant={
                             place.reservationsEnabled ? "success" : "secondary"
                           }
-                          className="gap-1"
                         >
                           {place.reservationsEnabled
                             ? "Reservations on"
                             : "Reservations off"}
                         </Badge>
-                      )}
+                      </>
+                    )}
+                  </CardContent>
+
+                  <CardFooter className="grid gap-2 border-t pt-4">
+                    <div className="grid grid-cols-2 gap-2">
+                      <Button size="sm" asChild>
+                        <Link
+                          href={appRoutes.organization.places.courts.base(
+                            place.id,
+                          )}
+                        >
+                          Manage Courts
+                        </Link>
+                      </Button>
+                      <Button variant="outline" size="sm" asChild>
+                        <Link
+                          href={appRoutes.organization.places.edit(place.id)}
+                        >
+                          Edit Venue
+                        </Link>
+                      </Button>
                     </div>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                    <span>{place.courtCount} courts</span>
-                    <span>•</span>
-                    <span>
-                      {place.sports.length > 0
-                        ? place.sports.map((sport) => sport.name).join(", ")
-                        : "No sports yet"}
-                    </span>
-                  </div>
-
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="outline" size="sm" asChild>
-                      <Link
-                        href={appRoutes.organization.places.courts.base(
-                          place.id,
-                        )}
+                    <div className="flex items-center">
+                      <VenueQrCodeDialog
+                        venueName={place.name}
+                        venueSlugOrId={place.slug ?? place.id}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-muted-foreground"
+                        asChild
                       >
-                        Manage Courts
-                      </Link>
-                    </Button>
-                    <Button variant="outline" size="sm" asChild>
-                      <Link href={appRoutes.organization.places.edit(place.id)}>
-                        Edit Venue
-                      </Link>
-                    </Button>
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link
-                        href={appRoutes.organization.verification.place(
-                          place.id,
-                        )}
+                        <Link
+                          href={appRoutes.organization.verification.place(
+                            place.id,
+                          )}
+                        >
+                          <ShieldCheck className="h-4 w-4" />
+                          Verification
+                        </Link>
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        className="ml-auto text-muted-foreground"
+                        asChild
                       >
-                        Verification
-                      </Link>
-                    </Button>
-
-                    <Button variant="ghost" size="sm" asChild>
-                      <Link
-                        href={appRoutes.places.detail(place.slug ?? place.id)}
-                      >
-                        View Public Page
-                      </Link>
-                    </Button>
-
-                    <VenueQrCodeDialog
-                      venueName={place.name}
-                      venueSlugOrId={place.slug ?? place.id}
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
+                        <Link
+                          href={appRoutes.places.detail(
+                            place.slug ?? place.id,
+                          )}
+                          title="View public page"
+                        >
+                          <ExternalLink className="h-4 w-4" />
+                        </Link>
+                      </Button>
+                    </div>
+                  </CardFooter>
+                </Card>
+              );
+            })}
           </div>
         )}
       </div>

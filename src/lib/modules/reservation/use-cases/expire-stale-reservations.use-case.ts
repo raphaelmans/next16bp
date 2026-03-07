@@ -1,3 +1,6 @@
+import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
+import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
+import type { IPlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import type { InsertReservationEvent } from "@/lib/shared/infra/db/schema";
 import type { TransactionManager } from "@/lib/shared/kernel/transaction";
 import type { IReservationRepository } from "../repositories/reservation.repository";
@@ -21,6 +24,9 @@ export class ExpireStaleReservationsUseCase
   constructor(
     private reservationRepository: IReservationRepository,
     private reservationEventRepository: IReservationEventRepository,
+    private courtRepository: ICourtRepository,
+    private placeRepository: IPlaceRepository,
+    private availabilityChangeEventService: IAvailabilityChangeEventService,
     private transactionManager: TransactionManager,
   ) {}
 
@@ -66,6 +72,26 @@ export class ExpireStaleReservationsUseCase
       }));
 
       await this.reservationEventRepository.createMany(events, ctx);
+
+      const updatedReservations =
+        await this.reservationRepository.findByIdsForUpdate(updatedIds, ctx);
+
+      for (const reservation of updatedReservations) {
+        const court = await this.courtRepository.findById(
+          reservation.courtId,
+          ctx,
+        );
+        if (!court?.placeId) continue;
+        const place = await this.placeRepository.findById(court.placeId, ctx);
+        if (!place) continue;
+
+        await this.availabilityChangeEventService.emitReservationReleased(
+          reservation,
+          { court, place },
+          "reservation.expired",
+          ctx,
+        );
+      }
 
       return updatedIds.length;
     });

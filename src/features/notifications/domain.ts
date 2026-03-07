@@ -54,18 +54,18 @@ export function deriveWebPushState(
 
   const diagnosticsMessage =
     diagnosticsCode === "unsupported"
-      ? "Your browser does not support push notifications."
+      ? "Your browser doesn't support notifications."
       : diagnosticsCode === "insecure_context"
-        ? "Use HTTPS (or localhost in dev) to enable notifications."
+        ? "Notifications require a secure connection."
         : diagnosticsCode === "permission_denied"
-          ? "Notifications are blocked for this site in browser settings."
+          ? "Notifications are blocked for this site."
           : diagnosticsCode === "enabled"
-            ? "Notifications are enabled on this device."
+            ? "Notifications are active on this device."
             : diagnosticsCode === "not_configured"
-              ? "Server Web Push is not configured yet."
+              ? "Notifications aren't available yet."
               : diagnosticsCode === "granted_not_registered"
-                ? "Permission is granted but this device is not subscribed yet."
-                : "Ready to request permission and enable notifications.";
+                ? "Tap Enable to start receiving notifications."
+                : "Tap Enable to turn on notifications.";
 
   const canSendLocalTest =
     supported && isSecureContext && permission !== "denied" && !busy;
@@ -193,16 +193,16 @@ export function getWebPushStatusBadgeVariant(
     case "enabled":
       return { variant: "success", label: "Enabled" };
     case "not_configured":
-      return { variant: "warning", label: "Not Configured" };
+      return { variant: "warning", label: "Unavailable" };
     case "granted_not_registered":
-      return { variant: "warning", label: "Not Registered" };
+      return { variant: "warning", label: "Not active" };
     case "permission_denied":
       return { variant: "destructive", label: "Blocked" };
     case "unsupported":
-      return { variant: "secondary", label: "Unsupported" };
+      return { variant: "secondary", label: "Not supported" };
     case "insecure_context":
-      return { variant: "secondary", label: "Insecure" };
+      return { variant: "secondary", label: "Unavailable" };
     case "ready":
-      return { variant: "secondary", label: "Ready" };
+      return { variant: "secondary", label: "Off" };
   }
 }

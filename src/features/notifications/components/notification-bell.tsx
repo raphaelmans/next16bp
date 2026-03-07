@@ -15,6 +15,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
+import { useModReservationSync } from "@/features/reservation/sync";
 import { trpc } from "@/trpc/client";
 import {
   getNotificationBellBadgeCount,
@@ -35,7 +36,7 @@ import {
   type NotificationInboxItem,
 } from "./notification-inbox";
 
-async function invalidateQueriesForEventType(
+async function invalidateNonReservationQueriesForEventType(
   eventType: string,
   utils: ReturnType<typeof trpc.useUtils>,
 ) {
@@ -91,6 +92,7 @@ export function NotificationBell({
   const markAsReadMutation = useMutNotificationMarkAsRead();
   const markAllAsReadMutation = useMutNotificationMarkAllAsRead();
   const utils = trpc.useUtils();
+  const { syncReservationNotificationEvent } = useModReservationSync();
   const prevServerUnreadCountRef = React.useRef<number | null>(null);
 
   const defaultSettingsHref =
@@ -201,7 +203,12 @@ export function NotificationBell({
         await markAsReadMutation.mutateAsync({ id: item.id });
       }
 
-      await invalidateQueriesForEventType(item.eventType, utils);
+      await syncReservationNotificationEvent({
+        portal,
+        eventType: item.eventType,
+        href: item.href,
+      });
+      await invalidateNonReservationQueriesForEventType(item.eventType, utils);
 
       if (item.href) {
         setOpen(false);

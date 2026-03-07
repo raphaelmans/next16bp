@@ -1,6 +1,7 @@
 import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import { env } from "@/lib/env";
+import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
 import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
 import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
@@ -265,7 +266,44 @@ export class ReservationService implements IReservationService {
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
     private notificationDeliveryService: NotificationDeliveryService,
+    private availabilityChangeEventService: IAvailabilityChangeEventService,
   ) {}
+
+  private async emitReservationBooked(
+    reservation: ReservationRecord,
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    const court = await this.courtRepository.findById(reservation.courtId, ctx);
+    if (!court?.placeId) return;
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) return;
+
+    await this.availabilityChangeEventService.emitReservationBooked(
+      reservation,
+      { court, place },
+      sourceEvent,
+      ctx,
+    );
+  }
+
+  private async emitReservationReleased(
+    reservation: ReservationRecord,
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    const court = await this.courtRepository.findById(reservation.courtId, ctx);
+    if (!court?.placeId) return;
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) return;
+
+    await this.availabilityChangeEventService.emitReservationReleased(
+      reservation,
+      { court, place },
+      sourceEvent,
+      ctx,
+    );
+  }
 
   private async fetchVenueAddons(
     placeId: string,
@@ -752,6 +790,8 @@ export class ReservationService implements IReservationService {
         ctx,
       );
 
+      await this.emitReservationBooked(created, "reservation.created", ctx);
+
       if (place.organizationId) {
         await this.notificationDeliveryService.enqueueOwnerReservationCreated(
           {
@@ -1044,6 +1084,8 @@ export class ReservationService implements IReservationService {
         ctx,
       );
 
+      await this.emitReservationBooked(created, "reservation.created", ctx);
+
       if (place.organizationId) {
         await this.notificationDeliveryService.enqueueOwnerReservationCreated(
           {
@@ -1299,6 +1341,12 @@ export class ReservationService implements IReservationService {
               triggeredByRole: "PLAYER",
               notes: "Reservation created as part of a multi-court request",
             },
+            ctx,
+          );
+
+          await this.emitReservationBooked(
+            created,
+            "reservation_group.created",
             ctx,
           );
 
@@ -1895,6 +1943,8 @@ export class ReservationService implements IReservationService {
         },
         ctx,
       );
+
+      await this.emitReservationReleased(updated, "reservation.cancelled", ctx);
 
       logger.info(
         {

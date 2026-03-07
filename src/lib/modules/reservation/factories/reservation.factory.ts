@@ -1,3 +1,4 @@
+import { makeAvailabilityChangeEventService } from "@/lib/modules/availability/factories/availability-change-event.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeCourtAddonRepository } from "@/lib/modules/court-addon/factories/court-addon.factory";
 import { makeCourtBlockRepository } from "@/lib/modules/court-block/factories/court-block.factory";
@@ -59,6 +60,9 @@ export function makeExpireStaleReservationsUseCase(): ExpireStaleReservationsUse
     expireStaleReservationsUseCase = new ExpireStaleReservationsUseCase(
       makeReservationRepository(),
       makeReservationEventRepository(),
+      makeCourtRepository(),
+      makePlaceRepository(),
+      makeAvailabilityChangeEventService(),
       getContainer().transactionManager,
     );
   }
@@ -87,6 +91,7 @@ export function makeReservationService(): ReservationService {
       makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,
       makeNotificationDeliveryService(),
+      makeAvailabilityChangeEventService(),
     );
   }
   return reservationService;
@@ -105,6 +110,7 @@ export function makeReservationOwnerService(): ReservationOwnerService {
       getContainer().transactionManager,
       makeExpireStaleReservationsUseCase(),
       makeNotificationDeliveryService(),
+      makeAvailabilityChangeEventService(),
       makePaymentProofRepository(),
       makeGuestProfileRepository(),
       makeCourtHoursRepository(),

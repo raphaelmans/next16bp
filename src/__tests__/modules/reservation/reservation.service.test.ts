@@ -443,6 +443,10 @@ function makeReservationService(overrides?: {
       .mockResolvedValue(undefined),
     enqueueOwnerReservationCancelled: vi.fn().mockResolvedValue(undefined),
   };
+  const availabilityChangeEventService = {
+    emitReservationBooked: vi.fn().mockResolvedValue(undefined),
+    emitReservationReleased: vi.fn().mockResolvedValue(undefined),
+  };
 
   const service = new ReservationService(
     reservationRepository as never,
@@ -464,6 +468,7 @@ function makeReservationService(overrides?: {
     courtPriceOverrideRepository as never,
     transactionManager as never,
     notificationDeliveryService as never,
+    availabilityChangeEventService as never,
   );
 
   return {

@@ -1,3 +1,4 @@
+import { makeAvailabilityChangeEventService } from "@/lib/modules/availability/factories/availability-change-event.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeCourtHoursRepository } from "@/lib/modules/court-hours/factories/court-hours.factory";
 import { makeCourtPriceOverrideRepository } from "@/lib/modules/court-price-override/factories/court-price-override.factory";
@@ -39,6 +40,7 @@ export function makeCourtBlockService(): CourtBlockService {
       makeCourtRateRuleRepository(),
       makeCourtPriceOverrideRepository(),
       getContainer().transactionManager,
+      makeAvailabilityChangeEventService(),
     );
   }
   return courtBlockService;

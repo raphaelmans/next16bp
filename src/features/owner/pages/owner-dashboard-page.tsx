@@ -30,8 +30,8 @@ import { AnalyticsSection } from "@/features/owner/components/analytics/analytic
 import { shouldShowOwnerNotificationRoutingWarning } from "@/features/owner/domain";
 import { isOwnerSetupIncomplete } from "@/features/owner/helpers";
 import {
-  useQueryDashboardData,
   useQueryOwnerOrganization,
+  useQueryOwnerReservationDashboardProjection,
   useQueryOwnerSetupStatus,
   useQueryOwnerStats,
   useQueryReservationNotificationRoutingStatus,
@@ -63,7 +63,7 @@ export default function OwnerDashboardPage() {
     organization?.id ?? null,
   );
   const { data: dashboardData, isLoading: dashboardLoading } =
-    useQueryDashboardData(organization?.id ?? null);
+    useQueryOwnerReservationDashboardProjection(organization?.id ?? null);
   const routingStatusQuery = useQueryReservationNotificationRoutingStatus(
     organization?.id ?? undefined,
   );

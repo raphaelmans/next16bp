@@ -31,6 +31,7 @@ vi.mock("@/trpc/client", () => {
     trpc: {
       auth: { me: { useQuery } },
       chatMessage: {
+        listThreadSummaries: { useQuery },
         getUnreadCounts: { useQuery },
         sendMessage: { useMutation },
       },
@@ -40,11 +41,6 @@ vi.mock("@/trpc/client", () => {
 });
 
 vi.mock("@/features/chat/hooks/use-chat-trpc", () => ({
-  useModChatInvalidation: () => ({
-    fetchReservationThreadMetas: vi.fn(async () => []),
-    invalidateReservationThreadMetas: vi.fn(async () => undefined),
-    invalidateChatInboxListArchivedThreadIds: vi.fn(async () => undefined),
-  }),
   useMutReservationChatSendMessage: () => ({ mutateAsync: vi.fn() }),
   useMutChatInboxArchiveThread: () => ({
     mutateAsync: vi.fn(),
@@ -75,6 +71,12 @@ vi.mock("@/features/chat/hooks/use-chat-trpc", () => ({
     isSuccess: true,
     isError: false,
     isLoading: false,
+  }),
+}));
+
+vi.mock("@/features/reservation/sync", () => ({
+  useModReservationSync: () => ({
+    syncReservationChatInbox: vi.fn(async () => undefined),
   }),
 }));
 

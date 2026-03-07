@@ -90,6 +90,12 @@ vi.mock("@/trpc/client", () => ({
   },
 }));
 
+vi.mock("@/features/reservation/sync", () => ({
+  useModReservationSync: () => ({
+    syncReservationNotificationEvent: vi.fn(async () => undefined),
+  }),
+}));
+
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),
 }));

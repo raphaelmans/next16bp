@@ -2,6 +2,10 @@
 
 import { addDays } from "date-fns";
 import * as React from "react";
+import {
+  normalizeAvailabilityCourtRangeInput,
+  normalizeAvailabilityPlaceSportRangeInput,
+} from "@/common/query-keys";
 import { getZonedDayKey } from "@/common/time-zone";
 import {
   getWeekDayKeys,
@@ -114,7 +118,7 @@ export function useModNextWeekPrefetch({
     const prefetch = async () => {
       try {
         if (selectionMode === "any") {
-          const input = {
+          const input = normalizeAvailabilityPlaceSportRangeInput({
             placeId,
             sportId: selectedSportId ?? "",
             startDate: queryWindow.startDateIso,
@@ -122,7 +126,7 @@ export function useModNextWeekPrefetch({
             durationMinutes,
             includeUnavailable: true,
             includeCourtOptions: false,
-          };
+          });
 
           if (!utils.availability.getForPlaceSportRange.getData(input)) {
             await utils.availability.getForPlaceSportRange.fetch(input);
@@ -130,13 +134,13 @@ export function useModNextWeekPrefetch({
           return;
         }
 
-        const input = {
+        const input = normalizeAvailabilityCourtRangeInput({
           courtId: selectedCourtId ?? "",
           startDate: queryWindow.startDateIso,
           endDate: queryWindow.endDateIso,
           durationMinutes,
           includeUnavailable: true,
-        };
+        });
 
         if (!utils.availability.getForCourtRange.getData(input)) {
           await utils.availability.getForCourtRange.fetch(input);

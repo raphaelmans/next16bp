@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useModReservationSync } from "@/features/reservation/sync";
 import {
   makeReservationGroupThreadId,
   makeReservationThreadId,
@@ -35,7 +36,6 @@ import {
   sumReservationUnreadCounts,
 } from "../../domain";
 import {
-  useModChatInvalidation,
   useMutChatInboxArchiveThread,
   useMutChatInboxUnarchiveThread,
   useMutReservationChatSendMessage,
@@ -161,15 +161,11 @@ export function ReservationInboxWidget({
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
-  const {
-    invalidateReservationThreadMetas,
-    invalidateChatInboxListArchivedThreadIds,
-  } = useModChatInvalidation();
   const sendMessageMutation = useMutReservationChatSendMessage();
   const sendGroupMessageMutation = useMutReservationGroupChatSendMessage();
   const archiveThreadMutation = useMutChatInboxArchiveThread();
   const unarchiveThreadMutation = useMutChatInboxUnarchiveThread();
-  const utils = trpc.useUtils();
+  const { syncReservationChatInbox } = useModReservationSync();
 
   // Supabase Auth session provides identity - no separate Stream auth needed
   const authQuery = trpc.auth.me.useQuery(undefined, {
@@ -485,27 +481,16 @@ export function ReservationInboxWidget({
     setSyncPhase("syncing");
     setSyncErrorMessage(null);
     try {
-      await Promise.all([
-        utils.chatMessage.listThreadSummaries.invalidate({
-          threadIdPrefix: "res-",
-          limit: 30,
-        }),
-        utils.chatMessage.listThreadSummaries.invalidate({
-          threadIdPrefix: "grp-",
-          limit: 30,
-        }),
-        utils.chatMessage.getUnreadCounts.invalidate(),
-        invalidateReservationThreadMetas({
-          reservationIds: visibleThreadTargets.reservationIds,
-          reservationGroupIds: visibleThreadTargets.reservationGroupIds,
-        }),
-      ]);
+      await syncReservationChatInbox(visibleThreadTargets.reservationIds, {
+        visibleReservationIds: visibleThreadTargets.reservationIds,
+        visibleReservationGroupIds: visibleThreadTargets.reservationGroupIds,
+      });
       setSyncPhase("idle");
     } catch {
       setSyncPhase("error");
       setSyncErrorMessage("Failed to refresh conversations.");
     }
-  }, [invalidateReservationThreadMetas, utils, visibleThreadTargets]);
+  }, [syncReservationChatInbox, visibleThreadTargets]);
 
   const handleArchiveThread = useCallback(async () => {
     if (!activeChannelThreadId) {
@@ -516,18 +501,15 @@ export function ReservationInboxWidget({
       threadKind: "reservation",
       threadId: activeChannelThreadId,
     });
-    await Promise.all([
-      invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
-      invalidateReservationThreadMetas({
-        reservationIds: visibleThreadTargets.reservationIds,
-        reservationGroupIds: visibleThreadTargets.reservationGroupIds,
-      }),
-    ]);
+    await syncReservationChatInbox(visibleThreadTargets.reservationIds, {
+      visibleReservationIds: visibleThreadTargets.reservationIds,
+      visibleReservationGroupIds: visibleThreadTargets.reservationGroupIds,
+      includeArchivedThreadIds: true,
+    });
   }, [
     activeChannelThreadId,
     archiveThreadMutation,
-    invalidateChatInboxListArchivedThreadIds,
-    invalidateReservationThreadMetas,
+    syncReservationChatInbox,
     visibleThreadTargets,
   ]);
 
@@ -542,18 +524,15 @@ export function ReservationInboxWidget({
         threadKind: "reservation",
         threadId: targetThreadId,
       });
-      await Promise.all([
-        invalidateChatInboxListArchivedThreadIds({ threadKind: "reservation" }),
-        invalidateReservationThreadMetas({
-          reservationIds: visibleThreadTargets.reservationIds,
-          reservationGroupIds: visibleThreadTargets.reservationGroupIds,
-        }),
-      ]);
+      await syncReservationChatInbox(visibleThreadTargets.reservationIds, {
+        visibleReservationIds: visibleThreadTargets.reservationIds,
+        visibleReservationGroupIds: visibleThreadTargets.reservationGroupIds,
+        includeArchivedThreadIds: true,
+      });
     },
     [
       activeChannelThreadId,
-      invalidateChatInboxListArchivedThreadIds,
-      invalidateReservationThreadMetas,
+      syncReservationChatInbox,
       unarchiveThreadMutation,
       visibleThreadTargets,
     ],

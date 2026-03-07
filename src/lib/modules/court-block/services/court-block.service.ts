@@ -1,4 +1,5 @@
 import { differenceInMinutes } from "date-fns";
+import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
 import {
   CourtNotFoundError,
   NotCourtOwnerError,
@@ -71,7 +72,36 @@ export class CourtBlockService implements ICourtBlockService {
     private courtRateRuleRepository: ICourtRateRuleRepository,
     private courtPriceOverrideRepository: ICourtPriceOverrideRepository,
     private transactionManager: TransactionManager,
+    private availabilityChangeEventService: IAvailabilityChangeEventService,
   ) {}
+
+  private async emitCourtBlockBooked(
+    block: CourtBlockRecord,
+    context: { court: CourtRecord; place: PlaceRecord },
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    await this.availabilityChangeEventService.emitCourtBlockBooked(
+      block,
+      context,
+      sourceEvent,
+      ctx,
+    );
+  }
+
+  private async emitCourtBlockReleased(
+    block: CourtBlockRecord,
+    context: { court: CourtRecord; place: PlaceRecord },
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    await this.availabilityChangeEventService.emitCourtBlockReleased(
+      block,
+      context,
+      sourceEvent,
+      ctx,
+    );
+  }
 
   async listForCourtRange(
     userId: string,
@@ -100,7 +130,7 @@ export class CourtBlockService implements ICourtBlockService {
         data.startTime,
         data.endTime,
       );
-      const { court } = await this.verifyCourtOwnership(
+      const { court, place } = await this.verifyCourtOwnership(
         userId,
         data.courtId,
         ctx,
@@ -132,6 +162,13 @@ export class CourtBlockService implements ICourtBlockService {
           endTime: created.endTime.toISOString(),
         },
         "Court maintenance block created",
+      );
+
+      await this.emitCourtBlockBooked(
+        created,
+        { court, place },
+        "court_block.created",
+        ctx,
       );
 
       return created;
@@ -190,6 +227,13 @@ export class CourtBlockService implements ICourtBlockService {
           currency: created.currency,
         },
         "Court walk-in block created",
+      );
+
+      await this.emitCourtBlockBooked(
+        created,
+        { court, place },
+        "court_block.created",
+        ctx,
       );
 
       return created;
@@ -257,6 +301,19 @@ export class CourtBlockService implements ICourtBlockService {
         "Court block rescheduled",
       );
 
+      await this.emitCourtBlockReleased(
+        block,
+        { court, place },
+        "court_block.rescheduled",
+        ctx,
+      );
+      await this.emitCourtBlockBooked(
+        updated,
+        { court, place },
+        "court_block.rescheduled",
+        ctx,
+      );
+
       return updated;
     });
   }
@@ -293,6 +350,19 @@ export class CourtBlockService implements ICourtBlockService {
         },
         "Court block cancelled",
       );
+
+      const court = await this.courtRepository.findById(block.courtId, ctx);
+      if (court?.placeId) {
+        const place = await this.placeRepository.findById(court.placeId, ctx);
+        if (place) {
+          await this.emitCourtBlockReleased(
+            block,
+            { court, place },
+            "court_block.cancelled",
+            ctx,
+          );
+        }
+      }
 
       return updated;
     });

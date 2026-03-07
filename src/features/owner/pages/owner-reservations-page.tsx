@@ -65,7 +65,6 @@ import {
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
   useModOwnerReservationRealtimeStream,
-  useModOwnerReservations,
   useMutAcceptReservation,
   useMutConfirmReservation,
   useMutOwnerConfirmPaidOffline,
@@ -74,6 +73,7 @@ import {
   useQueryOwnerCourts,
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
+  useQueryOwnerReservationSummaries,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -191,9 +191,8 @@ export default function OwnerReservationsPage() {
   const confirmLabel =
     selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
 
-  const { data: reservations = [], isLoading } = useModOwnerReservations(
-    organization?.id ?? null,
-    {
+  const { data: reservations = [], isLoading } =
+    useQueryOwnerReservationSummaries(organization?.id ?? null, {
       placeId: placeId || undefined,
       courtId: courtId || undefined,
       status: "all",
@@ -201,8 +200,7 @@ export default function OwnerReservationsPage() {
       dateFrom,
       dateTo,
       refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
-    },
-  );
+    });
 
   useModOwnerReservationRealtimeStream({
     enabled: Boolean(organization?.id),

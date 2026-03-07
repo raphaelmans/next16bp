@@ -5,8 +5,10 @@ import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { normalizeOwnerReservationScopeInput } from "@/common/query-keys";
 import { getZonedDayKey } from "@/common/time-zone";
 import { getReservationRealtimeApi } from "@/features/reservation/realtime-api.runtime";
+import { useModReservationSync } from "@/features/reservation/sync";
 import { trpc } from "@/trpc/client";
 import { getOwnerApi } from "../api.runtime";
 import { useQueryOwnerCourts } from "./courts";
@@ -483,14 +485,16 @@ function deriveDashboardData(
 }
 
 export function useQueryDashboardData(organizationId: string | null) {
+  const queryInput = normalizeOwnerReservationScopeInput({
+    organizationId: organizationId ?? "",
+    limit: 100,
+    offset: 0,
+  });
+
   return useFeatureQuery(
     ["reservationOwner", "getForOrganization"],
     ownerApi.queryReservationOwnerGetForOrganization,
-    {
-      organizationId: organizationId ?? "",
-      limit: 100,
-      offset: 0,
-    },
+    queryInput,
     {
       enabled: !!organizationId,
       refetchInterval: DASHBOARD_REFRESH_INTERVAL_MS,
@@ -517,19 +521,20 @@ export function useModOwnerReservations(
     placeId,
   } = options;
 
+  const queryInput = normalizeOwnerReservationScopeInput({
+    organizationId: organizationId ?? "",
+    reservationId: reservationId || undefined,
+    placeId: placeId || undefined,
+    courtId: courtId || undefined,
+    status: status && status !== "all" ? mapStatusToBackend(status) : undefined,
+    limit: 100,
+    offset: 0,
+  });
+
   return useFeatureQuery(
     ["reservationOwner", "getForOrganization"],
     ownerApi.queryReservationOwnerGetForOrganization,
-    {
-      organizationId: organizationId ?? "",
-      reservationId: reservationId || undefined,
-      placeId: placeId || undefined,
-      courtId: courtId || undefined,
-      status:
-        status && status !== "all" ? mapStatusToBackend(status) : undefined,
-      limit: 100,
-      offset: 0,
-    },
+    queryInput,
     {
       enabled: !!organizationId,
       refetchInterval: refetchIntervalMs,
@@ -582,11 +587,48 @@ export function useModOwnerReservations(
   );
 }
 
+export function useQueryOwnerReservationSummaries(
+  organizationId: string | null,
+  options: UseOwnerReservationsOptions = {},
+) {
+  return useModOwnerReservations(organizationId, options);
+}
+
+export function useQueryOwnerReservationEntity(
+  organizationId: string | null,
+  reservationId?: string,
+) {
+  const query = useQueryOwnerReservationSummaries(organizationId, {
+    reservationId,
+  });
+
+  return {
+    ...query,
+    data: query.data?.[0] ?? null,
+  };
+}
+
+export function useQueryOwnerReservationDashboardProjection(
+  organizationId: string | null,
+) {
+  return useQueryDashboardData(organizationId);
+}
+
+export function useQueryOwnerReservationAlertsProjection(
+  organizationId: string | null,
+  options: {
+    placeId?: string;
+    courtId?: string;
+  } = {},
+) {
+  return useModReservationAlerts(organizationId, options);
+}
+
 export function useModOwnerReservationRealtimeStream(
   options: UseOwnerReservationRealtimeStreamOptions = {},
 ) {
   const { enabled = true, reservationIds } = options;
-  const utils = trpc.useUtils();
+  const { syncOwnerReservationChange } = useModReservationSync();
   const processedEventIdsRef = useRef<string[]>([]);
 
   const reservationIdsKey = useMemo(
@@ -619,25 +661,17 @@ export function useModOwnerReservationRealtimeStream(
           );
         }
 
-        void Promise.all([
-          utils.reservationOwner.getForOrganization.invalidate(),
-          utils.reservationOwner.getPendingCount.invalidate(),
-          utils.reservationOwner.getLinkedDetail.invalidate(),
-          utils.reservationChat.getThreadMetas.invalidate(),
-          utils.reservationChat.getSession.invalidate({
-            reservationId: event.reservationId,
-          }),
-          utils.audit.reservationHistory.invalidate({
-            reservationId: event.reservationId,
-          }),
-        ]);
+        void syncOwnerReservationChange({
+          reservationId: event.reservationId,
+          includeHistory: true,
+        });
       },
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [enabled, reservationIdsKey, utils]);
+  }, [enabled, reservationIdsKey, syncOwnerReservationChange]);
 }
 
 type ReservationActionInput = {
@@ -653,7 +687,7 @@ type RejectReservationActionInput = ReservationActionInput & {
 };
 
 export function useMutAcceptReservation() {
-  const utils = trpc.useUtils();
+  const { syncOwnerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(
     async (input: ReservationActionInput) =>
@@ -663,23 +697,16 @@ export function useMutAcceptReservation() {
     {
       onSuccess: async (_data, variables) => {
         const payload = variables as ReservationActionInput | undefined;
-        await Promise.all([
-          utils.reservationOwner.getForOrganization.invalidate(),
-          utils.reservationOwner.getPendingCount.invalidate(),
-          utils.reservationChat.getThreadMetas.invalidate(),
-          payload?.reservationId
-            ? utils.reservationChat.getSession.invalidate({
-                reservationId: payload.reservationId,
-              })
-            : Promise.resolve(),
-        ]);
+        await syncOwnerReservationChange({
+          reservationId: payload?.reservationId,
+        });
       },
     },
   );
 }
 
 export function useMutConfirmReservation() {
-  const utils = trpc.useUtils();
+  const { syncOwnerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(
     async (input: ConfirmReservationActionInput) =>
@@ -690,23 +717,16 @@ export function useMutConfirmReservation() {
     {
       onSuccess: async (_data, variables) => {
         const payload = variables as ConfirmReservationActionInput | undefined;
-        await Promise.all([
-          utils.reservationOwner.getForOrganization.invalidate(),
-          utils.reservationOwner.getPendingCount.invalidate(),
-          utils.reservationChat.getThreadMetas.invalidate(),
-          payload?.reservationId
-            ? utils.reservationChat.getSession.invalidate({
-                reservationId: payload.reservationId,
-              })
-            : Promise.resolve(),
-        ]);
+        await syncOwnerReservationChange({
+          reservationId: payload?.reservationId,
+        });
       },
     },
   );
 }
 
 export function useMutRejectReservation() {
-  const utils = trpc.useUtils();
+  const { syncOwnerReservationChange } = useModReservationSync();
 
   return useFeatureMutation(
     async (input: RejectReservationActionInput) =>
@@ -717,16 +737,9 @@ export function useMutRejectReservation() {
     {
       onSuccess: async (_data, variables) => {
         const payload = variables as RejectReservationActionInput | undefined;
-        await Promise.all([
-          utils.reservationOwner.getForOrganization.invalidate(),
-          utils.reservationOwner.getPendingCount.invalidate(),
-          utils.reservationChat.getThreadMetas.invalidate(),
-          payload?.reservationId
-            ? utils.reservationChat.getSession.invalidate({
-                reservationId: payload.reservationId,
-              })
-            : Promise.resolve(),
-        ]);
+        await syncOwnerReservationChange({
+          reservationId: payload?.reservationId,
+        });
       },
     },
   );
@@ -812,21 +825,14 @@ export function useModReservationAlerts(
 export function useMutOwnerConfirmPaidOffline(
   options?: Record<string, unknown>,
 ) {
-  const utils = trpc.useUtils();
+  const { syncOwnerReservationChange } = useModReservationSync();
   return useFeatureMutation(ownerApi.mutReservationOwnerConfirmPaidOffline, {
     ...(options ?? {}),
     onSuccess: async (_data, variables, context) => {
       const payload = variables as { reservationId?: string } | undefined;
-      await Promise.all([
-        utils.reservationOwner.getForOrganization.invalidate(),
-        utils.reservationOwner.getPendingCount.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate(),
-        payload?.reservationId
-          ? utils.reservationChat.getSession.invalidate({
-              reservationId: payload.reservationId,
-            })
-          : Promise.resolve(),
-      ]);
+      await syncOwnerReservationChange({
+        reservationId: payload?.reservationId,
+      });
       const userOnSuccess = options?.onSuccess;
       if (typeof userOnSuccess === "function") {
         await (userOnSuccess as (...args: unknown[]) => unknown)(

@@ -38,6 +38,8 @@ vi.mock("@/trpc/client", () => ({
   trpc: {
     useUtils: () => ({
       reservation: {
+        getById: { invalidate: vi.fn(async () => undefined) },
+        getDetail: { invalidate: vi.fn(async () => undefined) },
         getLinkedDetail: { invalidate: vi.fn(async () => undefined) },
         getMy: { invalidate: vi.fn(async () => undefined) },
         getMyWithDetails: { invalidate: vi.fn(async () => undefined) },
@@ -46,9 +48,26 @@ vi.mock("@/trpc/client", () => ({
         getThreadMetas: { invalidate: vi.fn(async () => undefined) },
         getSession: { invalidate: vi.fn(async () => undefined) },
       },
+      userNotification: {
+        unreadCount: { invalidate: vi.fn(async () => undefined) },
+        listMy: { invalidate: vi.fn(async () => undefined) },
+      },
     }),
   },
 }));
+
+vi.mock("@tanstack/react-query", async () => {
+  const actual = await vi.importActual<typeof import("@tanstack/react-query")>(
+    "@tanstack/react-query",
+  );
+
+  return {
+    ...actual,
+    useQueryClient: () => ({
+      invalidateQueries: vi.fn(async () => undefined),
+    }),
+  };
+});
 
 vi.mock("next/navigation", () => ({
   useRouter: () => ({ push: vi.fn() }),

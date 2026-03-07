@@ -1,4 +1,5 @@
 import { addMinutes, differenceInMinutes } from "date-fns";
+import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
 import { postOwnerCancelledMessage } from "@/lib/modules/chat/ops/post-owner-cancelled-message";
 import { postOwnerConfirmedMessage } from "@/lib/modules/chat/ops/post-owner-confirmed-message";
 import {
@@ -154,6 +155,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     private transactionManager: TransactionManager,
     private expireStaleReservationsUseCase: IExpireStaleReservationsUseCase,
     private notificationDeliveryService: NotificationDeliveryService,
+    private availabilityChangeEventService: IAvailabilityChangeEventService,
     private paymentProofRepository?: IPaymentProofRepository,
     private guestProfileRepository?: IGuestProfileRepository,
     private courtHoursRepository?: ICourtHoursRepository,
@@ -167,6 +169,42 @@ export class ReservationOwnerService implements IReservationOwnerService {
       "hasOrganizationPermission"
     >,
   ) {}
+
+  private async emitReservationBooked(
+    reservation: ReservationRecord,
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    const court = await this.courtRepository.findById(reservation.courtId, ctx);
+    if (!court?.placeId) return;
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) return;
+
+    await this.availabilityChangeEventService.emitReservationBooked(
+      reservation,
+      { court, place },
+      sourceEvent,
+      ctx,
+    );
+  }
+
+  private async emitReservationReleased(
+    reservation: ReservationRecord,
+    sourceEvent: string,
+    ctx?: RequestContext,
+  ) {
+    const court = await this.courtRepository.findById(reservation.courtId, ctx);
+    if (!court?.placeId) return;
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) return;
+
+    await this.availabilityChangeEventService.emitReservationReleased(
+      reservation,
+      { court, place },
+      sourceEvent,
+      ctx,
+    );
+  }
 
   private async attachSignedPaymentProofUrl(
     record: ReservationWithDetails,
@@ -921,6 +959,8 @@ export class ReservationOwnerService implements IReservationOwnerService {
         ctx,
       );
 
+      await this.emitReservationReleased(updated, "reservation.rejected", ctx);
+
       logger.info(
         {
           event: "reservation.confirmed",
@@ -1452,6 +1492,14 @@ export class ReservationOwnerService implements IReservationOwnerService {
         );
       }
 
+      for (const item of updated) {
+        await this.emitReservationReleased(
+          item,
+          "reservation_group.rejected",
+          ctx,
+        );
+      }
+
       return updated;
     });
   }
@@ -1539,6 +1587,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
           triggeredByRole: "OWNER",
           notes: `Cancelled by owner: ${data.reason}`,
         },
+        ctx,
+      );
+
+      await this.emitReservationReleased(
+        result,
+        "reservation.cancelled_by_owner",
         ctx,
       );
 
@@ -1690,6 +1744,14 @@ export class ReservationOwnerService implements IReservationOwnerService {
         },
         "Reservation group cancelled by owner",
       );
+
+      for (const item of updated) {
+        await this.emitReservationReleased(
+          item,
+          "reservation_group.cancelled_by_owner",
+          ctx,
+        );
+      }
 
       return updated;
     });
@@ -1880,6 +1942,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
         ctx,
       );
 
+      await this.emitReservationBooked(
+        created,
+        "reservation.guest_booking_created",
+        ctx,
+      );
+
       logger.info(
         {
           event: "reservation.guest_booking_created",
@@ -2035,11 +2103,30 @@ export class ReservationOwnerService implements IReservationOwnerService {
         ctx,
       );
 
+      await this.emitReservationBooked(
+        created,
+        "reservation.walk_in_converted",
+        ctx,
+      );
+
       await this.courtBlockRepository.update(
         block.id,
         { isActive: false, cancelledAt: now },
         ctx,
       );
+
+      const court = await this.courtRepository.findById(block.courtId, ctx);
+      if (court?.placeId) {
+        const place = await this.placeRepository.findById(court.placeId, ctx);
+        if (place) {
+          await this.availabilityChangeEventService.emitCourtBlockReleased(
+            block,
+            { court, place },
+            "court_block.walk_in_converted",
+            ctx,
+          );
+        }
+      }
 
       logger.info(
         {
