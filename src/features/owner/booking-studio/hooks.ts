@@ -1,7 +1,7 @@
 "use client";
 
 import { addDays } from "date-fns";
-import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { formatInTimeZone } from "@/common/format";
 import {
@@ -9,52 +9,31 @@ import {
   getZonedDayRangeFromDayKey,
   getZonedToday,
 } from "@/common/time-zone";
-import {
-  type StudioView,
-  studioViewSchema,
-} from "@/features/owner/components/booking-studio/types";
-import { useIsMobile } from "@/hooks/use-mobile";
 import { getWeekDayKeys, getWeekLabel, getWeekStartDayKey } from "./helpers";
 
 type BookingStudioViewOptions = {
   timeZone: string;
   weekStartsOn?: number;
-  defaultView?: StudioView;
-  forceDayOnMobile?: boolean;
-  forceView?: StudioView;
 };
 
 export const useBookingStudioViewState = (
   options: BookingStudioViewOptions,
 ) => {
-  const {
-    timeZone,
-    weekStartsOn = 0,
-    defaultView = "week",
-    forceDayOnMobile = true,
-    forceView,
-  } = options;
-
-  const isMobile = useIsMobile();
+  const { timeZone, weekStartsOn = 0 } = options;
   const [dayKeyParam, setDayKeyParam] = useQueryState(
     "dayKey",
     parseAsString.withOptions({ history: "replace" }),
   );
   const [viewParam, setViewParam] = useQueryState(
     "view",
-    parseAsStringLiteral(studioViewSchema).withOptions({ history: "replace" }),
+    parseAsString.withOptions({ history: "replace" }),
   );
 
-  const view = (viewParam ?? defaultView) as StudioView;
-
-  const effectiveView = forceView ?? view;
-  const isWeekView = effectiveView === "week";
-
   React.useEffect(() => {
-    if (forceView && view !== forceView) {
-      setViewParam(forceView);
+    if (viewParam !== null) {
+      setViewParam(null);
     }
-  }, [forceView, setViewParam, view]);
+  }, [setViewParam, viewParam]);
 
   const fallbackDayKey = React.useMemo(
     () => getZonedDayKey(getZonedToday(timeZone), timeZone),
@@ -67,12 +46,6 @@ export const useBookingStudioViewState = (
       setDayKeyParam(fallbackDayKey);
     }
   }, [dayKeyParam, fallbackDayKey, setDayKeyParam]);
-
-  React.useEffect(() => {
-    if (!forceView && isMobile && forceDayOnMobile && view !== "day") {
-      setViewParam("day");
-    }
-  }, [forceDayOnMobile, forceView, isMobile, setViewParam, view]);
 
   const selectedDayRange = React.useMemo(
     () => getZonedDayRangeFromDayKey(dayKey, timeZone),
@@ -118,10 +91,7 @@ export const useBookingStudioViewState = (
     setDayKeyParam(getZonedDayKey(todayDate, timeZone));
   }, [setDayKeyParam, timeZone, todayDate]);
 
-  const visibleDayKeys = React.useMemo(() => {
-    if (isWeekView) return weekDayKeys;
-    return [dayKey];
-  }, [dayKey, isWeekView, weekDayKeys]);
+  const visibleDayKeys = weekDayKeys;
 
   const navigateWeek = React.useCallback(
     (direction: 1 | -1) => {
@@ -141,10 +111,6 @@ export const useBookingStudioViewState = (
   return {
     dayKey,
     setDayKeyParam,
-    view: effectiveView,
-    setViewParam,
-    isWeekView,
-    isMobile,
     selectedDayRange,
     selectedDayStart,
     selectedDate,

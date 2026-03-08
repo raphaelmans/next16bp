@@ -18,9 +18,6 @@ export const generateOptimisticId = () =>
 export const isOptimisticBlockId = (blockId: string) =>
   blockId.startsWith("optimistic:");
 
-export const studioViewSchema = ["day", "week"] as const;
-export type StudioView = (typeof studioViewSchema)[number];
-
 export type BlockPreset = {
   id: string;
   label: string;

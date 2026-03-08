@@ -2,10 +2,9 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Building2 } from "lucide-react";
-import { useMemo } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { allowEmptyString, S } from "@/common/schemas";
+import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
@@ -15,7 +14,6 @@ import { useMutOrganizationCreate } from "@/features/organization/hooks";
 
 const organizationFormSchema = z.object({
   name: S.organization.name,
-  slug: allowEmptyString(S.organization.slug.optional()),
 });
 
 type OrganizationFormValues = z.infer<typeof organizationFormSchema>;
@@ -24,13 +22,6 @@ interface OrganizationFormProps {
   onSuccess?: (org: { id: string }) => void;
   onCancel?: () => void;
 }
-
-const generateSlug = (name: string) => {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-};
 
 export function OrganizationForm({
   onSuccess,
@@ -43,23 +34,13 @@ export function OrganizationForm({
     mode: "onChange",
     defaultValues: {
       name: "",
-      slug: "",
     },
   });
 
   const {
-    control,
     reset,
     formState: { isDirty, isSubmitting, isValid },
   } = form;
-  const nameValue = useWatch({ control, name: "name" });
-  const slugValue = useWatch({ control, name: "slug" });
-
-  const previewSlug = useMemo(
-    () => slugValue || (nameValue ? generateSlug(nameValue) : "your-org-slug"),
-    [nameValue, slugValue],
-  );
-
   const submitting = createMutation.isPending || isSubmitting;
   const isSubmitDisabled = submitting || !isValid || !isDirty;
 
@@ -67,9 +48,8 @@ export function OrganizationForm({
     try {
       await createMutation.mutateAsync({
         name: data.name,
-        slug: data.slug || undefined,
       });
-      reset({ name: data.name, slug: data.slug ?? "" });
+      reset({ name: data.name });
     } catch (error) {
       toast.error("Unable to create organization", {
         description: getClientErrorMessage(error, "Please try again"),
@@ -102,17 +82,6 @@ export function OrganizationForm({
           placeholder="My Sports Club (Pickleball)"
           required
         />
-
-        <div className="space-y-2">
-          <StandardFormInput<OrganizationFormValues>
-            name="slug"
-            label="Custom URL (optional)"
-            placeholder={previewSlug}
-          />
-          <p className="text-xs text-muted-foreground">
-            Preview: kudoscourts.ph/{previewSlug}
-          </p>
-        </div>
 
         <div className="flex gap-4">
           {onCancel && (
