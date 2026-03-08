@@ -93,8 +93,7 @@ const submitCourtFormSchema = z
       return hasCoords;
     },
     {
-      message:
-        "Provide a Google Maps link or both coordinates",
+      message: "Provide a Google Maps link or both coordinates",
       path: ["googleMapsLink"],
     },
   );
@@ -252,9 +251,7 @@ export function SubmitCourtForm() {
         <CardContent className="pt-6">
           <div className="flex flex-col items-center gap-4 text-center py-8">
             <CheckCircle className="h-12 w-12 text-success" />
-            <h2 className="text-xl font-heading font-bold">
-              Venue Submitted!
-            </h2>
+            <h2 className="text-xl font-heading font-bold">Venue Submitted!</h2>
             <p className="text-muted-foreground">
               Your venue submission is now pending admin review. Once approved,
               it will appear in the directory.

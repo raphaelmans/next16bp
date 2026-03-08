@@ -15,14 +15,8 @@ export const adminCourtsSearchParams = {
     "claimed",
     "removal_requested",
   ] as const),
-  featured: parseAsStringLiteral([
-    "featured",
-    "not_featured",
-  ] as const),
-  source: parseAsStringLiteral([
-    "user_submitted",
-    "admin_curated",
-  ] as const),
+  featured: parseAsStringLiteral(["featured", "not_featured"] as const),
+  source: parseAsStringLiteral(["user_submitted", "admin_curated"] as const),
   sortBy: parseAsStringLiteral([
     "name",
     "city",

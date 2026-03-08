@@ -1,11 +1,14 @@
 "use client";
 
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { toast } from "@/common/toast";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Dialog,
   DialogContent,
@@ -17,6 +20,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectItem,
@@ -25,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryAuthSession } from "@/features/auth";
+import { cn } from "@/lib/utils";
 import { useMutCreateExternalOpenPlay } from "../hooks";
 
 interface ExternalOpenPlayCreateDialogProps {
@@ -38,7 +47,21 @@ interface ExternalOpenPlayCreateDialogProps {
   triggerLabel?: string;
 }
 
-const LOCAL_DATETIME_STEP_SECONDS = 60;
+const HOUR_OPTIONS = Array.from({ length: 24 }, (_, i) => {
+  const hour12 = i % 12 || 12;
+  const amPm = i < 12 ? "AM" : "PM";
+  return { value: String(i), label: `${hour12}:00 ${amPm}` };
+});
+
+type CourtField = {
+  id: string;
+  label: string;
+};
+
+const INITIAL_COURT_FIELD: CourtField = {
+  id: "court-field-0",
+  label: "",
+};
 
 export function ExternalOpenPlayCreateDialog({
   place,
@@ -49,14 +72,26 @@ export function ExternalOpenPlayCreateDialog({
   const { data: session } = useQueryAuthSession();
   const isAuthed = Boolean(session);
   const createExternal = useMutCreateExternalOpenPlay();
+  const nextCourtFieldId = React.useRef(1);
+  const createCourtField = React.useCallback(
+    (label = ""): CourtField => ({
+      id: `court-field-${nextCourtFieldId.current++}`,
+      label,
+    }),
+    [],
+  );
 
   const [open, setOpen] = React.useState(false);
   const [sportId, setSportId] = React.useState<string>(
     place.sports[0]?.id ?? "",
   );
-  const [startsAtLocal, setStartsAtLocal] = React.useState("");
-  const [endsAtLocal, setEndsAtLocal] = React.useState("");
-  const [courtLabel, setCourtLabel] = React.useState("");
+  const [startDate, setStartDate] = React.useState<Date | undefined>();
+  const [startHour, setStartHour] = React.useState<string>("");
+  const [endDate, setEndDate] = React.useState<Date | undefined>();
+  const [endHour, setEndHour] = React.useState<string>("");
+  const [courtFields, setCourtFields] = React.useState<CourtField[]>([
+    INITIAL_COURT_FIELD,
+  ]);
   const [title, setTitle] = React.useState("");
   const [note, setNote] = React.useState("");
   const [maxPlayers, setMaxPlayers] = React.useState(4);
@@ -73,10 +108,13 @@ export function ExternalOpenPlayCreateDialog({
 
   React.useEffect(() => {
     if (!open) {
+      nextCourtFieldId.current = 1;
       setSportId(place.sports[0]?.id ?? "");
-      setStartsAtLocal("");
-      setEndsAtLocal("");
-      setCourtLabel("");
+      setStartDate(undefined);
+      setStartHour("");
+      setEndDate(undefined);
+      setEndHour("");
+      setCourtFields([INITIAL_COURT_FIELD]);
       setTitle("");
       setNote("");
       setMaxPlayers(4);
@@ -130,35 +168,142 @@ export function ExternalOpenPlayCreateDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="externalStartsAt">Start time</Label>
-              <Input
-                id="externalStartsAt"
-                type="datetime-local"
-                step={LOCAL_DATETIME_STEP_SECONDS}
-                value={startsAtLocal}
-                onChange={(e) => setStartsAtLocal(e.target.value)}
-              />
+              <Label>Start date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left text-base font-normal md:text-sm",
+                      !startDate && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 size-4" />
+                    {startDate ? format(startDate, "MMM d, yyyy") : "Pick date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={startDate}
+                    onSelect={(day) => {
+                      setStartDate(day);
+                      if (!endDate && day) setEndDate(day);
+                    }}
+                  />
+                </PopoverContent>
+              </Popover>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="externalEndsAt">End time</Label>
-              <Input
-                id="externalEndsAt"
-                type="datetime-local"
-                step={LOCAL_DATETIME_STEP_SECONDS}
-                value={endsAtLocal}
-                onChange={(e) => setEndsAtLocal(e.target.value)}
-              />
+              <Label>Start hour</Label>
+              <Select value={startHour} onValueChange={setStartHour}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select hour" />
+                </SelectTrigger>
+                <SelectContent>
+                  {HOUR_OPTIONS.map((h) => (
+                    <SelectItem key={h.value} value={h.value}>
+                      {h.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="externalCourtLabel">Court label (optional)</Label>
-            <Input
-              id="externalCourtLabel"
-              value={courtLabel}
-              onChange={(e) => setCourtLabel(e.target.value)}
-              placeholder="e.g. Court A"
-            />
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <Label>End date</Label>
+              <Popover>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className={cn(
+                      "w-full justify-start text-left text-base font-normal md:text-sm",
+                      !endDate && "text-muted-foreground",
+                    )}
+                  >
+                    <CalendarIcon className="mr-2 size-4" />
+                    {endDate ? format(endDate, "MMM d, yyyy") : "Pick date"}
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-auto p-0" align="start">
+                  <Calendar
+                    mode="single"
+                    selected={endDate}
+                    onSelect={setEndDate}
+                  />
+                </PopoverContent>
+              </Popover>
+            </div>
+            <div className="space-y-2">
+              <Label>End hour</Label>
+              <Select value={endHour} onValueChange={setEndHour}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select hour" />
+                </SelectTrigger>
+                <SelectContent>
+                  {HOUR_OPTIONS.map((h) => (
+                    <SelectItem key={h.value} value={h.value}>
+                      {h.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <div className="flex items-center justify-between gap-3">
+              <div className="space-y-1">
+                <Label>Courts</Label>
+                <p className="text-xs text-muted-foreground">
+                  Add each court included in this external session.
+                </p>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() =>
+                  setCourtFields((current) => [...current, createCourtField()])
+                }
+              >
+                Add court
+              </Button>
+            </div>
+            <div className="space-y-2">
+              {courtFields.map((courtField, index) => (
+                <div key={courtField.id} className="flex gap-2">
+                  <Input
+                    value={courtField.label}
+                    onChange={(e) => {
+                      setCourtFields((current) =>
+                        current.map((item) =>
+                          item.id === courtField.id
+                            ? { ...item, label: e.target.value }
+                            : item,
+                        ),
+                      );
+                    }}
+                    placeholder={`e.g. Court ${String.fromCharCode(65 + index)}`}
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    disabled={courtFields.length === 1}
+                    onClick={() =>
+                      setCourtFields((current) =>
+                        current.filter((item) => item.id !== courtField.id),
+                      )
+                    }
+                  >
+                    Remove
+                  </Button>
+                </div>
+              ))}
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -276,13 +421,22 @@ export function ExternalOpenPlayCreateDialog({
                   toast.error("Select a sport.");
                   return;
                 }
-                if (!startsAtLocal || !endsAtLocal) {
-                  toast.error("Provide start and end times.");
+                const normalizedCourts = courtFields
+                  .map((courtField) => courtField.label.trim())
+                  .filter((courtLabel) => courtLabel.length > 0);
+                if (normalizedCourts.length === 0) {
+                  toast.error("Add at least one court.");
+                  return;
+                }
+                if (!startDate || !startHour || !endDate || !endHour) {
+                  toast.error("Provide start and end date/hour.");
                   return;
                 }
 
-                const startsAt = new Date(startsAtLocal);
-                const endsAt = new Date(endsAtLocal);
+                const startsAt = new Date(startDate);
+                startsAt.setHours(Number(startHour), 0, 0, 0);
+                const endsAt = new Date(endDate);
+                endsAt.setHours(Number(endHour), 0, 0, 0);
                 if (
                   Number.isNaN(startsAt.getTime()) ||
                   Number.isNaN(endsAt.getTime())
@@ -297,10 +451,7 @@ export function ExternalOpenPlayCreateDialog({
                     sportId,
                     startsAtIso: startsAt.toISOString(),
                     endsAtIso: endsAt.toISOString(),
-                    courtLabel:
-                      courtLabel.trim().length > 0
-                        ? courtLabel.trim()
-                        : undefined,
+                    courts: normalizedCourts.map((label) => ({ label })),
                     maxPlayers: Math.max(2, Math.min(32, maxPlayers)),
                     joinPolicy,
                     visibility,

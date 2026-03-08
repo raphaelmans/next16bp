@@ -1,4 +1,4 @@
-import { and, count, desc, eq, ne } from "drizzle-orm";
+import { and, count, desc, eq } from "drizzle-orm";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -18,6 +18,7 @@ import {
   buildCanonicalUrl,
   getCanonicalOrigin,
 } from "@/lib/shared/utils/canonical-origin";
+import { publicCaller } from "@/trpc/server";
 
 type CourtsCitySportPageProps = {
   params: Promise<{ province: string; city: string; sport: string }>;
@@ -149,7 +150,7 @@ export default async function CourtsCitySportPage({
     return notFound();
   }
 
-  const [placeCountRow, courtCountRow, siblingSportRows, venueRows] =
+  const [placeCountRow, courtCountRow, citySportRows, venueSummaries] =
     await Promise.all([
       db
         .select({ value: count() })
@@ -199,37 +200,45 @@ export default async function CourtsCitySportPage({
             eq(place.isActive, true),
             eq(place.province, context.province.name),
             eq(place.city, context.city.name),
-            ne(sportTable.id, context.sport.id),
           ),
         )
         .groupBy(sportTable.slug, sportTable.name)
         .orderBy(desc(count()), sportTable.name)
         .limit(6),
-      db
-        .select({ slug: place.slug, name: place.name })
-        .from(place)
-        .innerJoin(
-          court,
-          and(
-            eq(court.placeId, place.id),
-            eq(court.sportId, context.sport.id),
-            eq(court.isActive, true),
-          ),
-        )
-        .where(
-          and(
-            eq(place.isActive, true),
-            eq(place.province, context.province.name),
-            eq(place.city, context.city.name),
-          ),
-        )
-        .groupBy(place.slug, place.name, place.featuredRank)
-        .orderBy(desc(place.featuredRank), place.name)
-        .limit(6),
+      publicCaller.place.listSummary({
+        province: context.province.name,
+        city: context.city.name,
+        sportId: context.sport.id,
+        limit: 6,
+        offset: 0,
+      }),
     ]);
 
   const placeCount = Number(placeCountRow?.[0]?.value ?? 0);
   const courtCount = Number(courtCountRow?.[0]?.value ?? 0);
+  const siblingSportRows = citySportRows.filter(
+    (row) => row.slug !== context.sport.slug,
+  );
+  const venueRows = venueSummaries.items
+    .map((item) => ({
+      slug: item.place.slug,
+      name: item.place.name,
+      featuredRank: item.place.featuredRank ?? 0,
+    }))
+    .filter(
+      (
+        item,
+      ): item is {
+        slug: string;
+        name: string;
+        featuredRank: number;
+      } => Boolean(item.slug),
+    )
+    .sort(
+      (left, right) =>
+        (right.featuredRank ?? 0) - (left.featuredRank ?? 0) ||
+        left.name.localeCompare(right.name),
+    );
   const canonicalPath = appRoutes.courts.locations.sport(
     context.province.slug,
     context.city.slug,

@@ -13,11 +13,7 @@ import {
 } from "@/common/query-keys";
 import { getZonedStartOfDayIso, toUtcISOString } from "@/common/time-zone";
 import type { PlaceCardPlace, TimeSlot } from "@/components/kudos";
-import {
-  createDiscoveryPlaceCardMediaQueryOptions,
-  createDiscoveryPlaceCardMetaQueryOptions,
-  DISCOVERY_TIER2_STALE_TIME_MS,
-} from "@/features/discovery/query-options";
+import { DISCOVERY_TIER2_STALE_TIME_MS } from "@/features/discovery/query-options";
 import { getDiscoveryApi } from "../api.runtime";
 import { useModDiscoveryAvailabilityRealtimeSync } from "../realtime";
 
@@ -227,27 +223,24 @@ export function useModDiscoveryProgressivePlaceCardDetails(
   placeIds: string[],
   sportId: string | undefined,
 ) {
-  const queries = useFeatureQueries([
-    createDiscoveryPlaceCardMediaQueryOptions(
-      discoveryApi.queryPlaceCardMediaByIds,
-      { placeIds },
-      {
-        enabled: placeIds.length > 0,
-        staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
-      },
-    ),
-    createDiscoveryPlaceCardMetaQueryOptions(
-      discoveryApi.queryPlaceCardMetaByIds,
-      { placeIds, sportId },
-      {
-        enabled: placeIds.length > 0,
-        staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
-      },
-    ),
-  ] as const);
-
-  const mediaQuery = queries[0];
-  const metaQuery = queries[1];
+  const mediaQuery = useFeatureQuery(
+    ["place", "cardMediaByIds"],
+    discoveryApi.queryPlaceCardMediaByIds,
+    { placeIds },
+    {
+      enabled: placeIds.length > 0,
+      staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
+    },
+  );
+  const metaQuery = useFeatureQuery(
+    ["place", "cardMetaByIds"],
+    discoveryApi.queryPlaceCardMetaByIds,
+    { placeIds, sportId },
+    {
+      enabled: placeIds.length > 0,
+      staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
+    },
+  );
 
   const mediaById = useMemo(() => {
     const record: Record<string, PlaceCardMedia> = {};

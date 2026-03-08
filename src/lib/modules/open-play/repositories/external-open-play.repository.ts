@@ -1,9 +1,12 @@
-import { and, asc, count, eq, gt, lt, sql } from "drizzle-orm";
+import { and, asc, count, eq, gt, inArray, lt, sql } from "drizzle-orm";
 import {
+  type ExternalOpenPlayCourtRecord,
   type ExternalOpenPlayRecord,
   externalOpenPlay,
+  externalOpenPlayCourt,
   externalOpenPlayParticipant,
   type InsertExternalOpenPlay,
+  type InsertExternalOpenPlayCourt,
   place,
   profile,
   sport,
@@ -22,7 +25,10 @@ export interface ExternalOpenPlayListItemRecord {
   confirmedCount: number;
   title: string | null;
   note: string | null;
-  courtLabel: string | null;
+  courtSummaryLabel: string | null;
+  courts: Array<{
+    label: string;
+  }>;
   sportName: string;
   sourcePlatform: string;
   reportCount: number;
@@ -35,6 +41,9 @@ export interface ExternalOpenPlayListItemRecord {
 
 export interface ExternalOpenPlayDetailContextRecord {
   externalOpenPlay: ExternalOpenPlayRecord;
+  courts: Array<{
+    label: string;
+  }>;
   place: {
     id: string;
     name: string;
@@ -70,6 +79,13 @@ export interface IExternalOpenPlayRepository {
     data: InsertExternalOpenPlay,
     ctx?: RequestContext,
   ): Promise<ExternalOpenPlayRecord>;
+  insertCourts(
+    externalOpenPlayId: string,
+    courts: Array<{
+      label: string;
+    }>,
+    ctx?: RequestContext,
+  ): Promise<ExternalOpenPlayCourtRecord[]>;
   update(
     id: string,
     data: Partial<InsertExternalOpenPlay>,
@@ -137,6 +153,29 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
     return row;
   }
 
+  async insertCourts(
+    externalOpenPlayId: string,
+    courts: Array<{
+      label: string;
+    }>,
+    ctx?: RequestContext,
+  ): Promise<ExternalOpenPlayCourtRecord[]> {
+    const client = this.getClient(ctx);
+    if (courts.length === 0) {
+      return [];
+    }
+
+    const values: InsertExternalOpenPlayCourt[] = courts.map(
+      (court, index) => ({
+        externalOpenPlayId,
+        label: court.label,
+        sortOrder: index,
+      }),
+    );
+
+    return client.insert(externalOpenPlayCourt).values(values).returning();
+  }
+
   async update(
     id: string,
     data: Partial<InsertExternalOpenPlay>,
@@ -193,7 +232,7 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
         confirmedCount: confirmedCountSql,
         title: externalOpenPlay.title,
         note: externalOpenPlay.note,
-        courtLabel: externalOpenPlay.courtLabel,
+        courtSummaryLabel: externalOpenPlay.courtLabel,
         sportName: sport.name,
         sourcePlatform: externalOpenPlay.sourcePlatform,
         reportCount: externalOpenPlay.reportCount,
@@ -208,6 +247,11 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
       .orderBy(asc(externalOpenPlay.startsAt))
       .limit(options.limit);
 
+    const courtsByOpenPlayId = await this.getCourtsByOpenPlayIds(
+      rows.map((row) => row.id),
+      ctx,
+    );
+
     return rows.map((row) => ({
       id: row.id,
       startsAtIso: toIso(row.startsAt),
@@ -219,7 +263,14 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
       confirmedCount: Number(row.confirmedCount ?? 0),
       title: row.title ?? null,
       note: row.note ?? null,
-      courtLabel: row.courtLabel ?? null,
+      courtSummaryLabel: this.buildCourtSummaryLabel(
+        courtsByOpenPlayId.get(row.id) ?? [],
+        row.courtSummaryLabel ?? null,
+      ),
+      courts: this.toCourtItems(
+        courtsByOpenPlayId.get(row.id) ?? [],
+        row.courtSummaryLabel ?? null,
+      ),
       sportName: row.sportName,
       sourcePlatform: row.sourcePlatform,
       reportCount: row.reportCount,
@@ -284,8 +335,14 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
       return null;
     }
 
+    const courts = this.toCourtItems(
+      await this.listCourtsByOpenPlayId(externalOpenPlayId, ctx),
+      row.externalOpenPlay.courtLabel ?? null,
+    );
+
     return {
       externalOpenPlay: row.externalOpenPlay,
+      courts,
       place: {
         id: row.placeId,
         name: row.placeName,
@@ -307,5 +364,71 @@ export class ExternalOpenPlayRepository implements IExternalOpenPlayRepository {
         waitlisted: countsByStatus.get("WAITLISTED") ?? 0,
       },
     };
+  }
+
+  private async getCourtsByOpenPlayIds(
+    externalOpenPlayIds: string[],
+    ctx?: RequestContext,
+  ) {
+    const client = this.getClient(ctx);
+    const map = new Map<string, ExternalOpenPlayCourtRecord[]>();
+
+    if (externalOpenPlayIds.length === 0) {
+      return map;
+    }
+
+    const rows = await client
+      .select()
+      .from(externalOpenPlayCourt)
+      .where(
+        inArray(externalOpenPlayCourt.externalOpenPlayId, externalOpenPlayIds),
+      )
+      .orderBy(
+        asc(externalOpenPlayCourt.externalOpenPlayId),
+        asc(externalOpenPlayCourt.sortOrder),
+      );
+
+    for (const row of rows) {
+      const existing = map.get(row.externalOpenPlayId) ?? [];
+      existing.push(row);
+      map.set(row.externalOpenPlayId, existing);
+    }
+
+    return map;
+  }
+
+  private async listCourtsByOpenPlayId(
+    externalOpenPlayId: string,
+    ctx?: RequestContext,
+  ) {
+    const client = this.getClient(ctx);
+    return client
+      .select()
+      .from(externalOpenPlayCourt)
+      .where(eq(externalOpenPlayCourt.externalOpenPlayId, externalOpenPlayId))
+      .orderBy(asc(externalOpenPlayCourt.sortOrder));
+  }
+
+  private toCourtItems(
+    rows: Array<Pick<ExternalOpenPlayCourtRecord, "label">>,
+    fallback: string | null,
+  ) {
+    if (rows.length > 0) {
+      return rows.map((row) => ({ label: row.label }));
+    }
+    if (fallback) {
+      return [{ label: fallback }];
+    }
+    return [];
+  }
+
+  private buildCourtSummaryLabel(
+    rows: Array<Pick<ExternalOpenPlayCourtRecord, "label">>,
+    fallback: string | null,
+  ) {
+    if (rows.length === 0) {
+      return fallback;
+    }
+    return rows.map((row) => row.label).join(", ");
   }
 }

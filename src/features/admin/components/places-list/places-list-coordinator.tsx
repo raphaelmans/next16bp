@@ -138,9 +138,9 @@ export function AdminPlacesList({
   entityLabel,
 }: AdminPlacesListProps) {
   const f = useModAdminCourtFilters();
-  const typeFilter = (defaultTypeFilter !== "all" && lockTypeFilter
-    ? defaultTypeFilter
-    : f.type) as CourtType | "all";
+  const typeFilter = (
+    defaultTypeFilter !== "all" && lockTypeFilter ? defaultTypeFilter : f.type
+  ) as CourtType | "all";
   const statusFilter = f.status as CourtStatus | "all";
   const provinceFilter = f.province;
   const cityFilter = f.city;

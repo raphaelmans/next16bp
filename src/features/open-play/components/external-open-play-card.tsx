@@ -14,7 +14,10 @@ export interface ExternalOpenPlayCardProps {
     startsAtIso: string;
     endsAtIso: string;
     title: string | null;
-    courtLabel: string | null;
+    courtSummaryLabel: string | null;
+    courts: Array<{
+      label: string;
+    }>;
     joinPolicy: "REQUEST" | "AUTO";
     maxPlayers: number;
     confirmedCount: number;
@@ -45,7 +48,7 @@ export function ExternalOpenPlayCard({
   href,
   className,
 }: ExternalOpenPlayCardProps) {
-  const subtitle = `${externalOpenPlay.sportName} • ${externalOpenPlay.courtLabel ?? "Court TBD"}`;
+  const subtitle = `${externalOpenPlay.sportName} • ${externalOpenPlay.courtSummaryLabel ?? "Court TBD"}`;
   const dateLabel = formatInTimeZone(
     externalOpenPlay.startsAtIso,
     timeZone,
@@ -77,6 +80,11 @@ export function ExternalOpenPlayCard({
               <p className="mt-1 text-sm text-muted-foreground truncate">
                 {subtitle}
               </p>
+              {externalOpenPlay.courts.length > 1 ? (
+                <p className="mt-1 text-xs text-muted-foreground truncate">
+                  {externalOpenPlay.courts.length} courts
+                </p>
+              ) : null}
               <p className="mt-2 text-sm">
                 <span className="font-medium">{dateLabel}</span>
                 <span className="text-muted-foreground"> · {timeLabel}</span>

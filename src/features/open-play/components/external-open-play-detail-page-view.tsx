@@ -107,6 +107,11 @@ export default function ExternalOpenPlayDetailPageView({
     data.externalOpenPlay.endsAtIso,
     data.place.timeZone,
   );
+  const courtSummary =
+    data.externalOpenPlay.courtSummaryLabel ??
+    (data.courts.length > 0
+      ? data.courts.map((court) => court.label).join(", ")
+      : "Court TBD");
 
   const joinDisabledReason =
     data.externalOpenPlay.status !== "ACTIVE"
@@ -138,9 +143,7 @@ export default function ExternalOpenPlayDetailPageView({
                     {data.externalOpenPlay.title || "External Open Play"}
                   </CardTitle>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    {data.sport.name} •{" "}
-                    {data.externalOpenPlay.courtLabel ?? "Court TBD"} •{" "}
-                    {data.place.name}
+                    {data.sport.name} • {courtSummary} • {data.place.name}
                   </p>
                   <p className="mt-2 text-sm">
                     <span className="font-medium">{dateLabel}</span>
@@ -172,6 +175,22 @@ export default function ExternalOpenPlayDetailPageView({
               {data.externalOpenPlay.note ? (
                 <div className="rounded-md border bg-muted/30 p-3 text-sm">
                   {data.externalOpenPlay.note}
+                </div>
+              ) : null}
+
+              {data.courts.length > 0 ? (
+                <div className="rounded-md border bg-muted/30 p-3 text-sm">
+                  <div className="font-medium">Courts</div>
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {data.courts.map((court, index) => (
+                      <Badge
+                        key={`${court.label}-${index}`}
+                        variant="secondary"
+                      >
+                        {court.label}
+                      </Badge>
+                    ))}
+                  </div>
                 </div>
               ) : null}
 

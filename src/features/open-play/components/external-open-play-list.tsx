@@ -12,7 +12,10 @@ export function ExternalOpenPlayList({
     startsAtIso: string;
     endsAtIso: string;
     title: string | null;
-    courtLabel: string | null;
+    courtSummaryLabel: string | null;
+    courts: Array<{
+      label: string;
+    }>;
     joinPolicy: "REQUEST" | "AUTO";
     maxPlayers: number;
     confirmedCount: number;

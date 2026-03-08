@@ -102,6 +102,51 @@ export type InsertExternalOpenPlay = z.infer<
 >;
 
 /**
+ * External Open Play Court
+ * Structured court labels for a single external session.
+ */
+export const externalOpenPlayCourt = pgTable(
+  "external_open_play_court",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    externalOpenPlayId: uuid("external_open_play_id")
+      .notNull()
+      .references(() => externalOpenPlay.id, { onDelete: "cascade" }),
+    label: varchar("label", { length: 120 }).notNull(),
+    sortOrder: integer("sort_order").notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true })
+      .defaultNow()
+      .notNull(),
+  },
+  (table) => [
+    index("idx_external_open_play_court_open_play").on(
+      table.externalOpenPlayId,
+    ),
+    uniqueIndex("uq_external_open_play_court_sort_order").on(
+      table.externalOpenPlayId,
+      table.sortOrder,
+    ),
+  ],
+);
+
+export const ExternalOpenPlayCourtSchema = createSelectSchema(
+  externalOpenPlayCourt,
+);
+export const InsertExternalOpenPlayCourtSchema = createInsertSchema(
+  externalOpenPlayCourt,
+);
+
+export type ExternalOpenPlayCourtRecord = z.infer<
+  typeof ExternalOpenPlayCourtSchema
+>;
+export type InsertExternalOpenPlayCourt = z.infer<
+  typeof InsertExternalOpenPlayCourtSchema
+>;
+
+/**
  * External Open Play Participant
  * Mirrors participation states for unverified sessions.
  */

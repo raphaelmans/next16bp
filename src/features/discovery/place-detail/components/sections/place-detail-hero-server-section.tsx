@@ -1,7 +1,16 @@
-import { Calendar, LayoutGrid, MapPin, Phone, ShieldCheck } from "lucide-react";
+import {
+  Calendar,
+  LayoutGrid,
+  MapPin,
+  MessageSquare,
+  Phone,
+  ShieldCheck,
+  Star,
+} from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
 import { PlaceDetailBookmarkSlot } from "@/features/discovery/place-detail/components/place-detail-bookmark-slot";
 
@@ -13,6 +22,10 @@ type PlaceDetailHeroServerSectionProps = {
   directionsUrl: string;
   hasCallCta: boolean;
   callHref: string;
+  reviewAggregate: {
+    averageRating: number;
+    reviewCount: number;
+  } | null;
 };
 
 export function PlaceDetailHeroServerSection({
@@ -23,6 +36,7 @@ export function PlaceDetailHeroServerSection({
   directionsUrl,
   hasCallCta,
   callHref,
+  reviewAggregate,
 }: PlaceDetailHeroServerSectionProps) {
   const logoUrl = place.logoUrl?.trim();
   const logoFallback = place.name
@@ -69,10 +83,52 @@ export function PlaceDetailHeroServerSection({
               </Badge>
             )}
           </div>
-          <p className="mt-0.5 text-sm text-muted-foreground">
-            {place.city}
-            {place.address ? ` · ${place.address}` : ""}
-          </p>
+          <div className="mt-0.5 flex flex-wrap items-center gap-x-2 gap-y-0.5">
+            <p className="text-sm text-muted-foreground">
+              {place.city}
+              {place.address ? ` · ${place.address}` : ""}
+            </p>
+            <a
+              href="#reviews"
+              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              {reviewAggregate && reviewAggregate.reviewCount > 0 ? (
+                <>
+                  <span className="font-medium text-foreground">
+                    {reviewAggregate.averageRating.toFixed(1)}
+                  </span>
+                  <div className="flex gap-px">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className={cn(
+                          "h-3 w-3",
+                          s <= Math.round(reviewAggregate.averageRating)
+                            ? "fill-amber-400 text-amber-400"
+                            : "text-muted-foreground/20",
+                        )}
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs">
+                    ({reviewAggregate.reviewCount})
+                  </span>
+                </>
+              ) : (
+                <>
+                  <div className="flex gap-px">
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <Star
+                        key={s}
+                        className="h-3 w-3 text-muted-foreground/20"
+                      />
+                    ))}
+                  </div>
+                  <span className="text-xs">No reviews</span>
+                </>
+              )}
+            </a>
+          </div>
         </div>
       </div>
 
@@ -94,7 +150,13 @@ export function PlaceDetailHeroServerSection({
         <Button asChild variant="outline" size="sm">
           <a href="#courts-info">
             <LayoutGrid className="h-4 w-4" />
-            Courts & info
+            Courts & amenities
+          </a>
+        </Button>
+        <Button asChild variant="outline" size="sm">
+          <a href="#reviews">
+            <MessageSquare className="h-4 w-4" />
+            Reviews
           </a>
         </Button>
         {hasCallCta && (

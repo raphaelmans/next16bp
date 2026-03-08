@@ -567,12 +567,12 @@ function CourtsPageSkeleton() {
   return (
     <Container>
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
+        <div className="flex items-center justify-between gap-3">
+          <div className="min-w-0 space-y-1">
             <Skeleton className="h-7 w-44" />
             <Skeleton className="h-4 w-24" />
           </div>
-          <div className="flex gap-2">
+          <div className="flex shrink-0 items-center gap-2">
             <Skeleton className="h-9 w-9 rounded-md" />
             <Skeleton className="h-9 w-[120px] rounded-lg" />
           </div>

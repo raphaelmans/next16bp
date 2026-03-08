@@ -58,9 +58,23 @@ type ExternalOpenPlayStatus =
   | "HIDDEN";
 
 const REPORT_HIDE_THRESHOLD = 3;
+const COURT_SUMMARY_MAX_LENGTH = 120;
 
 const toIsoString = (value: Date | string) =>
   value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+
+const toStoredCourtSummaryLabel = (
+  courts: Array<{
+    label: string;
+  }>,
+) => {
+  const firstLabel = courts[0]?.label ?? "Court";
+  const summary =
+    courts.length <= 1
+      ? firstLabel
+      : `${firstLabel} +${courts.length - 1} more`;
+  return summary.slice(0, COURT_SUMMARY_MAX_LENGTH);
+};
 
 export interface ExternalOpenPlayCard {
   id: string;
@@ -68,7 +82,10 @@ export interface ExternalOpenPlayCard {
   endsAtIso: string;
   title: string | null;
   note: string | null;
-  courtLabel: string | null;
+  courtSummaryLabel: string | null;
+  courts: Array<{
+    label: string;
+  }>;
   joinPolicy: ExternalOpenPlayJoinPolicy;
   maxPlayers: number;
   confirmedCount: number;
@@ -94,13 +111,16 @@ export interface ExternalOpenPlayPublicDetail {
     endsAtIso: string;
     title: string | null;
     note: string | null;
-    courtLabel: string | null;
+    courtSummaryLabel: string | null;
     sourcePlatform: "RECLUB" | "OTHER";
     reportCount: number;
     confirmedCount: number;
     availableSpots: number;
     promotedOpenPlayId: string | null;
   };
+  courts: Array<{
+    label: string;
+  }>;
   place: {
     id: string;
     name: string;
@@ -261,7 +281,10 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
         endsAtIso: toIsoString(context.externalOpenPlay.endsAt),
         title: context.externalOpenPlay.title ?? null,
         note: context.externalOpenPlay.note ?? null,
-        courtLabel: context.externalOpenPlay.courtLabel ?? null,
+        courtSummaryLabel:
+          context.courts.length > 0
+            ? context.courts.map((court) => court.label).join(", ")
+            : (context.externalOpenPlay.courtLabel ?? null),
         sourcePlatform: context.externalOpenPlay.sourcePlatform as
           | "RECLUB"
           | "OTHER",
@@ -270,6 +293,7 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
         availableSpots,
         promotedOpenPlayId: context.externalOpenPlay.promotedOpenPlayId ?? null,
       },
+      courts: context.courts,
       place: context.place,
       sport: context.sport,
       host: {
@@ -304,7 +328,8 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
         endsAtIso: item.endsAtIso,
         title: item.title,
         note: item.note,
-        courtLabel: item.courtLabel,
+        courtSummaryLabel: item.courtSummaryLabel,
+        courts: item.courts,
         joinPolicy: item.joinPolicy as ExternalOpenPlayJoinPolicy,
         maxPlayers: item.maxPlayers,
         confirmedCount: item.confirmedCount,
@@ -477,7 +502,7 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
           hostProfileId,
           placeId: input.placeId,
           sportId: input.sportId,
-          courtLabel: input.courtLabel,
+          courtLabel: toStoredCourtSummaryLabel(input.courts),
           startsAt,
           endsAt,
           status: "ACTIVE",
@@ -489,6 +514,12 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
           sourcePlatform: input.sourcePlatform,
           sourceReference: input.sourceReference,
         },
+        ctx,
+      );
+
+      await this.externalOpenPlayRepository.insertCourts(
+        created.id,
+        input.courts,
         ctx,
       );
 

@@ -7,7 +7,7 @@ export const buildTrpcQueryKey = (
   const splitPath = path.flatMap((part) => part.split("."));
 
   return [
-    splitPath,
+    ["__feature__", ...splitPath],
     {
       ...(typeof input !== "undefined" && input !== skipToken ? { input } : {}),
       type: "query" as const,

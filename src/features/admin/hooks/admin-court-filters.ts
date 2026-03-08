@@ -26,7 +26,11 @@ export function useModAdminCourtFilters() {
     });
 
   const setProvince = (value: string) =>
-    setFilters({ province: value === "all" ? null : value, city: null, page: 1 });
+    setFilters({
+      province: value === "all" ? null : value,
+      city: null,
+      page: 1,
+    });
 
   const setCity = (value: string) =>
     setFilters({ city: value === "all" ? null : value, page: 1 });
@@ -46,17 +50,14 @@ export function useModAdminCourtFilters() {
 
   const setFeatured = (value: string) =>
     setFilters({
-      featured:
-        value === "all" ? null : (value as "featured" | "not_featured"),
+      featured: value === "all" ? null : (value as "featured" | "not_featured"),
       page: 1,
     });
 
   const setSource = (value: string) =>
     setFilters({
       source:
-        value === "all"
-          ? null
-          : (value as "user_submitted" | "admin_curated"),
+        value === "all" ? null : (value as "user_submitted" | "admin_curated"),
       page: 1,
     });
 

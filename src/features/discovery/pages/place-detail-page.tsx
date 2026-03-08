@@ -413,6 +413,7 @@ async function PlaceDetailPageServerSection({
             directionsUrl={directionsUrl}
             hasCallCta={hasCallCta}
             callHref={callHref}
+            reviewAggregate={reviewAggregate}
           />
 
           {showBooking && (

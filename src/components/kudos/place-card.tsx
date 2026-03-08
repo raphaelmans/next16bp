@@ -267,10 +267,11 @@ export function PlaceCard({
             >
               {place.city}
             </span>
-            {place.averageRating != null &&
+            <span className="ml-auto flex items-center gap-0.5 shrink-0">
+              {place.averageRating != null &&
               place.reviewCount != null &&
-              place.reviewCount > 0 && (
-                <span className="ml-auto flex items-center gap-0.5 shrink-0">
+              place.reviewCount > 0 ? (
+                <>
                   <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
                   <span
                     className={cn(
@@ -288,8 +289,21 @@ export function PlaceCard({
                   >
                     ({place.reviewCount})
                   </span>
-                </span>
+                </>
+              ) : (
+                <>
+                  <Star className="h-3 w-3 text-muted-foreground/30" />
+                  <span
+                    className={cn(
+                      "text-muted-foreground/50",
+                      variant === "compact" ? "text-[10px]" : "text-[11px]",
+                    )}
+                  >
+                    No reviews
+                  </span>
+                </>
               )}
+            </span>
           </div>
           <div
             className={cn(
@@ -374,7 +388,7 @@ export function PlaceCardSkeleton({
   return (
     <Card
       className={cn(
-        "overflow-hidden p-0 gap-0 animate-pulse",
+        "h-full overflow-hidden p-0 gap-0 animate-pulse",
         variant === "compact" && "flex flex-row",
       )}
     >
@@ -389,24 +403,61 @@ export function PlaceCardSkeleton({
           className={cn(
             "absolute rounded-full bg-muted-foreground/10",
             variant === "compact"
-              ? "h-6 w-6 top-2 left-2"
-              : "h-9 w-9 top-3 left-3",
+              ? "h-7 w-7 top-2 left-2"
+              : "h-10 w-10 top-3 left-3",
           )}
         />
       </div>
 
       <div
         className={cn(
-          "p-4 space-y-2",
+          "flex h-full flex-col p-4",
           variant === "compact" && "flex-1 py-2 px-3",
         )}
       >
-        <div className="h-5 bg-muted rounded w-3/4" />
-        <div className="h-4 bg-muted rounded w-1/2" />
-        <div className="h-3 bg-muted rounded w-2/3" />
+        {/* Title + court count */}
+        <div className="flex items-start justify-between gap-2">
+          <div className="h-5 bg-muted rounded w-3/4" />
+          {variant !== "compact" && (
+            <div className="h-5 w-16 bg-muted rounded-full shrink-0" />
+          )}
+        </div>
+
+        {/* Status badges */}
         {variant !== "compact" && (
-          <div className="h-8 bg-muted rounded w-full mt-3" />
+          <div className="mt-2 flex gap-2">
+            <div className="h-5 w-14 bg-muted rounded-full" />
+            <div className="h-5 w-16 bg-muted rounded-full" />
+          </div>
         )}
+
+        {/* City + rating row */}
+        <div className="mt-2 flex items-center justify-between">
+          <div className="h-4 bg-muted rounded w-1/3" />
+          <div className="h-3 bg-muted rounded w-16" />
+        </div>
+
+        {/* Address */}
+        <div className="mt-1 h-3 bg-muted rounded w-2/3 ml-4" />
+
+        {/* Sports badges */}
+        {variant !== "compact" && (
+          <div className="mt-3 flex gap-2">
+            <div className="h-5 w-16 bg-muted rounded-full" />
+            <div className="h-5 w-12 bg-muted rounded-full" />
+            <div className="h-5 w-14 bg-muted rounded-full" />
+          </div>
+        )}
+
+        {/* Price + CTA */}
+        <div className="mt-auto space-y-3 pt-3">
+          {variant !== "compact" && (
+            <div className="h-5 bg-muted rounded w-28" />
+          )}
+          {variant !== "compact" && (
+            <div className="h-9 bg-muted rounded w-full" />
+          )}
+        </div>
       </div>
     </Card>
   );

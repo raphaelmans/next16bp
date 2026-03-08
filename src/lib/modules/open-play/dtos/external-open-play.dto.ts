@@ -1,6 +1,10 @@
 import { z } from "zod";
 import { S } from "@/common/schemas";
 
+export const ExternalOpenPlayCourtInputSchema = z.object({
+  label: z.string().trim().min(1).max(120),
+});
+
 export const ListExternalOpenPlaysByPlaceSchema = z.object({
   placeId: S.ids.placeId,
   fromIso: S.common.isoDateTime.optional(),
@@ -23,7 +27,13 @@ export const CreateExternalOpenPlaySchema = z.object({
   sportId: S.ids.generic,
   startsAtIso: S.common.isoDateTime,
   endsAtIso: S.common.isoDateTime,
-  courtLabel: z.string().trim().max(120).optional(),
+  courts: z
+    .array(ExternalOpenPlayCourtInputSchema)
+    .min(1)
+    .max(32)
+    .transform((courts) =>
+      courts.map((court) => ({ label: court.label.trim() })),
+    ),
   maxPlayers: z.number().int().min(2).max(32).default(4),
   joinPolicy: z.enum(["REQUEST", "AUTO"]).default("REQUEST"),
   visibility: z.enum(["PUBLIC", "UNLISTED"]).default("PUBLIC"),
