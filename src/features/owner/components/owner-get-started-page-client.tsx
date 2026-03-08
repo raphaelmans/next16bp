@@ -5,6 +5,7 @@ import {
   ArrowRight,
   BarChart3,
   Bell,
+  BookOpen,
   Building2,
   CheckCircle,
   ClipboardList,
@@ -1385,6 +1386,55 @@ export default function OwnersGetStartedPage() {
               </CardContent>
             </Card>
           </div>
+        </Container>
+      </section>
+
+      {/* ----------------------------------------------------------------- */}
+      {/* ORGANIZATION GUIDE TEASER                                          */}
+      {/* ----------------------------------------------------------------- */}
+      <section className="py-10 sm:py-14">
+        <Container size="xl">
+          <Card className="border-border/60">
+            <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
+              <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10">
+                <BookOpen className="h-6 w-6 text-primary" />
+              </div>
+              <h2 className="font-heading text-xl font-bold tracking-tight sm:text-2xl">
+                Want to see the full setup walkthrough?
+              </h2>
+              <p className="max-w-lg text-muted-foreground">
+                Our organization guide covers every step from the setup wizard
+                through courts, verification, notifications, team access, and
+                handling your first reservations.
+              </p>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button asChild size="lg" className="rounded-xl">
+                  <Link
+                    href={appRoutes.guides.detail(
+                      "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+                    )}
+                  >
+                    Read the guide
+                    <BookOpen className="h-4 w-4" />
+                  </Link>
+                </Button>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="lg"
+                  className="rounded-xl"
+                >
+                  <Link
+                    href={registerHref}
+                    onClick={() => handleCtaClick("guide-teaser")}
+                  >
+                    Create free owner account
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </Container>
       </section>
 

@@ -310,6 +310,100 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     ],
   },
   {
+    slug: "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+    title: "How To Set Up Your Sports Venue Organization On KudosCourts",
+    description:
+      "An owner guide to setting up a venue organization on KudosCourts, from the setup wizard through courts, verification, notifications, team access, and reservation handling.",
+    audience: "owners",
+    heroEyebrow: "Owner Guide",
+    queryCluster: "how to set up a sports venue organization on kudoscourts",
+    publishedAt: GUIDE_PUBLISHED_AT,
+    updatedAt: GUIDE_PUBLISHED_AT,
+    intro:
+      "After creating your owner account, the setup wizard walks you through organization basics, venue details, and court configuration. This guide covers each step so you can get from zero to accepting reservation requests with confidence.",
+    sections: [
+      {
+        title: "Create the organization and add your first venue",
+        paragraphs: [
+          "The setup wizard starts by asking for the organization name, then guides you through adding a venue with its address, sports, photos, and amenities. Think of the organization as the owner-level container and the venue as the physical place players will find.",
+          "Getting these details right early means your venue page looks complete to players from day one instead of looking like a placeholder.",
+        ],
+      },
+      {
+        title: "Configure courts and availability",
+        paragraphs: [
+          "Each venue can have one or more courts. Courts define what players actually book, so adding the sport, surface type, and pricing gives players the information they need to decide.",
+          "Once courts exist you can open the availability studio to publish time slots. Players can then see when a court is free and send a reservation request without messaging you directly.",
+        ],
+      },
+      {
+        title: "Verify your venue and build trust",
+        paragraphs: [
+          "Verification signals tell players the listing is managed by a real operator. Complete your venue profile, upload clear photos, and confirm location details to earn trust before you go live.",
+          "A verified venue stands out in discovery pages and gives players more confidence when they compare options in the same city.",
+        ],
+      },
+      {
+        title: "Turn on notifications so you never miss a request",
+        paragraphs: [
+          "Reservation requests and player messages arrive as notifications. Make sure email and in-app notifications are enabled so you can respond quickly.",
+          "Fast response times improve the player experience and increase the chance that a request turns into a confirmed booking.",
+        ],
+      },
+      {
+        title: "Invite your team",
+        paragraphs: [
+          "If you have staff who help run the venue, invite them as team members. Team access lets multiple people manage reservations, respond to messages, and update availability without sharing a single account.",
+          "You stay in control of permissions while your team handles day-to-day operations.",
+        ],
+      },
+      {
+        title: "Handle reservations and go live",
+        paragraphs: [
+          "When a player sends a reservation request, you review the details, confirm or decline, and the player gets notified. The reservation flow is designed to give you full control over who books and when.",
+          "Once you are comfortable with the workflow, your venue is effectively live. Players discover it, request slots, and you manage everything from the venue dashboard.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "How long does the setup wizard take?",
+        answer:
+          "Most owners finish the wizard in under ten minutes. You can always return later to add more details, photos, or courts.",
+      },
+      {
+        question: "Can I manage multiple venues under one organization?",
+        answer:
+          "Yes. An organization can have multiple venues, each with its own courts, availability, and team members.",
+      },
+      {
+        question:
+          "Do I need to publish availability before players can find my venue?",
+        answer:
+          "No. Your venue page is discoverable as soon as the listing is complete. Publishing availability adds the reservation flow but is not required for discovery.",
+      },
+      {
+        question: "What happens when a player sends a reservation request?",
+        answer:
+          "You receive a notification, review the request in your dashboard, and confirm or decline. The player is notified of your decision.",
+      },
+    ],
+    relatedLinks: [
+      {
+        label: "Create your owner account",
+        href: appRoutes.ownersGetStarted.base,
+      },
+      {
+        label: "Browse venue listings",
+        href: appRoutes.courts.base,
+      },
+      {
+        label: "More guides",
+        href: appRoutes.guides.base,
+      },
+    ],
+  },
+  {
     slug: "how-to-list-your-sports-venue-online-in-the-philippines",
     title: "How To List Your Sports Venue Online In The Philippines",
     description:
