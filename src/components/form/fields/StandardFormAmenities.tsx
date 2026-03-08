@@ -229,50 +229,50 @@ export function StandardFormAmenities<
                     </div>
                   </PopoverAnchor>
 
-                    {selectedValues.length > 0 && (
-                      <div className="flex flex-wrap gap-2">
-                        {selectedValues.map((amenity) => (
-                          <Badge
-                            key={getAmenityKey(amenity)}
-                            variant="secondary"
-                            className="gap-1 rounded-full px-3 py-1 text-xs font-medium"
+                  {selectedValues.length > 0 && (
+                    <div className="flex flex-wrap gap-2">
+                      {selectedValues.map((amenity) => (
+                        <Badge
+                          key={getAmenityKey(amenity)}
+                          variant="secondary"
+                          className="gap-1 rounded-full px-3 py-1 text-xs font-medium"
+                        >
+                          {getAmenityDisplayLabel(amenity)}
+                          <button
+                            type="button"
+                            onClick={() => removeAmenity(amenity)}
+                            className="rounded-full p-0.5 transition hover:bg-foreground/10"
+                            aria-label={`Remove ${getAmenityDisplayLabel(amenity)}`}
                           >
-                            {getAmenityDisplayLabel(amenity)}
-                            <button
-                              type="button"
-                              onClick={() => removeAmenity(amenity)}
-                              className="rounded-full p-0.5 transition hover:bg-foreground/10"
-                              aria-label={`Remove ${getAmenityDisplayLabel(amenity)}`}
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </Badge>
-                        ))}
-                      </div>
-                    )}
+                            <X className="h-3 w-3" />
+                          </button>
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
 
-                    {quickPickLabels.length > 0 && (
-                      <ToggleGroup
-                        type="multiple"
-                        value={selectedQuickPicks}
-                        onValueChange={handleQuickPickChange}
-                        variant="outline"
-                        spacing={2}
-                        className="flex w-full flex-wrap gap-2"
-                        disabled={disabled}
-                      >
-                        {quickPickLabels.map((amenity) => (
-                          <ToggleGroupItem
-                            key={getAmenityKey(amenity)}
-                            value={getAmenityKey(amenity)}
-                            size="sm"
-                            className="h-auto rounded-full border-border/70 px-3 py-2 text-xs font-medium data-[state=on]:border-primary/30 data-[state=on]:bg-primary/8 data-[state=on]:text-primary"
-                          >
-                            {amenity}
-                          </ToggleGroupItem>
-                        ))}
-                      </ToggleGroup>
-                    )}
+                  {quickPickLabels.length > 0 && (
+                    <ToggleGroup
+                      type="multiple"
+                      value={selectedQuickPicks}
+                      onValueChange={handleQuickPickChange}
+                      variant="outline"
+                      spacing={2}
+                      className="flex w-full flex-wrap gap-2"
+                      disabled={disabled}
+                    >
+                      {quickPickLabels.map((amenity) => (
+                        <ToggleGroupItem
+                          key={getAmenityKey(amenity)}
+                          value={getAmenityKey(amenity)}
+                          size="sm"
+                          className="h-auto rounded-full border-border/70 px-3 py-2 text-xs font-medium data-[state=on]:border-primary/30 data-[state=on]:bg-primary/8 data-[state=on]:text-primary"
+                        >
+                          {amenity}
+                        </ToggleGroupItem>
+                      ))}
+                    </ToggleGroup>
+                  )}
                 </div>
 
                 <PopoverContent
