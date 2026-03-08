@@ -17,9 +17,9 @@ import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
+  StandardFormCombobox,
   StandardFormInput,
   StandardFormProvider,
-  StandardFormSelect,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import {
@@ -56,7 +56,7 @@ const courtEntrySchema = z.object({
   count: z.number().int().min(1).max(20),
 });
 
-const submitCourtFormSchema = z
+const submitVenueFormSchema = z
   .object({
     name: S.place.name,
     courts: z
@@ -97,9 +97,9 @@ const submitCourtFormSchema = z
     },
   );
 
-type SubmitCourtFormData = z.infer<typeof submitCourtFormSchema>;
+type SubmitVenueFormData = z.infer<typeof submitVenueFormSchema>;
 
-export function SubmitCourtForm() {
+export function SubmitVenueForm() {
   const submitMutation = useMutSubmitCourt();
   const { data: sports = [], isLoading: sportsLoading } =
     useQueryDiscoverySports();
@@ -109,8 +109,8 @@ export function SubmitCourtForm() {
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
 
-  const form = useForm<SubmitCourtFormData>({
-    resolver: zodResolver(submitCourtFormSchema),
+  const form = useForm<SubmitVenueFormData>({
+    resolver: zodResolver(submitVenueFormSchema),
     mode: "onChange",
     defaultValues: {
       name: "",
@@ -163,6 +163,15 @@ export function SubmitCourtForm() {
     return buildCityOptions(province, "name");
   }, [province]);
 
+  // Reset city when province changes
+  const prevProvinceRef = React.useRef(selectedProvince);
+  React.useEffect(() => {
+    if (prevProvinceRef.current !== selectedProvince) {
+      form.setValue("city", "");
+      prevProvinceRef.current = selectedProvince;
+    }
+  }, [selectedProvince, form]);
+
   const handleParseLink = () => {
     const url = form.getValues("googleMapsLink");
     if (!url) return;
@@ -187,7 +196,7 @@ export function SubmitCourtForm() {
     );
   };
 
-  const handleSubmit = (data: SubmitCourtFormData) => {
+  const handleSubmit = (data: SubmitVenueFormData) => {
     submitMutation.mutate(
       {
         name: data.name,
@@ -369,19 +378,17 @@ export function SubmitCourtForm() {
           </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <StandardFormSelect
+            <StandardFormCombobox
               name="province"
               label="Province"
               required
               disabled={provincesCitiesQuery.isLoading}
               options={provinceOptions}
-              placeholder={
-                provincesCitiesQuery.isLoading
-                  ? "Select province"
-                  : "Select province"
-              }
+              placeholder="Select province"
+              searchPlaceholder="Search province..."
+              emptyMessage="No province found."
             />
-            <StandardFormSelect
+            <StandardFormCombobox
               name="city"
               label="City"
               required
@@ -390,6 +397,8 @@ export function SubmitCourtForm() {
               placeholder={
                 !selectedProvince ? "Select province first" : "Select city"
               }
+              searchPlaceholder="Search city..."
+              emptyMessage="No city found."
             />
           </div>
 

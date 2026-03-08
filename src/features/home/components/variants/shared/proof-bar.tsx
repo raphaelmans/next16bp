@@ -44,7 +44,7 @@ function BoldAthleticProofBar({
           />
           <StatItem
             value={stats?.totalCourts ?? 0}
-            label="Venues"
+            label="Courts"
             className="text-center text-white"
           />
           <StatItem
@@ -70,7 +70,7 @@ function CleanMinimalProofBar({
           <CountUp end={stats?.totalPlaces ?? 0} duration={1.5} separator="," />{" "}
           venues{" · "}
           <CountUp end={stats?.totalCourts ?? 0} duration={1.5} separator="," />{" "}
-          venues{" · "}
+          courts{" · "}
           <CountUp end={stats?.totalCities ?? 0} duration={1.5} separator="," />{" "}
           cities
         </p>
@@ -96,7 +96,7 @@ function WarmCommunityProofBar({
             />
             <StatItem
               value={stats?.totalCourts ?? 0}
-              label="Venues"
+              label="Courts"
               className="text-center"
             />
             <StatItem

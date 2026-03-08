@@ -2,6 +2,10 @@ import { fetchRequestHandler } from "@trpc/server/adapters/fetch";
 import { NextResponse } from "next/server";
 import { logger } from "@/lib/shared/infra/logger";
 import { createContext } from "@/lib/shared/infra/trpc/context";
+import {
+  getTrpcProcedurePaths,
+  shouldBlockAnonymousTrpcHttpRequest,
+} from "@/lib/shared/infra/trpc/public-http-policy";
 import { appRouter } from "@/lib/shared/infra/trpc/root";
 
 /**
@@ -30,6 +34,18 @@ function getTrpcPath(req: Request) {
   return pathname === "/api/trpc" ? "unknown" : pathname;
 }
 
+function buildRequestInfo(req: Request) {
+  return {
+    accept: null,
+    type: "unknown" as const,
+    isBatchCall: false,
+    calls: [],
+    connectionParams: null,
+    signal: new AbortController().signal,
+    url: new URL(req.url),
+  };
+}
+
 async function handleTrpcRequest(req: Request, method: "GET" | "POST") {
   const origin = req.headers.get("origin");
   const secFetchSite = req.headers.get("sec-fetch-site");
@@ -46,12 +62,38 @@ async function handleTrpcRequest(req: Request, method: "GET" | "POST") {
     return NextResponse.json({ error: "CSRF blocked" }, { status: 403 });
   }
 
+  const ctx = await createContext({
+    req,
+    resHeaders: new Headers(),
+    info: buildRequestInfo(req),
+  });
+  const procedurePaths = getTrpcProcedurePaths(req);
+
+  if (
+    shouldBlockAnonymousTrpcHttpRequest({
+      isAuthenticated: Boolean(ctx.userId),
+      procedurePaths,
+    })
+  ) {
+    ctx.log.warn(
+      {
+        scope: "trpc:http",
+        event: "trpc.anonymous_public_http_blocked",
+        method,
+        procedurePaths,
+      },
+      "Blocked anonymous access to server-only public procedures",
+    );
+
+    return NextResponse.json({ error: "Not Found" }, { status: 404 });
+  }
+
   try {
     return await fetchRequestHandler({
       endpoint: "/api/trpc",
       req,
       router: appRouter,
-      createContext,
+      createContext: async () => ctx,
       onError({ error, path, type, input, ctx, req: trpcRequest }) {
         const requestId =
           ctx?.requestId ??

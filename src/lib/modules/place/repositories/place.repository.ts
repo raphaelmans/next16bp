@@ -53,6 +53,18 @@ export interface PlaceListItem {
   reservationsEnabled?: boolean | null;
 }
 
+export interface PlaceSummaryMeta {
+  sports: { id: string; slug: string; name: string }[];
+  courtCount: number;
+  lowestPriceCents: number | null;
+  currency: string | null;
+  verificationStatus?: (typeof placeVerification.$inferSelect)["status"] | null;
+  reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
+}
+
 export interface PlaceSummaryItem {
   place: {
     id: string;
@@ -77,6 +89,7 @@ export interface PlaceSummaryItem {
     sportName?: string;
     sportId?: string;
   };
+  meta?: PlaceSummaryMeta;
 }
 
 export interface PlaceCardMediaItem {

@@ -1,1 +1,6 @@
-export { default } from "@/features/court-submission/pages/submit-court-page";
+import { redirect } from "next/navigation";
+import { appRoutes } from "@/common/app-routes";
+
+export default function SubmitCourtRedirectPage() {
+  redirect(appRoutes.submitVenue.base);
+}

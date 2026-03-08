@@ -14,7 +14,7 @@ export default function MySubmissionsPage() {
         description="Venues you've submitted for review."
         actions={
           <Button asChild>
-            <Link href={appRoutes.submitCourt.base}>Submit a Venue</Link>
+            <Link href={appRoutes.submitVenue.base}>Submit a Venue</Link>
           </Button>
         }
       />

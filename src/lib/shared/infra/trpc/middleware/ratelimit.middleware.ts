@@ -2,6 +2,7 @@ import { TRPCError } from "@trpc/server";
 import { RateLimitError } from "@/lib/shared/kernel/errors";
 import {
   getRateLimiter,
+  RATE_LIMIT_TIERS,
   RateLimiterUnavailableError,
   type RateLimitTier,
 } from "../../ratelimit";
@@ -16,8 +17,29 @@ import { middleware } from "../trpc";
  */
 export function createRateLimitMiddleware(tier: RateLimitTier) {
   const limiter = getRateLimiter(tier);
+  const config = RATE_LIMIT_TIERS[tier];
 
   return middleware(async ({ ctx, next }) => {
+    if (
+      process.env.NODE_ENV === "production" &&
+      !ctx.userId &&
+      config.requireIpForAnonymous &&
+      ctx.clientIdentifierSource !== "ip"
+    ) {
+      ctx.log.warn(
+        {
+          tier,
+          identifierType: ctx.clientIdentifierSource,
+        },
+        "Anonymous request missing verifiable client IP",
+      );
+
+      throw new TRPCError({
+        code: "FORBIDDEN",
+        message: "Anonymous access requires a verifiable client IP.",
+      });
+    }
+
     const identifier = ctx.userId ?? ctx.clientIdentifier;
 
     let result: Awaited<ReturnType<typeof limiter.limit>>;

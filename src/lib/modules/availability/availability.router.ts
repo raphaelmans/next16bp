@@ -36,7 +36,7 @@ function handleAvailabilityError(error: unknown): never {
 }
 
 export const availabilityRouter = router({
-  getForCourt: rateLimitedProcedure("default")
+  getForCourt: rateLimitedProcedure("publicAvailability")
     .input(GetAvailabilityForCourtSchema)
     .query(async ({ input }) => {
       try {
@@ -47,7 +47,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForCourts: rateLimitedProcedure("default")
+  getForCourts: rateLimitedProcedure("publicAvailability")
     .input(GetAvailabilityForCourtsSchema)
     .query(async ({ input }) => {
       try {
@@ -58,7 +58,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForPlaceSport: rateLimitedProcedure("default")
+  getForPlaceSport: rateLimitedProcedure("publicAvailability")
     .input(GetAvailabilityForPlaceSportSchema)
     .query(async ({ input }) => {
       try {
@@ -69,7 +69,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForCourtRange: rateLimitedProcedure("default")
+  getForCourtRange: rateLimitedProcedure("publicAvailability")
     .input(GetAvailabilityForCourtRangeSchema)
     .query(async ({ input }) => {
       try {
@@ -80,7 +80,7 @@ export const availabilityRouter = router({
         handleAvailabilityError(error);
       }
     }),
-  getForPlaceSportRange: rateLimitedProcedure("default")
+  getForPlaceSportRange: rateLimitedProcedure("publicAvailability")
     .input(GetAvailabilityForPlaceSportRangeSchema)
     .query(async ({ input }) => {
       try {

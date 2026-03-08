@@ -6,6 +6,18 @@
 export const RATE_LIMIT_TIERS = {
   /** Standard read endpoints - 100 req/min */
   default: { requests: 100, window: "1 m" as const },
+  /** Public catalog endpoints that should only be queried by real clients */
+  publicDiscoveryRead: {
+    requests: 20,
+    window: "1 m" as const,
+    requireIpForAnonymous: true,
+  },
+  /** Availability endpoints are expensive and scrape-prone */
+  publicAvailability: {
+    requests: 10,
+    window: "1 m" as const,
+    requireIpForAnonymous: true,
+  },
   /** Authentication endpoints - 10 req/min */
   auth: { requests: 10, window: "1 m" as const },
   /** Auth endpoints that can trigger outbound email - 5 req/5 min */

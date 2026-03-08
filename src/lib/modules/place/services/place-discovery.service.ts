@@ -16,6 +16,7 @@ import type {
   PlaceCardMetaItem,
   PlaceListItem,
   PlaceSummaryItem,
+  PlaceSummaryMeta,
   PlaceWithDetails,
 } from "../repositories/place.repository";
 
@@ -129,24 +130,70 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
     items: PlaceSummaryItem[];
     total: number;
   }> {
+    let result: { items: PlaceSummaryItem[]; total: number };
+
     if (filters.date) {
-      return this.listAvailabilityAwarePlaceSummaries({
+      result = await this.listAvailabilityAwarePlaceSummaries({
         ...filters,
         date: filters.date,
       });
+    } else {
+      result = await this.placeRepository.listSummary({
+        q: filters.q,
+        province: filters.province,
+        city: filters.city,
+        sportId: filters.sportId,
+        amenities: filters.amenities,
+        verificationTier: filters.verificationTier,
+        featuredOnly: filters.featuredOnly,
+        limit: filters.limit,
+        offset: filters.offset,
+      });
     }
 
-    return this.placeRepository.listSummary({
-      q: filters.q,
-      province: filters.province,
-      city: filters.city,
-      sportId: filters.sportId,
-      amenities: filters.amenities,
-      verificationTier: filters.verificationTier,
-      featuredOnly: filters.featuredOnly,
-      limit: filters.limit,
-      offset: filters.offset,
-    });
+    return this.enrichSummariesWithMeta(result, filters.sportId);
+  }
+
+  private async enrichSummariesWithMeta(
+    result: { items: PlaceSummaryItem[]; total: number },
+    sportId?: string,
+  ): Promise<{ items: PlaceSummaryItem[]; total: number }> {
+    const placeIds = result.items.map((item) => item.place.id);
+    if (placeIds.length === 0) return result;
+
+    const [metaItems, reviewAggregates] = await Promise.all([
+      this.placeRepository.listCardMetaByPlaceIds(placeIds, sportId),
+      this.placeReviewRepository
+        ? this.placeReviewRepository.getAggregatesByPlaceIds(placeIds)
+        : Promise.resolve(new Map<string, never>()),
+    ]);
+
+    const metaByPlaceId = new Map(
+      metaItems.map((item) => [item.placeId, item]),
+    );
+
+    return {
+      items: result.items.map((item) => {
+        const metaItem = metaByPlaceId.get(item.place.id);
+        const review = reviewAggregates.get(item.place.id);
+        if (!metaItem) return item;
+
+        const meta: PlaceSummaryMeta = {
+          sports: metaItem.sports,
+          courtCount: metaItem.courtCount,
+          lowestPriceCents: metaItem.lowestPriceCents,
+          currency: metaItem.currency,
+          verificationStatus: metaItem.verificationStatus,
+          reservationsEnabled: metaItem.reservationsEnabled,
+          hasPaymentMethods: metaItem.hasPaymentMethods,
+          averageRating: review?.averageRating ?? null,
+          reviewCount: review?.reviewCount ?? null,
+        };
+
+        return { ...item, meta };
+      }),
+      total: result.total,
+    };
   }
 
   private async listAvailabilityAwarePlaceSummaries(

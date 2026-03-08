@@ -1,20 +1,18 @@
 import "server-only";
 
-import {
-  dehydrate,
-  HydrationBoundary,
-  QueryClient,
-} from "@tanstack/react-query";
 import { unstable_cache } from "next/cache";
 import CourtsPageClient from "@/features/discovery/components/courts-page-client";
+import type {
+  PublicCourtsPageData,
+  PublicDiscoveryPlaceCardMedia,
+  PublicDiscoveryPlaceCardMeta,
+  PublicDiscoveryPlaceSummary,
+} from "@/features/discovery/public-courts-data";
 import {
   buildDiscoveryPlaceListSummaryQueryInput,
   buildDiscoveryTier1CacheTags,
-  createDiscoveryPlaceSummariesQueryOptions,
-  DISCOVERY_AVAILABILITY_STALE_TIME_MS,
   DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
   DISCOVERY_TIER1_REVALIDATE_SECONDS,
-  DISCOVERY_TIER1_STALE_TIME_MS,
   type DiscoveryListFilterState,
   type DiscoveryVerificationTier,
 } from "@/features/discovery/query-options";
@@ -38,6 +36,7 @@ type DiscoveryResolvedLocation = {
   provinceName?: string;
   cityName?: string;
 };
+
 const getFirstValue = (value?: string | string[]) =>
   Array.isArray(value) ? value[0] : value;
 
@@ -168,6 +167,25 @@ const getCachedDiscoveryPlaceSummaries = async (
   return cachedQuery();
 };
 
+const getCachedDiscoveryPlaceCardMedia = async (
+  placeIds: string[],
+  location: DiscoveryResolvedLocation,
+) => {
+  const cacheKey = JSON.stringify(placeIds);
+  const tags = buildDiscoveryTier1CacheTags(location);
+
+  const cachedQuery = unstable_cache(
+    async () => publicCaller.place.cardMediaByIds({ placeIds }),
+    ["discovery", "place-card-media", cacheKey],
+    {
+      revalidate: DISCOVERY_TIER1_REVALIDATE_SECONDS,
+      tags,
+    },
+  );
+
+  return cachedQuery();
+};
+
 const getDiscoveryPlaceSummaries = async (
   input: ReturnType<typeof buildDiscoveryPlaceListSummaryQueryInput>,
   location: DiscoveryResolvedLocation,
@@ -177,6 +195,125 @@ const getDiscoveryPlaceSummaries = async (
   }
 
   return getCachedDiscoveryPlaceSummaries(input, location);
+};
+
+const getDiscoveryPlaceCardMedia = async (
+  placeIds: string[],
+  location: DiscoveryResolvedLocation,
+) => {
+  if (placeIds.length === 0) {
+    return [];
+  }
+
+  return getCachedDiscoveryPlaceCardMedia(placeIds, location);
+};
+
+const mapSummaryMeta = (meta?: {
+  sports: { id: string; slug: string; name: string }[];
+  courtCount: number;
+  lowestPriceCents: number | null;
+  currency: string | null;
+  verificationStatus?: string | null;
+  reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
+}): PublicDiscoveryPlaceCardMeta | undefined => {
+  if (!meta) return undefined;
+  return {
+    sports: meta.sports,
+    courtCount: meta.courtCount,
+    lowestPriceCents: meta.lowestPriceCents ?? undefined,
+    currency: meta.currency ?? undefined,
+    verificationStatus:
+      (meta.verificationStatus as PublicDiscoveryPlaceCardMeta["verificationStatus"]) ??
+      undefined,
+    reservationsEnabled: meta.reservationsEnabled ?? undefined,
+    hasPaymentMethods: meta.hasPaymentMethods,
+    averageRating: meta.averageRating,
+    reviewCount: meta.reviewCount,
+  };
+};
+
+const mapSummaryItem = (item: {
+  place: {
+    id: string;
+    slug?: string | null;
+    name: string;
+    address: string;
+    city: string;
+    latitude: string | null;
+    longitude: string | null;
+    placeType?: "CURATED" | "RESERVABLE";
+    featuredRank?: number | null;
+    provinceRank?: number | null;
+  };
+  availabilityPreview?: PublicDiscoveryPlaceSummary["availabilityPreview"];
+  meta?: Parameters<typeof mapSummaryMeta>[0];
+}): PublicDiscoveryPlaceSummary => {
+  const latitude = Number.parseFloat(item.place.latitude ?? "");
+  const longitude = Number.parseFloat(item.place.longitude ?? "");
+
+  return {
+    id: item.place.id,
+    slug: item.place.slug ?? undefined,
+    name: item.place.name,
+    address: item.place.address,
+    city: item.place.city,
+    placeType: item.place.placeType,
+    featuredRank: item.place.featuredRank ?? 0,
+    provinceRank: item.place.provinceRank ?? 0,
+    latitude: Number.isFinite(latitude) ? latitude : undefined,
+    longitude: Number.isFinite(longitude) ? longitude : undefined,
+    availabilityPreview: item.availabilityPreview,
+    meta: mapSummaryMeta(item.meta),
+  };
+};
+
+const mapMediaById = (
+  items: {
+    placeId: string;
+    coverImageUrl?: string | null;
+    organizationLogoUrl?: string | null;
+  }[],
+) =>
+  Object.fromEntries(
+    items.map((item) => [
+      item.placeId,
+      {
+        coverImageUrl: item.coverImageUrl ?? undefined,
+        organizationLogoUrl: item.organizationLogoUrl ?? undefined,
+      } satisfies PublicDiscoveryPlaceCardMedia,
+    ]),
+  );
+
+const buildPublicCourtsPageData = async (args: {
+  summaryInput: ReturnType<typeof buildDiscoveryPlaceListSummaryQueryInput>;
+  resolvedLocation: DiscoveryResolvedLocation;
+  page: number;
+}) => {
+  const summaryResult = await getDiscoveryPlaceSummaries(
+    args.summaryInput,
+    args.resolvedLocation,
+  );
+  const places = summaryResult.items.map(mapSummaryItem);
+  const placeIds = places.map((place) => place.id);
+
+  const mediaItems = await getDiscoveryPlaceCardMedia(
+    placeIds,
+    args.resolvedLocation,
+  );
+
+  return {
+    places,
+    mediaById: mapMediaById(mediaItems),
+    total: summaryResult.total,
+    page: args.page,
+    limit: args.summaryInput.limit,
+    hasMore:
+      args.summaryInput.offset + summaryResult.items.length <
+      summaryResult.total,
+  } satisfies PublicCourtsPageData;
 };
 
 type DiscoveryHydratedCourtsPageProps = {
@@ -190,39 +327,22 @@ export async function DiscoveryHydratedCourtsPage({
   initialLocationLabel,
   searchParams,
 }: DiscoveryHydratedCourtsPageProps) {
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
-      },
-    },
-  });
-
   const prefetchState = await resolveDiscoveryPrefetchState({
     searchParams,
     initialFilters,
   });
-
-  await queryClient.prefetchQuery(
-    createDiscoveryPlaceSummariesQueryOptions(
-      (input) =>
-        getDiscoveryPlaceSummaries(input, prefetchState.resolvedLocation),
-      prefetchState.summaryInput,
-      {
-        staleTime: prefetchState.summaryInput.date
-          ? DISCOVERY_AVAILABILITY_STALE_TIME_MS
-          : DISCOVERY_TIER1_STALE_TIME_MS,
-      },
-    ),
-  );
+  const initialData = await buildPublicCourtsPageData({
+    summaryInput: prefetchState.summaryInput,
+    resolvedLocation: prefetchState.resolvedLocation,
+    page: prefetchState.effectiveFilters.page ?? 1,
+  });
 
   return (
-    <HydrationBoundary state={dehydrate(queryClient)}>
-      <CourtsPageClient
-        initialFilters={initialFilters}
-        initialLocationLabel={initialLocationLabel}
-        initialResolvedLocation={prefetchState.resolvedLocation}
-      />
-    </HydrationBoundary>
+    <CourtsPageClient
+      initialData={initialData}
+      initialFilters={initialFilters}
+      initialLocationLabel={initialLocationLabel}
+      initialResolvedLocation={prefetchState.resolvedLocation}
+    />
   );
 }

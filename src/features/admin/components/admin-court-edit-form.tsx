@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { UseFormReturn } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import {
+  StandardFormCombobox,
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
@@ -196,19 +197,23 @@ export function AdminCourtEditForm({
           />
 
           <div className="grid gap-4 sm:grid-cols-2">
-            <StandardFormSelect<AdminCourtEditFormData>
+            <StandardFormCombobox<AdminCourtEditFormData>
               name="province"
               label="Province"
               options={provinceOptions}
               placeholder={provincePlaceholder}
+              searchPlaceholder="Search province..."
+              emptyMessage="No province found."
               required
               disabled={isProvinceDisabled}
             />
-            <StandardFormSelect<AdminCourtEditFormData>
+            <StandardFormCombobox<AdminCourtEditFormData>
               name="city"
               label="City"
               options={cityOptions}
               placeholder={cityPlaceholder}
+              searchPlaceholder="Search city..."
+              emptyMessage="No city found."
               required
               disabled={isCityDisabled}
             />

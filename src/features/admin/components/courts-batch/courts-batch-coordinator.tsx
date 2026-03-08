@@ -20,6 +20,7 @@ import {
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
+  StandardFormCombobox,
   StandardFormField,
   StandardFormInput,
   StandardFormProvider,
@@ -669,19 +670,23 @@ export default function AdminCourtsBatchView() {
                             required
                           />
                           <div className="grid gap-4 sm:grid-cols-2">
-                            <StandardFormSelect<CuratedCourtBatchFormData>
+                            <StandardFormCombobox<CuratedCourtBatchFormData>
                               name={`courts.${index}.province`}
                               label="Province"
                               options={provinceOptions}
                               placeholder={provincePlaceholder}
+                              searchPlaceholder="Search province..."
+                              emptyMessage="No province found."
                               required
                               disabled={isProvinceDisabled}
                             />
-                            <StandardFormSelect<CuratedCourtBatchFormData>
+                            <StandardFormCombobox<CuratedCourtBatchFormData>
                               name={`courts.${index}.city`}
                               label="City"
                               options={cityOptions}
                               placeholder={cityPlaceholder}
+                              searchPlaceholder="Search city..."
+                              emptyMessage="No city found."
                               required
                               disabled={cityDisabled}
                             />

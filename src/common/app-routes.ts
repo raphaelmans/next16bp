@@ -109,8 +109,8 @@ export const appRoutes = {
     base: "/dashboard",
     options: { type: "protected" as const },
   },
-  submitCourt: {
-    base: "/submit-court",
+  submitVenue: {
+    base: "/submit-venue",
     options: { type: "protected" as const },
   },
   mySubmissions: {

@@ -33,11 +33,10 @@ import {
 import {
   buildDiscoveryPlaceCard,
   useModDiscoveryFilters,
-  useModDiscoveryPlaceSummaries,
-  useModDiscoveryProgressivePlaceCardDetails,
   useModPlaceBookmarkBatch,
 } from "@/features/discovery/hooks";
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
+import type { PublicCourtsPageData } from "@/features/discovery/public-courts-data";
 import type { DiscoveryResolvedLocationState } from "@/features/discovery/query-options";
 
 type PaginationItemModel =
@@ -51,6 +50,7 @@ type LocationDefaults = {
 };
 
 interface CourtsPageClientProps {
+  initialData: PublicCourtsPageData;
   initialFilters?: LocationDefaults;
   initialLocationLabel?: string;
   initialResolvedLocation?: DiscoveryResolvedLocationState;
@@ -91,6 +91,7 @@ const buildPaginationItems = (
 };
 
 export default function CourtsPageClient({
+  initialData,
   initialFilters,
   initialLocationLabel,
   initialResolvedLocation,
@@ -98,6 +99,7 @@ export default function CourtsPageClient({
   return (
     <Suspense fallback={<CourtsPageSkeleton />}>
       <CourtsPageContent
+        initialData={initialData}
         initialFilters={initialFilters}
         initialLocationLabel={initialLocationLabel}
         initialResolvedLocation={initialResolvedLocation}
@@ -107,6 +109,7 @@ export default function CourtsPageClient({
 }
 
 interface CourtsPageContentProps {
+  initialData: PublicCourtsPageData;
   initialFilters?: LocationDefaults;
   initialLocationLabel?: string;
   initialResolvedLocation?: DiscoveryResolvedLocationState;
@@ -128,6 +131,7 @@ type StagedFilters = {
 };
 
 function CourtsPageContent({
+  initialData,
   initialFilters,
   initialLocationLabel,
   initialResolvedLocation,
@@ -245,31 +249,11 @@ function CourtsPageContent({
   const effectiveSportId =
     filters.sportId ?? initialFilters?.sportId ?? undefined;
 
-  // ── Query with committed (URL) filters (no debounce) ──
-  const { data, isLoading } = useModDiscoveryPlaceSummaries({
-    q: filters.q ?? undefined,
-    province: effectiveProvince,
-    city: effectiveCity,
-    sportId: effectiveSportId,
-    date: filters.date ?? undefined,
-    time: filters.time ?? undefined,
-    amenities: filters.amenities ?? undefined,
-    verificationTier: filters.verification ?? undefined,
-    page: filters.page,
-    limit: filters.limit,
-    initialResolvedLocation,
-  });
-
-  const placeSummaries = data?.places ?? [];
+  const placeSummaries = initialData.places;
   const placeIds = useMemo(
     () => placeSummaries.map((place) => place.id),
     [placeSummaries],
   );
-  const { mediaById, metaById, mediaLoadingIds, metaLoadingIds } =
-    useModDiscoveryProgressivePlaceCardDetails(
-      placeIds,
-      effectiveSportId ?? undefined,
-    );
   const {
     bookmarkedSet,
     toggleBookmark,
@@ -279,13 +263,9 @@ function CourtsPageContent({
   const places = useMemo(
     () =>
       placeSummaries.map((summary) =>
-        buildDiscoveryPlaceCard(
-          summary,
-          mediaById[summary.id],
-          metaById[summary.id],
-        ),
+        buildDiscoveryPlaceCard(summary, initialData.mediaById[summary.id]),
       ),
-    [placeSummaries, mediaById, metaById],
+    [initialData.mediaById, placeSummaries],
   );
   const availabilityPreviewByPlaceId = useMemo(
     () =>
@@ -299,19 +279,15 @@ function CourtsPageContent({
   const mapPlaces = useMemo(
     () =>
       placeSummaries.map((summary) => ({
-        ...buildDiscoveryPlaceCard(
-          summary,
-          mediaById[summary.id],
-          metaById[summary.id],
-        ),
+        ...buildDiscoveryPlaceCard(summary, initialData.mediaById[summary.id]),
         lat: summary.latitude,
         lng: summary.longitude,
       })),
-    [placeSummaries, mediaById, metaById],
+    [initialData.mediaById, placeSummaries],
   );
-  const total = data?.total ?? 0;
+  const total = initialData.total;
   const page = filters.page;
-  const limit = data?.limit ?? filters.limit;
+  const limit = initialData.limit;
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
   const paginationItems = useMemo(
     () => buildPaginationItems(page, totalPages),
@@ -424,16 +400,12 @@ function CourtsPageContent({
               {locationLabel ? `Venues in ${locationLabel}` : "Browse Venues"}
             </h1>
             <div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
-              {isLoading ? (
-                <Skeleton className="h-4 w-20" />
-              ) : (
-                <span>
-                  {total} result{total !== 1 ? "s" : ""}
-                </span>
-              )}
+              <span>
+                {total} result{total !== 1 ? "s" : ""}
+              </span>
               <span className="text-border">|</span>
               <Link
-                href={appRoutes.submitCourt.base}
+                href={appRoutes.submitVenue.base}
                 className="text-primary hover:underline"
               >
                 Add a venue
@@ -476,13 +448,6 @@ function CourtsPageContent({
         {/* Results */}
         {filters.view === "map" ? (
           <PlaceMap places={mapPlaces} />
-        ) : isLoading ? (
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-            {Array.from({ length: 8 }, (_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
-              <PlaceCardSkeleton key={i} />
-            ))}
-          </div>
         ) : places.length > 0 ? (
           <>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -491,8 +456,8 @@ function CourtsPageContent({
                   key={place.id}
                   place={place}
                   availabilityPreview={availabilityPreviewByPlaceId[place.id]}
-                  isMediaLoading={mediaLoadingIds.has(place.id)}
-                  isMetaLoading={metaLoadingIds.has(place.id)}
+                  isMediaLoading={false}
+                  isMetaLoading={false}
                   isBookmarked={bookmarkedSet.has(place.id)}
                   isBookmarkPending={
                     isBookmarkPending && pendingPlaceId === place.id

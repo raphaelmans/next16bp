@@ -175,6 +175,18 @@ interface UseDiscoveryOptions {
   initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
+export interface DiscoveryPlaceSummaryMeta {
+  sports: { id: string; name: string; slug: string }[];
+  courtCount: number;
+  lowestPriceCents: number | null;
+  currency: string | null;
+  verificationStatus?: string | null;
+  reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
+}
+
 export interface DiscoveryPlaceSummary {
   id: string;
   slug?: string | null;
@@ -187,6 +199,7 @@ export interface DiscoveryPlaceSummary {
   latitude?: number;
   longitude?: number;
   availabilityPreview?: DiscoveryAvailabilityPreview;
+  meta?: DiscoveryPlaceSummaryMeta;
 }
 
 export interface PlaceCardMedia {
@@ -205,6 +218,18 @@ export interface PlaceCardMeta {
   reviewCount?: number | null;
 }
 
+interface PlaceSummaryListItemMeta {
+  sports: { id: string; slug: string; name: string }[];
+  courtCount: number;
+  lowestPriceCents: number | null;
+  currency: string | null;
+  verificationStatus?: string | null;
+  reservationsEnabled?: boolean | null;
+  hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
+}
+
 interface PlaceSummaryListItem {
   place: {
     id: string;
@@ -219,6 +244,7 @@ interface PlaceSummaryListItem {
     provinceRank?: number | null;
   };
   availabilityPreview?: DiscoveryAvailabilityPreview;
+  meta?: PlaceSummaryListItemMeta;
 }
 
 interface DiscoveryResult {
@@ -257,6 +283,7 @@ const mapPlaceSummaryItem = (
     latitude: Number.isFinite(latitude) ? latitude : undefined,
     longitude: Number.isFinite(longitude) ? longitude : undefined,
     availabilityPreview: item.availabilityPreview,
+    meta: item.meta,
   };
 };
 

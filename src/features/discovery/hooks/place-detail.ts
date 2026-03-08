@@ -118,6 +118,7 @@ export interface DiscoveryPlaceSummary {
   provinceRank?: number;
   latitude?: number;
   longitude?: number;
+  meta?: PlaceCardMeta;
 }
 
 export interface PlaceCardMedia {
@@ -140,27 +141,30 @@ export interface PlaceCardMeta {
 export const buildDiscoveryPlaceCard = (
   summary: DiscoveryPlaceSummary,
   media?: PlaceCardMedia,
-  meta?: PlaceCardMeta,
-): PlaceCardPlace => ({
-  id: summary.id,
-  slug: summary.slug ?? undefined,
-  name: summary.name,
-  address: summary.address,
-  city: summary.city,
-  coverImageUrl: media?.coverImageUrl,
-  logoUrl: media?.organizationLogoUrl,
-  sports: meta?.sports ?? [],
-  courtCount: meta?.courtCount,
-  lowestPriceCents: meta?.lowestPriceCents,
-  currency: meta?.currency,
-  placeType: summary.placeType,
-  verificationStatus: meta?.verificationStatus,
-  reservationsEnabled: meta?.reservationsEnabled,
-  featuredRank: summary.featuredRank,
-  provinceRank: summary.provinceRank,
-  averageRating: meta?.averageRating,
-  reviewCount: meta?.reviewCount,
-});
+  overrideMeta?: PlaceCardMeta,
+): PlaceCardPlace => {
+  const meta = overrideMeta ?? summary.meta;
+  return {
+    id: summary.id,
+    slug: summary.slug ?? undefined,
+    name: summary.name,
+    address: summary.address,
+    city: summary.city,
+    coverImageUrl: media?.coverImageUrl,
+    logoUrl: media?.organizationLogoUrl,
+    sports: meta?.sports ?? [],
+    courtCount: meta?.courtCount,
+    lowestPriceCents: meta?.lowestPriceCents,
+    currency: meta?.currency,
+    placeType: summary.placeType,
+    verificationStatus: meta?.verificationStatus,
+    reservationsEnabled: meta?.reservationsEnabled,
+    featuredRank: summary.featuredRank,
+    provinceRank: summary.provinceRank,
+    averageRating: meta?.averageRating,
+    reviewCount: meta?.reviewCount,
+  };
+};
 
 export function useModDiscoveryPlaceCardDetails(
   placeIds: string[],
@@ -219,23 +223,11 @@ export function useModDiscoveryPlaceCardDetails(
   };
 }
 
-export function useModDiscoveryProgressivePlaceCardDetails(
-  placeIds: string[],
-  sportId: string | undefined,
-) {
+export function useModDiscoveryProgressivePlaceCardDetails(placeIds: string[]) {
   const mediaQuery = useFeatureQuery(
     ["place", "cardMediaByIds"],
     discoveryApi.queryPlaceCardMediaByIds,
     { placeIds },
-    {
-      enabled: placeIds.length > 0,
-      staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
-    },
-  );
-  const metaQuery = useFeatureQuery(
-    ["place", "cardMetaByIds"],
-    discoveryApi.queryPlaceCardMetaByIds,
-    { placeIds, sportId },
     {
       enabled: placeIds.length > 0,
       staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
@@ -253,22 +245,6 @@ export function useModDiscoveryProgressivePlaceCardDetails(
     return record;
   }, [mediaQuery?.data]);
 
-  const metaById = useMemo(() => {
-    const record: Record<string, PlaceCardMeta> = {};
-    for (const item of metaQuery?.data ?? []) {
-      record[item.placeId] = {
-        sports: item.sports ?? [],
-        courtCount: item.courtCount,
-        lowestPriceCents: item.lowestPriceCents ?? undefined,
-        currency: item.currency ?? undefined,
-        verificationStatus: item.verificationStatus ?? undefined,
-        reservationsEnabled: item.reservationsEnabled ?? undefined,
-        hasPaymentMethods: item.hasPaymentMethods ?? undefined,
-      };
-    }
-    return record;
-  }, [metaQuery?.data]);
-
   const mediaLoadingIds = useMemo(() => {
     if (!(mediaQuery?.isLoading ?? false)) {
       return new Set<string>();
@@ -276,18 +252,9 @@ export function useModDiscoveryProgressivePlaceCardDetails(
     return new Set(placeIds);
   }, [mediaQuery?.isLoading, placeIds]);
 
-  const metaLoadingIds = useMemo(() => {
-    if (!(metaQuery?.isLoading ?? false)) {
-      return new Set<string>();
-    }
-    return new Set(placeIds);
-  }, [metaQuery?.isLoading, placeIds]);
-
   return {
     mediaById,
-    metaById,
     mediaLoadingIds,
-    metaLoadingIds,
   };
 }
 
