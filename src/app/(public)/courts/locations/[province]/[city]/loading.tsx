@@ -30,7 +30,7 @@ export default function CourtsCityLoading() {
       </section>
 
       {/* Courts list skeleton */}
-      <Container>
+      <Container className="pt-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between gap-3">
             <div className="min-w-0 space-y-1">

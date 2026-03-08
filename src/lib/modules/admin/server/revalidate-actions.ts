@@ -1,18 +1,22 @@
 "use server";
 
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { appRoutes } from "@/common/app-routes";
 import { requireAdminSession } from "@/lib/shared/infra/auth/server-session";
+import {
+  HOME_FEATURED_VENUES_CACHE_TAG,
+  revalidateHomeFeaturedVenues,
+} from "@/lib/shared/infra/cache/revalidate-home-featured-venues";
 
-const RevalidateHomeInputSchema = z.object({
+const RevalidateFeaturedVenuesInputSchema = z.object({
   confirm: z.literal(true),
 });
 
-export async function revalidateHomeAction(input: { confirm: true }) {
+export async function revalidateHomeFeaturedVenuesAction(input: {
+  confirm: true;
+}) {
   await requireAdminSession("/admin/tools/revalidate");
 
-  const parsed = RevalidateHomeInputSchema.safeParse(input);
+  const parsed = RevalidateFeaturedVenuesInputSchema.safeParse(input);
   if (!parsed.success) {
     return {
       ok: false as const,
@@ -20,13 +24,12 @@ export async function revalidateHomeAction(input: { confirm: true }) {
     };
   }
 
-  revalidatePath(appRoutes.index.base);
-  revalidateTag("home:featured", "max");
+  await revalidateHomeFeaturedVenues();
 
   return {
     ok: true as const,
-    path: appRoutes.index.base,
-    tag: "home:featured",
+    path: "/",
+    tag: HOME_FEATURED_VENUES_CACHE_TAG,
     at: Date.now(),
   };
 }

@@ -3,7 +3,7 @@ import type { AppError } from "@/common/errors/app-error";
 import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
 export const DISCOVERY_SUMMARIES_DEFAULT_PAGE = 1;
-export const DISCOVERY_SUMMARIES_DEFAULT_LIMIT = 12;
+export const DISCOVERY_SUMMARIES_DEFAULT_LIMIT = 8;
 export const DISCOVERY_TIER1_STALE_TIME_MS = 7 * 24 * 60 * 60 * 1000;
 export const DISCOVERY_TIER1_REVALIDATE_SECONDS = 7 * 24 * 60 * 60;
 export const DISCOVERY_AVAILABILITY_STALE_TIME_MS = 30 * 1000;

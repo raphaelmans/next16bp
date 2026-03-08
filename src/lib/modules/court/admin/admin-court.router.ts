@@ -1,3 +1,4 @@
+import { revalidateHomeFeaturedVenues } from "@/lib/shared/infra/cache/revalidate-home-featured-venues";
 import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   adminProcedure,
@@ -101,10 +102,24 @@ export const adminCourtRouter = router({
     .input(AdminUpdateCourtSchema)
     .mutation(async ({ input, ctx }) => {
       const service = makeAdminCourtService();
+      const previousFeaturedRank =
+        input.featuredRank === undefined
+          ? undefined
+          : (
+              await service.getPlaceById(ctx.userId, {
+                placeId: input.placeId,
+              })
+            ).place.featuredRank;
       const updated = await service.updatePlace(ctx.userId, input);
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
       });
+      if (
+        previousFeaturedRank !== undefined &&
+        updated.featuredRank !== previousFeaturedRank
+      ) {
+        await revalidateHomeFeaturedVenues(ctx.requestId);
+      }
       return updated;
     }),
 

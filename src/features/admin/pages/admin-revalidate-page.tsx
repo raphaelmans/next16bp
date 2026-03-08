@@ -18,14 +18,15 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { useQueryAdminSidebarStats } from "@/features/admin/hooks";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { revalidateHomeAction } from "@/lib/modules/admin/server/revalidate-actions";
+import { revalidateHomeFeaturedVenuesAction } from "@/lib/modules/admin/server/revalidate-actions";
 
 export default function AdminRevalidatePage() {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
   const { data: stats } = useQueryAdminSidebarStats();
 
-  const [confirmRevalidate, setConfirmRevalidate] = React.useState(false);
+  const [confirmFeaturedVenuesRefresh, setConfirmFeaturedVenuesRefresh] =
+    React.useState(false);
   const [isPending, startTransition] = React.useTransition();
 
   const goBack = () => {
@@ -37,21 +38,23 @@ export default function AdminRevalidatePage() {
     window.location.href = appRoutes.login.from(appRoutes.admin.base);
   };
 
-  const handleRevalidate = () => {
+  const handleFeaturedVenuesRefresh = () => {
     startTransition(async () => {
       try {
-        const result = await revalidateHomeAction({ confirm: true });
+        const result = await revalidateHomeFeaturedVenuesAction({
+          confirm: true,
+        });
         if (!result.ok) {
-          toast.error("Revalidation failed", {
+          toast.error("Featured venues refresh failed", {
             description: result.error,
           });
           return;
         }
-        toast.success("Revalidation triggered", {
+        toast.success("Featured venues refresh triggered", {
           description: `path: ${result.path} | tag: ${result.tag}`,
         });
       } catch (error) {
-        toast.error("Revalidation failed", {
+        toast.error("Featured venues refresh failed", {
           description: getClientErrorMessage(error, "Please try again"),
         });
       }
@@ -94,34 +97,41 @@ export default function AdminRevalidatePage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Home page</CardTitle>
+            <CardTitle>Landing page featured venues</CardTitle>
             <CardDescription>
-              This will mark the homepage (/) for revalidation on the next
-              visit.
+              Refreshes the featured venues cache used on the landing page and
+              marks <code>/</code> stale for the next visit.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-xs text-muted-foreground">
               Cache tag: <code>home:featured</code>
             </p>
+            <p className="text-xs text-muted-foreground">
+              Featured-rank updates in admin revalidate this automatically. This
+              control is the manual fallback.
+            </p>
             <div className="flex items-center gap-3">
               <Checkbox
-                checked={confirmRevalidate}
+                checked={confirmFeaturedVenuesRefresh}
                 onCheckedChange={(checked) =>
-                  setConfirmRevalidate(Boolean(checked))
+                  setConfirmFeaturedVenuesRefresh(Boolean(checked))
                 }
               />
               <div className="text-sm">
-                I understand this will refresh the cached homepage
+                I understand this will refresh featured venues on the landing
+                page
               </div>
             </div>
 
             <div className="flex items-center gap-3">
               <Button
-                onClick={handleRevalidate}
-                disabled={isPending || !confirmRevalidate}
+                onClick={handleFeaturedVenuesRefresh}
+                disabled={isPending || !confirmFeaturedVenuesRefresh}
               >
-                {isPending ? "Revalidating..." : "Revalidate / (Home)"}
+                {isPending
+                  ? "Refreshing..."
+                  : "Refresh Landing Featured Venues"}
               </Button>
               <Button type="button" variant="outline" onClick={goBack}>
                 Back

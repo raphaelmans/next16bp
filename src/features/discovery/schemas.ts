@@ -32,7 +32,7 @@ export const searchParamsSchema = {
 
   // Pagination
   page: parseAsInteger.withDefault(1),
-  limit: parseAsInteger.withDefault(12),
+  limit: parseAsInteger.withDefault(8),
 };
 
 export const searchParamsCache = createSearchParamsCache(searchParamsSchema);

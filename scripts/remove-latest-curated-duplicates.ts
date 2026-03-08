@@ -250,7 +250,7 @@ async function main() {
         ? or(
             inArray(schema.openPlay.placeId, removeIds),
             inArray(schema.openPlay.courtId, targetCourtIds),
-          )
+          )!
         : inArray(schema.openPlay.placeId, removeIds);
 
     const summary = {

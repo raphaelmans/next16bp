@@ -269,7 +269,7 @@ export function useModDiscoveryPlaces(options: UseDiscoveryOptions = {}) {
     amenities,
     verificationTier,
     page = 1,
-    limit = 12,
+    limit = DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
   } = options;
   const offset = (page - 1) * limit;
   const { data: provincesCities } = usePHProvincesCitiesQuery();

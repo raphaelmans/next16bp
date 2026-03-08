@@ -12,6 +12,7 @@ import {
   buildDiscoveryTier1CacheTags,
   createDiscoveryPlaceSummariesQueryOptions,
   DISCOVERY_AVAILABILITY_STALE_TIME_MS,
+  DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
   DISCOVERY_TIER1_REVALIDATE_SECONDS,
   DISCOVERY_TIER1_STALE_TIME_MS,
   type DiscoveryListFilterState,
@@ -106,7 +107,10 @@ export const parseDiscoverySearchParams = (
     normalizeString(getFirstValue(searchParams?.verification)),
   ),
   page: parsePositiveInt(getFirstValue(searchParams?.page), 1),
-  limit: parsePositiveInt(getFirstValue(searchParams?.limit), 12),
+  limit: parsePositiveInt(
+    getFirstValue(searchParams?.limit),
+    DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
+  ),
 });
 
 export const resolveDiscoveryPrefetchState = async (input: {
