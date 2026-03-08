@@ -15,6 +15,7 @@ import { useParams, useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
+import { useFeatureQueryCache } from "@/common/feature-api-hooks";
 import { formatTimeRangeInTimeZone } from "@/common/format";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
@@ -40,6 +41,7 @@ import { PageHeader } from "@/components/ui/page-header";
 import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
+import { getOwnerApi } from "@/features/owner/api.runtime";
 import {
   buildBlocksRange,
   buildWeekTimelineBlocksByDayKey,
@@ -94,7 +96,6 @@ import {
   useModCourtHours,
   useModCourtRateRules,
   useModOwnerAvailabilityReservationSync,
-  useModOwnerCourtStudioTransport,
   useModOwnerInvalidation,
   useMutOwnerCourtBlockCancel,
   useMutOwnerCourtBlockCreateMaintenance,
@@ -110,6 +111,8 @@ import {
   useQueryOwnerOrganization,
   useQueryOwnerPlaceById,
 } from "@/features/owner/hooks";
+
+const ownerApi = getOwnerApi();
 
 export default function OwnerCourtAvailabilityPage() {
   const params = useParams<{ placeId: string; courtId: string }>();
@@ -361,7 +364,7 @@ function OwnerCourtAvailabilityInner({
   const emptyDraftBlocksByDay = React.useMemo(() => new Map(), []);
 
   // Mutations
-  const utils = useModOwnerCourtStudioTransport();
+  const featureCache = useFeatureQueryCache();
   const {
     invalidateActiveReservationsForCourtRange,
     invalidateCourtBlocksRange,
@@ -419,13 +422,16 @@ function OwnerCourtAvailabilityInner({
         const blockEnd = new Date(serverBlock.endTime);
         const isInRange = blockStart < rangeEnd && blockEnd > rangeStart;
 
-        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-          reconcileAvailabilityBlockInRange(
-            old,
-            blockId,
-            serverBlock,
-            isInRange,
-          ),
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
+          blocksQueryInput,
+          (old) =>
+            reconcileAvailabilityBlockInRange(
+              old,
+              blockId,
+              serverBlock,
+              isInRange,
+            ),
         );
         toast.success("Block updated");
       } catch (error) {
@@ -447,7 +453,7 @@ function OwnerCourtAvailabilityInner({
       invalidateCourtBlocksRange,
       updatePendingBlockId,
       updateRange,
-      utils,
+      featureCache,
     ],
   );
 
@@ -522,14 +528,17 @@ function OwnerCourtAvailabilityInner({
       const nextStartIso = toUtcISOString(next.startTime);
       const nextEndIso = toUtcISOString(next.endTime);
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        updateAvailabilityBlockRange(old, args.blockId, {
-          startTime: nextStartIso,
-          endTime: nextEndIso,
-        }),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          updateAvailabilityBlockRange(old, args.blockId, {
+            startTime: nextStartIso,
+            endTime: nextEndIso,
+          }),
       );
     },
-    [blocksQueryInput, computeNextResizeRange, utils],
+    [blocksQueryInput, computeNextResizeRange, featureCache],
   );
 
   const handleResizeCommit = React.useCallback(
@@ -555,25 +564,38 @@ function OwnerCourtAvailabilityInner({
         version: nextVersion,
       });
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        updateAvailabilityBlockRange(old, args.blockId, {
-          startTime: nextStartIso,
-          endTime: nextEndIso,
-        }),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          updateAvailabilityBlockRange(old, args.blockId, {
+            startTime: nextStartIso,
+            endTime: nextEndIso,
+          }),
       );
 
       scheduleRangeFlush(args.blockId);
     },
-    [blocksQueryInput, computeNextResizeRange, scheduleRangeFlush, utils],
+    [
+      blocksQueryInput,
+      computeNextResizeRange,
+      scheduleRangeFlush,
+      featureCache,
+    ],
   );
 
   const createMaintenance = useMutOwnerCourtBlockCreateMaintenance({
     async onMutate(variables) {
       const optimisticId = generateOptimisticId();
       const nowIso = new Date().toISOString();
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
       const optimisticBlock: CourtBlockItem = {
         id: optimisticId,
@@ -590,8 +612,10 @@ function OwnerCourtAvailabilityInner({
         updatedAt: nowIso,
       };
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        appendAvailabilityBlock(old, optimisticBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -599,7 +623,8 @@ function OwnerCourtAvailabilityInner({
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -609,8 +634,11 @@ function OwnerCourtAvailabilityInner({
       }
     },
     onSuccess(serverBlock, _variables, context) {
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        replaceAvailabilityBlock(old, context?.optimisticId, serverBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          replaceAvailabilityBlock(old, context?.optimisticId, serverBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -625,9 +653,14 @@ function OwnerCourtAvailabilityInner({
     async onMutate(variables) {
       const optimisticId = generateOptimisticId();
       const nowIso = new Date().toISOString();
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
       const optimisticBlock: CourtBlockItem = {
         id: optimisticId,
@@ -644,8 +677,10 @@ function OwnerCourtAvailabilityInner({
         updatedAt: nowIso,
       };
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        appendAvailabilityBlock(old, optimisticBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -653,7 +688,8 @@ function OwnerCourtAvailabilityInner({
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -663,8 +699,11 @@ function OwnerCourtAvailabilityInner({
       }
     },
     onSuccess(serverBlock, _variables, context) {
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        replaceAvailabilityBlock(old, context?.optimisticId, serverBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          replaceAvailabilityBlock(old, context?.optimisticId, serverBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -677,12 +716,19 @@ function OwnerCourtAvailabilityInner({
 
   const cancelBlock = useMutOwnerCourtBlockCancel({
     async onMutate(variables) {
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        removeAvailabilityBlock(old, variables.blockId),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => removeAvailabilityBlock(old, variables.blockId),
       );
       updatePendingBlockId(variables.blockId, 1);
 
@@ -690,7 +736,8 @@ function OwnerCourtAvailabilityInner({
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -948,15 +995,27 @@ function OwnerCourtAvailabilityInner({
     const nextEndIso = toUtcISOString(nextRange.end);
     const input = { courtId, startTime: nextStartIso, endTime: nextEndIso };
 
-    void utils.courtBlock.listForCourtRange.fetch(input).catch(() => {
-      prefetchedWeeksRef.current.delete(cacheKey);
-    });
-    void utils.reservationOwner.getActiveForCourtRange
-      .fetch(input)
+    void featureCache
+      .fetch(["courtBlock", "listForCourtRange"], input, () =>
+        ownerApi.queryCourtBlockListForCourtRange(input),
+      )
       .catch(() => {
         prefetchedWeeksRef.current.delete(cacheKey);
       });
-  }, [courtId, blocksQuery.isLoading, weekDayKeys, placeTimeZone, utils]);
+    void featureCache
+      .fetch(["reservationOwner", "getActiveForCourtRange"], input, () =>
+        ownerApi.queryReservationOwnerGetActiveForCourtRange(input),
+      )
+      .catch(() => {
+        prefetchedWeeksRef.current.delete(cacheKey);
+      });
+  }, [
+    courtId,
+    blocksQuery.isLoading,
+    weekDayKeys,
+    placeTimeZone,
+    featureCache,
+  ]);
 
   const committedDayKey = weekCommittedDayKey ?? dayKey;
   const committedEndDayKey = weekCommittedEndDayKey ?? committedDayKey;

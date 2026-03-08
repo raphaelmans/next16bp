@@ -26,7 +26,6 @@ import { toast } from "@/common/toast";
 import { StandardFormProvider } from "@/components/form";
 import { KudosStatusBadge, type ReservationStatus } from "@/components/kudos";
 import { Container } from "@/components/layout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
@@ -242,10 +241,6 @@ export default function ReservationDetailPage({
 
   const handleOpenChatFromBanner = () => {
     handleOpenChat("reservation-status-banner");
-  };
-
-  const handleGoToPayment = async () => {
-    await setStepParam("payment");
   };
 
   const handleGoToOverview = async () => {
@@ -522,55 +517,6 @@ export default function ReservationDetailPage({
         cancellationReason={reservation.cancellationReason ?? undefined}
         onMessageOwner={handleOpenChatFromBanner}
       />
-
-      {canShowPaymentStep ? (
-        <Card className="mt-6 overflow-hidden border-primary/15 bg-[linear-gradient(135deg,hsl(var(--primary)/0.08),transparent_45%,hsl(var(--warning)/0.10))]">
-          <CardContent className="flex flex-col gap-4 p-5 md:flex-row md:items-center md:justify-between">
-            <div className="space-y-2">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant={activeStep === "payment" ? "paid" : "outline"}>
-                  {activeStep === "payment"
-                    ? "Payment Workspace"
-                    : "Reservation Overview"}
-                </Badge>
-                <Badge variant="warning">Payment Required</Badge>
-              </div>
-              <div className="space-y-1">
-                <p className="font-heading text-lg font-semibold tracking-tight">
-                  Keep this reservation on one surface.
-                </p>
-                <p className="max-w-2xl text-sm text-muted-foreground">
-                  Review the slot, switch to payment when you&apos;re ready, and
-                  stay here while the owner confirms the result.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-2 rounded-2xl border bg-background/90 p-1 shadow-sm">
-              <Button
-                type="button"
-                variant={activeStep === "overview" ? "default" : "ghost"}
-                className="min-w-28 rounded-xl"
-                onClick={() => {
-                  void handleGoToOverview();
-                }}
-              >
-                Overview
-              </Button>
-              <Button
-                type="button"
-                variant={activeStep === "payment" ? "default" : "ghost"}
-                className="min-w-28 rounded-xl"
-                onClick={() => {
-                  void handleGoToPayment();
-                }}
-              >
-                Payment
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ) : null}
 
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
         <div className="lg:col-span-2 space-y-6">

@@ -13,6 +13,24 @@ import type { RateLimitTier } from "../ratelimit";
 import type { AuthenticatedContext, Context } from "./context";
 import { createRateLimitMiddleware } from "./middleware/ratelimit.middleware";
 
+const isRecord = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" && value !== null;
+
+export const pickPublicTrpcShapeData = (shapeData: unknown) => {
+  const data = isRecord(shapeData) ? shapeData : {};
+  const publicData: Record<string, unknown> = {};
+
+  if (typeof data.path === "string") {
+    publicData.path = data.path;
+  }
+
+  if (isRecord(data.zodError)) {
+    publicData.zodError = data.zodError;
+  }
+
+  return publicData;
+};
+
 /**
  * tRPC initialization with error formatter.
  * Maps AppError to structured tRPC error responses.
@@ -42,7 +60,7 @@ const t = initTRPC.context<Context>().create({
         ...shape,
         message: publicMessage,
         data: {
-          ...shape.data,
+          ...pickPublicTrpcShapeData(shape.data),
           code: cause.code,
           httpStatus: cause.httpStatus,
           requestId,
@@ -64,7 +82,7 @@ const t = initTRPC.context<Context>().create({
       ...shape,
       message: GENERIC_PUBLIC_ERROR_MESSAGE,
       data: {
-        ...shape.data,
+        ...pickPublicTrpcShapeData(shape.data),
         code: "INTERNAL_ERROR",
         httpStatus: 500,
         requestId,

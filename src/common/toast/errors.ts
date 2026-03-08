@@ -12,6 +12,10 @@ const getFieldErrorMessage = (fieldErrors: unknown): string | null => {
   if (!isRecord(fieldErrors)) return null;
 
   for (const errorList of Object.values(fieldErrors)) {
+    if (typeof errorList === "string" && errorList.trim().length > 0) {
+      return errorList;
+    }
+
     if (Array.isArray(errorList)) {
       const message = errorList.find(
         (entry) => typeof entry === "string" && entry.trim().length > 0,
@@ -87,16 +91,22 @@ const shouldUseFallbackMessage = (appError: AppError): boolean => {
   return isInternalErrorCode(code);
 };
 
+const getAppErrorCode = (appError: AppError): string | undefined => {
+  switch (appError.kind) {
+    case "validation":
+    case "unauthorized":
+    case "forbidden":
+    case "not_found":
+    case "rate_limited":
+    case "network":
+    case "unknown":
+      return appError.code;
+  }
+};
+
 const getCodeErrorMessage = (error: unknown): string | null => {
   const appError = toAppError(error);
-  const code =
-    appError.kind === "validation" ||
-    appError.kind === "unauthorized" ||
-    appError.kind === "forbidden" ||
-    appError.kind === "not_found" ||
-    appError.kind === "rate_limited"
-      ? appError.code
-      : undefined;
+  const code = getAppErrorCode(appError);
   if (typeof code === "string" && code in FRIENDLY_ERROR_MESSAGES) {
     return FRIENDLY_ERROR_MESSAGES[code] ?? null;
   }

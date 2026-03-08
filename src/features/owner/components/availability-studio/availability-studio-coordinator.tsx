@@ -16,6 +16,7 @@ import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
+import { useFeatureQueryCache } from "@/common/feature-api-hooks";
 import { formatTimeRangeInTimeZone } from "@/common/format";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
@@ -41,6 +42,7 @@ import {
   OwnerSidebar,
   ReservationAlertsPanel,
 } from "@/features/owner";
+import { getOwnerApi } from "@/features/owner/api.runtime";
 import {
   buildBlocksRange,
   buildDraftRowsState,
@@ -99,7 +101,6 @@ import {
   useModCourtHours,
   useModOwnerAvailabilityReservationSync,
   useModOwnerCourtFilter,
-  useModOwnerCourtStudioTransport,
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
   useMutOwnerConvertWalkInBlockToGuest,
@@ -122,6 +123,8 @@ import {
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
 } from "@/features/owner/hooks";
+
+const ownerApi = getOwnerApi();
 
 export default function OwnerAvailabilityStudioPage() {
   return (
@@ -477,7 +480,7 @@ function OwnerAvailabilityStudioInner() {
     weekRowHeight,
   ]);
 
-  const utils = useModOwnerCourtStudioTransport();
+  const featureCache = useFeatureQueryCache();
   const {
     invalidateActiveReservationsForCourtRange,
     invalidateCourtBlocksRange,
@@ -544,9 +547,14 @@ function OwnerAvailabilityStudioInner() {
     async onMutate(variables) {
       const optimisticId = generateOptimisticId();
       const nowIso = new Date().toISOString();
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
       const optimisticBlock: CourtBlockItem = {
         id: optimisticId,
@@ -563,8 +571,10 @@ function OwnerAvailabilityStudioInner() {
         updatedAt: nowIso,
       };
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        appendAvailabilityBlock(old, optimisticBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -572,7 +582,8 @@ function OwnerAvailabilityStudioInner() {
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -595,8 +606,11 @@ function OwnerAvailabilityStudioInner() {
         serverBlock,
         context?.optimisticId,
       );
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -611,9 +625,14 @@ function OwnerAvailabilityStudioInner() {
     async onMutate(variables) {
       const optimisticId = generateOptimisticId();
       const nowIso = new Date().toISOString();
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
       const optimisticBlock: CourtBlockItem = {
         id: optimisticId,
@@ -630,8 +649,10 @@ function OwnerAvailabilityStudioInner() {
         updatedAt: nowIso,
       };
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        appendAvailabilityBlock(old, optimisticBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => appendAvailabilityBlock(old, optimisticBlock),
       );
       updatePendingBlockId(optimisticId, 1);
 
@@ -639,7 +660,8 @@ function OwnerAvailabilityStudioInner() {
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -662,8 +684,11 @@ function OwnerAvailabilityStudioInner() {
         serverBlock,
         context?.optimisticId,
       );
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          replaceAvailabilityBlock(old, context?.optimisticId, nextBlock),
       );
       if (context?.optimisticId) {
         updatePendingBlockId(context.optimisticId, -1);
@@ -676,12 +701,19 @@ function OwnerAvailabilityStudioInner() {
 
   const cancelBlock = useMutOwnerCourtBlockCancel({
     async onMutate(variables) {
-      await utils.courtBlock.listForCourtRange.cancel(blocksQueryInput);
-      const previousBlocks =
-        utils.courtBlock.listForCourtRange.getData(blocksQueryInput);
+      await featureCache.cancel(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
+      const previousBlocks = featureCache.getData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+      );
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        removeAvailabilityBlock(old, variables.blockId),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) => removeAvailabilityBlock(old, variables.blockId),
       );
       updatePendingBlockId(variables.blockId, 1);
 
@@ -689,7 +721,8 @@ function OwnerAvailabilityStudioInner() {
     },
     onError(_error, _variables, context) {
       if (context?.previousBlocks !== undefined) {
-        utils.courtBlock.listForCourtRange.setData(
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
           blocksQueryInput,
           context.previousBlocks,
         );
@@ -733,13 +766,16 @@ function OwnerAvailabilityStudioInner() {
         const blockEnd = new Date(serverBlock.endTime);
         const isInRange = blockStart < rangeEnd && blockEnd > rangeStart;
 
-        utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-          reconcileAvailabilityBlockInRange(
-            old,
-            blockId,
-            serverBlock,
-            isInRange,
-          ),
+        featureCache.setData(
+          ["courtBlock", "listForCourtRange"],
+          blocksQueryInput,
+          (old) =>
+            reconcileAvailabilityBlockInRange(
+              old,
+              blockId,
+              serverBlock,
+              isInRange,
+            ),
         );
         toast.success("Block updated");
       } catch (error) {
@@ -761,7 +797,7 @@ function OwnerAvailabilityStudioInner() {
       invalidateCourtBlocksRange,
       updatePendingBlockId,
       updateRange,
-      utils,
+      featureCache,
     ],
   );
 
@@ -796,50 +832,59 @@ function OwnerAvailabilityStudioInner() {
   const updateDraftRow = useMutOwnerImportUpdateRow({
     async onMutate(variables) {
       if (!jobId) return { previousRows: undefined };
-      await utils.bookingsImport.listRows.cancel(draftRowsQueryInput);
-      const previousRows =
-        utils.bookingsImport.listRows.getData(draftRowsQueryInput);
+      await featureCache.cancel(
+        ["bookingsImport", "listRows"],
+        draftRowsQueryInput,
+      );
+      const previousRows = featureCache.getData(
+        ["bookingsImport", "listRows"],
+        draftRowsQueryInput,
+      );
 
-      utils.bookingsImport.listRows.setData(draftRowsQueryInput, (old) =>
-        old?.map((row) => {
-          if (row.id !== variables.rowId) return row;
+      featureCache.setData(
+        ["bookingsImport", "listRows"],
+        draftRowsQueryInput,
+        (old) =>
+          old?.map((row) => {
+            if (row.id !== variables.rowId) return row;
 
-          const startTime: string | null =
-            variables.startTime === undefined
-              ? row.startTime
-              : variables.startTime instanceof Date
-                ? toUtcISOString(variables.startTime)
-                : null;
-          const endTime: string | null =
-            variables.endTime === undefined
-              ? row.endTime
-              : variables.endTime instanceof Date
-                ? toUtcISOString(variables.endTime)
-                : null;
-          const courtId: string | null =
-            variables.courtId === undefined
-              ? row.courtId
-              : (variables.courtId as string | null);
-          const courtLabel: string | null =
-            variables.courtLabel === undefined
-              ? row.courtLabel
-              : (variables.courtLabel as string | null);
+            const startTime: string | null =
+              variables.startTime === undefined
+                ? row.startTime
+                : variables.startTime instanceof Date
+                  ? toUtcISOString(variables.startTime)
+                  : null;
+            const endTime: string | null =
+              variables.endTime === undefined
+                ? row.endTime
+                : variables.endTime instanceof Date
+                  ? toUtcISOString(variables.endTime)
+                  : null;
+            const courtId: string | null =
+              variables.courtId === undefined
+                ? row.courtId
+                : (variables.courtId as string | null);
+            const courtLabel: string | null =
+              variables.courtLabel === undefined
+                ? row.courtLabel
+                : (variables.courtLabel as string | null);
 
-          return {
-            ...row,
-            startTime,
-            endTime,
-            courtId,
-            courtLabel,
-          };
-        }),
+            return {
+              ...row,
+              startTime,
+              endTime,
+              courtId,
+              courtLabel,
+            };
+          }),
       );
 
       return { previousRows };
     },
     onError(_error, _variables, context) {
       if (context?.previousRows !== undefined && jobId) {
-        utils.bookingsImport.listRows.setData(
+        featureCache.setData(
+          ["bookingsImport", "listRows"],
           draftRowsQueryInput,
           context.previousRows,
         );
@@ -1331,15 +1376,27 @@ function OwnerAvailabilityStudioInner() {
     const nextEndIso = toUtcISOString(nextRange.end);
     const input = { courtId, startTime: nextStartIso, endTime: nextEndIso };
 
-    void utils.courtBlock.listForCourtRange.fetch(input).catch(() => {
-      prefetchedWeeksRef.current.delete(cacheKey);
-    });
-    void utils.reservationOwner.getActiveForCourtRange
-      .fetch(input)
+    void featureCache
+      .fetch(["courtBlock", "listForCourtRange"], input, () =>
+        ownerApi.queryCourtBlockListForCourtRange(input),
+      )
       .catch(() => {
         prefetchedWeeksRef.current.delete(cacheKey);
       });
-  }, [courtId, blocksQuery.isLoading, weekDayKeys, placeTimeZone, utils]);
+    void featureCache
+      .fetch(["reservationOwner", "getActiveForCourtRange"], input, () =>
+        ownerApi.queryReservationOwnerGetActiveForCourtRange(input),
+      )
+      .catch(() => {
+        prefetchedWeeksRef.current.delete(cacheKey);
+      });
+  }, [
+    courtId,
+    blocksQuery.isLoading,
+    weekDayKeys,
+    placeTimeZone,
+    featureCache,
+  ]);
 
   const handleMobileDrawerClose = React.useCallback(
     (open: boolean) => {
@@ -1464,14 +1521,17 @@ function OwnerAvailabilityStudioInner() {
       const nextStartIso = toUtcISOString(next.startTime);
       const nextEndIso = toUtcISOString(next.endTime);
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        updateAvailabilityBlockRange(old, args.blockId, {
-          startTime: nextStartIso,
-          endTime: nextEndIso,
-        }),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          updateAvailabilityBlockRange(old, args.blockId, {
+            startTime: nextStartIso,
+            endTime: nextEndIso,
+          }),
       );
     },
-    [blocksQueryInput, computeNextResizeRange, utils],
+    [blocksQueryInput, computeNextResizeRange, featureCache],
   );
 
   const handleResizeCommit = React.useCallback(
@@ -1497,18 +1557,21 @@ function OwnerAvailabilityStudioInner() {
         version: nextVersion,
       });
 
-      utils.courtBlock.listForCourtRange.setData(blocksQueryInput, (old) =>
-        updateAvailabilityBlockRange(old, args.blockId, {
-          startTime: nextStartIso,
-          endTime: nextEndIso,
-        }),
+      featureCache.setData(
+        ["courtBlock", "listForCourtRange"],
+        blocksQueryInput,
+        (old) =>
+          updateAvailabilityBlockRange(old, args.blockId, {
+            startTime: nextStartIso,
+            endTime: nextEndIso,
+          }),
       );
 
       if (!isOptimisticBlockId(args.blockId)) {
         scheduleRangeFlushRef.current(args.blockId);
       }
     },
-    [blocksQueryInput, computeNextResizeRange, utils],
+    [blocksQueryInput, computeNextResizeRange, featureCache],
   );
 
   const isCreatingBlock =
@@ -1911,6 +1974,7 @@ function OwnerAvailabilityStudioInner() {
         <AvailabilityStudioToolbar
           placeId={placeId}
           places={places}
+          placesLoading={placesLoading}
           courtId={courtId}
           courts={courts}
           courtsLoading={courtsLoading}

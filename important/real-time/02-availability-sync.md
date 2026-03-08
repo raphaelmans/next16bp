@@ -16,6 +16,20 @@ Client-side pieces:
 - realtime client: `src/common/clients/availability-realtime-client/index.ts`
 - discovery sync consumer: `src/features/discovery/realtime.ts`
 
+## Realtime Publication Setup
+
+The Drizzle migration creates `availability_change_event`, but Supabase Realtime publication still needs to be enabled per environment.
+
+Run after migrating the target database:
+
+```bash
+pnpm exec dotenvx run --env-file=.env.local -- tsx scripts/enable-realtime-availability-change-events.ts
+pnpm exec dotenvx run --env-file=.env.production -- tsx scripts/enable-realtime-availability-change-events.ts
+```
+
+Expected result:
+- `public.availability_change_event` is present in `pg_publication_tables` for `supabase_realtime`
+
 ## Payload Shape
 
 The event carries patchable slot state, including:

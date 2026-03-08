@@ -11,6 +11,11 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  getAmenityDisplayLabel,
+  getAmenityKey,
+  mergeAmenityOptions,
+} from "@/common/amenities";
 import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
@@ -19,9 +24,6 @@ import {
   findCityBySlug,
   findCityBySlugAcrossProvinces,
   findProvinceBySlug,
-  getAmenityDisplayLabel,
-  getAmenityKey,
-  mergeAmenityOptions,
 } from "@/common/ph-location-data";
 import { getZonedDayKey } from "@/common/time-zone";
 import { KudosDatePicker } from "@/components/kudos";
@@ -567,7 +569,7 @@ export function PlaceFilters({
       }
       variant="outline"
       size="sm"
-      className={isSheet ? "grid w-full grid-cols-3" : undefined}
+      className={cn("w-full", isSheet && "grid grid-cols-3")}
     >
       <ToggleGroupItem
         value="verified_reservable"
@@ -591,10 +593,7 @@ export function PlaceFilters({
   );
 
   const amenitiesCombobox = (
-    <div
-      ref={amenitiesAnchorRef}
-      className={cn(isSheet ? "w-full" : "w-auto min-w-[220px]")}
-    >
+    <div ref={amenitiesAnchorRef} className="w-full">
       <Combobox
         items={amenitiesOptions}
         multiple
@@ -610,7 +609,6 @@ export function PlaceFilters({
         <ComboboxChips
           className={cn(
             "min-h-9 text-sm",
-            !isSheet && "border-none bg-transparent px-0 shadow-none",
             isAmenitiesDisabled && "pointer-events-none opacity-50",
           )}
         >

@@ -58,6 +58,15 @@ When a player clicks on a venue card, they see the full venue profile.
 
 **Business purpose:** Build player trust. Verified badges, photos, and transparent information help the player decide if this venue is worth booking.
 
+### Engineering Note: Venue Detail SSR/ISR Caching
+
+- Public venue detail URLs use the `/venues/:placeIdOrSlug` surface, but the request is internally rewritten through the existing `/places/[placeId]` filesystem route.
+- The route has a segment-level `loading.tsx`, so when Next.js has to wait for a fresh server render the player sees the full-page skeleton state.
+- `revalidate = false` alone was not enough to make this dynamic route behave like cached ISR. Without `generateStaticParams()` or `dynamic = "force-static"`, Next.js kept treating unknown dynamic params as on-demand streaming SSR.
+- The symptom was repeated slow loads on the same venue URL, with live responses returning `cache-control: private, no-cache, no-store` and `x-vercel-cache: MISS`.
+- The fix applied in March 2026 was to add `generateStaticParams() { return []; }` to both public place-detail entrypoints so venue pages can be generated on first hit, cached afterward, and still refreshed via the existing `revalidatePath(...)` invalidation flow.
+- Expected behavior after the fix: the first request after a cold hit or explicit invalidation can still stream and show the skeleton, but repeated requests for an unchanged venue should be served from cached static output rather than full SSR every time.
+
 ## Court Detail Page
 
 Individual court information within a venue.

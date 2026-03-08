@@ -23,6 +23,7 @@ type CourtOption = {
 type AvailabilityStudioToolbarProps = {
   placeId: string;
   places: Option[];
+  placesLoading: boolean;
   courtId: string;
   courts: CourtOption[];
   courtsLoading: boolean;
@@ -33,6 +34,7 @@ type AvailabilityStudioToolbarProps = {
 export function AvailabilityStudioToolbar({
   placeId,
   places,
+  placesLoading,
   courtId,
   courts,
   courtsLoading,
@@ -45,9 +47,16 @@ export function AvailabilityStudioToolbar({
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
           Venue
         </p>
-        <Select value={placeId} onValueChange={onPlaceChange}>
-          <SelectTrigger>
+        <Select
+          value={placeId}
+          onValueChange={onPlaceChange}
+          disabled={placesLoading}
+        >
+          <SelectTrigger className="relative pr-9">
             <SelectValue placeholder="Select a venue" />
+            {placesLoading ? (
+              <Spinner className="pointer-events-none absolute right-8 size-4 text-muted-foreground" />
+            ) : null}
           </SelectTrigger>
           <SelectContent>
             {places.map((place) => (
@@ -69,11 +78,7 @@ export function AvailabilityStudioToolbar({
           disabled={!placeId || courtsLoading}
         >
           <SelectTrigger className="relative pr-9">
-            <SelectValue
-              placeholder={
-                courtsLoading ? "Loading courts..." : "Select a court"
-              }
-            />
+            <SelectValue placeholder="Select a court" />
             {courtsLoading ? (
               <Spinner className="pointer-events-none absolute right-8 size-4 text-muted-foreground" />
             ) : null}

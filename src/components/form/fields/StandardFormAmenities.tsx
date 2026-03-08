@@ -164,8 +164,8 @@ export function StandardFormAmenities<
             )}
             <div className="flex-1 space-y-3">
               <Popover open={open && !disabled} onOpenChange={setOpen}>
-                <PopoverAnchor asChild>
-                  <div className="space-y-3">
+                <div className="space-y-3">
+                  <PopoverAnchor asChild>
                     <div className="relative">
                       <Input
                         ref={inputRef}
@@ -227,6 +227,7 @@ export function StandardFormAmenities<
                         </button>
                       )}
                     </div>
+                  </PopoverAnchor>
 
                     {selectedValues.length > 0 && (
                       <div className="flex flex-wrap gap-2">
@@ -272,12 +273,11 @@ export function StandardFormAmenities<
                         ))}
                       </ToggleGroup>
                     )}
-                  </div>
-                </PopoverAnchor>
+                </div>
 
                 <PopoverContent
                   align="start"
-                  className="w-[min(28rem,calc(100vw-2rem))] p-0"
+                  className="w-[var(--radix-popover-trigger-width)] p-0"
                   onOpenAutoFocus={(event) => {
                     event.preventDefault();
                   }}

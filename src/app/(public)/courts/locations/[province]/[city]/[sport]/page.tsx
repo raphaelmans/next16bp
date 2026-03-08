@@ -323,68 +323,82 @@ export default async function CourtsCitySportPage({
         }).replace(/</g, "\\u003c")}
       </Script>
       <section className="border-b border-border bg-card/50 py-5">
-        <Container className="space-y-3">
-          <p className="text-sm text-muted-foreground">
-            {context.sport.name} listings in {context.city.displayName}:{" "}
-            {placeCount} listing{placeCount === 1 ? "" : "s"} and {courtCount}{" "}
-            court{courtCount === 1 ? "" : "s"}.
-          </p>
-          <div className="flex flex-wrap gap-2">
+        <Container>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            <Link
+              href={appRoutes.courts.locations.province(context.province.slug)}
+              className="hover:text-foreground"
+            >
+              {context.province.displayName}
+            </Link>
+            <span aria-hidden="true" className="text-border">
+              /
+            </span>
             <Link
               href={appRoutes.courts.locations.city(
                 context.province.slug,
                 context.city.slug,
               )}
-              className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground"
+              className="hover:text-foreground"
             >
-              All sports in {context.city.displayName}
+              {context.city.displayName}
             </Link>
+            <span aria-hidden="true" className="text-border">
+              /
+            </span>
+            <span>
+              {context.sport.name}
+              <span className="ml-1 tabular-nums">
+                · {placeCount} listing{placeCount === 1 ? "" : "s"},{" "}
+                {courtCount} court{courtCount === 1 ? "" : "s"}
+              </span>
+            </span>
+            <span aria-hidden="true" className="hidden text-border sm:inline">
+              /
+            </span>
             <Link
-              href={appRoutes.courts.locations.province(context.province.slug)}
-              className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground"
+              href={appRoutes.ownersGetStarted.base}
+              className="text-primary hover:text-primary/80"
             >
-              {context.province.displayName} hub
+              List your venue
             </Link>
           </div>
-          {venueRows.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold">
-                Popular {context.sport.name} courts in{" "}
-                {context.city.displayName}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {venueRows.map((venue) => (
-                  <Link
-                    key={venue.slug}
-                    href={appRoutes.places.detail(venue.slug)}
-                    className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground"
-                  >
-                    {venue.name}
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-          {siblingSportRows.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold">
-                Explore other sports nearby
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {siblingSportRows.map((sportRow) => (
-                  <Link
-                    key={sportRow.slug}
-                    href={appRoutes.courts.locations.sport(
-                      context.province.slug,
-                      context.city.slug,
-                      sportRow.slug,
-                    )}
-                    className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground"
-                  >
-                    {sportRow.name} ({Number(sportRow.value ?? 0)})
-                  </Link>
-                ))}
-              </div>
+          {(siblingSportRows.length > 0 || venueRows.length > 0) && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              <span className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs text-primary">
+                {context.sport.name}{" "}
+                <span className="tabular-nums text-primary/60">
+                  {courtCount}
+                </span>
+              </span>
+              {siblingSportRows.map((sportRow) => (
+                <Link
+                  key={sportRow.slug}
+                  href={appRoutes.courts.locations.sport(
+                    context.province.slug,
+                    context.city.slug,
+                    sportRow.slug,
+                  )}
+                  className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs text-primary transition-colors hover:bg-primary/15"
+                >
+                  {sportRow.name}{" "}
+                  <span className="tabular-nums text-primary/60">
+                    {Number(sportRow.value ?? 0)}
+                  </span>
+                </Link>
+              ))}
+              {siblingSportRows.length > 0 && venueRows.length > 0 && (
+                <span aria-hidden="true" className="mx-1 h-3 w-px bg-border" />
+              )}
+              {venueRows.map((venue) => (
+                <Link
+                  key={venue.slug}
+                  href={appRoutes.places.detail(venue.slug)}
+                  className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
+                >
+                  {venue.name}
+                </Link>
+              ))}
             </div>
           )}
         </Container>

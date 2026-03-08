@@ -36,7 +36,10 @@ const mapErrorKind = (input: {
   }
   if (
     status === 422 ||
+    (status >= 400 && status < 500) ||
     code.includes("BAD_REQUEST") ||
+    code.includes("CONFLICT") ||
+    code.includes("BUSINESS_RULE") ||
     code.includes("PARSE") ||
     code.includes("VALIDATION")
   ) {

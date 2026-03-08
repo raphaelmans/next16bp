@@ -10,6 +10,10 @@ type PlaceDetailRoutePageProps = {
 
 export const revalidate = false;
 
+export function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({
   params,
 }: PlaceDetailRoutePageProps): Promise<Metadata> {

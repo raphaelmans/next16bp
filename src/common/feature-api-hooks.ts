@@ -3,6 +3,7 @@
 import {
   mutationOptions,
   type QueriesResults,
+  type Updater,
   type UseMutateFunction,
   type UseMutationOptions,
   type UseMutationResult,
@@ -10,7 +11,9 @@ import {
   useMutation,
   useQueries,
   useQuery,
+  useQueryClient,
 } from "@tanstack/react-query";
+import * as React from "react";
 import type { AppError } from "@/common/errors/app-error";
 import type { FeatureQueryOptions } from "@/common/feature-query-options";
 import { buildTrpcQueryKey } from "@/common/trpc-query-key";
@@ -138,4 +141,38 @@ export function useFeatureQueries<TQueries extends readonly unknown[]>(
   return useQueries({
     queries: queries as Parameters<typeof useQueries>[0]["queries"],
   }) as QueriesResults<MutableQueryTuple<TQueries>>;
+}
+
+export function useFeatureQueryCache() {
+  const queryClient = useQueryClient();
+
+  return React.useMemo(() => {
+    const getQueryKey = (path: QueryPath, input?: unknown) =>
+      buildTrpcQueryKey(path, input);
+
+    return {
+      // biome-ignore lint/suspicious/noExplicitAny: cache operations are untyped at the key level
+      setData: (path: QueryPath, input: unknown, updater: Updater<any, any>) =>
+        queryClient.setQueryData(getQueryKey(path, input), updater),
+
+      getData: <T = unknown>(path: QueryPath, input: unknown): T | undefined =>
+        queryClient.getQueryData<T>(getQueryKey(path, input)),
+
+      cancel: (path: QueryPath, input: unknown) =>
+        queryClient.cancelQueries({
+          queryKey: getQueryKey(path, input),
+        }),
+
+      invalidate: (path: QueryPath, input?: unknown) =>
+        queryClient.invalidateQueries({
+          queryKey: getQueryKey(path, input),
+        }),
+
+      fetch: <T>(path: QueryPath, input: unknown, queryFn: () => Promise<T>) =>
+        queryClient.fetchQuery<T>({
+          queryKey: getQueryKey(path, input),
+          queryFn,
+        }),
+    };
+  }, [queryClient]);
 }

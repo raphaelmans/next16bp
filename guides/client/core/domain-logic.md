@@ -27,26 +27,6 @@ Domain files stay function-based:
 - avoid feature API classes in domain files
 - keep mutable IO collaborators in `api.ts` (`I<Feature>Api` + class)
 
-## Cross-Surface Source of Truth Rule (Desktop First)
-
-When desktop and mobile implement the same business behavior, keep one shared
-domain path and treat the already-correct desktop behavior as canonical.
-
-Rules:
-
-- put shared deterministic logic in one pure module (for example week-grid hour
-  model + committed range derivation)
-- desktop and mobile must both consume that shared module
-- do not fork business rules per surface (for example separate hour/index
-  mapping paths) unless requirements actually differ
-- if UX differs by surface, keep differences in rendering/interaction layers
-  only, not in selection/pricing/availability domain logic
-
-Example (booking week grid):
-
-- shared: `src/components/kudos/week-grid-domain.ts`
-- consumers: `availability-week-grid.tsx` and `mobile-week-grid.tsx`
-
 ## Precedence Rule
 
 When deciding where logic goes:

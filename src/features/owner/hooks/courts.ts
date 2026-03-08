@@ -17,10 +17,6 @@ import type { CourtFormData } from "../schemas";
 
 const ownerApi = getOwnerApi();
 
-export function useModOwnerCourtStudioTransport() {
-  return trpc.useUtils();
-}
-
 interface CreateCourtResult {
   success: boolean;
   courtId: string;

@@ -3,6 +3,18 @@ import { isRecord } from "@/common/type-guards";
 const toRecordOrEmpty = (value: unknown): Record<string, unknown> =>
   isRecord(value) ? value : {};
 
+const getErrorData = (
+  errRecord: Record<string, unknown>,
+): Record<string, unknown> => {
+  const directData = toRecordOrEmpty(errRecord.data);
+  if (Object.keys(directData).length > 0) {
+    return directData;
+  }
+
+  const shape = toRecordOrEmpty(errRecord.shape);
+  return toRecordOrEmpty(shape.data);
+};
+
 export type TrpcErrorMeta = {
   code?: string;
   status?: number;
@@ -16,7 +28,7 @@ export const toTrpcErrorMeta = (err: unknown): TrpcErrorMeta => {
   }
 
   const errRecord = toRecordOrEmpty(err);
-  const data = toRecordOrEmpty(errRecord.data);
+  const data = getErrorData(errRecord);
   const zodError = toRecordOrEmpty(data.zodError);
   const fieldErrors = toRecordOrEmpty(zodError.fieldErrors);
 

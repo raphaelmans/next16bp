@@ -1,8 +1,7 @@
 "use client";
 
-import { useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
-import { buildTrpcQueryKey } from "@/common/trpc-query-key";
+import { useFeatureQueryCache } from "@/common/feature-api-hooks";
 import { trpc } from "@/trpc/client";
 
 export * from "./analytics";
@@ -20,14 +19,11 @@ export * from "./reservations";
 
 export function useModOwnerInvalidation() {
   const cache = trpc.useUtils();
-  const queryClient = useQueryClient();
+  const featureCache = useFeatureQueryCache();
 
   const invalidateOwnerSetupStatus = React.useCallback(
-    () =>
-      queryClient.invalidateQueries({
-        queryKey: buildTrpcQueryKey(["ownerSetup", "getStatus"]),
-      }),
-    [queryClient],
+    () => featureCache.invalidate(["ownerSetup", "getStatus"]),
+    [featureCache],
   );
 
   const invalidateClaimRequestMine = React.useCallback(
@@ -62,49 +58,48 @@ export function useModOwnerInvalidation() {
   );
 
   const invalidateCourtBlocksRange = React.useCallback(
-    (
-      ...args: Parameters<typeof cache.courtBlock.listForCourtRange.invalidate>
-    ) => cache.courtBlock.listForCourtRange.invalidate(...args),
-    [cache],
+    (input?: Record<string, unknown>) =>
+      featureCache.invalidate(["courtBlock", "listForCourtRange"], input),
+    [featureCache],
   );
 
   const invalidateActiveReservationsForCourtRange = React.useCallback(
-    (
-      ...args: Parameters<
-        typeof cache.reservationOwner.getActiveForCourtRange.invalidate
-      >
-    ) => cache.reservationOwner.getActiveForCourtRange.invalidate(...args),
-    [cache],
+    (input?: Record<string, unknown>) =>
+      featureCache.invalidate(
+        ["reservationOwner", "getActiveForCourtRange"],
+        input,
+      ),
+    [featureCache],
   );
 
   const invalidateImportJob = React.useCallback(
-    (...args: Parameters<typeof cache.bookingsImport.getJob.invalidate>) =>
-      cache.bookingsImport.getJob.invalidate(...args),
-    [cache],
+    (input?: Record<string, unknown>) =>
+      featureCache.invalidate(["bookingsImport", "getJob"], input),
+    [featureCache],
   );
 
   const invalidateImportRows = React.useCallback(
-    (...args: Parameters<typeof cache.bookingsImport.listRows.invalidate>) =>
-      cache.bookingsImport.listRows.invalidate(...args),
-    [cache],
+    (input?: Record<string, unknown>) =>
+      featureCache.invalidate(["bookingsImport", "listRows"], input),
+    [featureCache],
   );
 
   const invalidateImportAiUsage = React.useCallback(
-    (...args: Parameters<typeof cache.bookingsImport.aiUsage.invalidate>) =>
-      cache.bookingsImport.aiUsage.invalidate(...args),
-    [cache],
+    (input?: Record<string, unknown>) =>
+      featureCache.invalidate(["bookingsImport", "aiUsage"], input),
+    [featureCache],
   );
 
   const invalidateImportRowsAndJob = React.useCallback(
     async (
-      rowsArg: Parameters<typeof cache.bookingsImport.listRows.invalidate>[0],
-      jobArg: Parameters<typeof cache.bookingsImport.getJob.invalidate>[0],
+      rowsInput?: Record<string, unknown>,
+      jobInput?: Record<string, unknown>,
     ) =>
       Promise.all([
-        cache.bookingsImport.listRows.invalidate(rowsArg),
-        cache.bookingsImport.getJob.invalidate(jobArg),
+        featureCache.invalidate(["bookingsImport", "listRows"], rowsInput),
+        featureCache.invalidate(["bookingsImport", "getJob"], jobInput),
       ]),
-    [cache],
+    [featureCache],
   );
 
   return {

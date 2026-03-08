@@ -10,6 +10,10 @@ type VenueDetailRoutePageProps = {
 
 export const revalidate = false;
 
+export function generateStaticParams() {
+  return [];
+}
+
 export async function generateMetadata({
   params,
 }: VenueDetailRoutePageProps): Promise<Metadata> {

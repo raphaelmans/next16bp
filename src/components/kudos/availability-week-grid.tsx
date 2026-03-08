@@ -285,6 +285,10 @@ const WeekGridCell = React.memo(function WeekGridCell({
   const isBooked = slot?.status === "booked" || slot?.status === "held";
   const isMaintenance = slot?.unavailableReason === "MAINTENANCE";
   const isReserved = isBooked && !isMaintenance;
+  const priceLabel =
+    slot?.priceCents !== undefined
+      ? formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")
+      : null;
 
   const touchIntent = useTouchIntent({
     onConfirm: React.useCallback(
@@ -381,13 +385,23 @@ const WeekGridCell = React.memo(function WeekGridCell({
       {isReserved && !compact && (
         <span className="text-xs font-medium text-destructive/50">Booked</span>
       )}
+      {isReserved && compact && (
+        <span className="block w-full px-0.5 text-center font-heading text-[9px] font-semibold leading-none tracking-[-0.01em] text-destructive/75">
+          Booked
+        </span>
+      )}
       {isMaintenance && !compact && (
         <span className="text-xs font-medium text-warning-foreground/60">
           Maint.
         </span>
       )}
+      {isMaintenance && compact && (
+        <span className="block w-full px-0.5 text-center font-heading text-[9px] font-semibold leading-none tracking-[-0.01em] text-warning-foreground/80">
+          Maint.
+        </span>
+      )}
       {inRange && (
-        <div className="flex flex-col items-center gap-0.5">
+        <div className="flex min-w-0 flex-col items-center gap-0.5 px-0.5">
           <div
             className={cn(
               "h-2 w-2 rounded-full bg-primary shadow-sm shadow-primary/25 animate-in zoom-in-50 duration-150",
@@ -395,51 +409,67 @@ const WeekGridCell = React.memo(function WeekGridCell({
                 "h-2.5 w-2.5 ring-2 ring-primary/20 animate-pulse",
             )}
           />
-          {slot?.priceCents !== undefined && (
+          {priceLabel && (
             <span
               className={cn(
-                "font-medium tabular-nums text-primary/70",
-                compact ? "max-w-full truncate text-[11px]" : "text-xs",
+                "tabular-nums",
+                compact
+                  ? "block w-full text-center font-heading text-[9px] font-semibold leading-none tracking-[-0.01em] text-primary"
+                  : "text-xs font-medium text-primary/70",
               )}
             >
-              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
+              {priceLabel}
             </span>
           )}
         </div>
       )}
-      {isInCart && !inRange && slot && (
-        <div className="flex flex-col items-center gap-0.5">
+      {isInCart && !inRange && slot && !isReserved && !isMaintenance && (
+        <div className="flex min-w-0 flex-col items-center gap-0.5 px-0.5">
           <div className="flex h-4 w-4 items-center justify-center rounded-full bg-success/20">
             <Check className="h-2.5 w-2.5 text-success" />
           </div>
-          {slot.priceCents !== undefined && (
+          {priceLabel && (
             <span
               className={cn(
-                "font-medium tabular-nums text-success/80",
-                compact ? "max-w-full truncate text-[11px]" : "text-xs",
+                "tabular-nums",
+                compact
+                  ? "block w-full text-center font-heading text-[9px] font-semibold leading-none tracking-[-0.01em] text-success"
+                  : "text-xs font-medium text-success/80",
               )}
             >
-              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
+              {priceLabel}
             </span>
           )}
         </div>
       )}
-      {available && !inRange && !isInCart && slot && (
-        <div className="flex flex-col items-center gap-0.5">
-          {slot.priceCents !== undefined ? (
-            <span
-              className={cn(
-                "font-medium tabular-nums text-success/80 group-hover/cell:text-success",
-                compact ? "max-w-full truncate text-[11px]" : "text-xs",
-              )}
-            >
-              {formatCurrencyWhole(slot.priceCents, slot.currency ?? "PHP")}
-            </span>
-          ) : (
-            <div className="h-1.5 w-1.5 rounded-full bg-success/50 transition-transform group-hover/cell:scale-150 group-hover/cell:bg-success" />
-          )}
-        </div>
-      )}
+      {available &&
+        !inRange &&
+        !isInCart &&
+        !isReserved &&
+        !isMaintenance &&
+        slot && (
+          <div className="flex min-w-0 flex-col items-center gap-0.5 px-0.5">
+            {priceLabel ? (
+              <span
+                className={cn(
+                  "tabular-nums transition-colors",
+                  compact
+                    ? cn(
+                        "block w-full text-center font-heading text-[9px] font-semibold leading-none tracking-[-0.01em]",
+                        isDisabled
+                          ? "text-foreground/70"
+                          : "text-success group-hover/cell:text-success",
+                      )
+                    : "text-xs font-medium text-success/80 group-hover/cell:text-success",
+                )}
+              >
+                {priceLabel}
+              </span>
+            ) : (
+              <div className="h-1.5 w-1.5 rounded-full bg-success/50 transition-transform group-hover/cell:scale-150 group-hover/cell:bg-success" />
+            )}
+          </div>
+        )}
     </button>
   );
 });
