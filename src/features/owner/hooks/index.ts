@@ -1,6 +1,8 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import * as React from "react";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 import { trpc } from "@/trpc/client";
 
 export * from "./analytics";
@@ -18,11 +20,14 @@ export * from "./reservations";
 
 export function useModOwnerInvalidation() {
   const cache = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   const invalidateOwnerSetupStatus = React.useCallback(
-    (...args: Parameters<typeof cache.ownerSetup.getStatus.invalidate>) =>
-      cache.ownerSetup.getStatus.invalidate(...args),
-    [cache],
+    () =>
+      queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["ownerSetup", "getStatus"]),
+      }),
+    [queryClient],
   );
 
   const invalidateClaimRequestMine = React.useCallback(

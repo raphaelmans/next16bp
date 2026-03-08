@@ -8,6 +8,7 @@ import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
   StandardFormCheckbox,
+  StandardFormCombobox,
   StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
@@ -152,16 +153,16 @@ export function CourtForm({
 
   const placeHelper = useMemo(() => {
     if (placeOptions.length === 0) {
-      return "Create a venue first to add venues.";
+      return "Create a venue first to add courts.";
     }
-    return "Select the venue where this venue belongs.";
+    return "Select the venue where this court belongs.";
   }, [placeOptions.length]);
 
   const sportHelper = useMemo(() => {
     if (sportOptions.length === 0) {
-      return "Add a sport before creating venues.";
+      return "Add a sport before creating courts.";
     }
-    return "Choose the sport for this venue.";
+    return "Choose the sport for this court.";
   }, [sportOptions.length]);
 
   const placeSelectDisabled =
@@ -180,10 +181,16 @@ export function CourtForm({
 
   const sportOptionItems = useMemo(
     () =>
-      sportOptions.map((sport) => ({
-        label: sport.name,
-        value: sport.id,
-      })),
+      [...sportOptions]
+        .sort((a, b) => {
+          if (a.name === "Pickleball") return -1;
+          if (b.name === "Pickleball") return 1;
+          return a.name.localeCompare(b.name);
+        })
+        .map((sport) => ({
+          label: sport.name,
+          value: sport.id,
+        })),
     [sportOptions],
   );
 
@@ -195,7 +202,7 @@ export function CourtForm({
       reset(buildFormDefaults(normalized));
     } catch (error) {
       toast.error(
-        isEditing ? "Unable to save venue" : "Unable to create venue",
+        isEditing ? "Unable to save court" : "Unable to create court",
         {
           description: getClientErrorMessage(error, "Please try again"),
         },
@@ -219,7 +226,7 @@ export function CourtForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Venue Details</CardTitle>
+          <CardTitle>Court Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <StandardFormSelect<CourtFormValues>
@@ -232,10 +239,11 @@ export function CourtForm({
             required
           />
 
-          <StandardFormSelect<CourtFormValues>
+          <StandardFormCombobox<CourtFormValues>
             name="sportId"
             label="Sport"
             placeholder="Select a sport"
+            searchPlaceholder="Search sports..."
             options={sportOptionItems}
             description={sportHelper}
             disabled={sportSelectDisabled}
@@ -244,8 +252,8 @@ export function CourtForm({
 
           <StandardFormInput<CourtFormValues>
             name="label"
-            label="Venue Label"
-            placeholder="e.g., Venue A"
+            label="Court Label"
+            placeholder="e.g., Court A"
             required
           />
 
@@ -253,13 +261,13 @@ export function CourtForm({
             name="tierLabel"
             label="Tier Label"
             placeholder="e.g., Premium"
-            description="Optional label to distinguish premium or standard venues."
+            description="Optional label to distinguish premium or standard courts."
           />
 
           {isEditing && (
             <StandardFormCheckbox<CourtFormValues>
               name="isActive"
-              label="Venue is active"
+              label="Court is active"
             />
           )}
         </CardContent>
@@ -287,7 +295,7 @@ export function CourtForm({
           <Button type="submit" disabled={isSubmitDisabled}>
             {submitting && <Spinner />}
             {primaryActionLabel ??
-              (isEditing ? "Save Changes" : "Create Venue")}
+              (isEditing ? "Save Changes" : "Create Court")}
           </Button>
         </div>
       </div>

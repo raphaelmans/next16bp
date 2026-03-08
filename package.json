@@ -38,6 +38,7 @@
     "db:seed:sports": "dotenvx run --env-file=.env.local -- tsx scripts/seed-sports.ts",
     "db:seed:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/seed-curated-courts.ts",
     "db:seed:curated-courts:production": "dotenvx run --env-file=.env.production -- tsx scripts/seed-curated-courts.ts",
+    "db:remove:latest-curated-duplicates:production": "dotenvx run --env-file=.env.production -- tsx scripts/remove-latest-curated-duplicates.ts",
     "db:reset:curated-staging": "dotenvx run --env-file=.env.local -- tsx scripts/reset-curated-staging.ts",
     "db:seed:buckets": "dotenvx run --env-file=.env.local -- tsx scripts/seed-storage-buckets.ts",
     "db:migrate:default-portal:production": "dotenvx run --env-file=.env.production -- tsx scripts/migrate-default-portal-production.ts",

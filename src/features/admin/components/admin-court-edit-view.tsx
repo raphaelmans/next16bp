@@ -1,6 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ExternalLink } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -18,6 +20,7 @@ import {
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { AppShell } from "@/components/layout";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { Spinner } from "@/components/ui/spinner";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
@@ -47,7 +50,7 @@ import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { env } from "@/lib/env";
 
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
-const DEFAULT_COURT_UNIT = { label: "Venue 1", sportId: "", tierLabel: "" };
+const DEFAULT_COURT_UNIT = { label: "Court 1", sportId: "", tierLabel: "" };
 
 type AdminCourtEditViewProps = {
   courtId: string;
@@ -626,6 +629,18 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
             { label: "Edit" },
           ]}
           backHref={appRoutes.admin.courts.base}
+          actions={
+            <Button variant="outline" size="sm" asChild>
+              <Link
+                href={appRoutes.places.detail(courtData.place.slug ?? courtId)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                View public page
+              </Link>
+            </Button>
+          }
         />
 
         <AdminCourtOwnershipTransferCard

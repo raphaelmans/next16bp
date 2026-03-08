@@ -86,6 +86,75 @@ export function useModAdminCourtFilters() {
     }
   };
 
+  const applyFilters = (batch: {
+    type?: string;
+    status?: string;
+    province?: string;
+    city?: string;
+    claimStatus?: string;
+    featured?: string;
+    source?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) =>
+    setFilters({
+      type:
+        batch.type !== undefined
+          ? batch.type === "all"
+            ? null
+            : (batch.type as "curated" | "reservable")
+          : undefined,
+      status:
+        batch.status !== undefined
+          ? batch.status === "all"
+            ? null
+            : (batch.status as "active" | "inactive")
+          : undefined,
+      province:
+        batch.province !== undefined
+          ? batch.province === "all"
+            ? null
+            : batch.province
+          : undefined,
+      city:
+        batch.city !== undefined
+          ? batch.city === "all"
+            ? null
+            : batch.city
+          : undefined,
+      claimStatus:
+        batch.claimStatus !== undefined
+          ? batch.claimStatus === "all"
+            ? null
+            : (batch.claimStatus as
+                | "unclaimed"
+                | "claim_pending"
+                | "claimed"
+                | "removal_requested")
+          : undefined,
+      featured:
+        batch.featured !== undefined
+          ? batch.featured === "all"
+            ? null
+            : (batch.featured as "featured" | "not_featured")
+          : undefined,
+      source:
+        batch.source !== undefined
+          ? batch.source === "all"
+            ? null
+            : (batch.source as "user_submitted" | "admin_curated")
+          : undefined,
+      sortBy:
+        batch.sortBy !== undefined
+          ? (batch.sortBy as "name" | "city" | "createdAt" | "status")
+          : undefined,
+      sortOrder:
+        batch.sortOrder !== undefined
+          ? (batch.sortOrder as "asc" | "desc")
+          : undefined,
+      page: 1,
+    });
+
   return {
     // Values — null means "all"
     type: filters.type ?? "all",
@@ -113,5 +182,6 @@ export function useModAdminCourtFilters() {
     setSearch,
     setPage,
     handleSort,
+    applyFilters,
   };
 }

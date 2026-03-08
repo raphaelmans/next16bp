@@ -45,6 +45,8 @@ export async function getPlaceCourtsSectionData(
 export type PlaceVenueSectionData = {
   placeId: string;
   placeSlug: string;
+  placeName: string;
+  photos: ReturnType<typeof mapPlaceDetailsToPlaceDetail>["photos"];
   contactDetail: ReturnType<
     typeof mapPlaceDetailsToPlaceDetail
   >["contactDetail"];
@@ -60,6 +62,8 @@ export async function getPlaceVenueSectionData(
     placeId: coreData.placeDetails.place.id,
     placeSlug:
       coreData.placeDetails.place.slug ?? coreData.placeDetails.place.id,
+    placeName: place.name,
+    photos: place.photos,
     contactDetail: place.contactDetail,
     amenities: place.amenities,
   };

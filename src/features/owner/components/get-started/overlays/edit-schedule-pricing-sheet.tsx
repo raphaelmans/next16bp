@@ -57,14 +57,14 @@ export function EditSchedulePricingSheet({
         <SheetHeader>
           <SheetTitle>Schedule & Pricing</SheetTitle>
           <SheetDescription>
-            Configure venue hours, pricing rules, and add-ons.
+            Configure court hours, pricing rules, and add-ons.
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6 space-y-6">
           {showCourtSelector && (
             <Select value={selectedCourtId} onValueChange={setSelectedCourtId}>
               <SelectTrigger>
-                <SelectValue placeholder="Select a venue" />
+                <SelectValue placeholder="Select a court" />
               </SelectTrigger>
               <SelectContent>
                 {courts.map((court) => (

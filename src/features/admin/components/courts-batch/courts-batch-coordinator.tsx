@@ -66,7 +66,7 @@ const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const MAX_PHOTOS = 10;
 
 const DEFAULT_COURT_UNIT = {
-  label: "Venue 1",
+  label: "Court 1",
   sportId: "",
   tierLabel: "",
 };
@@ -131,8 +131,8 @@ function CourtList({
             <div className="mt-4 grid gap-4 md:grid-cols-3">
               <StandardFormInput<CuratedCourtBatchFormData>
                 name={`courts.${placeIndex}.courts.${courtIndex}.label`}
-                label="Venue Label"
-                placeholder="Venue 1"
+                label="Court Label"
+                placeholder="Court 1"
                 required
               />
               <StandardFormSelect<CuratedCourtBatchFormData>
@@ -829,9 +829,9 @@ export default function AdminCourtsBatchView() {
 
                       <Card>
                         <CardHeader>
-                          <CardTitle>Venue Inventory</CardTitle>
+                          <CardTitle>Court Inventory</CardTitle>
                           <CardDescription>
-                            Define each venue unit and its sport
+                            Define each court unit and its sport
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">

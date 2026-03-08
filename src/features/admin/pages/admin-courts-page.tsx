@@ -10,22 +10,14 @@ export function AdminCourtsPageView() {
       title="All Venues"
       description="Manage all venues on the platform"
       defaultTypeFilter="all"
-      entityLabel={{ singular: "Venue" }}
+      entityLabel={{ singular: "Court" }}
       primaryActions={
-        <>
-          <Button variant="outline" asChild>
-            <Link href={appRoutes.admin.courts.batch}>
-              <Plus className="mr-2 h-4 w-4" />
-              Batch Add Venues
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href={appRoutes.admin.courts.new}>
-              <Plus className="mr-2 h-4 w-4" />
-              Add Curated Venue
-            </Link>
-          </Button>
-        </>
+        <Button asChild>
+          <Link href={appRoutes.admin.courts.new}>
+            <Plus className="mr-2 h-4 w-4" />
+            Add Curated Venue
+          </Link>
+        </Button>
       }
     />
   );

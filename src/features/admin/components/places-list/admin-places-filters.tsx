@@ -1,7 +1,8 @@
 "use client";
 
-import { Search } from "lucide-react";
-import type * as React from "react";
+import { Filter, Search } from "lucide-react";
+import * as React from "react";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -22,7 +23,19 @@ import type {
 
 type Option = { label: string; value: string };
 
-type AdminPlacesFiltersProps = {
+type PendingFilters = {
+  type: CourtType | "all";
+  status: CourtStatus | "all";
+  featured: FeaturedFilter;
+  province: string;
+  city: string;
+  claimStatus: ClaimStatusFilter | "all";
+  source: CourtSource | "all";
+  sortBy: CourtSortBy;
+  sortOrder: SortOrder;
+};
+
+export type AdminPlacesFiltersProps = {
   title: string;
   description?: string;
   primaryActions?: React.ReactNode;
@@ -39,56 +52,126 @@ type AdminPlacesFiltersProps = {
   sortOrder: SortOrder;
   search: string;
   provinceOptions: Option[];
-  cityOptions: Option[];
+  getCityOptionsForProvince: (province: string) => Option[];
   provincePlaceholder: string;
   cityPlaceholder: string;
   isProvinceDisabled: boolean;
-  isCityDisabled: boolean;
-  onTypeFilterChange: (value: CourtType | "all") => void;
-  onStatusFilterChange: (value: CourtStatus | "all") => void;
-  onFeaturedFilterChange: (value: FeaturedFilter) => void;
-  onProvinceFilterChange: (value: string) => void;
-  onCityFilterChange: (value: string) => void;
-  onClaimStatusFilterChange: (value: ClaimStatusFilter | "all") => void;
-  onSourceFilterChange: (value: CourtSource | "all") => void;
-  onSortByChange: (value: CourtSortBy) => void;
-  onSortOrderChange: (value: SortOrder) => void;
+  onApplyFilters: (batch: {
+    type?: string;
+    status?: string;
+    province?: string;
+    city?: string;
+    claimStatus?: string;
+    featured?: string;
+    source?: string;
+    sortBy?: string;
+    sortOrder?: string;
+  }) => void;
   onSearchChange: (value: string) => void;
 };
 
-export function AdminPlacesFilters({
-  title,
-  description,
-  primaryActions,
-  entityName,
-  lockTypeFilter,
-  typeFilter,
-  statusFilter,
-  featuredFilter,
-  provinceFilter,
-  cityFilter,
-  claimStatusFilter,
-  sourceFilter,
-  search,
-  provinceOptions,
-  cityOptions,
-  provincePlaceholder,
-  cityPlaceholder,
-  isProvinceDisabled,
-  isCityDisabled,
-  onTypeFilterChange,
-  onStatusFilterChange,
-  onFeaturedFilterChange,
-  onProvinceFilterChange,
-  onCityFilterChange,
-  onClaimStatusFilterChange,
-  onSourceFilterChange,
-  sortBy,
-  sortOrder,
-  onSortByChange,
-  onSortOrderChange,
-  onSearchChange,
-}: AdminPlacesFiltersProps) {
+function filtersMatch(a: PendingFilters, b: PendingFilters): boolean {
+  return (
+    a.type === b.type &&
+    a.status === b.status &&
+    a.featured === b.featured &&
+    a.province === b.province &&
+    a.city === b.city &&
+    a.claimStatus === b.claimStatus &&
+    a.source === b.source &&
+    a.sortBy === b.sortBy &&
+    a.sortOrder === b.sortOrder
+  );
+}
+
+export function AdminPlacesFilters(props: AdminPlacesFiltersProps) {
+  const {
+    title,
+    description,
+    primaryActions,
+    entityName,
+    lockTypeFilter,
+    typeFilter,
+    statusFilter,
+    featuredFilter,
+    provinceFilter,
+    cityFilter,
+    claimStatusFilter,
+    sourceFilter,
+    sortBy,
+    sortOrder,
+    search,
+    provinceOptions,
+    getCityOptionsForProvince,
+    provincePlaceholder,
+    cityPlaceholder,
+    isProvinceDisabled,
+    onApplyFilters,
+    onSearchChange,
+  } = props;
+
+  const applied = React.useMemo<PendingFilters>(
+    () => ({
+      type: typeFilter,
+      status: statusFilter,
+      featured: featuredFilter,
+      province: provinceFilter,
+      city: cityFilter,
+      claimStatus: claimStatusFilter,
+      source: sourceFilter,
+      sortBy,
+      sortOrder,
+    }),
+    [
+      typeFilter,
+      statusFilter,
+      featuredFilter,
+      provinceFilter,
+      cityFilter,
+      claimStatusFilter,
+      sourceFilter,
+      sortBy,
+      sortOrder,
+    ],
+  );
+
+  const [pending, setPending] = React.useState<PendingFilters>(applied);
+
+  // Sync pending state when applied filters change externally (e.g. URL navigation)
+  React.useEffect(() => {
+    setPending(applied);
+  }, [applied]);
+
+  const isDirty = !filtersMatch(pending, applied);
+
+  const handleApply = () => {
+    onApplyFilters({
+      type: pending.type,
+      status: pending.status,
+      featured: pending.featured,
+      province: pending.province,
+      city: pending.city,
+      claimStatus: pending.claimStatus,
+      source: pending.source,
+      sortBy: pending.sortBy,
+      sortOrder: pending.sortOrder,
+    });
+  };
+
+  // Reset city when province changes locally
+  const handlePendingProvince = (value: string) => {
+    setPending((prev) => ({ ...prev, province: value, city: "all" }));
+  };
+
+  const pendingCityOptions = React.useMemo(
+    () =>
+      pending.province !== "all"
+        ? getCityOptionsForProvince(pending.province)
+        : [],
+    [pending.province, getCityOptionsForProvince],
+  );
+  const pendingCityDisabled = isProvinceDisabled || pending.province === "all";
+
   return (
     <>
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -107,9 +190,12 @@ export function AdminPlacesFilters({
 
       <div className="flex flex-wrap gap-4">
         <Select
-          value={typeFilter}
+          value={pending.type}
           onValueChange={(value) =>
-            onTypeFilterChange(value as CourtType | "all")
+            setPending((prev) => ({
+              ...prev,
+              type: value as CourtType | "all",
+            }))
           }
           disabled={lockTypeFilter}
         >
@@ -124,9 +210,12 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={statusFilter}
+          value={pending.status}
           onValueChange={(value) =>
-            onStatusFilterChange(value as CourtStatus | "all")
+            setPending((prev) => ({
+              ...prev,
+              status: value as CourtStatus | "all",
+            }))
           }
         >
           <SelectTrigger className="w-[140px]">
@@ -140,9 +229,12 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={featuredFilter}
+          value={pending.featured}
           onValueChange={(value) =>
-            onFeaturedFilterChange(value as FeaturedFilter)
+            setPending((prev) => ({
+              ...prev,
+              featured: value as FeaturedFilter,
+            }))
           }
         >
           <SelectTrigger className="w-[170px]">
@@ -156,8 +248,8 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={provinceFilter}
-          onValueChange={onProvinceFilterChange}
+          value={pending.province}
+          onValueChange={handlePendingProvince}
           disabled={isProvinceDisabled}
         >
           <SelectTrigger className="w-[170px]">
@@ -174,16 +266,18 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={provinceFilter === "all" ? "" : cityFilter}
-          onValueChange={onCityFilterChange}
-          disabled={isCityDisabled}
+          value={pending.province === "all" ? "" : pending.city}
+          onValueChange={(value) =>
+            setPending((prev) => ({ ...prev, city: value }))
+          }
+          disabled={pendingCityDisabled}
         >
           <SelectTrigger className="w-[170px]">
             <SelectValue placeholder={cityPlaceholder} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Cities</SelectItem>
-            {cityOptions.map((city) => (
+            {pendingCityOptions.map((city) => (
               <SelectItem key={city.value} value={city.value}>
                 {city.label}
               </SelectItem>
@@ -192,9 +286,12 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={claimStatusFilter}
+          value={pending.claimStatus}
           onValueChange={(value) =>
-            onClaimStatusFilterChange(value as ClaimStatusFilter | "all")
+            setPending((prev) => ({
+              ...prev,
+              claimStatus: value as ClaimStatusFilter | "all",
+            }))
           }
         >
           <SelectTrigger className="w-[180px]">
@@ -210,9 +307,12 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={sourceFilter}
+          value={pending.source}
           onValueChange={(value) =>
-            onSourceFilterChange(value as CourtSource | "all")
+            setPending((prev) => ({
+              ...prev,
+              source: value as CourtSource | "all",
+            }))
           }
         >
           <SelectTrigger className="w-[170px]">
@@ -226,8 +326,13 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={sortBy}
-          onValueChange={(value) => onSortByChange(value as CourtSortBy)}
+          value={pending.sortBy}
+          onValueChange={(value) =>
+            setPending((prev) => ({
+              ...prev,
+              sortBy: value as CourtSortBy,
+            }))
+          }
         >
           <SelectTrigger className="w-[150px]">
             <SelectValue placeholder="Sort by" />
@@ -241,8 +346,13 @@ export function AdminPlacesFilters({
         </Select>
 
         <Select
-          value={sortOrder}
-          onValueChange={(value) => onSortOrderChange(value as SortOrder)}
+          value={pending.sortOrder}
+          onValueChange={(value) =>
+            setPending((prev) => ({
+              ...prev,
+              sortOrder: value as SortOrder,
+            }))
+          }
         >
           <SelectTrigger className="w-[120px]">
             <SelectValue placeholder="Order" />
@@ -262,6 +372,11 @@ export function AdminPlacesFilters({
             className="pl-9"
           />
         </div>
+
+        <Button onClick={handleApply} disabled={!isDirty}>
+          <Filter className="mr-2 h-4 w-4" />
+          Apply Filters
+        </Button>
       </div>
     </>
   );

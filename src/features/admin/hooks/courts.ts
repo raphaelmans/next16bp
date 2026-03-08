@@ -1,12 +1,13 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { useMemo } from "react";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
-import { trpc } from "@/trpc/client";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 import { getAdminApi } from "../api.runtime";
 
 const adminApi = getAdminApi();
@@ -262,40 +263,56 @@ export function useQueryAdminCourtOnboardingStatus(
 }
 
 export function useMutTransferPlaceToOrganization() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtTransfer, {
     onSuccess: async (_data, variables) => {
       const placeId = (variables as { placeId: string }).placeId;
       await Promise.all([
-        utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate({ placeId }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "getById"], {
+            placeId,
+          }),
+        }),
       ]);
     },
   });
 }
 
 export function useMutRecuratePlace() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtRecurate, {
     onSuccess: async (_data, variables) => {
       const placeId = (variables as { placeId: string }).placeId;
       await Promise.all([
-        utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate({ placeId }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "getById"], {
+            placeId,
+          }),
+        }),
       ]);
     },
   });
 }
 
 export function useMutToggleCourtStatus() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
   const activateMutation = useFeatureMutation(adminApi.mutAdminCourtActivate, {
     onSuccess: async () => {
       await Promise.all([
-        utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate(),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "getById"]),
+        }),
       ]);
     },
   });
@@ -304,8 +321,12 @@ export function useMutToggleCourtStatus() {
     {
       onSuccess: async () => {
         await Promise.all([
-          utils.admin.court.list.invalidate(),
-          utils.admin.court.getById.invalidate(),
+          queryClient.invalidateQueries({
+            queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+          }),
+          queryClient.invalidateQueries({
+            queryKey: buildTrpcQueryKey(["admin", "court", "getById"]),
+          }),
         ]);
       },
     },
@@ -343,13 +364,17 @@ export function useMutToggleCourtStatus() {
 }
 
 export function useMutDeleteAdminPlace() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtDeletePlace, {
     onSuccess: async () => {
       await Promise.all([
-        utils.admin.court.list.invalidate(),
-        utils.admin.court.stats.invalidate(),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "stats"]),
+        }),
       ]);
     },
   });
@@ -402,54 +427,66 @@ export interface CuratedCourtBatchResult {
 }
 
 export function useMutCreateCuratedCourt() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtCreateCurated, {
     onSuccess: async () => {
-      await utils.admin.court.list.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+      });
     },
   });
 }
 
 export function useMutCreateCuratedCourtsBatch() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtCreateCuratedBatch, {
     onSuccess: async () => {
-      await utils.admin.court.list.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+      });
     },
   });
 }
 
 export function useMutUpdateCuratedCourt() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtUpdate, {
     onSuccess: async () => {
       await Promise.all([
-        utils.admin.court.list.invalidate(),
-        utils.admin.court.getById.invalidate(),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "list"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "court", "getById"]),
+        }),
       ]);
     },
   });
 }
 
 export function useMutUploadAdminCourtPhoto(placeId: string) {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtUploadPhoto, {
     onSuccess: async () => {
-      await utils.admin.court.getById.invalidate({ placeId });
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "court", "getById"], { placeId }),
+      });
     },
   });
 }
 
 export function useMutRemoveAdminCourtPhoto(placeId: string) {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminCourtRemovePhoto, {
     onSuccess: async () => {
-      await utils.admin.court.getById.invalidate({ placeId });
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "court", "getById"], { placeId }),
+      });
     },
   });
 }

@@ -1,6 +1,7 @@
 import { buildViberDeepLink, toDialablePhone } from "@/common/phone";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { PhotoCarousel } from "@/features/discovery/components";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
 import { PlaceDetailReviewsSection } from "@/features/discovery/place-detail/components/place-detail-reviews-section";
@@ -8,10 +9,12 @@ import type { PlaceVenueSectionData } from "@/features/discovery/place-detail/se
 
 type PlaceDetailVenueServerSectionProps = {
   dataPromise: Promise<PlaceVenueSectionData>;
+  showPhotos?: boolean;
 };
 
 export async function PlaceDetailVenueServerSection({
   dataPromise,
+  showPhotos = false,
 }: PlaceDetailVenueServerSectionProps) {
   const data = await dataPromise;
   const contactDetail = data.contactDetail;
@@ -30,6 +33,11 @@ export async function PlaceDetailVenueServerSection({
 
   return (
     <div className="space-y-6">
+      {showPhotos && (
+        <Card className="overflow-hidden p-0">
+          <PhotoCarousel photos={data.photos} courtName={data.placeName} />
+        </Card>
+      )}
       <PlaceDetailContactCard
         hasContactDetail={hasContactDetail}
         contactDetail={contactDetail}

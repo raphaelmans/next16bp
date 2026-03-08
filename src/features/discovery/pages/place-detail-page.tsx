@@ -504,7 +504,7 @@ async function PlaceDetailPageServerSection({
           {JSON.stringify(breadcrumbStructuredData).replace(/</g, "\\u003c")}
         </Script>
 
-        <section className="border-b border-border bg-card/50 py-3">
+        <section className="border-b border-border bg-card/50 py-5">
           <Container>
             <nav className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
               <Link
@@ -604,6 +604,7 @@ async function PlaceDetailPageServerSection({
             <Suspense fallback={<PlaceDetailVenueServerSectionFallback />}>
               <PlaceDetailVenueServerSection
                 dataPromise={venueSectionPromise}
+                showPhotos={isCurated}
               />
             </Suspense>
           </div>

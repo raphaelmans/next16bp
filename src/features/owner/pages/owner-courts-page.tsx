@@ -64,10 +64,10 @@ export default function OwnerCourtsPage() {
       { courtId },
       {
         onSuccess: () => {
-          toast.success("Venue deactivated successfully");
+          toast.success("Court deactivated successfully");
         },
         onError: () => {
-          toast.error("Failed to deactivate venue");
+          toast.error("Failed to deactivate court");
         },
       },
     );
@@ -144,16 +144,16 @@ export default function OwnerCourtsPage() {
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Venues
+              Courts
             </h1>
             <p className="text-muted-foreground">
-              View venues across your locations
+              View courts across your locations
             </p>
           </div>
           <Button asChild>
             <Link href={appRoutes.organization.courts.setupCreate}>
               <Plus className="mr-2 h-4 w-4" />
-              Add New Venue
+              Add New Court
             </Link>
           </Button>
         </div>

@@ -47,7 +47,7 @@ const OWNER_SETUP_NEXT_STEP_LABELS = {
   add_or_claim_venue: "Add or claim a venue",
   claim_pending: "Claim pending review",
   verify_venue: "Submit verification",
-  configure_courts: "Set up venues",
+  configure_courts: "Set up courts",
   add_payment_method: "Add a payment method",
   complete: "Setup complete",
 } as const;

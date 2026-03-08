@@ -415,7 +415,7 @@ function CourtsPageContent({
   } as const;
 
   return (
-    <Container>
+    <Container className="pt-6">
       <div className="space-y-4">
         {/* Header */}
         <div className="flex items-center justify-between gap-3">
@@ -436,7 +436,7 @@ function CourtsPageContent({
                 href={appRoutes.submitCourt.base}
                 className="text-primary hover:underline"
               >
-                Add a court
+                Add a venue
               </Link>
             </div>
           </div>

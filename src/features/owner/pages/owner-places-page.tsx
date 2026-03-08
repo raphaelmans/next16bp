@@ -308,7 +308,7 @@ export default function OwnerPlacesPage() {
               <div className="space-y-1">
                 <p className="font-heading font-semibold">No venues yet</p>
                 <p className="text-sm text-muted-foreground">
-                  Create your first venue to add venues and hours.
+                  Create your first venue to add courts and hours.
                 </p>
               </div>
               <Button asChild>
@@ -353,7 +353,7 @@ export default function OwnerPlacesPage() {
                   </CardHeader>
 
                   <CardContent className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                    <span>{place.courtCount} venues</span>
+                    <span>{place.courtCount} courts</span>
                     <span className="text-border">•</span>
                     <span>
                       {place.sports.length > 0
@@ -384,7 +384,7 @@ export default function OwnerPlacesPage() {
                             place.id,
                           )}
                         >
-                          Manage Venues
+                          Manage Courts
                         </Link>
                       </Button>
                       <Button variant="outline" size="sm" asChild>

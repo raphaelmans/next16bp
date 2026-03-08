@@ -212,12 +212,12 @@ function ScopeChangeDialog({
           <AlertDialogTitle>
             {direction === "TO_GLOBAL"
               ? "Make venue-wide?"
-              : "Make venue-specific?"}
+              : "Make court-specific?"}
           </AlertDialogTitle>
           <AlertDialogDescription>
             {direction === "TO_GLOBAL"
-              ? "This add-on will apply to all venues at this location."
-              : "This add-on will be removed from other venues. Only this venue will have it."}
+              ? "This add-on will apply to all courts at this venue."
+              : "This add-on will be removed from other courts. Only this court will have it."}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
@@ -481,7 +481,7 @@ export function CourtAddonEditor({
             <div className="space-y-1">
               <CardTitle>Add-ons</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Configure optional or auto-applied extras for this venue.
+                Configure optional or auto-applied extras for this court.
               </p>
             </div>
             <div className="flex shrink-0 gap-2">
@@ -507,9 +507,9 @@ export function CourtAddonEditor({
                   <DropdownMenuItem onClick={() => handleAddAddon("SPECIFIC")}>
                     <Target className="mr-2 h-4 w-4 text-muted-foreground" />
                     <div>
-                      <p>Venue add-on</p>
+                      <p>Court add-on</p>
                       <p className="text-xs text-muted-foreground">
-                        Only this venue
+                        Only this court
                       </p>
                     </div>
                   </DropdownMenuItem>
@@ -519,7 +519,7 @@ export function CourtAddonEditor({
                       <div>
                         <p>Venue-wide add-on</p>
                         <p className="text-xs text-muted-foreground">
-                          All venues at this location
+                          All courts at this venue
                         </p>
                       </div>
                     </DropdownMenuItem>
@@ -530,7 +530,7 @@ export function CourtAddonEditor({
                       <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
                           <Copy className="mr-2 h-4 w-4 text-muted-foreground" />
-                          Copy from venue
+                          Copy from court
                         </DropdownMenuSubTrigger>
                         <DropdownMenuSubContent>
                           {siblingCourts.map((court) => (
@@ -567,7 +567,7 @@ export function CourtAddonEditor({
                 No add-ons configured yet.
               </p>
               <p className="mt-1 text-xs text-muted-foreground">
-                Add extras like equipment rental or venue lighting.
+                Add extras like equipment rental or court lighting.
               </p>
               <Button
                 type="button"
@@ -677,13 +677,13 @@ export function CourtAddonEditor({
                               >
                                 {addon.scope === "GLOBAL"
                                   ? "Venue-wide"
-                                  : "Venue"}
+                                  : "Court"}
                               </Badge>
                             </TooltipTrigger>
                             <TooltipContent side="top">
                               {addon.scope === "GLOBAL"
-                                ? "Applies to all venues. Click to make venue-specific."
-                                : "Only this venue. Click to make venue-wide."}
+                                ? "Applies to all courts. Click to make court-specific."
+                                : "Only this court. Click to make venue-wide."}
                             </TooltipContent>
                           </Tooltip>
                         )}
@@ -973,7 +973,7 @@ export function CourtAddonEditor({
                         <div className="flex items-center gap-2 pt-1">
                           <Target className="h-3.5 w-3.5 text-muted-foreground" />
                           <span className="text-xs font-medium text-muted-foreground">
-                            This venue
+                            This court
                           </span>
                           <div className="h-px flex-1 bg-border" />
                         </div>

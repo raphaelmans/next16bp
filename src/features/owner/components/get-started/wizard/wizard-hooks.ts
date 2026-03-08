@@ -1,18 +1,12 @@
 "use client";
 
-import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { SetupStatus } from "../get-started-types";
 import { deriveFirstIncompleteStep } from "./wizard-helpers";
-import { WIZARD_STEPS, type WizardStep } from "./wizard-types";
+import type { WizardStep } from "./wizard-types";
 
 export function useWizardStep() {
-  return useQueryState(
-    "step",
-    parseAsStringLiteral(WIZARD_STEPS)
-      .withDefault("org")
-      .withOptions({ history: "push" }),
-  );
+  return useState<WizardStep>("org");
 }
 
 export function useWizardAutoSkip(

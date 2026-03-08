@@ -1,11 +1,12 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
 import { toast } from "@/common/toast";
-import { trpc } from "@/trpc/client";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 import { getAdminApi } from "../api.runtime";
 
 const adminApi = getAdminApi();
@@ -99,12 +100,27 @@ export function useQueryPlaceVerificationRequest(requestId: string) {
 }
 
 export function useMutApprovePlaceVerification() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminPlaceVerificationApprove, {
     onSuccess: async () => {
       toast.success("Verification approved");
-      await utils.admin.placeVerification.invalidate();
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey([
+            "admin",
+            "placeVerification",
+            "getPending",
+          ]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey([
+            "admin",
+            "placeVerification",
+            "getById",
+          ]),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to approve verification");
@@ -113,12 +129,27 @@ export function useMutApprovePlaceVerification() {
 }
 
 export function useMutRejectPlaceVerification() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminPlaceVerificationReject, {
     onSuccess: async () => {
       toast.success("Verification rejected");
-      await utils.admin.placeVerification.invalidate();
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey([
+            "admin",
+            "placeVerification",
+            "getPending",
+          ]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey([
+            "admin",
+            "placeVerification",
+            "getById",
+          ]),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to reject verification");

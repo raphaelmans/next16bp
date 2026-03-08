@@ -349,7 +349,7 @@ export function CourtPricingEditor({
               onClick={() => setCopyOpen(true)}
               disabled={!organizationId || courts.length <= 1}
             >
-              Copy from another venue
+              Copy from another court
             </Button>
           )}
           <Button
@@ -368,7 +368,7 @@ export function CourtPricingEditor({
           open={copyOpen}
           onOpenChange={setCopyOpen}
           title="Copy pricing rules"
-          description="Select a source venue to replace this venue’s pricing rules."
+          description="Select a source court to replace this court’s pricing rules."
           courts={courts}
           currentCourtId={courtId}
           isSubmitting={copyRules.isPending}

@@ -45,7 +45,7 @@ export default function CreateCourtSetupPage() {
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: (result) => {
-      toast.success("Venue created successfully!");
+      toast.success("Court created successfully!");
       const targetPlaceId = selectedPlaceIdRef.current || draft.placeId || "";
       if (!targetPlaceId) {
         toast.error("Select a venue to continue setup.");
@@ -113,7 +113,7 @@ export default function CreateCourtSetupPage() {
                 Create an organization first
               </h2>
               <p className="text-sm text-muted-foreground">
-                You need an organization before creating venues.
+                You need an organization before creating courts.
               </p>
               <Button asChild>
                 <Link href={appRoutes.organization.getStarted}>
@@ -169,11 +169,11 @@ export default function CreateCourtSetupPage() {
       >
         <div className="space-y-6">
           <PageHeader
-            title="Create Venue"
-            description="Add venue details before setting hours and pricing"
+            title="Create Court"
+            description="Add court details before setting hours and pricing"
             breadcrumbs={[
-              { label: "My Venues", href: appRoutes.organization.courts.base },
-              { label: "Create Venue" },
+              { label: "My Courts", href: appRoutes.organization.courts.base },
+              { label: "Create Court" },
             ]}
             backHref={appRoutes.organization.courts.base}
           />

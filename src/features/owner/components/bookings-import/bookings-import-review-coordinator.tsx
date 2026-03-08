@@ -658,7 +658,7 @@ export default function OwnerBookingsImportReviewView({
                           )}
                           {aiUsed && (
                             <p className="mt-2 text-xs text-muted-foreground">
-                              AI normalization was already used for this venue.
+                              AI normalization was already used for this court.
                             </p>
                           )}
                         </div>
@@ -669,7 +669,7 @@ export default function OwnerBookingsImportReviewView({
                               Your files will be parsed and converted to booking
                               rows
                             </li>
-                            <li>Venue names will be matched to your venues</li>
+                            <li>Court names will be matched to your courts</li>
                             <li>
                               Time slots will be validated for hour-alignment
                             </li>
@@ -820,7 +820,7 @@ export default function OwnerBookingsImportReviewView({
                               <TableRow>
                                 <TableHead className="w-16">#</TableHead>
                                 <TableHead>Source</TableHead>
-                                <TableHead>Venue</TableHead>
+                                <TableHead>Court</TableHead>
                                 <TableHead>Start</TableHead>
                                 <TableHead>End</TableHead>
                                 <TableHead>Reason</TableHead>
@@ -1055,11 +1055,11 @@ export default function OwnerBookingsImportReviewView({
                   <span>{sourceTypeLabel}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Venue scope</span>
+                  <span className="text-muted-foreground">Court scope</span>
                   <span>
                     {selectedCourtId
-                      ? `${selectedCourtLabel ?? "Single venue"}`
-                      : "Multiple venues"}
+                      ? `${selectedCourtLabel ?? "Single court"}`
+                      : "Multiple courts"}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -1088,17 +1088,17 @@ export default function OwnerBookingsImportReviewView({
             <div className="space-y-2">
               {selectedCourtId ? (
                 <>
-                  <Label className="text-sm">Venue</Label>
+                  <Label className="text-sm">Court</Label>
                   <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
-                    {selectedCourtLabel ?? "Selected venue"}
+                    {selectedCourtLabel ?? "Selected court"}
                   </div>
                 </>
               ) : (
                 <>
-                  <Label htmlFor="edit-court">Venue</Label>
+                  <Label htmlFor="edit-court">Court</Label>
                   <Select value={editCourtId} onValueChange={setEditCourtId}>
                     <SelectTrigger id="edit-court">
-                      <SelectValue placeholder="Select a venue" />
+                      <SelectValue placeholder="Select a court" />
                     </SelectTrigger>
                     <SelectContent>
                       {courts.map((c) => (
@@ -1215,7 +1215,7 @@ export default function OwnerBookingsImportReviewView({
           <AlertDialogHeader>
             <AlertDialogTitle>Commit import?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will create {statusCounts.VALID} venue blocks from the valid
+              This will create {statusCounts.VALID} court blocks from the valid
               rows. These blocks will prevent double-booking for the specified
               time slots.
             </AlertDialogDescription>
@@ -1239,7 +1239,7 @@ export default function OwnerBookingsImportReviewView({
           <AlertDialogHeader>
             <AlertDialogTitle>Use AI normalization?</AlertDialogTitle>
             <AlertDialogDescription>
-              AI normalization can only be used once per venue. After this, you
+              AI normalization can only be used once per court. After this, you
               will need to rely on deterministic parsing or manual corrections.
               This helps control AI costs while still providing the option for
               complex imports.

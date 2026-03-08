@@ -1,6 +1,6 @@
 "use client";
 
-import { MapPin, Search } from "lucide-react";
+import { ArrowRight, MapPin, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -62,7 +62,7 @@ export function HomeSearchForm({
           <div className="flex items-center rounded-2xl border-[1.5px] border-border bg-card p-1.5 pl-5 shadow-sm transition-all duration-300 focus-within:border-primary focus-within:shadow-[0_0_0_4px_color-mix(in_oklch,var(--color-primary)_7%,transparent),0_8px_28px_color-mix(in_oklch,var(--color-primary)_9%,transparent)] focus-within:-translate-y-0.5 max-w-[470px]">
             <Search className="h-[18px] w-[18px] text-muted-foreground/60 mr-2.5 shrink-0" />
             <input
-              type="search"
+              type="text"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
               placeholder='Try "Cebu City" or "badminton"...'
@@ -93,6 +93,13 @@ export function HomeSearchForm({
               {location.label}
             </Link>
           ))}
+          <Link
+            href={appRoutes.courts.base}
+            className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium font-heading text-primary transition-all hover:text-primary/80"
+          >
+            View all Venues
+            <ArrowRight className="h-[11px] w-[11px]" />
+          </Link>
         </div>
       </div>
     );
@@ -102,7 +109,7 @@ export function HomeSearchForm({
     <form onSubmit={handleSearch} className="mb-6">
       <div className="flex flex-col gap-3 sm:flex-row">
         <input
-          type="search"
+          type="text"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
           placeholder="Search by city, sport, or venue..."

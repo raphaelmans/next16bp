@@ -363,9 +363,9 @@ export function AdminCourtEditForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Venue Inventory</CardTitle>
+          <CardTitle>Court Inventory</CardTitle>
           <CardDescription>
-            Define each venue unit and its sport
+            Define each court unit and its sport
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -380,7 +380,7 @@ export function AdminCourtEditForm({
                   {...register(`courts.${index}.id` as const)}
                 />
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-sm font-medium">{`Venue ${index + 1}`}</div>
+                  <div className="text-sm font-medium">{`Court ${index + 1}`}</div>
                   <Button
                     type="button"
                     variant="ghost"
@@ -395,8 +395,8 @@ export function AdminCourtEditForm({
                 <div className="mt-4 grid gap-4 md:grid-cols-3">
                   <StandardFormInput<AdminCourtEditFormData>
                     name={`courts.${index}.label`}
-                    label="Venue Label"
-                    placeholder="Venue 1"
+                    label="Court Label"
+                    placeholder="Court 1"
                     required
                   />
                   <StandardFormSelect<AdminCourtEditFormData>
@@ -420,11 +420,11 @@ export function AdminCourtEditForm({
             type="button"
             variant="outline"
             onClick={() =>
-              appendCourt({ label: "Venue 1", sportId: "", tierLabel: "" })
+              appendCourt({ label: "Court 1", sportId: "", tierLabel: "" })
             }
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Venue
+            Add Court
           </Button>
         </CardContent>
       </Card>

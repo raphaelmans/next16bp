@@ -502,7 +502,7 @@ export class BookingsImportService implements IBookingsImportService {
 
     // Court mapping validation
     if (!courtId) {
-      errors.push("Venue must be selected");
+      errors.push("Court must be selected");
     }
 
     // Required fields
@@ -1058,11 +1058,11 @@ export class BookingsImportService implements IBookingsImportService {
             failures.push({
               rowId: row.id,
               lineNumber: row.lineNumber,
-              error: "Could not match venue",
+              error: "Could not match court",
             });
             await this.rowRepository.update(
               row.id,
-              { status: "SKIPPED", skipReason: "Could not match venue" },
+              { status: "SKIPPED", skipReason: "Could not match court" },
               ctx,
             );
             skippedCount++;

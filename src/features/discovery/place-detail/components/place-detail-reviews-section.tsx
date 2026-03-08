@@ -142,7 +142,7 @@ export function PlaceDetailReviewsSection({
   const totalReviews = aggregate?.reviewCount ?? 0;
 
   return (
-    <Card id="reviews" className="scroll-mt-4">
+    <Card id="reviews" className="scroll-mt-24">
       <CardHeader>
         <CardTitle className="text-base font-heading">Reviews</CardTitle>
       </CardHeader>

@@ -59,9 +59,9 @@ export function ConfigureCourtsSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle>Configure venues</SheetTitle>
+          <SheetTitle>Configure courts</SheetTitle>
           <SheetDescription>
-            Add a venue with sport type and schedule details.
+            Add a court with sport type and schedule details.
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">

@@ -1,12 +1,12 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
 import { toast } from "@/common/toast";
-import { trpc } from "@/trpc/client";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 import { getAdminApi } from "../api.runtime";
 
 const adminApi = getAdminApi();
@@ -293,12 +293,19 @@ export function useQueryClaimEvents(claimId: string) {
  * Connected to admin.claim.approve tRPC endpoint
  */
 export function useMutApproveClaim() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminClaimApprove, {
     onSuccess: async () => {
       toast.success("Claim approved successfully");
-      await utils.admin.claim.invalidate();
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "claim", "getPending"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "claim", "getById"]),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to approve claim");
@@ -311,12 +318,19 @@ export function useMutApproveClaim() {
  * Connected to admin.claim.reject tRPC endpoint
  */
 export function useMutRejectClaim() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminClaimReject, {
     onSuccess: async () => {
       toast.success("Claim rejected");
-      await utils.admin.claim.invalidate();
+      await Promise.all([
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "claim", "getPending"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["admin", "claim", "getById"]),
+        }),
+      ]);
     },
     onError: (error) => {
       toast.error(error.message || "Failed to reject claim");

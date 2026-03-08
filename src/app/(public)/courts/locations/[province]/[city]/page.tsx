@@ -223,7 +223,7 @@ export default async function CourtsCityPage({
           "@graph": [faqStructuredData, breadcrumbStructuredData],
         }).replace(/</g, "\\u003c")}
       </Script>
-      <section className="border-b border-border bg-card/50 py-3">
+      <section className="border-b border-border bg-card/50 py-5">
         <Container>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
             <Link
@@ -239,7 +239,7 @@ export default async function CourtsCityPage({
               {city.displayName}
               <span className="ml-1 tabular-nums">
                 · {placeCount} venue{placeCount === 1 ? "" : "s"}, {courtCount}{" "}
-                venue{courtCount === 1 ? "" : "s"}
+                court{courtCount === 1 ? "" : "s"}
               </span>
             </span>
             <span aria-hidden="true" className="hidden text-border sm:inline">

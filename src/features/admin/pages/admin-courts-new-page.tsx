@@ -91,7 +91,7 @@ export default function NewCuratedCourtPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
-      courts: [{ label: "Venue 1", sportId: "", tierLabel: "" }],
+      courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
     },
   });
 
@@ -575,9 +575,9 @@ export default function NewCuratedCourtPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Venue Inventory</CardTitle>
+              <CardTitle>Court Inventory</CardTitle>
               <CardDescription>
-                Define each venue unit and its sport
+                Define each court unit and its sport
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -603,8 +603,8 @@ export default function NewCuratedCourtPage() {
                     <div className="mt-4 grid gap-4 md:grid-cols-3">
                       <StandardFormInput<CuratedCourtFormData>
                         name={`courts.${index}.label`}
-                        label="Venue Label"
-                        placeholder="Venue 1"
+                        label="Court Label"
+                        placeholder="Court 1"
                         required
                       />
                       <StandardFormSelect<CuratedCourtFormData>

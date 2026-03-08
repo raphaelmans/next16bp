@@ -60,7 +60,7 @@ export default function EditPlaceCourtPage({
   const { submitAsync, isSubmitting } = useModCourtForm({
     courtId,
     onSuccess: () => {
-      toast.success("Venue updated successfully!");
+      toast.success("Court updated successfully!");
     },
   });
 

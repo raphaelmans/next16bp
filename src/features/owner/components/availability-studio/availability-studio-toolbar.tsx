@@ -61,7 +61,7 @@ export function AvailabilityStudioToolbar({
 
       <div className="w-full space-y-2 sm:min-w-[220px] sm:w-auto">
         <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Venue
+          Court
         </p>
         <Select
           value={courtId}
@@ -71,7 +71,7 @@ export function AvailabilityStudioToolbar({
           <SelectTrigger className="relative pr-9">
             <SelectValue
               placeholder={
-                courtsLoading ? "Loading venues..." : "Select a venue"
+                courtsLoading ? "Loading courts..." : "Select a court"
               }
             />
             {courtsLoading ? (

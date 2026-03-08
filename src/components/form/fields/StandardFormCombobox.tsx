@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/command";
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -42,6 +43,7 @@ export function StandardFormCombobox<
 >({
   name,
   label,
+  description,
   placeholder,
   disabled,
   required,
@@ -127,6 +129,7 @@ export function StandardFormCombobox<
                   </Command>
                 </PopoverContent>
               </Popover>
+              {description && <FormDescription>{description}</FormDescription>}
               <FormMessage />
             </div>
           </FormItem>

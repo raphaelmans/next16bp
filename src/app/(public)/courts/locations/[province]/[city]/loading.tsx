@@ -6,7 +6,7 @@ export default function CourtsCityLoading() {
   return (
     <>
       {/* City breadcrumb header skeleton */}
-      <section className="border-b border-border bg-card/50 py-3">
+      <section className="border-b border-border bg-card/50 py-5">
         <Container>
           <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
             <Skeleton className="h-4 w-20" />

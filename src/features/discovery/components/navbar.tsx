@@ -142,19 +142,25 @@ export function Navbar({ className }: NavbarProps) {
         action={appRoutes.courts.base}
         method="GET"
         onSubmit={handleSearch}
-        className="hidden md:flex flex-1 max-w-md mx-8"
+        className="hidden md:flex flex-1 max-w-md mx-8 items-center gap-2"
       >
-        <div className="relative w-full">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input
-            name="q"
-            type="search"
-            placeholder="Search venues..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-10 rounded-lg"
-          />
-        </div>
+        <Input
+          name="q"
+          type="text"
+          placeholder="Search venues..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="h-10 rounded-lg"
+        />
+        <Button
+          type="submit"
+          size="icon"
+          variant="default"
+          className="shrink-0 h-10 w-10 rounded-lg"
+          aria-label="Search"
+        >
+          <Search className="h-4 w-4" />
+        </Button>
       </form>
 
       {/* Desktop Actions */}
@@ -219,7 +225,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
                   name="q"
-                  type="search"
+                  type="text"
                   placeholder="Search venues..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}

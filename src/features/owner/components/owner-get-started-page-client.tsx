@@ -337,7 +337,7 @@ const STEPS = [
   {
     id: "go-live",
     step: "4",
-    title: "Configure venues & go live",
+    title: "Configure courts & go live",
     description:
       "Set hours, pricing, and amenities. Publish availability — players book immediately.",
     icon: Settings,

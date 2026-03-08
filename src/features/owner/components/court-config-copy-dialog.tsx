@@ -74,7 +74,7 @@ export function CourtConfigCopyDialog({
 
         <div className="space-y-4">
           <Input
-            placeholder="Search venues"
+            placeholder="Search courts"
             value={search}
             onChange={(event) => setSearch(event.target.value)}
           />
@@ -82,7 +82,7 @@ export function CourtConfigCopyDialog({
           <div className="max-h-64 space-y-2 overflow-auto rounded-md border p-2">
             {filteredCourts.length === 0 ? (
               <p className="text-sm text-muted-foreground px-2 py-6 text-center">
-                No venues available to copy from.
+                No courts available to copy from.
               </p>
             ) : (
               filteredCourts.map((court) => {
@@ -114,7 +114,7 @@ export function CourtConfigCopyDialog({
           {selectedCourt && (
             <p className="text-xs text-muted-foreground">
               Copying from <strong>{selectedCourt.label}</strong> will replace
-              the current configuration for this venue.
+              the current configuration for this court.
             </p>
           )}
         </div>

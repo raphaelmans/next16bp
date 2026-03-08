@@ -199,7 +199,7 @@ export default async function CourtsProvincePage({
         <Container className="space-y-4">
           <p className="text-sm text-muted-foreground">
             {placeCount} active venue{placeCount === 1 ? "" : "s"} and{" "}
-            {courtCount} indexed venue{courtCount === 1 ? "" : "s"} in{" "}
+            {courtCount} indexed court{courtCount === 1 ? "" : "s"} in{" "}
             {province.displayName}.
           </p>
           {topCities.length > 0 && (

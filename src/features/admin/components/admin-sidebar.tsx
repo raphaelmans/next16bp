@@ -2,8 +2,8 @@
 
 import {
   Building2,
+  Grid2x2,
   LayoutDashboard,
-  MapPin,
   MessageSquare,
   ShieldCheck,
   Tag,
@@ -55,15 +55,15 @@ const navItems = [
     badgeKey: "verifications" as const,
   },
   {
-    title: "Venues",
+    title: "All Venues",
     href: appRoutes.admin.courts.base,
     icon: Building2,
     badgeKey: null,
   },
   {
-    title: "Venues",
+    title: "Org Venues",
     href: appRoutes.admin.venues.base,
-    icon: MapPin,
+    icon: Grid2x2,
     badgeKey: null,
   },
   {

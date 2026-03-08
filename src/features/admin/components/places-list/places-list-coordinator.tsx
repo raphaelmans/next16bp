@@ -176,18 +176,15 @@ export function AdminPlacesList({
     return buildProvinceOptions(provincesCities, "name");
   }, [provincesCities]);
 
-  const selectedProvince = React.useMemo(
-    () =>
-      provincesCities && provinceFilter !== "all"
-        ? findProvinceByName(provincesCities, provinceFilter)
-        : null,
-    [provinceFilter, provincesCities],
+  const getCityOptionsForProvince = React.useCallback(
+    (province: string): LocationOption[] => {
+      if (!provincesCities || province === "all") return [];
+      const prov = findProvinceByName(provincesCities, province);
+      if (!prov) return [];
+      return buildCityOptions(prov, "name");
+    },
+    [provincesCities],
   );
-
-  const cityOptions = React.useMemo<LocationOption[]>(() => {
-    if (!selectedProvince) return [];
-    return buildCityOptions(selectedProvince, "name");
-  }, [selectedProvince]);
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -201,8 +198,6 @@ export function AdminPlacesList({
         : "All Cities";
 
   const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
-  const isCityDisabled = isProvinceDisabled || provinceFilter === "all";
-
   const { data: courtsData, isLoading } = useModAdminCourts({
     type: typeFilter,
     status: statusFilter,
@@ -365,23 +360,14 @@ export function AdminPlacesList({
         claimStatusFilter={claimStatusFilter}
         search={search}
         provinceOptions={provinceOptions}
-        cityOptions={cityOptions}
+        getCityOptionsForProvince={getCityOptionsForProvince}
         provincePlaceholder={provincePlaceholder}
         cityPlaceholder={cityPlaceholder}
         isProvinceDisabled={isProvinceDisabled}
-        isCityDisabled={isCityDisabled}
-        onTypeFilterChange={f.setType}
-        onStatusFilterChange={f.setStatus}
-        onFeaturedFilterChange={f.setFeatured}
-        onProvinceFilterChange={f.setProvince}
-        onCityFilterChange={f.setCity}
-        onClaimStatusFilterChange={f.setClaimStatus}
         sourceFilter={sourceFilter}
-        onSourceFilterChange={f.setSource}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onSortByChange={f.setSortBy}
-        onSortOrderChange={f.setSortOrder}
+        onApplyFilters={f.applyFilters}
         onSearchChange={f.setSearch}
       />
 

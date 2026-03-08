@@ -22,8 +22,8 @@ export function CourtsListManager({ placeId }: CourtsListManagerProps) {
     deactivateMutation.mutate(
       { courtId },
       {
-        onSuccess: () => toast.success("Venue deactivated successfully"),
-        onError: () => toast.error("Failed to deactivate venue"),
+        onSuccess: () => toast.success("Court deactivated successfully"),
+        onError: () => toast.error("Failed to deactivate court"),
       },
     );
   };

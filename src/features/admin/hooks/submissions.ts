@@ -1,10 +1,11 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
-import { trpc } from "@/trpc/client";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 import { getAdminApi } from "../api.runtime";
 
 const adminApi = getAdminApi();
@@ -24,31 +25,37 @@ export function useQueryAdminSubmissions(options?: {
 }
 
 export function useMutAdminApproveSubmission() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminSubmissionApprove, {
     onSuccess: async () => {
-      await utils.admin.courtSubmission.list.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "courtSubmission", "list"]),
+      });
     },
   });
 }
 
 export function useMutAdminRejectSubmission() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminSubmissionReject, {
     onSuccess: async () => {
-      await utils.admin.courtSubmission.list.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "courtSubmission", "list"]),
+      });
     },
   });
 }
 
 export function useMutAdminBanSubmitter() {
-  const utils = trpc.useUtils();
+  const queryClient = useQueryClient();
 
   return useFeatureMutation(adminApi.mutAdminSubmissionBanUser, {
     onSuccess: async () => {
-      await utils.admin.courtSubmission.list.invalidate();
+      await queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(["admin", "courtSubmission", "list"]),
+      });
     },
   });
 }
