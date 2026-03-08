@@ -26,8 +26,12 @@ export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
   const placeHref = appRoutes.places.detail(place.slug ?? place.id);
   const visibleSports = place.sports.slice(0, MAX_BADGES);
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
+  const lowestPriceCents = place.lowestPriceCents;
+  const currency = place.currency;
   const showPrice =
-    typeof place.lowestPriceCents === "number" && !!place.currency;
+    typeof lowestPriceCents === "number" &&
+    typeof currency === "string" &&
+    currency.length > 0;
 
   return (
     <Link
@@ -135,7 +139,7 @@ export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
           <div>
             {showPrice ? (
               <p className="font-heading text-base font-semibold text-foreground">
-                {formatCurrency(place.lowestPriceCents, place.currency)}
+                {formatCurrency(lowestPriceCents, currency)}
               </p>
             ) : (
               <p className="font-heading text-sm font-medium text-muted-foreground">
