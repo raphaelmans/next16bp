@@ -323,6 +323,13 @@
       "when": 1772992800000,
       "tag": "0042_external_open_play_multi_court",
       "breakpoints": true
+    },
+    {
+      "idx": 46,
+      "version": "7",
+      "when": 1773072000000,
+      "tag": "0043_place_embedding",
+      "breakpoints": true
     }
   ]
 }

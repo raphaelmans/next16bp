@@ -18,8 +18,4 @@ export const POPULAR_DISCOVERY_LINKS: PopularDiscoveryLink[] = [
     label: "Basketball in Quezon City",
     href: appRoutes.courts.locations.city("metro-manila", "quezon-city"),
   },
-  {
-    label: "Venue guides",
-    href: appRoutes.guides.base,
-  },
 ];
