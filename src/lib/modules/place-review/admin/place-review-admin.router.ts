@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import { adminProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import {
@@ -49,11 +50,16 @@ export const placeReviewAdminRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceReviewService();
-        await service.adminRemoveReview(
+        const review = await service.adminRemoveReview(
           ctx.userId,
           input.reviewId,
           input.reason,
         );
+        await revalidatePublicPlaceDetailPaths({
+          placeId: review.placeId,
+          includeReviewPaths: true,
+          requestId: ctx.requestId,
+        });
         return { success: true };
       } catch (error) {
         handleAdminReviewError(error);

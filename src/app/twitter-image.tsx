@@ -3,12 +3,11 @@ import { OG_BRAND } from "@/common/og-brand";
 
 const FEATURE_POINTS = [
   "Search by city",
-  "Compare sports",
+  "Browse sports",
   "Read player reviews",
 ];
 
-export const alt =
-  "KudosCourts helps players find sports courts in the Philippines faster.";
+export const alt = "One platform for every sports court in the Philippines.";
 export const size = {
   width: 1200,
   height: 630,
@@ -156,7 +155,7 @@ export default function TwitterImage() {
                     color: "#E7E5E4",
                   }}
                 >
-                  Find your next game faster
+                  The court discovery platform
                 </div>
               </div>
             </div>
@@ -173,7 +172,7 @@ export default function TwitterImage() {
                 maxWidth: "560px",
               }}
             >
-              Find sports courts across the Philippines
+              One platform. Every court.
             </div>
 
             <div
@@ -186,8 +185,8 @@ export default function TwitterImage() {
                 marginBottom: "28px",
               }}
             >
-              Search by city or sport, read real player reviews, and check
-              availability where courts keep it updated.
+              Every sports court in the Philippines, discoverable in seconds.
+              Search by city, sport, reviews, and availability.
             </div>
 
             <div
@@ -211,7 +210,7 @@ export default function TwitterImage() {
               color: "rgba(255,255,255,0.76)",
             }}
           >
-            Free for court owners who want more visibility.
+            Free for courts who want visibility and full control.
           </div>
         </div>
 
@@ -272,7 +271,7 @@ export default function TwitterImage() {
                     color: "#0C3B37",
                   }}
                 >
-                  One search, less tab-hopping
+                  One search. Every court.
                 </div>
               </div>
             </div>

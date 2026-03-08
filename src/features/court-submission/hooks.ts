@@ -12,6 +12,10 @@ export function useMutSubmitCourt() {
   return useFeatureMutation(courtSubmissionApi.mutSubmitCourt);
 }
 
+export function useMutUploadSubmissionPhoto() {
+  return useFeatureMutation(courtSubmissionApi.mutUploadSubmissionPhoto);
+}
+
 export function useQueryMySubmissions(
   input?: { limit?: number; offset?: number },
   options?: { enabled?: boolean },

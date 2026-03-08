@@ -1,16 +1,11 @@
 import { appRoutes } from "@/common/app-routes";
-import { AdminPageFrame, AdminPlacesList } from "@/features/admin";
+import { AdminPageFrame } from "@/features/admin";
+import { AdminVenuesPageView } from "@/features/admin/pages/admin-venues-page";
 
 export default function AdminVenuesPage() {
   return (
     <AdminPageFrame redirectPath={appRoutes.admin.venues.base}>
-      <AdminPlacesList
-        title="Venues"
-        description="Manage all venues on the platform"
-        defaultTypeFilter="reservable"
-        lockTypeFilter
-        entityLabel={{ singular: "Venue" }}
-      />
+      <AdminVenuesPageView />
     </AdminPageFrame>
   );
 }

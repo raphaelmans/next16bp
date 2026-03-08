@@ -23,6 +23,7 @@ const FOOTER_LINKS = {
   owners: [
     { name: "List Your Venue", href: appRoutes.ownersGetStarted.base },
     { name: "Venue Dashboard", href: appRoutes.organization.base },
+    { name: "Guides for Owners", href: appRoutes.guides.detail("how-to-list-your-sports-venue-online-in-the-philippines") },
   ],
   company: [
     { name: "About Us", href: appRoutes.about.base },

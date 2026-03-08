@@ -127,7 +127,7 @@ export default async function OpenGraphImage({
           color: "rgba(255,255,255,0.85)",
         }}
       >
-        Book courts on KudosCourts
+        Find courts on KudosCourts
       </div>
 
       <div

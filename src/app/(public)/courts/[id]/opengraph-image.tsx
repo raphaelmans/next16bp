@@ -20,7 +20,7 @@ export default async function OpenGraphImage({
   const fallbackPath = appRoutes.places.detail(id);
 
   let title = "Court details";
-  let subtitle = "Discover. Reserve. Play.";
+  let subtitle = "One platform. Every court.";
 
   try {
     const caller = await createServerCaller(fallbackPath);

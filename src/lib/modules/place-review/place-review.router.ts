@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { revalidatePublicPlaceDetailPaths } from "@/lib/shared/infra/cache/revalidate-public-place-detail";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -79,7 +80,13 @@ export const placeReviewRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceReviewService();
-        return await service.upsertReview(ctx.userId, input);
+        const review = await service.upsertReview(ctx.userId, input);
+        await revalidatePublicPlaceDetailPaths({
+          placeId: input.placeId,
+          includeReviewPaths: true,
+          requestId: ctx.requestId,
+        });
+        return review;
       } catch (error) {
         handlePlaceReviewError(error);
       }
@@ -90,7 +97,15 @@ export const placeReviewRouter = router({
     .mutation(async ({ input, ctx }) => {
       try {
         const service = makePlaceReviewService();
-        await service.removeOwnReview(ctx.userId, input.reviewId);
+        const review = await service.removeOwnReview(
+          ctx.userId,
+          input.reviewId,
+        );
+        await revalidatePublicPlaceDetailPaths({
+          placeId: review.placeId,
+          includeReviewPaths: true,
+          requestId: ctx.requestId,
+        });
         return { success: true };
       } catch (error) {
         handlePlaceReviewError(error);

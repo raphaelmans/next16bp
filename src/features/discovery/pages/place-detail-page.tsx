@@ -166,7 +166,7 @@ export async function generatePlaceDetailMetadata(
     if (amenityNames.length > 0) {
       desc += ` Amenities include ${amenityNames.slice(0, 3).join(", ")}.`;
     }
-    desc += " Check real-time availability and book online.";
+    desc += " Check availability and reserve your slot.";
     description = desc;
 
     canonicalPath = appRoutes.places.detail(place.slug ?? place.id);

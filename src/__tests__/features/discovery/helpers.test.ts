@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
   buildSlotsByDayKey,
+  comparePublicVenueSort,
   filterSlotsByDayKey,
   getPlaceVerificationDisplay,
+  getPublicVenueSortBucket,
   groupSlotsByDayKey,
   mapAvailabilityOptionsToSlots,
+  type PublicVenueSortInput,
 } from "@/features/discovery/helpers";
 
 // ---------------------------------------------------------------------------
@@ -57,6 +60,22 @@ const crossMidnightOptions = [
     status: "AVAILABLE",
   },
 ];
+
+const createVenue = (
+  overrides: Partial<PublicVenueSortInput> & {
+    id: string;
+    name: string;
+  },
+): PublicVenueSortInput => ({
+  id: overrides.id,
+  name: overrides.name,
+  featuredRank: overrides.featuredRank ?? 0,
+  provinceRank: overrides.provinceRank ?? 0,
+  placeType: overrides.placeType ?? "RESERVABLE",
+  verificationStatus: overrides.verificationStatus ?? "UNVERIFIED",
+  averageRating: overrides.averageRating ?? null,
+  reviewCount: overrides.reviewCount ?? null,
+});
 
 // ---------------------------------------------------------------------------
 // mapAvailabilityOptionsToSlots
@@ -298,5 +317,170 @@ describe("getPlaceVerificationDisplay", () => {
     expect(result.showBooking).toBe(false);
     expect(result.verificationMessage).toBe("Verification pending");
     expect(result.verificationStatusVariant).toBe("warning");
+  });
+});
+
+// ---------------------------------------------------------------------------
+// public venue ranking
+// ---------------------------------------------------------------------------
+
+describe("getPublicVenueSortBucket", () => {
+  it("applies the public ranking buckets in the expected order", () => {
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "featured",
+          name: "Featured",
+          featuredRank: 1,
+          provinceRank: 1,
+          verificationStatus: "VERIFIED",
+          reviewCount: 12,
+        }),
+      ),
+    ).toBe(0);
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "province",
+          name: "Province",
+          provinceRank: 1,
+          verificationStatus: "VERIFIED",
+          reviewCount: 12,
+        }),
+      ),
+    ).toBe(1);
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "verified-reviewed",
+          name: "Verified Reviewed",
+          verificationStatus: "VERIFIED",
+          reviewCount: 3,
+        }),
+      ),
+    ).toBe(2);
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "verified",
+          name: "Verified",
+          verificationStatus: "VERIFIED",
+        }),
+      ),
+    ).toBe(3);
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "reviewed",
+          name: "Reviewed",
+          reviewCount: 1,
+          averageRating: 1,
+        }),
+      ),
+    ).toBe(4);
+    expect(
+      getPublicVenueSortBucket(
+        createVenue({
+          id: "unreviewed",
+          name: "Unreviewed",
+        }),
+      ),
+    ).toBe(5);
+  });
+});
+
+describe("comparePublicVenueSort", () => {
+  it("sorts venues using featured, province, verification, and review precedence", () => {
+    const venues = [
+      createVenue({
+        id: "reviewed",
+        name: "Reviewed",
+        reviewCount: 1,
+        averageRating: 1,
+      }),
+      createVenue({
+        id: "verified",
+        name: "Verified",
+        verificationStatus: "VERIFIED",
+      }),
+      createVenue({
+        id: "verified-reviewed",
+        name: "Verified Reviewed",
+        verificationStatus: "VERIFIED",
+        reviewCount: 2,
+        averageRating: 4.5,
+      }),
+      createVenue({
+        id: "province",
+        name: "Province",
+        provinceRank: 2,
+      }),
+      createVenue({
+        id: "featured",
+        name: "Featured",
+        featuredRank: 3,
+      }),
+      createVenue({
+        id: "none",
+        name: "None",
+      }),
+    ];
+
+    const sorted = venues.toSorted(comparePublicVenueSort);
+
+    expect(sorted.map((venue) => venue.id)).toEqual([
+      "featured",
+      "province",
+      "verified-reviewed",
+      "verified",
+      "reviewed",
+      "none",
+    ]);
+  });
+
+  it("prefers any reviewed venue over an unreviewed venue even at one star", () => {
+    const sorted = [
+      createVenue({
+        id: "no-reviews",
+        name: "No Reviews",
+      }),
+      createVenue({
+        id: "one-star",
+        name: "One Star",
+        reviewCount: 1,
+        averageRating: 1,
+      }),
+    ].toSorted(comparePublicVenueSort);
+
+    expect(sorted.map((venue) => venue.id)).toEqual(["one-star", "no-reviews"]);
+  });
+
+  it("uses review count, then rating, then name as tie-breakers inside review buckets", () => {
+    const sorted = [
+      createVenue({
+        id: "alpha",
+        name: "Alpha",
+        reviewCount: 2,
+        averageRating: 4.5,
+      }),
+      createVenue({
+        id: "beta",
+        name: "Beta",
+        reviewCount: 5,
+        averageRating: 3.5,
+      }),
+      createVenue({
+        id: "aardvark",
+        name: "Aardvark",
+        reviewCount: 2,
+        averageRating: 4.5,
+      }),
+    ].toSorted(comparePublicVenueSort);
+
+    expect(sorted.map((venue) => venue.id)).toEqual([
+      "beta",
+      "aardvark",
+      "alpha",
+    ]);
   });
 });

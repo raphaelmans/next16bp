@@ -6,6 +6,10 @@ import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { findCityBySlug, findProvinceBySlug } from "@/common/ph-location-data";
 import { Container } from "@/components/layout";
+import {
+  comparePublicVenueSort,
+  hasVenueSlug,
+} from "@/features/discovery/helpers";
 import { DiscoveryCourtsPage } from "@/features/discovery/pages/courts-page";
 import { db } from "@/lib/shared/infra/db/drizzle";
 import { court, place, sport } from "@/lib/shared/infra/db/schema";
@@ -134,24 +138,18 @@ export default async function CourtsCityPage({
   const courtCount = Number(courtCountRow[0]?.value ?? 0);
   const venueRows = venueSummaries.items
     .map((item) => ({
+      id: item.place.id,
       slug: item.place.slug,
       name: item.place.name,
       featuredRank: item.place.featuredRank ?? 0,
+      provinceRank: item.place.provinceRank ?? 0,
+      placeType: item.place.placeType,
+      verificationStatus: item.meta?.verificationStatus,
+      averageRating: item.meta?.averageRating,
+      reviewCount: item.meta?.reviewCount,
     }))
-    .filter(
-      (
-        item,
-      ): item is {
-        slug: string;
-        name: string;
-        featuredRank: number;
-      } => Boolean(item.slug),
-    )
-    .sort(
-      (left, right) =>
-        (right.featuredRank ?? 0) - (left.featuredRank ?? 0) ||
-        left.name.localeCompare(right.name),
-    );
+    .filter(hasVenueSlug)
+    .sort(comparePublicVenueSort);
   const canonicalPath = appRoutes.courts.locations.city(
     province.slug,
     city.slug,

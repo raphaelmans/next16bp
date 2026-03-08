@@ -24,6 +24,7 @@ import {
   StandardFormInput,
   StandardFormProvider,
 } from "@/components/form";
+import { FileUpload } from "@/components/kudos/file-upload";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -44,7 +45,7 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
 import { env } from "@/lib/env";
-import { useMutSubmitCourt } from "../hooks";
+import { useMutSubmitCourt, useMutUploadSubmissionPhoto } from "../hooks";
 
 const optionalUrl = z
   .string()
@@ -120,12 +121,14 @@ const getSubmitVenueErrorCopy = (error: unknown) => {
 
 export function SubmitVenueForm() {
   const submitMutation = useMutSubmitCourt();
+  const uploadPhotoMutation = useMutUploadSubmissionPhoto();
   const { data: sports = [], isLoading: sportsLoading } =
     useQueryDiscoverySports();
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const googleLocPreview = useGoogleLocPreviewMutation();
   const amenitiesQuery = useAmenitiesQuery();
   const [isSubmitted, setIsSubmitted] = React.useState(false);
+  const [photoFile, setPhotoFile] = React.useState<File | undefined>();
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
 
@@ -220,6 +223,9 @@ export function SubmitVenueForm() {
     );
   };
 
+  const isSubmitting =
+    submitMutation.isPending || uploadPhotoMutation.isPending;
+
   const handleSubmit = (data: SubmitVenueFormData) => {
     submitMutation.mutate(
       {
@@ -242,8 +248,28 @@ export function SubmitVenueForm() {
         websiteUrl: data.websiteUrl || undefined,
       },
       {
-        onSuccess: () => {
-          setIsSubmitted(true);
+        onSuccess: (submission) => {
+          if (photoFile && submission.placeId) {
+            const formData = new FormData();
+            formData.append("placeId", submission.placeId);
+            formData.append("image", photoFile, photoFile.name);
+            uploadPhotoMutation.mutate(formData, {
+              onSuccess: () => {
+                setIsSubmitted(true);
+                setPhotoFile(undefined);
+              },
+              onError: () => {
+                // Venue was created but photo failed — still show success
+                toast.error(
+                  "Photo could not be uploaded, but the venue was submitted.",
+                );
+                setIsSubmitted(true);
+                setPhotoFile(undefined);
+              },
+            });
+          } else {
+            setIsSubmitted(true);
+          }
         },
         onError: (error) => {
           const { title, description } = getSubmitVenueErrorCopy(error);
@@ -266,7 +292,7 @@ export function SubmitVenueForm() {
 
   if (isSubmitted) {
     return (
-      <Card className="max-w-lg mx-auto">
+      <Card>
         <CardContent className="pt-6">
           <div className="flex flex-col items-center gap-4 text-center py-8">
             <CheckCircle className="h-12 w-12 text-success" />
@@ -279,6 +305,7 @@ export function SubmitVenueForm() {
               variant="outline"
               onClick={() => {
                 setIsSubmitted(false);
+                setPhotoFile(undefined);
                 form.reset();
               }}
             >
@@ -419,6 +446,24 @@ export function SubmitVenueForm() {
 
       <Card>
         <CardHeader>
+          <CardTitle>Photo (optional)</CardTitle>
+          <CardDescription>
+            Upload a photo of the venue to help others recognize it.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <FileUpload
+            value={photoFile}
+            onChange={setPhotoFile}
+            accept="image/png,image/jpeg,image/webp"
+            maxSize={5 * 1024 * 1024}
+            disabled={isSubmitting}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
           <CardTitle>Location (optional)</CardTitle>
           <CardDescription>
             Help us pinpoint the exact location.
@@ -541,12 +586,8 @@ export function SubmitVenueForm() {
         </CardContent>
       </Card>
 
-      <Button
-        type="submit"
-        className="w-full"
-        disabled={submitMutation.isPending}
-      >
-        {submitMutation.isPending ? <Spinner /> : "Submit Venue"}
+      <Button type="submit" className="w-full" disabled={isSubmitting}>
+        {isSubmitting ? <Spinner /> : "Submit Venue"}
       </Button>
     </StandardFormProvider>
   );

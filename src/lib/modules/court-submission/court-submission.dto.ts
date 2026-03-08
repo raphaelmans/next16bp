@@ -1,5 +1,7 @@
 import { z } from "zod";
+import { zfd } from "zod-form-data";
 import { S } from "@/common/schemas";
+import { imageFileSchema } from "@/lib/modules/storage/dtos";
 
 const optionalUrl = z.string().trim().check(z.url()).optional();
 
@@ -63,6 +65,16 @@ export type GetMySubmissionsInput = z.infer<typeof GetMySubmissionsSchema>;
 export const ParseGoogleMapsLinkSchema = z.object({
   url: z.string().trim().check(z.url()),
 });
+
+export const UploadSubmissionPhotoSchema = zfd.formData({
+  placeId: zfd.text(S.ids.placeId),
+  image: imageFileSchema,
+});
+
+export type UploadSubmissionPhotoInput = {
+  placeId: string;
+  image: File;
+};
 
 export const AdminListSubmissionsSchema = z.object({
   status: z.enum(["PENDING", "APPROVED", "REJECTED"]).optional(),

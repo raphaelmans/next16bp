@@ -30,6 +30,9 @@ export type GuideEntry = {
   relatedLinks: GuideLink[];
 };
 
+export const ORG_GUIDE_SLUG =
+  "how-to-set-up-your-sports-venue-organization-on-kudoscourts";
+
 const GUIDE_PUBLISHED_AT = "2026-03-08";
 
 export const GUIDE_ENTRIES: GuideEntry[] = [

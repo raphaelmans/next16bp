@@ -1,13 +1,16 @@
 import {
   and,
   asc,
+  avg,
   count,
+  desc,
   eq,
   ilike,
   inArray,
   isNull,
   ne,
   or,
+  type SQLWrapper,
   sql,
 } from "drizzle-orm";
 import {
@@ -28,6 +31,7 @@ import {
   placeAmenity,
   placeContactDetail,
   placePhoto,
+  placeReview,
   placeVerification,
   sport,
 } from "@/lib/shared/infra/db/schema";
@@ -240,6 +244,58 @@ export class PlaceRepository implements IPlaceRepository {
 
   private getClient(ctx?: RequestContext): DbClient | DrizzleTransaction {
     return (ctx?.tx as DrizzleTransaction) ?? this.db;
+  }
+
+  private getActiveReviewAggregateSubquery(
+    client: DbClient | DrizzleTransaction,
+  ) {
+    return client
+      .select({
+        placeId: placeReview.placeId,
+        reviewCount: count().as("reviewCount"),
+        averageRating: avg(placeReview.rating).as("averageRating"),
+      })
+      .from(placeReview)
+      .where(isNull(placeReview.removedAt))
+      .groupBy(placeReview.placeId)
+      .as("active_place_review_aggregate");
+  }
+
+  private buildDiscoveryOrder(input: {
+    verificationStatus: SQLWrapper;
+    reviewCount: SQLWrapper;
+    averageRating: SQLWrapper;
+  }) {
+    const reviewCount = sql<number>`coalesce(${input.reviewCount}, 0)`;
+    const averageRating = sql<number>`coalesce(${input.averageRating}, 0)`;
+    const isVerifiedReservable = sql<number>`case
+      when ${place.placeType} = 'RESERVABLE'
+        and ${input.verificationStatus} = 'VERIFIED'
+        then 1
+      else 0
+    end`;
+    const hasReviews = sql<number>`case
+      when ${reviewCount} > 0 then 1
+      else 0
+    end`;
+    const rankingBucket = sql<number>`case
+      when ${place.featuredRank} > 0 then 0
+      when ${place.provinceRank} > 0 then 1
+      when ${isVerifiedReservable} = 1 and ${hasReviews} = 1 then 2
+      when ${isVerifiedReservable} = 1 then 3
+      when ${hasReviews} = 1 then 4
+      else 5
+    end`;
+
+    return [
+      rankingBucket,
+      asc(place.featuredRank),
+      asc(place.provinceRank),
+      desc(reviewCount),
+      desc(averageRating),
+      asc(place.name),
+      asc(place.id),
+    ] as const;
   }
 
   async findById(
@@ -492,39 +548,12 @@ export class PlaceRepository implements IPlaceRepository {
     const canonicalAmenityName = sql`lower(btrim(${placeAmenity.name}))`;
     const verificationTier = filters.verificationTier;
     const verificationJoin = placeVerification;
-    const verificationRank = sql<number>`case
-      when ${place.placeType} = 'RESERVABLE'
-        and ${verificationJoin.status} = 'VERIFIED'
-        then 0
-      when ${place.placeType} = 'CURATED' then 1
-      else 2
-    end`;
-    const featuredBucket = sql<number>`case
-      when ${place.featuredRank} = 0 then 1
-      else 0
-    end`;
-    const provinceBucket = sql<number>`case
-      when ${place.provinceRank} = 0 then 1
-      else 0
-    end`;
-    const featuredOrder = [
-      featuredBucket,
-      asc(place.featuredRank),
-      verificationRank,
-      asc(place.name),
-      asc(place.id),
-    ] as const;
-    const provinceScopedOrder = [
-      provinceBucket,
-      asc(place.provinceRank),
-      verificationRank,
-      asc(place.name),
-      asc(place.featuredRank),
-      asc(place.id),
-    ] as const;
-    const discoveryOrder = filters.province
-      ? provinceScopedOrder
-      : featuredOrder;
+    const reviewAggregate = this.getActiveReviewAggregateSubquery(client);
+    const discoveryOrder = this.buildDiscoveryOrder({
+      verificationStatus: verificationJoin.status,
+      reviewCount: reviewAggregate.reviewCount,
+      averageRating: reviewAggregate.averageRating,
+    });
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -604,6 +633,7 @@ export class PlaceRepository implements IPlaceRepository {
           .select({ placeId: place.id })
           .from(place)
           .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+          .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
           .innerJoin(court, eq(court.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
@@ -613,7 +643,12 @@ export class PlaceRepository implements IPlaceRepository {
               inArray(canonicalAmenityName, amenitiesFilter),
             ),
           )
-          .groupBy(place.id)
+          .groupBy(
+            place.id,
+            placeVerification.status,
+            reviewAggregate.reviewCount,
+            reviewAggregate.averageRating,
+          )
           .having(
             sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
           )
@@ -693,6 +728,7 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ place })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
         .orderBy(...discoveryOrder)
@@ -779,11 +815,17 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ placeId: place.id })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
         .where(
           and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
         )
-        .groupBy(place.id)
+        .groupBy(
+          place.id,
+          placeVerification.status,
+          reviewAggregate.reviewCount,
+          reviewAggregate.averageRating,
+        )
         .having(
           sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
         )
@@ -813,6 +855,7 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ place })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .where(baseCondition)
         .orderBy(...discoveryOrder)
         .limit(filters.limit)
@@ -1051,39 +1094,12 @@ export class PlaceRepository implements IPlaceRepository {
     const canonicalAmenityName = sql`lower(btrim(${placeAmenity.name}))`;
     const verificationTier = filters.verificationTier;
     const verificationJoin = placeVerification;
-    const verificationRank = sql<number>`case
-      when ${place.placeType} = 'RESERVABLE'
-        and ${verificationJoin.status} = 'VERIFIED'
-        then 0
-      when ${place.placeType} = 'CURATED' then 1
-      else 2
-    end`;
-    const featuredBucket = sql<number>`case
-      when ${place.featuredRank} = 0 then 1
-      else 0
-    end`;
-    const provinceBucket = sql<number>`case
-      when ${place.provinceRank} = 0 then 1
-      else 0
-    end`;
-    const featuredOrder = [
-      featuredBucket,
-      asc(place.featuredRank),
-      verificationRank,
-      asc(place.name),
-      asc(place.id),
-    ] as const;
-    const provinceScopedOrder = [
-      provinceBucket,
-      asc(place.provinceRank),
-      verificationRank,
-      asc(place.name),
-      asc(place.featuredRank),
-      asc(place.id),
-    ] as const;
-    const discoveryOrder = filters.province
-      ? provinceScopedOrder
-      : featuredOrder;
+    const reviewAggregate = this.getActiveReviewAggregateSubquery(client);
+    const discoveryOrder = this.buildDiscoveryOrder({
+      verificationStatus: verificationJoin.status,
+      reviewCount: reviewAggregate.reviewCount,
+      averageRating: reviewAggregate.averageRating,
+    });
 
     if (filters.province) {
       conditions.push(ilike(place.province, filters.province));
@@ -1163,6 +1179,7 @@ export class PlaceRepository implements IPlaceRepository {
           .select({ placeId: place.id })
           .from(place)
           .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+          .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
           .innerJoin(court, eq(court.placeId, place.id))
           .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
           .where(
@@ -1172,7 +1189,12 @@ export class PlaceRepository implements IPlaceRepository {
               inArray(canonicalAmenityName, amenitiesFilter),
             ),
           )
-          .groupBy(place.id)
+          .groupBy(
+            place.id,
+            placeVerification.status,
+            reviewAggregate.reviewCount,
+            reviewAggregate.averageRating,
+          )
           .having(
             sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
           )
@@ -1208,6 +1230,7 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ place })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .innerJoin(court, eq(court.placeId, place.id))
         .where(and(baseCondition, eq(court.sportId, filters.sportId)))
         .orderBy(...discoveryOrder)
@@ -1249,11 +1272,17 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ placeId: place.id })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .innerJoin(placeAmenity, eq(placeAmenity.placeId, place.id))
         .where(
           and(baseCondition, inArray(canonicalAmenityName, amenitiesFilter)),
         )
-        .groupBy(place.id)
+        .groupBy(
+          place.id,
+          placeVerification.status,
+          reviewAggregate.reviewCount,
+          reviewAggregate.averageRating,
+        )
         .having(
           sql`count(distinct ${canonicalAmenityName}) = ${amenitiesCount}`,
         )
@@ -1283,6 +1312,7 @@ export class PlaceRepository implements IPlaceRepository {
         .select({ place })
         .from(place)
         .leftJoin(placeVerification, eq(placeVerification.placeId, place.id))
+        .leftJoin(reviewAggregate, eq(reviewAggregate.placeId, place.id))
         .where(baseCondition)
         .orderBy(...discoveryOrder)
         .limit(filters.limit)

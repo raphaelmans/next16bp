@@ -33,6 +33,13 @@ export class SubmissionNotPendingError extends BusinessRuleError {
   }
 }
 
+export class SubmissionNotFoundError extends NotFoundError {
+  readonly code = "SUBMISSION_NOT_FOUND";
+  constructor() {
+    super("No submission found for this venue");
+  }
+}
+
 export class InvalidGoogleMapsLinkError extends ValidationError {
   readonly code = "INVALID_GOOGLE_MAPS_LINK";
   constructor() {

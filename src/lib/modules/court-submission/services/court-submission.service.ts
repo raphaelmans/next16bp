@@ -1,8 +1,15 @@
+import { v4 as uuidv4 } from "uuid";
 import type { CourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { GoogleLocService } from "@/lib/modules/google-loc/services/google-loc.service";
 import { resolvePlaceSlug } from "@/lib/modules/place/helpers";
 import type { PlaceRepository } from "@/lib/modules/place/repositories/place.repository";
-import type { CourtSubmissionRecord } from "@/lib/shared/infra/db/schema";
+import type { IPlacePhotoRepository } from "@/lib/modules/place/repositories/place-photo.repository";
+import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
+import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
+import type {
+  CourtSubmissionRecord,
+  PlacePhotoRecord,
+} from "@/lib/shared/infra/db/schema";
 import { placeContactDetail } from "@/lib/shared/infra/db/schema";
 import type { DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import { logger } from "@/lib/shared/infra/logger";
@@ -12,6 +19,7 @@ import type { SubmitCourtInput } from "../court-submission.dto";
 import {
   DailySubmissionQuotaExceededError,
   InvalidGoogleMapsLinkError,
+  SubmissionNotFoundError,
   UserBannedFromSubmissionsError,
 } from "../errors/court-submission.errors";
 import type { CourtSubmissionRepository } from "../repositories/court-submission.repository";
@@ -29,6 +37,8 @@ export class CourtSubmissionService {
     private courtRepo: CourtRepository,
     private googleLocService: GoogleLocService,
     private transactionManager: TransactionManager,
+    private storageService: IObjectStorageService,
+    private placePhotoRepo: IPlacePhotoRepository,
   ) {}
 
   async submitCourt(
@@ -177,5 +187,54 @@ export class CourtSubmissionService {
 
   async getDailyCount(userId: string): Promise<number> {
     return this.submissionRepo.getDailyCount(userId);
+  }
+
+  async uploadSubmissionPhoto(
+    userId: string,
+    placeId: string,
+    file: File,
+  ): Promise<PlacePhotoRecord> {
+    const submission = await this.submissionRepo.findByPlaceAndUser(
+      placeId,
+      userId,
+    );
+    if (!submission) {
+      throw new SubmissionNotFoundError();
+    }
+
+    const photoId = uuidv4();
+    const ext = file.name.split(".").pop() || "jpg";
+    const path = `${placeId}/${photoId}.${ext}`;
+
+    const result = await this.storageService.upload({
+      bucket: STORAGE_BUCKETS.PLACE_PHOTOS,
+      path,
+      file,
+      upsert: false,
+    });
+
+    const publicUrl = result.url;
+    if (!publicUrl) {
+      throw new Error("Expected public URL for place photo upload");
+    }
+
+    const photo = await this.placePhotoRepo.create({
+      placeId,
+      url: publicUrl,
+      displayOrder: 0,
+    });
+
+    logger.info(
+      {
+        event: "court_submission.photo_uploaded",
+        submissionId: submission.id,
+        placeId,
+        userId,
+        photoId: photo.id,
+      },
+      "Submission photo uploaded",
+    );
+
+    return photo;
   }
 }

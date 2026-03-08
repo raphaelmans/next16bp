@@ -76,8 +76,8 @@ const adminTabs: TabConfig[] = [
     icon: ShieldCheck,
     showBadge: true,
   },
-  { label: "Venues", href: appRoutes.admin.courts.base, icon: Building2 },
-  { label: "Venues", href: appRoutes.admin.venues.base, icon: MapPin },
+  { label: "All Venues", href: appRoutes.admin.courts.base, icon: Building2 },
+  { label: "Org Venues", href: appRoutes.admin.venues.base, icon: MapPin },
 ];
 
 // ─── Organization tabs (role-based) ────────────────────

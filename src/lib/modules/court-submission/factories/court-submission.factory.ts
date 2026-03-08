@@ -1,6 +1,10 @@
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeGoogleLocService } from "@/lib/modules/google-loc/factories/google-loc.factory";
-import { makePlaceRepository } from "@/lib/modules/place/factories/place.factory";
+import {
+  makePlacePhotoRepository,
+  makePlaceRepository,
+} from "@/lib/modules/place/factories/place.factory";
+import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { CourtSubmissionRepository } from "../repositories/court-submission.repository";
 import { CourtSubmissionBanRepository } from "../repositories/court-submission-ban.repository";
@@ -35,6 +39,8 @@ export function makeCourtSubmissionService(): CourtSubmissionService {
       makeCourtRepository(),
       makeGoogleLocService(),
       getContainer().transactionManager,
+      makeObjectStorageService(),
+      makePlacePhotoRepository(),
     );
   }
   return submissionService;

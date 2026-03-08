@@ -195,47 +195,54 @@ export default async function CourtsProvincePage({
           "@graph": [faqStructuredData, breadcrumbStructuredData],
         }).replace(/</g, "\\u003c")}
       </Script>
-      <section className="border-b border-border bg-card/50 py-6">
-        <Container className="space-y-4">
-          <p className="text-sm text-muted-foreground">
-            {placeCount} active listing{placeCount === 1 ? "" : "s"} and{" "}
-            {courtCount} indexed court{courtCount === 1 ? "" : "s"} in{" "}
-            {province.displayName}.
-          </p>
-          {topCities.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold">
-                Top cities in this province
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {topCities.map((city) => (
-                  <Link
-                    key={city.citySlug}
-                    href={appRoutes.courts.locations.city(
-                      province.slug,
-                      city.citySlug,
-                    )}
-                    className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:border-foreground/30 hover:text-foreground"
-                  >
-                    {city.cityLabel} ({city.totalVenues})
-                  </Link>
-                ))}
-              </div>
-            </div>
-          )}
-          {topSports.length > 0 && (
-            <div className="space-y-2">
-              <p className="text-sm font-semibold">Most listed sports</p>
-              <div className="flex flex-wrap gap-2">
-                {topSports.map((sportItem) => (
-                  <span
-                    key={sportItem.slug}
-                    className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground"
-                  >
-                    {sportItem.name} ({sportItem.totalCourts})
+      <section className="border-b border-border bg-card/50 py-5">
+        <Container>
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+            <span>
+              {province.displayName}
+              <span className="ml-1 tabular-nums">
+                · {placeCount} listing{placeCount === 1 ? "" : "s"},{" "}
+                {courtCount} court{courtCount === 1 ? "" : "s"}
+              </span>
+            </span>
+            <span aria-hidden="true" className="hidden text-border sm:inline">
+              /
+            </span>
+            <Link
+              href={appRoutes.ownersGetStarted.base}
+              className="text-primary hover:text-primary/80"
+            >
+              List your venue
+            </Link>
+          </div>
+          {(topCities.length > 0 || topSports.length > 0) && (
+            <div className="mt-2 flex flex-wrap items-center gap-1.5">
+              {topSports.map((sportItem) => (
+                <span
+                  key={sportItem.slug}
+                  className="rounded-full bg-primary/8 px-2.5 py-0.5 text-xs text-primary"
+                >
+                  {sportItem.name}{" "}
+                  <span className="tabular-nums text-primary/60">
+                    {sportItem.totalCourts}
                   </span>
-                ))}
-              </div>
+                </span>
+              ))}
+              {topSports.length > 0 && topCities.length > 0 && (
+                <span aria-hidden="true" className="mx-1 h-3 w-px bg-border" />
+              )}
+              {topCities.map((city) => (
+                <Link
+                  key={city.citySlug}
+                  href={appRoutes.courts.locations.city(
+                    province.slug,
+                    city.citySlug,
+                  )}
+                  className="rounded-full border border-border px-2.5 py-0.5 text-xs text-muted-foreground transition-colors hover:border-foreground/20 hover:text-foreground"
+                >
+                  {city.cityLabel}
+                </Link>
+              ))}
             </div>
           )}
         </Container>

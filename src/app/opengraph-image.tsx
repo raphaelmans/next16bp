@@ -5,7 +5,7 @@ const CITY_TAGS = ["Manila", "Cebu", "Davao"];
 const SPORT_TAGS = ["Badminton", "Basketball", "Tennis"];
 
 export const alt =
-  "KudosCourts lets players find sports courts in the Philippines by city, sport, reviews, and amenities.";
+  "One platform for every sports court in the Philippines. Search by city, sport, reviews, and amenities.";
 export const size = {
   width: 1200,
   height: 630,
@@ -228,7 +228,7 @@ export default function OpenGraphImage() {
                     color: "#E7E5E4",
                   }}
                 >
-                  Player-first court discovery
+                  The court discovery platform
                 </div>
               </div>
             </div>
@@ -245,7 +245,7 @@ export default function OpenGraphImage() {
                 maxWidth: "620px",
               }}
             >
-              Find sports courts in seconds
+              One platform. Every court.
             </div>
 
             <div
@@ -258,8 +258,8 @@ export default function OpenGraphImage() {
                 marginBottom: "32px",
               }}
             >
-              Search by city, sport, real player reviews, and amenities. Check
-              availability on courts that keep it updated.
+              Every sports court in the Philippines, discoverable in seconds.
+              Search by city, sport, reviews, and availability.
             </div>
 
             <div
@@ -305,7 +305,7 @@ export default function OpenGraphImage() {
               color: "rgba(255,255,255,0.78)",
             }}
           >
-            Free for court owners who want more visibility and full control.
+            Free for courts who want visibility and full control.
           </div>
         </div>
 

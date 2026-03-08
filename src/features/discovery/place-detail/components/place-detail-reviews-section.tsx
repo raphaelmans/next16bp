@@ -86,23 +86,30 @@ export function PlaceDetailReviewsSection({
     { enabled: isAuthenticated },
   );
 
+  const refreshReviewQueries = useCallback(async () => {
+    await Promise.all([
+      utils.placeReview.aggregate.invalidate({ placeId }),
+      utils.placeReview.list.invalidate(),
+      isAuthenticated
+        ? utils.placeReview.viewerReview.invalidate({ placeId })
+        : Promise.resolve(),
+    ]);
+    router.refresh();
+  }, [isAuthenticated, placeId, router, utils]);
+
   const upsertMutation = trpc.placeReview.upsert.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setIsEditing(false);
-      void utils.placeReview.aggregate.invalidate({ placeId });
-      void utils.placeReview.list.invalidate({ placeId });
-      void utils.placeReview.viewerReview.invalidate({ placeId });
+      await refreshReviewQueries();
     },
   });
 
   const removeMutation = trpc.placeReview.remove.useMutation({
-    onSuccess: () => {
+    onSuccess: async () => {
       setRating(0);
       setBody("");
       setIsEditing(false);
-      void utils.placeReview.aggregate.invalidate({ placeId });
-      void utils.placeReview.list.invalidate({ placeId });
-      void utils.placeReview.viewerReview.invalidate({ placeId });
+      await refreshReviewQueries();
     },
   });
 

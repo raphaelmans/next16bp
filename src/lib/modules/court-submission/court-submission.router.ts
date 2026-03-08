@@ -10,10 +10,12 @@ import {
   GetMySubmissionsSchema,
   ParseGoogleMapsLinkSchema,
   SubmitCourtInputSchema,
+  UploadSubmissionPhotoSchema,
 } from "./court-submission.dto";
 import {
   DailySubmissionQuotaExceededError,
   InvalidGoogleMapsLinkError,
+  SubmissionNotFoundError,
   UserBannedFromSubmissionsError,
 } from "./errors/court-submission.errors";
 import { makeCourtSubmissionService } from "./factories/court-submission.factory";
@@ -40,6 +42,13 @@ function handleCourtSubmissionError(error: unknown): never {
       cause: error,
     });
   }
+  if (error instanceof SubmissionNotFoundError) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
+      message: error.message,
+      cause: error,
+    });
+  }
   if (error instanceof AppError) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -57,6 +66,21 @@ export const courtSubmissionRouter = router({
       try {
         const service = makeCourtSubmissionService();
         return await service.submitCourt(ctx.userId, input);
+      } catch (error) {
+        handleCourtSubmissionError(error);
+      }
+    }),
+
+  uploadSubmissionPhoto: protectedRateLimitedProcedure("mutation")
+    .input(UploadSubmissionPhotoSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const service = makeCourtSubmissionService();
+        return await service.uploadSubmissionPhoto(
+          ctx.userId,
+          input.placeId,
+          input.image,
+        );
       } catch (error) {
         handleCourtSubmissionError(error);
       }

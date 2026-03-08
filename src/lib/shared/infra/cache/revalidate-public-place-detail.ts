@@ -8,6 +8,7 @@ import { revalidatePublicDiscoveryTier1 } from "./revalidate-public-discovery";
 type RevalidatePublicPlaceDetailPathsInput = {
   placeId: string;
   placeSlug?: string | null;
+  includeReviewPaths?: boolean;
   previousLocation?: {
     province?: string | null;
     city?: string | null;
@@ -31,9 +32,18 @@ const addPublicPlacePaths = (paths: Set<string>, placeSlugOrId: string) => {
   paths.add(`${LEGACY_PUBLIC_PLACE_BASE_PATH}/${placeSlugOrId}`);
 };
 
+const addPublicPlaceReviewPaths = (
+  paths: Set<string>,
+  placeSlugOrId: string,
+) => {
+  paths.add(appRoutes.places.reviews(placeSlugOrId));
+  paths.add(`${LEGACY_PUBLIC_PLACE_BASE_PATH}/${placeSlugOrId}/reviews`);
+};
+
 export async function revalidatePublicPlaceDetailPaths({
   placeId,
   placeSlug,
+  includeReviewPaths = false,
   previousLocation,
   nextLocation,
   requestId,
@@ -52,8 +62,14 @@ export async function revalidatePublicPlaceDetailPaths({
 
     const paths = new Set<string>();
     addPublicPlacePaths(paths, normalizedPlaceId);
+    if (includeReviewPaths) {
+      addPublicPlaceReviewPaths(paths, normalizedPlaceId);
+    }
     if (slugToUse && slugToUse !== normalizedPlaceId) {
       addPublicPlacePaths(paths, slugToUse);
+      if (includeReviewPaths) {
+        addPublicPlaceReviewPaths(paths, slugToUse);
+      }
     }
 
     for (const path of paths) {
@@ -64,6 +80,9 @@ export async function revalidatePublicPlaceDetailPaths({
     // invalidate slug-based public URLs without introducing router import cycles.
     if (!slugToUse) {
       revalidateAllPublicPlaceDetailPages(requestId);
+      if (includeReviewPaths) {
+        revalidateAllPublicPlaceReviewPages(requestId);
+      }
     }
 
     await revalidatePublicDiscoveryTier1({
@@ -100,6 +119,22 @@ export function revalidateAllPublicPlaceDetailPages(requestId?: string): void {
         error,
       },
       "Failed to revalidate all public place detail pages",
+    );
+  }
+}
+
+export function revalidateAllPublicPlaceReviewPages(requestId?: string): void {
+  try {
+    revalidatePath("/venues/[placeId]/reviews", "page");
+    revalidatePath("/places/[placeId]/reviews", "page");
+  } catch (error) {
+    logger.warn(
+      {
+        event: "cache.revalidate_public_place_review_all.failed",
+        requestId,
+        error,
+      },
+      "Failed to revalidate all public place review pages",
     );
   }
 }

@@ -48,6 +48,17 @@ export class CourtSubmissionApi {
       this.toAppError,
     );
 
+  mutUploadSubmissionPhoto: ProcedureFn<
+    TrpcClientApi["courtSubmission"]["uploadSubmissionPhoto"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["courtSubmission", "uploadSubmissionPhoto"],
+      (clientApi) => clientApi.courtSubmission.uploadSubmissionPhoto.mutate,
+      input,
+      this.toAppError,
+    );
+
   queryParseGoogleMapsLink: ProcedureFn<
     TrpcClientApi["courtSubmission"]["parseGoogleMapsLink"]["query"]
   > = async (input) =>

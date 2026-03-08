@@ -75,6 +75,8 @@ export class PlaceReviewService {
         },
         "Venue review removed by author",
       );
+
+      return review;
     });
   }
 
@@ -144,6 +146,8 @@ export class PlaceReviewService {
         },
         "Venue review removed by admin",
       );
+
+      return review;
     });
   }
 }

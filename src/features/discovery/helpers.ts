@@ -69,6 +69,47 @@ export interface PlaceVerificationDisplay {
   verificationStatusVariant: PlaceVerificationStatusVariant;
 }
 
+export interface PublicVenueSortInput {
+  id: string;
+  name: string;
+  featuredRank?: number | null;
+  provinceRank?: number | null;
+  placeType?: PlaceType | null;
+  verificationStatus?: PlaceVerificationStatus | null;
+  averageRating?: number | null;
+  reviewCount?: number | null;
+}
+
+export const getPublicVenueSortBucket = (item: PublicVenueSortInput) => {
+  const isVerifiedReservable =
+    item.placeType === "RESERVABLE" && item.verificationStatus === "VERIFIED";
+  const hasReviews = (item.reviewCount ?? 0) > 0;
+
+  if ((item.featuredRank ?? 0) > 0) return 0;
+  if ((item.provinceRank ?? 0) > 0) return 1;
+  if (isVerifiedReservable && hasReviews) return 2;
+  if (isVerifiedReservable) return 3;
+  if (hasReviews) return 4;
+  return 5;
+};
+
+export const comparePublicVenueSort = (
+  left: PublicVenueSortInput,
+  right: PublicVenueSortInput,
+) =>
+  getPublicVenueSortBucket(left) - getPublicVenueSortBucket(right) ||
+  (left.featuredRank ?? 0) - (right.featuredRank ?? 0) ||
+  (left.provinceRank ?? 0) - (right.provinceRank ?? 0) ||
+  (right.reviewCount ?? 0) - (left.reviewCount ?? 0) ||
+  (right.averageRating ?? 0) - (left.averageRating ?? 0) ||
+  left.name.localeCompare(right.name) ||
+  left.id.localeCompare(right.id);
+
+export const hasVenueSlug = <T extends { slug?: string | null }>(
+  item: T,
+): item is T & { slug: string } =>
+  typeof item.slug === "string" && item.slug.length > 0;
+
 export function getPlaceVerificationDisplay(
   input: PlaceVerificationDisplayInput,
 ): PlaceVerificationDisplay {

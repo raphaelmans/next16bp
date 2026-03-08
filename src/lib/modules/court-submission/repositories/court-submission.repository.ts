@@ -238,4 +238,23 @@ export class CourtSubmissionRepository {
       .limit(1);
     return result[0] ?? null;
   }
+
+  async findByPlaceAndUser(
+    placeId: string,
+    userId: string,
+    ctx?: RequestContext,
+  ): Promise<CourtSubmissionRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(courtSubmission)
+      .where(
+        and(
+          eq(courtSubmission.placeId, placeId),
+          eq(courtSubmission.submittedByUserId, userId),
+        ),
+      )
+      .limit(1);
+    return result[0] ?? null;
+  }
 }
