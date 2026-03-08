@@ -8,6 +8,7 @@ import { appRoutes } from "@/common/app-routes";
 import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
 import { Button } from "@/components/ui/button";
+import { POPULAR_DISCOVERY_LINKS } from "@/features/home/constants/popular-discovery-links";
 
 interface PopularLocation {
   label: string;
@@ -101,6 +102,20 @@ export function HomeSearchForm({
             <ArrowRight className="h-[11px] w-[11px]" />
           </Link>
         </div>
+        <div className="mt-2.5 flex flex-wrap gap-[7px] items-center">
+          <span className="text-xs text-muted-foreground/60 font-medium font-heading">
+            Explore:
+          </span>
+          {POPULAR_DISCOVERY_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </div>
       </div>
     );
   }
@@ -112,7 +127,7 @@ export function HomeSearchForm({
           type="text"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Search by city, sport, or venue..."
+          placeholder="Search by city, sport, or court..."
           className="h-12 flex-1 rounded-xl border border-border/60 bg-background px-4 text-base shadow-sm"
         />
         <div className="flex flex-wrap gap-2">

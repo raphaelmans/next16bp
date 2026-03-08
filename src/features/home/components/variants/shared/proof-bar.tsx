@@ -39,7 +39,7 @@ function BoldAthleticProofBar({
         <div className="flex justify-center gap-14 flex-wrap">
           <StatItem
             value={stats?.totalPlaces ?? 0}
-            label="Venues"
+            label="Listings"
             className="text-center text-white"
           />
           <StatItem
@@ -68,7 +68,7 @@ function CleanMinimalProofBar({
       <Container>
         <p className="text-sm text-muted-foreground text-center">
           <CountUp end={stats?.totalPlaces ?? 0} duration={1.5} separator="," />{" "}
-          venues{" · "}
+          listings{" · "}
           <CountUp end={stats?.totalCourts ?? 0} duration={1.5} separator="," />{" "}
           courts{" · "}
           <CountUp end={stats?.totalCities ?? 0} duration={1.5} separator="," />{" "}
@@ -91,7 +91,7 @@ function WarmCommunityProofBar({
           <div className="flex justify-center gap-10 flex-wrap">
             <StatItem
               value={stats?.totalPlaces ?? 0}
-              label="Venues"
+              label="Listings"
               className="text-center"
             />
             <StatItem

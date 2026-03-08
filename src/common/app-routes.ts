@@ -101,6 +101,11 @@ export const appRoutes = {
     base: "/blog",
     options: { type: "public" as const },
   },
+  guides: {
+    base: "/guides",
+    options: { type: "public" as const },
+    detail: (slug: string) => `/guides/${slug}`,
+  },
   cookies: {
     base: "/cookies",
     options: { type: "public" as const },

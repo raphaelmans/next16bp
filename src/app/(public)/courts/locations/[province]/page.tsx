@@ -31,7 +31,7 @@ export async function generateMetadata({
 
   if (!province) {
     return {
-      title: "Venues",
+      title: "Courts",
       robots: {
         index: false,
         follow: false,
@@ -39,8 +39,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = `Sports Venues in ${province.displayName}, Philippines`;
-  const description = `Browse pickleball, basketball, and tennis venues in ${province.displayName}, Philippines. Book your next game on KudosCourts.`;
+  const title = `Sports Courts in ${province.displayName}, Philippines`;
+  const description = `Browse pickleball, basketball, tennis, and other sports courts in ${province.displayName}, Philippines. Compare listings, reviews, and availability signals on KudosCourts.`;
   const canonicalUrl = new URL(`/courts/locations/${province.slug}`, appUrl);
 
   return {
@@ -143,10 +143,10 @@ export default async function CourtsProvincePage({
     mainEntity: [
       {
         "@type": "Question",
-        name: `How do I find sports venues in ${province.displayName}?`,
+        name: `How do I find sports courts in ${province.displayName}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Use KudosCourts to filter by city and sport in ${province.displayName}, then pick an available venue and book online.`,
+          text: `Use KudosCourts to filter by city and sport in ${province.displayName}, then compare court listings, reviews, and availability signals before you decide where to play.`,
         },
       },
       {
@@ -172,7 +172,7 @@ export default async function CourtsProvincePage({
       {
         "@type": "ListItem",
         position: 2,
-        name: "Venues",
+        name: "Courts",
         item: buildCanonicalUrl(appRoutes.courts.base),
       },
       {
@@ -198,7 +198,7 @@ export default async function CourtsProvincePage({
       <section className="border-b border-border bg-card/50 py-6">
         <Container className="space-y-4">
           <p className="text-sm text-muted-foreground">
-            {placeCount} active venue{placeCount === 1 ? "" : "s"} and{" "}
+            {placeCount} active listing{placeCount === 1 ? "" : "s"} and{" "}
             {courtCount} indexed court{courtCount === 1 ? "" : "s"} in{" "}
             {province.displayName}.
           </p>

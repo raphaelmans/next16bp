@@ -20,19 +20,19 @@ const HOW_IT_WORKS = [
     step: 1,
     title: "Search",
     description:
-      "Pick a sport and city. Browse every venue in the area with reviews, photos, and amenities.",
+      "Pick a sport and city. Browse court listings in the area with reviews, photos, and amenities.",
   },
   {
     step: 2,
     title: "Check",
     description:
-      "Read player reviews, compare pricing, and check availability when venues publish open slots.",
+      "Read player reviews, compare pricing, and check availability when courts publish open slots.",
   },
   {
     step: 3,
     title: "Play",
     description:
-      "Walk in, call ahead, or reserve online — whatever the venue offers. Show up and play.",
+      "Walk in, call ahead, or reserve online when it is available. Show up and play.",
   },
 ];
 
@@ -60,12 +60,12 @@ export function CleanMinimalPage({ featuredPlaces }: CleanMinimalPageProps) {
             <div className="animate-in fade-in duration-500">
               <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1.08] tracking-tight mb-6">
                 Where Filipino players
-                <span className="block">discover sports venues.</span>
+                <span className="block">discover sports courts.</span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[460px] mb-10">
                 Stop hopping between Facebook pages and reservation sites.
-                Search venues, read player reviews, check amenities and
+                Search courts, read player reviews, check amenities and
                 availability — all in one place.
               </p>
 

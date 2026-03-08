@@ -5,9 +5,9 @@ import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL(appRoutes.courts.base, appUrl);
-const title = "Browse Sports Venues in the Philippines";
+const title = "Browse Sports Courts in the Philippines";
 const description =
-  "Find and book pickleball, basketball, tennis, and badminton venues across the Philippines. Filter by city, sport, and availability on KudosCourts.";
+  "Discover pickleball, basketball, tennis, badminton, and other sports courts across the Philippines. Filter by city, sport, reviews, and availability signals on KudosCourts.";
 
 export const metadata: Metadata = {
   title,

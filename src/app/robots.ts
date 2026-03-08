@@ -25,6 +25,14 @@ const privatePaths = [
   "/poc",
   "/poc/*",
 ] satisfies string[];
+const sitemapUrls: string[] = [
+  `${appUrl}/sitemap.xml`,
+  `${appUrl}/sitemaps/static`,
+  `${appUrl}/sitemaps/editorial`,
+  `${appUrl}/sitemaps/locations`,
+  `${appUrl}/sitemaps/venues`,
+  `${appUrl}/sitemaps/organizations`,
+] as const;
 
 export default function robots(): MetadataRoute.Robots {
   if (!isProduction) {
@@ -45,10 +53,21 @@ export default function robots(): MetadataRoute.Robots {
         disallow: "/",
       },
       {
+        userAgent: [
+          "OAI-SearchBot",
+          "ChatGPT-User",
+          "Claude-SearchBot",
+          "PerplexityBot",
+          "Bingbot",
+        ],
+        allow: "/",
+        disallow: privatePaths,
+      },
+      {
         userAgent: "*",
         disallow: privatePaths,
       },
     ],
-    sitemap: `${appUrl}/sitemap.xml`,
+    sitemap: sitemapUrls,
   };
 }

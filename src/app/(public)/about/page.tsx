@@ -7,7 +7,7 @@ const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL(appRoutes.about.base, appUrl);
 const title = "About KudosCourts";
 const description =
-  "KudosCourts is a free reservation system for sports venues in the Philippines, helping players discover courts and reserve time with less back-and-forth.";
+  "KudosCourts is a player-first sports venue discovery platform for the Philippines, built to help players find courts faster and help venues get found with full control.";
 
 export const metadata: Metadata = {
   title,

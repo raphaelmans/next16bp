@@ -33,7 +33,7 @@ export async function generateMetadata({
 
   if (!province || !city) {
     return {
-      title: "Venues",
+      title: "Courts",
       robots: {
         index: false,
         follow: false,
@@ -41,8 +41,8 @@ export async function generateMetadata({
     };
   }
 
-  const title = `Sports Venues in ${city.displayName}, ${province.displayName} — Philippines`;
-  const description = `Discover and book pickleball, basketball, and badminton courts in ${city.displayName}, Philippines.`;
+  const title = `Sports Courts in ${city.displayName}, ${province.displayName} — Philippines`;
+  const description = `Discover pickleball, basketball, badminton, and other sports courts in ${city.displayName}, Philippines. Compare listings, reviews, and availability signals on KudosCourts.`;
   const canonicalUrl = new URL(
     `/courts/locations/${province.slug}/${city.slug}`,
     appUrl,
@@ -163,18 +163,18 @@ export default async function CourtsCityPage({
     mainEntity: [
       {
         "@type": "Question",
-        name: `How do I book venues in ${city.displayName}?`,
+        name: `How do I find courts in ${city.displayName}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Search by sport in ${city.displayName}, compare venue options, and book available slots directly on KudosCourts.`,
+          text: `Search by sport in ${city.displayName}, compare court listings, and check reviews and availability signals before you decide where to play.`,
         },
       },
       {
         "@type": "Question",
-        name: `Which sports are available in ${city.displayName}?`,
+        name: `Which sports courts are available in ${city.displayName}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `KudosCourts lists active sports venues in ${city.displayName}. Use the sport filters to narrow by the game you play.`,
+          text: `KudosCourts lists active sports courts in ${city.displayName}. Use the sport filters to narrow by the game you play.`,
         },
       },
     ],
@@ -192,7 +192,7 @@ export default async function CourtsCityPage({
       {
         "@type": "ListItem",
         position: 2,
-        name: "Venues",
+        name: "Courts",
         item: buildCanonicalUrl(appRoutes.courts.base),
       },
       {
@@ -238,8 +238,8 @@ export default async function CourtsCityPage({
             <span>
               {city.displayName}
               <span className="ml-1 tabular-nums">
-                · {placeCount} venue{placeCount === 1 ? "" : "s"}, {courtCount}{" "}
-                court{courtCount === 1 ? "" : "s"}
+                · {placeCount} listing{placeCount === 1 ? "" : "s"},{" "}
+                {courtCount} court{courtCount === 1 ? "" : "s"}
               </span>
             </span>
             <span aria-hidden="true" className="hidden text-border sm:inline">

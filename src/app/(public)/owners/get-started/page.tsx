@@ -7,9 +7,9 @@ import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL(appRoutes.ownersGetStarted.base, appUrl);
-const title = "Free Reservation System for Sports Venues in the Philippines";
+const title = "List Your Sports Venue Online in the Philippines";
 const description =
-  "Create an owner account, list or claim your venue, complete verification, and manage court bookings online. Core tools are free for Philippine sports venues.";
+  "Help players find your sports venue by city and sport, keep full control of your listing and operations, and manage availability when it makes sense for your venue.";
 
 const faqStructuredData = {
   "@type": "FAQPage",
@@ -33,7 +33,7 @@ const structuredData = {
       operatingSystem: "All",
       url: canonicalUrl.toString(),
       description:
-        "Reservation workflow software for sports venues in the Philippines. List or claim your venue, verify ownership, and manage bookings online.",
+        "Discovery and reservation workflow software for sports venues in the Philippines. List or claim your venue, verify ownership, and manage availability with full control.",
       offers: {
         "@type": "Offer",
         price: "0",

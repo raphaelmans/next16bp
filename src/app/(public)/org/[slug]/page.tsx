@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const result = await getOrganizationLandingBySlug(slug);
     const description =
       result.profile?.description ??
-      "Explore our venues in the Philippines, see what sports we host, and book your next game in minutes.";
+      "Explore our venues in the Philippines, see what sports we host, and help players discover where to play next.";
     const hasProfileContent = Boolean(
       result.profile?.description?.trim() ||
         result.profile?.logoUrl?.trim() ||

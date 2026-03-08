@@ -35,7 +35,7 @@ import { publicCaller } from "@/trpc/server";
 const appUrl = getCanonicalOrigin();
 
 const formatCourtCount = (count: number) =>
-  `${count} venue${count === 1 ? "" : "s"}`;
+  `${count} court${count === 1 ? "" : "s"}`;
 
 /**
  * Return the dominant sport name when one sport covers ≥60 % of courts.
@@ -65,10 +65,10 @@ const buildMetadataDescription = (
     sports.length > 0 ? ` for ${sports.slice(0, 3).join(", ")}` : " for sports";
 
   if (locationLabel) {
-    return `Book ${courtLabel}${sportsLabel} at ${place.name} in ${locationLabel}, Philippines.`;
+    return `Find ${courtLabel}${sportsLabel} at ${place.name} in ${locationLabel}, Philippines. Check reviews, details, and availability signals on KudosCourts.`;
   }
 
-  return `Book ${courtLabel}${sportsLabel} at ${place.name} on KudosCourts Philippines.`;
+  return `Find ${courtLabel}${sportsLabel} at ${place.name} on KudosCourts Philippines. Check reviews, details, and availability signals before you play.`;
 };
 
 const toAbsoluteUrl = (value?: string | null) => {
@@ -128,7 +128,7 @@ export async function generatePlaceDetailMetadata(
 
   const fallbackName = humanizeSlug(placeIdOrSlug);
   let title = fallbackName;
-  let description = `View ${fallbackName} venue details and availability on KudosCourts Philippines.`;
+  let description = `View ${fallbackName} court details, reviews, and availability on KudosCourts Philippines.`;
   let imageUrl: string | undefined;
 
   try {
@@ -147,7 +147,7 @@ export async function generatePlaceDetailMetadata(
 
     // Title: include dominant sport when one exists
     if (dominantSport && locationLabel) {
-      title = `${place.name} \u2013 ${dominantSport} Venues in ${locationLabel}`;
+      title = `${place.name} \u2013 ${dominantSport} Courts in ${locationLabel}`;
     } else if (locationLabel) {
       title = `${place.name} (${locationLabel})`;
     } else {
@@ -339,14 +339,14 @@ async function PlaceDetailPageServerSection({
           }
         : undefined;
     const courtCount = placeDetails.courts.length;
-    const courtCountLabel = `${courtCount} venue${courtCount === 1 ? "" : "s"}`;
+    const courtCountLabel = `${courtCount} court${courtCount === 1 ? "" : "s"}`;
     const locationLabel = [placeDetails.place.city, placeDetails.place.province]
       .map((value) => value?.trim())
       .filter(Boolean)
       .join(", ");
     const description = locationLabel
-      ? `${placeDetails.place.name} in ${locationLabel} with ${courtCountLabel}. Book with KudosCourts.`
-      : `${placeDetails.place.name} with ${courtCountLabel}. Book with KudosCourts.`;
+      ? `${placeDetails.place.name} in ${locationLabel} with ${courtCountLabel}. Discover court details, reviews, and availability signals on KudosCourts.`
+      : `${placeDetails.place.name} with ${courtCountLabel}. Discover court details, reviews, and availability signals on KudosCourts.`;
 
     const mapUrl =
       typeof latitude === "number" && typeof longitude === "number"

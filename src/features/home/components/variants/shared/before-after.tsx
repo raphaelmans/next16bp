@@ -5,17 +5,17 @@ import { Container } from "@/components/layout/container";
 import type { LandingVariant } from "@/features/home/constants/landing-variant";
 
 const BEFORE_ITEMS = [
-  "Scroll through dozens of Facebook pages to find one venue",
-  "Check separate reservation sites for each venue",
+  "Scroll through dozens of Facebook pages to find one court",
+  "Check separate reservation sites for each court",
   "Read scattered reviews across multiple platforms",
-  "Call or message venues one by one to ask about availability",
+  "Call or message court operators one by one to ask about availability",
 ];
 
 const AFTER_ITEMS = [
-  "Search venues by city, sport, or amenities in seconds",
-  "Read real player reviews right on each venue page",
+  "Search courts by city, sport, or amenities in seconds",
+  "Read real player reviews right on each court page",
   "Check amenities, photos, and pricing at a glance",
-  "See availability when venues manage it online",
+  "See availability when courts manage it online",
 ];
 
 interface BeforeAfterProps {
@@ -51,7 +51,7 @@ export function BeforeAfter({ variant }: BeforeAfterProps) {
             The difference
           </p>
           <h2 className="font-heading text-[34px] font-extrabold tracking-[-0.03em]">
-            How players find venues — before vs. now
+            How players find courts — before vs. now
           </h2>
         </div>
 

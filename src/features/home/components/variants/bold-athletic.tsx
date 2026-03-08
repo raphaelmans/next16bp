@@ -21,21 +21,21 @@ const HOW_IT_WORKS = [
     step: 1,
     title: "Search",
     description:
-      "Pick a sport and city. Browse every venue in the area with reviews, photos, and amenities.",
+      "Pick a sport and city. Browse court listings in the area with reviews, photos, and amenities.",
     icon: Search,
   },
   {
     step: 2,
     title: "Check",
     description:
-      "Read player reviews, compare pricing, and check availability when venues publish open slots.",
+      "Read player reviews, compare pricing, and check availability when courts publish open slots.",
     icon: Search,
   },
   {
     step: 3,
     title: "Play",
     description:
-      "Walk in, call ahead, or reserve online — whatever the venue offers. Show up and play.",
+      "Walk in, call ahead, or reserve online when it is available. Show up and play.",
     icon: Search,
   },
 ];
@@ -73,12 +73,12 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
               <h1 className="font-heading text-5xl md:text-7xl font-extrabold leading-[1.04] tracking-tight mb-5 uppercase">
                 Where Filipino
                 <span className="block">players discover</span>
-                <span className="block text-primary">sports venues.</span>
+                <span className="block text-primary">sports courts.</span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[430px] mb-8">
                 Stop hopping between Facebook pages and reservation sites.
-                Search venues, read player reviews, and check availability — all
+                Search courts, read player reviews, and check availability — all
                 in one place.
               </p>
 
@@ -105,7 +105,7 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
               How it works
             </p>
             <h2 className="font-heading text-3xl md:text-5xl font-extrabold tracking-[-0.03em]">
-              Discover a venue in 3 steps
+              Discover a court in 3 steps
             </h2>
           </div>
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[900px] mx-auto">

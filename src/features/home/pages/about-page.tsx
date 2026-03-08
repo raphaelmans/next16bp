@@ -15,9 +15,9 @@ export function AboutPageView() {
             About KudosCourts
           </h1>
           <p className="text-muted-foreground">
-            KudosCourts is built to make sports venue reservations
-            accessible—especially for small and newly opened venues that still
-            manage bookings in spreadsheets, notebooks, and DMs.
+            KudosCourts is a player-first discovery platform built to make
+            sports courts across the Philippines easier to find, compare, and
+            trust.
           </p>
         </div>
 
@@ -27,11 +27,11 @@ export function AboutPageView() {
               Why we built it
             </h2>
             <p>
-              Many venues still handle bookings with calendars, spreadsheets,
-              and DMs—not because they prefer it, but because reservation
-              software has historically been expensive or required custom work.
-              That leads to double bookings, confusion, and constant
-              back-and-forth.
+              Finding a court in the Philippines often means bouncing between
+              Facebook pages, old posts, separate reservation sites, and direct
+              messages. Players waste time just trying to figure out which
+              courts are active, where they are, and whether they are worth the
+              trip.
             </p>
           </div>
 
@@ -40,22 +40,24 @@ export function AboutPageView() {
               What we do
             </h2>
             <p>
-              We help players discover venues and see real availability. For
-              venue owners, KudosCourts is a free reservation system with
-              verification to build trust and built-in chat so players and
-              venues can coordinate. We do not process payments—venues keep
-              their existing payment methods and players pay venues directly.
+              We help players discover courts by city, sport, reviews,
+              amenities, and availability when venues manage it. For venue
+              owners, KudosCourts adds visibility without taking control away.
+              Owners keep their listing, pricing, payment methods, and
+              operations.
             </p>
           </div>
 
           <div className="space-y-3">
             <h2 className="font-heading text-lg font-semibold text-foreground">
-              How we stay free
+              How the platform works
             </h2>
             <p>
-              We plan to monetize through advertising and sponsored placements,
-              not by charging venues or players upfront. The goal is to keep the
-              core system accessible while building something sustainable.
+              KudosCourts is designed as a discovery platform, not a
+              marketplace. We connect players to venues and surface the details
+              they need to make a decision. When venues want to manage
+              availability or reservations through the platform, they can do
+              that without giving up control of the business.
             </p>
           </div>
 
@@ -66,7 +68,7 @@ export function AboutPageView() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="font-heading">
-              <Link href={appRoutes.courts.base}>Browse venues</Link>
+              <Link href={appRoutes.courts.base}>Browse courts</Link>
             </Button>
           </div>
         </div>

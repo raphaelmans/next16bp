@@ -111,7 +111,7 @@ export async function generateMetadata({
   }
 
   const title = `${context.sport.name} Courts in ${context.city.displayName}, ${context.province.displayName} — Philippines`;
-  const description = `Discover ${context.sport.name.toLowerCase()} courts in ${context.city.displayName}, ${context.province.displayName}. Compare venues, check open slots, and reserve online on KudosCourts.`;
+  const description = `Discover ${context.sport.name.toLowerCase()} courts in ${context.city.displayName}, ${context.province.displayName}. Compare listings, read reviews, and check availability when venues manage it on KudosCourts.`;
   const canonicalUrl = new URL(
     appRoutes.courts.locations.sport(
       context.province.slug,
@@ -254,7 +254,7 @@ export default async function CourtsCitySportPage({
         name: `Where can I book ${context.sport.name} courts in ${context.city.displayName}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `Use this page to browse active ${context.sport.name.toLowerCase()} venues in ${context.city.displayName}, compare options, and reserve available slots online.`,
+          text: `Use this page to browse active ${context.sport.name.toLowerCase()} court listings in ${context.city.displayName}, compare options, and reserve available slots when they are available online.`,
         },
       },
       {
@@ -262,7 +262,7 @@ export default async function CourtsCitySportPage({
         name: `How many ${context.sport.name.toLowerCase()} courts are listed in ${context.city.displayName}?`,
         acceptedAnswer: {
           "@type": "Answer",
-          text: `KudosCourts currently indexes ${courtCount} ${context.sport.name.toLowerCase()} court${courtCount === 1 ? "" : "s"} across ${placeCount} active venue${placeCount === 1 ? "" : "s"} in ${context.city.displayName}.`,
+          text: `KudosCourts currently indexes ${courtCount} ${context.sport.name.toLowerCase()} court${courtCount === 1 ? "" : "s"} across ${placeCount} active listing${placeCount === 1 ? "" : "s"} in ${context.city.displayName}.`,
         },
       },
     ],
@@ -326,7 +326,7 @@ export default async function CourtsCitySportPage({
         <Container className="space-y-3">
           <p className="text-sm text-muted-foreground">
             {context.sport.name} listings in {context.city.displayName}:{" "}
-            {placeCount} venue{placeCount === 1 ? "" : "s"} and {courtCount}{" "}
+            {placeCount} listing{placeCount === 1 ? "" : "s"} and {courtCount}{" "}
             court{courtCount === 1 ? "" : "s"}.
           </p>
           <div className="flex flex-wrap gap-2">
@@ -349,7 +349,7 @@ export default async function CourtsCitySportPage({
           {venueRows.length > 0 && (
             <div className="space-y-2">
               <p className="text-sm font-semibold">
-                Popular {context.sport.name} venues in{" "}
+                Popular {context.sport.name} courts in{" "}
                 {context.city.displayName}
               </p>
               <div className="flex flex-wrap gap-2">

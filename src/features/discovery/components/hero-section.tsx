@@ -51,13 +51,13 @@ export function HeroSection({ className }: HeroSectionProps) {
       <div className="text-center max-w-4xl mx-auto px-4">
         {/* Title */}
         <h1 className="font-heading font-extrabold text-4xl sm:text-5xl md:text-6xl text-foreground tracking-tight">
-          Find Venues Near You
+          Find Courts Near You
         </h1>
 
         {/* Subtitle */}
         <p className="mt-4 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
-          Discover and book venues near you. Compare venues, sports, and
-          real-time availability in one spot.
+          Discover and book courts near you. Compare courts, sports, and
+          availability signals in one spot.
         </p>
 
         {/* Search Bar */}
@@ -66,7 +66,7 @@ export function HeroSection({ className }: HeroSectionProps) {
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search by city, venue, or sport..."
+              placeholder="Search by city, court, or sport..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="h-14 pl-12 pr-32 text-lg rounded-xl shadow-md border-border/50"

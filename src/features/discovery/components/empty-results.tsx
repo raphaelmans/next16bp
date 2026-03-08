@@ -24,11 +24,11 @@ export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
         <EmptyMedia variant="icon">
           <MapPin />
         </EmptyMedia>
-        <EmptyTitle>No venues found</EmptyTitle>
+        <EmptyTitle>No courts found</EmptyTitle>
         <EmptyDescription>
           {query
-            ? `We couldn't find any venues matching "${query}". Try adjusting your search or filters.`
-            : "No venues match your current filters. Try adjusting your search criteria."}
+            ? `We couldn't find any courts matching "${query}". Try adjusting your search or filters.`
+            : "No courts match your current filters. Try adjusting your search criteria."}
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>

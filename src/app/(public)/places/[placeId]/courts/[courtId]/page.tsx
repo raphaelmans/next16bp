@@ -138,8 +138,8 @@ export default async function CourtDetailPage({
     const courtLabel = court.court.label;
     const sportName = court.sport.name;
     const courtDescription = sportName
-      ? `${courtLabel} for ${sportName} at ${place.name}${locationLabel ? ` in ${locationLabel}` : ""}. Book with KudosCourts.`
-      : `${courtLabel} at ${place.name}${locationLabel ? ` in ${locationLabel}` : ""}. Book with KudosCourts.`;
+      ? `${courtLabel} for ${sportName} at ${place.name}${locationLabel ? ` in ${locationLabel}` : ""}. Check venue details and availability on KudosCourts.`
+      : `${courtLabel} at ${place.name}${locationLabel ? ` in ${locationLabel}` : ""}. Check venue details and availability on KudosCourts.`;
 
     const structuredData = {
       "@context": "https://schema.org",

@@ -116,7 +116,7 @@ export function PublicOrganizationPage({
                       </h1>
                       <p className="mt-3 max-w-2xl text-base leading-relaxed text-muted-foreground">
                         {landing.profile?.description ??
-                          "Explore our venues, see what sports we host, and book your next game in minutes."}
+                          "Explore our venues, see what sports we host, and help players discover where to play next."}
                       </p>
                     </div>
                   </div>

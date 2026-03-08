@@ -6,11 +6,18 @@ import { Button } from "@/components/ui/button";
 
 const FOOTER_LINKS = {
   discover: [
-    { name: "Browse Venues", href: appRoutes.courts.base },
-    { name: "Map View", href: `${appRoutes.courts.base}?view=map` },
+    { name: "Browse Courts", href: appRoutes.courts.base },
     {
-      name: "Pickleball (and more sports)",
-      href: `${appRoutes.courts.base}?q=pickleball`,
+      name: "Cebu City Courts",
+      href: appRoutes.courts.locations.city("cebu", "cebu-city"),
+    },
+    {
+      name: "Manila Courts",
+      href: appRoutes.courts.locations.city("metro-manila", "manila"),
+    },
+    {
+      name: "Player Guides",
+      href: appRoutes.guides.base,
     },
   ],
   owners: [
@@ -20,6 +27,7 @@ const FOOTER_LINKS = {
   company: [
     { name: "About Us", href: appRoutes.about.base },
     { name: "Contact", href: appRoutes.contactUs.base },
+    { name: "Guides", href: appRoutes.guides.base },
     { name: "Blog", href: appRoutes.blog.base },
   ],
   legal: [
@@ -42,7 +50,7 @@ export function Footer() {
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">
-                Every sports venue in the Philippines, discoverable in seconds.
+                Every sports court in the Philippines, discoverable in seconds.
               </p>
               <Button asChild variant="outline" size="sm" className="mt-5">
                 <Link href={appRoutes.contactUs.base}>Contact us</Link>

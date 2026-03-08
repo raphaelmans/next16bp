@@ -4,7 +4,7 @@ import { OG_BRAND, OG_GRADIENTS } from "@/common/og-brand";
 import { buildLocationLabel } from "@/common/seo-helpers";
 import { createServerCaller } from "@/lib/shared/infra/trpc/server";
 
-export const alt = "KudosCourts venue";
+export const alt = "KudosCourts court";
 export const size = {
   width: 1200,
   height: 630,
@@ -19,7 +19,7 @@ export default async function OpenGraphImage({
   const { id } = await params;
   const fallbackPath = appRoutes.places.detail(id);
 
-  let title = "Venue details";
+  let title = "Court details";
   let subtitle = "Discover. Reserve. Play.";
 
   try {
@@ -113,7 +113,7 @@ export default async function OpenGraphImage({
           color: "rgba(255,255,255,0.85)",
         }}
       >
-        Book venues on KudosCourts
+        Find courts on KudosCourts
       </div>
 
       <div
