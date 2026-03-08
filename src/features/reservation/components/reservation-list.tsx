@@ -27,7 +27,7 @@ const emptyStateConfig: Record<
   upcoming: {
     title: "No Upcoming Reservations",
     description:
-      "You don't have any upcoming court reservations. Find a court and book a slot to get started!",
+      "You don't have any upcoming venue reservations. Find a venue and book a slot to get started!",
   },
   pending: {
     title: "No Pending Reservations",
@@ -102,7 +102,7 @@ export function ReservationList({ tab, isActive }: ReservationListProps) {
             <Button asChild>
               <Link href={appRoutes.courts.base}>
                 <Search className="mr-2 h-4 w-4" />
-                Find Courts
+                Find Venues
               </Link>
             </Button>
           </EmptyContent>

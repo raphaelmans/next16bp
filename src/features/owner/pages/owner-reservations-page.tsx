@@ -112,7 +112,7 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
       icon: CalendarIcon,
       title: "No reservations yet",
       description:
-        "When players book your courts, reservations will appear here.",
+        "When players book your venues, reservations will appear here.",
     },
     pending: {
       icon: CheckCircle,
@@ -564,7 +564,7 @@ export default function OwnerReservationsPage() {
               Reservations
             </h1>
             <p className="text-muted-foreground">
-              Manage bookings for your courts
+              Manage bookings for your venues
             </p>
           </div>
           <Button

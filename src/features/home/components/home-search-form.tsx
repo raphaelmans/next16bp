@@ -72,7 +72,7 @@ export function HomeSearchForm({
               type="submit"
               className="rounded-xl px-6 py-3 font-heading font-semibold text-sm"
             >
-              Search Courts
+              Search Venues
             </Button>
           </div>
         </form>
@@ -105,7 +105,7 @@ export function HomeSearchForm({
           type="search"
           value={searchQuery}
           onChange={(event) => setSearchQuery(event.target.value)}
-          placeholder="Search by city, court, or venue..."
+          placeholder="Search by city, sport, or venue..."
           className="h-12 flex-1 rounded-xl border border-border/60 bg-background px-4 text-base shadow-sm"
         />
         <div className="flex flex-wrap gap-2">

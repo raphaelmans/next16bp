@@ -99,10 +99,10 @@ const PAIN_POINTS = [
 const RESERVATION_FLOWS = [
   {
     id: "free",
-    label: "Free Court",
+    label: "Free Venue",
     steps: ["Pending", "You Accept", "Confirmed"],
     description:
-      "A player finds your court and requests a booking. You tap Accept — done. Confirmed instantly. No payment step because the court is free.",
+      "A player finds your venue and requests a booking. You tap Accept — done. Confirmed instantly. No payment step because the venue is free.",
     highlight:
       "You have a 45-minute window to accept or reject. If you don't respond, the request expires and the slot opens back up.",
   },
@@ -197,7 +197,7 @@ const GUEST_SCENARIOS = [
     emoji: "🚶",
     title: "Walk-in arrives",
     description:
-      "Someone shows up at your court. You already have a walk-in block set.",
+      "Someone shows up at your venue. You already have a walk-in block set.",
     steps: [
       "You already have a walk-in block on the timeline for this hour",
       "Customer arrives and pays at the counter",
@@ -244,9 +244,9 @@ const FREE_FEATURES = [
   },
   {
     id: "court-mgmt",
-    title: "Court Management",
+    title: "Venue Management",
     description:
-      "Day-specific hours, hourly pricing rules, and amenities per court.",
+      "Day-specific hours, hourly pricing rules, and amenities per venue.",
     icon: Settings,
     color: "muted" as const,
   },
@@ -337,7 +337,7 @@ const STEPS = [
   {
     id: "go-live",
     step: "4",
-    title: "Configure courts & go live",
+    title: "Configure venues & go live",
     description:
       "Set hours, pricing, and amenities. Publish availability — players book immediately.",
     icon: Settings,
@@ -457,11 +457,11 @@ export default function OwnersGetStartedPage() {
             </div>
 
             <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
-              Your court is already being searched for.
+              Your venue is already being searched for.
             </h1>
 
             <p className="mx-auto max-w-2xl text-base text-muted-foreground sm:text-lg">
-              Players are already searching for available courts in your city.
+              Players are already searching for available venues in your city.
               List or claim your venue, manage booking requests, and keep your
               schedule up to date with{" "}
               <strong className="text-foreground">
@@ -566,7 +566,7 @@ export default function OwnersGetStartedPage() {
           </div>
 
           <p className="mt-8 text-center font-heading text-lg font-semibold tracking-tight">
-            Your courts deserve better. Your players deserve better.
+            Your venues deserve better. Your players deserve better.
           </p>
         </Container>
       </section>
@@ -584,7 +584,7 @@ export default function OwnersGetStartedPage() {
               Free essentials
             </Badge>
             <h2 className="font-heading text-2xl font-bold tracking-tight sm:text-3xl">
-              The essentials to run your courts — free
+              The essentials to run your venues — free
             </h2>
             <p className="mx-auto max-w-xl text-muted-foreground">
               Accept bookings, manage your schedule, bring your team on board,
@@ -1051,7 +1051,7 @@ export default function OwnersGetStartedPage() {
                   ))}
                 </div>
                 <div className="mt-3 flex items-center justify-between text-xs text-muted-foreground">
-                  <span>Per court & day-of-week</span>
+                  <span>Per venue & day-of-week</span>
                   <span className="font-medium text-primary">+12%</span>
                 </div>
               </CardContent>
@@ -1069,7 +1069,7 @@ export default function OwnersGetStartedPage() {
                   </CardTitle>
                 </div>
                 <CardDescription className="text-sm">
-                  Court occupancy rates, peak vs. off-peak usage, and a day×hour
+                  Venue occupancy rates, peak vs. off-peak usage, and a day×hour
                   heatmap.
                 </CardDescription>
               </CardHeader>
@@ -1130,7 +1130,7 @@ export default function OwnersGetStartedPage() {
             <p className="text-sm text-muted-foreground">
               All dashboards are{" "}
               <strong className="text-foreground">included free</strong> —
-              filter by date range, compare periods, and drill down by court.
+              filter by date range, compare periods, and drill down by venue.
             </p>
           </div>
         </Container>
@@ -1274,7 +1274,7 @@ export default function OwnersGetStartedPage() {
                 Already see your venue listed?
               </CardTitle>
               <CardDescription>
-                Claim ownership to manage courts, rates, and enable
+                Claim ownership to manage venues, rates, and enable
                 reservations.
               </CardDescription>
             </CardHeader>
@@ -1300,7 +1300,7 @@ export default function OwnersGetStartedPage() {
                   3. Get approved
                 </p>
                 <p className="mt-1 text-sm text-muted-foreground">
-                  Once approved, manage courts and enable bookings.
+                  Once approved, manage venues and enable bookings.
                 </p>
               </div>
             </CardContent>
@@ -1396,7 +1396,7 @@ export default function OwnersGetStartedPage() {
           <Card className="border-border/60 bg-primary/5">
             <CardContent className="flex flex-col items-center gap-4 py-10 text-center">
               <h2 className="font-heading text-xl font-bold tracking-tight sm:text-2xl">
-                Your courts deserve better. Your players deserve better.
+                Your venues deserve better. Your players deserve better.
               </h2>
               <p className="max-w-md text-muted-foreground">
                 Claim your venue and start accepting online booking requests

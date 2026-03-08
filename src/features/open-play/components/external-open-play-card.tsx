@@ -48,7 +48,7 @@ export function ExternalOpenPlayCard({
   href,
   className,
 }: ExternalOpenPlayCardProps) {
-  const subtitle = `${externalOpenPlay.sportName} • ${externalOpenPlay.courtSummaryLabel ?? "Court TBD"}`;
+  const subtitle = `${externalOpenPlay.sportName} • ${externalOpenPlay.courtSummaryLabel ?? "Venue TBD"}`;
   const dateLabel = formatInTimeZone(
     externalOpenPlay.startsAtIso,
     timeZone,
@@ -82,7 +82,7 @@ export function ExternalOpenPlayCard({
               </p>
               {externalOpenPlay.courts.length > 1 ? (
                 <p className="mt-1 text-xs text-muted-foreground truncate">
-                  {externalOpenPlay.courts.length} courts
+                  {externalOpenPlay.courts.length} venues
                 </p>
               ) : null}
               <p className="mt-2 text-sm">

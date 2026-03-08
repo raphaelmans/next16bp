@@ -47,7 +47,7 @@ import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { env } from "@/lib/env";
 
 const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
-const DEFAULT_COURT_UNIT = { label: "Court 1", sportId: "", tierLabel: "" };
+const DEFAULT_COURT_UNIT = { label: "Venue 1", sportId: "", tierLabel: "" };
 
 type AdminCourtEditViewProps = {
   courtId: string;
@@ -397,7 +397,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
             setPendingPhotoId(null);
           },
           onError: (error) => {
-            toast.error(error.message || "Failed to remove court photo");
+            toast.error(error.message || "Failed to remove venue photo");
           },
         },
       );
@@ -412,7 +412,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
       formData.append("image", file, file.name);
       uploadPhotoMutation.mutate(formData, {
         onError: (error) => {
-          toast.error(error.message || "Failed to upload court photo");
+          toast.error(error.message || "Failed to upload venue photo");
         },
       });
     },
@@ -488,9 +488,9 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
       });
 
       reset(data);
-      toast.success("Court updated successfully");
+      toast.success("Venue updated successfully");
     } catch (error) {
-      toast.error("Failed to update court", {
+      toast.error("Failed to update venue", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
@@ -618,10 +618,10 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
     >
       <div className="space-y-6">
         <PageHeader
-          title={`Edit Court: ${courtData.place.name}`}
-          description="Update curated court details"
+          title={`Edit Venue: ${courtData.place.name}`}
+          description="Update curated venue details"
           breadcrumbs={[
-            { label: "Courts", href: appRoutes.admin.courts.base },
+            { label: "Venues", href: appRoutes.admin.courts.base },
             { label: courtData.place.name },
             { label: "Edit" },
           ]}

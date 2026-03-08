@@ -30,7 +30,7 @@ export function CourtsStep({
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: () => {
-      toast.success("Court created successfully!");
+      toast.success("Venue created successfully!");
       onStepComplete();
     },
   });
@@ -45,7 +45,7 @@ export function CourtsStep({
           <div className="flex-1">
             <p className="font-medium">Waiting for claim approval</p>
             <p className="text-sm text-muted-foreground">
-              Courts can be added after your venue claim is approved. You can
+              Venues can be added after your venue claim is approved. You can
               skip ahead and come back later.
             </p>
           </div>
@@ -62,9 +62,9 @@ export function CourtsStep({
             <CheckCircle2 className="h-5 w-5" />
           </div>
           <div className="flex-1">
-            <p className="font-medium">Court added</p>
+            <p className="font-medium">Venue added</p>
             <p className="text-sm text-muted-foreground">
-              You can manage additional courts from your settings page after
+              You can manage additional venues from your settings page after
               setup.
             </p>
           </div>
@@ -104,7 +104,7 @@ export function CourtsStep({
         status.primaryPlaceId ? { placeId: status.primaryPlaceId } : undefined
       }
       showCancel={false}
-      primaryActionLabel="Create Court"
+      primaryActionLabel="Create Venue"
     />
   );
 }

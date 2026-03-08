@@ -149,7 +149,7 @@ export function Navbar({ className }: NavbarProps) {
           <Input
             name="q"
             type="search"
-            placeholder="Search courts..."
+            placeholder="Search venues..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="pl-10 h-10 rounded-lg"
@@ -220,7 +220,7 @@ export function Navbar({ className }: NavbarProps) {
                 <Input
                   name="q"
                   type="search"
-                  placeholder="Search courts..."
+                  placeholder="Search venues..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -268,7 +268,7 @@ export function Navbar({ className }: NavbarProps) {
               className="py-2 text-lg font-heading font-semibold"
               onClick={() => setIsOpen(false)}
             >
-              Browse Courts
+              Browse Venues
             </Link>
 
             {/* Authenticated User Links */}

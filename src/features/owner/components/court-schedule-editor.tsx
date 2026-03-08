@@ -343,7 +343,7 @@ export function CourtScheduleEditor({
             onClick={() => setCopyOpen(true)}
             disabled={!organizationId || courts.length <= 1}
           >
-            Copy schedule from another court
+            Copy schedule from another venue
           </Button>
         </div>
 
@@ -504,7 +504,7 @@ export function CourtScheduleEditor({
         open={copyOpen}
         onOpenChange={setCopyOpen}
         title="Copy schedule"
-        description="Copy hours and pricing from another court. This will replace the current schedule."
+        description="Copy hours and pricing from another venue. This will replace the current schedule."
         courts={courts}
         currentCourtId={courtId}
         isSubmitting={isCopying}

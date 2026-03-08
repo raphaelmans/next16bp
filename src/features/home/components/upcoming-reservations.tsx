@@ -73,7 +73,7 @@ export function UpcomingReservations({
               >
                 <div className="space-y-1">
                   <p className="font-medium">
-                    {reservation.court?.name || "Court"}
+                    {reservation.court?.name || "Venue"}
                   </p>
                   <div className="flex items-center text-sm text-muted-foreground gap-4">
                     <span className="flex items-center gap-1">
@@ -106,11 +106,11 @@ export function UpcomingReservations({
             <div className="space-y-1">
               <p className="font-medium">No upcoming reservations</p>
               <p className="text-sm text-muted-foreground">
-                Ready to play? Find a court near you.
+                Ready to play? Find a venue near you.
               </p>
             </div>
             <Button asChild>
-              <Link href={appRoutes.courts.base}>Browse Courts</Link>
+              <Link href={appRoutes.courts.base}>Browse Venues</Link>
             </Button>
           </div>
         )}

@@ -42,7 +42,7 @@ const navItems = [
     badgeKey: "verifications" as const,
   },
   {
-    title: "Courts",
+    title: "Venues",
     href: appRoutes.admin.courts.base,
     icon: Building2,
     badgeKey: null,

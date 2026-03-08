@@ -112,7 +112,7 @@ export const CancelReservationDialog = React.memo(
                 </Label>
                 <Textarea
                   id="cancel-reason"
-                  placeholder="e.g. Court damaged, double-booking, weather closure..."
+                  placeholder="e.g. Venue damaged, double-booking, weather closure..."
                   value={reason}
                   onChange={(e) => setReason(e.target.value)}
                   maxLength={500}

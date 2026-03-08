@@ -23,7 +23,7 @@ export default async function RegisterOwnerPage({
     <Suspense fallback={<RegisterFormSkeleton />}>
       <RegisterForm
         title="Create Owner Account"
-        description="Set up your owner account to list your venue, add courts, and accept bookings."
+        description="Set up your owner account to list your venue, add venues, and accept bookings."
         defaultRedirect={appRoutes.organization.getStarted}
         redirectParam={redirect}
       />

@@ -80,12 +80,12 @@ export function PlaceDetailBookingSummaryCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">Court</p>
+          <p className="text-sm text-muted-foreground">Venue</p>
           <p className="font-medium">
             {selectionMode === "any"
-              ? "Any available court"
+              ? "Any available venue"
               : (courtsForSport.find((court) => court.id === selectedCourtId)
-                  ?.label ?? "Select a court")}
+                  ?.label ?? "Select a venue")}
           </p>
         </div>
         {hasSelection && (
@@ -134,7 +134,7 @@ export function PlaceDetailBookingSummaryCard({
           </div>
         ) : cartItems.length > 0 ? (
           <div className="rounded-lg border border-dashed p-4 text-sm text-muted-foreground">
-            You have {cartItems.length} court
+            You have {cartItems.length} venue
             {cartItems.length !== 1 ? "s" : ""} in booking. Continue to checkout
             when ready.
           </div>
@@ -158,7 +158,7 @@ export function PlaceDetailBookingSummaryCard({
         {cartItems.length > 0 && (
           <div className="space-y-2 rounded-lg border p-3">
             <p className="text-sm font-medium">
-              Courts in booking ({cartItems.length})
+              Venues in booking ({cartItems.length})
             </p>
             {cartItems.map((item) => (
               <div
@@ -215,7 +215,7 @@ export function PlaceDetailBookingSummaryCard({
             )}
             {hasPartialEstimate && (
               <p className="text-xs text-muted-foreground">
-                {unpricedItemCount} court
+                {unpricedItemCount} venue
                 {unpricedItemCount === 1 ? "" : "s"} pending price estimate.
               </p>
             )}

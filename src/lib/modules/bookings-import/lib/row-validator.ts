@@ -35,9 +35,9 @@ export function validateRow(input: RowValidationInput): ValidationResult {
 
   // Court mapping
   if (!input.courtId && !input.courtLabel) {
-    errors.push("Court must be specified");
+    errors.push("Venue must be specified");
   } else if (!input.courtId && input.courtLabel) {
-    errors.push("Court label could not be mapped to an existing court");
+    errors.push("Venue label could not be mapped to an existing venue");
   }
 
   // Time validations (only if we have both times)

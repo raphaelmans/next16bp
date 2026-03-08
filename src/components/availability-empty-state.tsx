@@ -106,15 +106,15 @@ const ownerMessages: Record<EmptyStateReason, { title: string; body: string }> =
     },
     no_schedule: {
       title: "No schedule hours configured",
-      body: "You haven't set up operating hours for this court yet. Add schedule hours to enable availability.",
+      body: "You haven't set up operating hours for this venue yet. Add schedule hours to enable availability.",
     },
     no_pricing: {
       title: "No pricing rules configured",
-      body: "You haven't set up pricing for this court yet. Add pricing rules to enable bookings.",
+      body: "You haven't set up pricing for this venue yet. Add pricing rules to enable bookings.",
     },
     closed: {
       title: "No operating hours for this day",
-      body: "This court doesn't have schedule hours configured for this day of the week.",
+      body: "This venue doesn't have schedule hours configured for this day of the week.",
     },
     fully_booked: {
       title: "All slots are booked",

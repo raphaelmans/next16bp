@@ -29,10 +29,8 @@ export function ManageCourtsSheet({
         className="w-full overflow-y-auto sm:max-w-2xl"
       >
         <SheetHeader>
-          <SheetTitle>Manage Courts</SheetTitle>
-          <SheetDescription>
-            View and manage your venue courts.
-          </SheetDescription>
+          <SheetTitle>Manage Venues</SheetTitle>
+          <SheetDescription>View and manage your venues.</SheetDescription>
         </SheetHeader>
         <div className="mt-6">
           <CourtsListManager placeId={placeId} />

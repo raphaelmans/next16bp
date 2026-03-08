@@ -38,7 +38,7 @@ export function ProfileCompletionBanner({
       <div className="flex-1">
         <h4 className="font-medium text-primary">Complete your profile</h4>
         <p className="text-sm text-muted-foreground mt-1 mb-3">
-          Add your phone number and other details to make booking courts faster
+          Add your phone number and other details to make booking venues faster
           and easier.
         </p>
         <Button

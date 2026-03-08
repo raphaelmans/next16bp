@@ -58,10 +58,10 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <QuickActionCard
-        title="Find Courts"
+        title="Find Venues"
         icon={Search}
         href={appRoutes.courts.base}
-        description="Browse available courts near you"
+        description="Browse available venues near you"
       />
       <QuickActionCard
         title="My Reservations"
@@ -81,7 +81,7 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
           title="Venue Dashboard"
           icon={Building2}
           href={appRoutes.organization.base}
-          description="Manage your organization and courts"
+          description="Manage your organization and venues"
           className="border-primary/20 bg-primary/5 hover:bg-primary/10"
           iconClassName="text-primary"
         />

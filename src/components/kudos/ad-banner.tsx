@@ -17,20 +17,20 @@ const AD_CONTENT: Record<
   { title: string; description: string; cta: string; href: string }
 > = {
   discovery: {
-    title: "List Your Court on KudosCourts",
+    title: "List Your Venue on KudosCourts",
     description:
       "Reach thousands of players (pickleball and more). Start accepting bookings today.",
     cta: "Get Started",
     href: appRoutes.ownersGetStarted.base,
   },
   "court-detail": {
-    title: "Premium Pickleball + Court Gear",
+    title: "Premium Pickleball + Venue Gear",
     description: "Get 20% off your first order with code KUDOS20",
     cta: "Shop Now",
     href: "#",
   },
   "search-results": {
-    title: "Become a Verified Court",
+    title: "Become a Verified Venue",
     description:
       "Get a verified badge and priority placement in search results.",
     cta: "Learn More",

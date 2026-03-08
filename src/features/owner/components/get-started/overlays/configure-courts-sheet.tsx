@@ -48,7 +48,7 @@ export function ConfigureCourtsSheet({
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: () => {
-      toast.success("Court created successfully!");
+      toast.success("Venue created successfully!");
       onSuccess();
     },
   });
@@ -59,9 +59,9 @@ export function ConfigureCourtsSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="w-full overflow-y-auto sm:max-w-xl">
         <SheetHeader>
-          <SheetTitle>Configure courts</SheetTitle>
+          <SheetTitle>Configure venues</SheetTitle>
           <SheetDescription>
-            Add a court with sport type and schedule details.
+            Add a venue with sport type and schedule details.
           </SheetDescription>
         </SheetHeader>
         <div className="mt-6">

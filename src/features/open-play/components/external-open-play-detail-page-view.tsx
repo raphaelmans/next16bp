@@ -111,7 +111,7 @@ export default function ExternalOpenPlayDetailPageView({
     data.externalOpenPlay.courtSummaryLabel ??
     (data.courts.length > 0
       ? data.courts.map((court) => court.label).join(", ")
-      : "Court TBD");
+      : "Venue TBD");
 
   const joinDisabledReason =
     data.externalOpenPlay.status !== "ACTIVE"
@@ -180,7 +180,7 @@ export default function ExternalOpenPlayDetailPageView({
 
               {data.courts.length > 0 ? (
                 <div className="rounded-md border bg-muted/30 p-3 text-sm">
-                  <div className="font-medium">Courts</div>
+                  <div className="font-medium">Venues</div>
                   <div className="mt-2 flex flex-wrap gap-2">
                     {data.courts.map((court, index) => (
                       <Badge

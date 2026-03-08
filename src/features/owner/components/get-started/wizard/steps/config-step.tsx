@@ -38,7 +38,7 @@ export function ConfigStep({ status, onStepComplete }: ConfigStepProps) {
       <Card>
         <CardContent className="p-6">
           <p className="text-sm text-muted-foreground">
-            Add a court first to configure schedule and pricing.
+            Add a venue first to configure schedule and pricing.
           </p>
         </CardContent>
       </Card>

@@ -47,7 +47,7 @@ const OWNER_SETUP_NEXT_STEP_LABELS = {
   add_or_claim_venue: "Add or claim a venue",
   claim_pending: "Claim pending review",
   verify_venue: "Submit verification",
-  configure_courts: "Set up courts",
+  configure_courts: "Set up venues",
   add_payment_method: "Add a payment method",
   complete: "Setup complete",
 } as const;
@@ -181,7 +181,7 @@ export default function OwnerDashboardPage() {
             Welcome back{user?.email ? `, ${user.email.split("@")[0]}` : ""}
           </h1>
           <p className="text-muted-foreground">
-            Here&apos;s what&apos;s happening with your courts today.
+            Here&apos;s what&apos;s happening with your venues today.
           </p>
         </div>
 
@@ -258,7 +258,7 @@ export default function OwnerDashboardPage() {
                 icon={CalendarCheck}
               />
               <StatsCard
-                title="Active Courts"
+                title="Active Venues"
                 value={stats?.activeCourts ?? 0}
                 icon={MapPin}
                 href={appRoutes.organization.courts.base}

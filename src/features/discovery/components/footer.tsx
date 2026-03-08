@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 
 const FOOTER_LINKS = {
   discover: [
-    { name: "Browse Courts", href: appRoutes.courts.base },
+    { name: "Browse Venues", href: appRoutes.courts.base },
     { name: "Map View", href: `${appRoutes.courts.base}?view=map` },
     {
       name: "Pickleball (and more sports)",
@@ -42,7 +42,7 @@ export function Footer() {
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">
-                Every sports court in the Philippines, discoverable in seconds.
+                Every sports venue in the Philippines, discoverable in seconds.
               </p>
               <Button asChild variant="outline" size="sm" className="mt-5">
                 <Link href={appRoutes.contactUs.base}>Contact us</Link>

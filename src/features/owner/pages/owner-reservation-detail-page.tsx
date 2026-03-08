@@ -489,7 +489,7 @@ export default function OwnerReservationDetailPage({
                         >
                           <div>
                             <p className="font-medium">
-                              {item.courtName ?? "Court"}
+                              {item.courtName ?? "Venue"}
                             </p>
                             <p className="text-sm text-muted-foreground">
                               {item.slotStartTime

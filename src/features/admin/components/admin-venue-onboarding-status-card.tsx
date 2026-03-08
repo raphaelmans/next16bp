@@ -82,16 +82,16 @@ export function AdminVenueOnboardingStatusCard({
 
   const missingItems: string[] = [];
   if (!status.isVerified) missingItems.push("verification");
-  if (!status.hasActiveCourt) missingItems.push("active courts");
-  if (!status.hasAnyCourtSchedule) missingItems.push("court schedule");
-  if (!status.hasAnyCourtPricing) missingItems.push("court pricing");
+  if (!status.hasActiveCourt) missingItems.push("active venues");
+  if (!status.hasAnyCourtSchedule) missingItems.push("venue schedule");
+  if (!status.hasAnyCourtPricing) missingItems.push("venue pricing");
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Onboarding Status</CardTitle>
         <CardDescription>
-          Owner setup progress and per-court configuration readiness.
+          Owner setup progress and per-venue configuration readiness.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -118,7 +118,7 @@ export function AdminVenueOnboardingStatusCard({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Court</TableHead>
+                  <TableHead>Venue</TableHead>
                   <TableHead className="w-20 text-center">Active</TableHead>
                   <TableHead className="w-20 text-center">Schedule</TableHead>
                   <TableHead className="w-20 text-center">Pricing</TableHead>
@@ -153,7 +153,7 @@ export function AdminVenueOnboardingStatusCard({
 
         {status.courts.length === 0 && (
           <p className="text-sm text-muted-foreground">
-            No court units configured for this venue.
+            No venue units configured for this venue.
           </p>
         )}
       </CardContent>

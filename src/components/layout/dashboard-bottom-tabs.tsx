@@ -50,7 +50,7 @@ interface TabConfig {
 // ─── Player tabs ───────────────────────────────────────
 
 const playerTabs: TabConfig[] = [
-  { label: "Courts", href: appRoutes.courts.base, icon: MapPin },
+  { label: "Venues", href: appRoutes.courts.base, icon: MapPin },
   {
     label: "Reservations",
     href: appRoutes.reservations.base,
@@ -76,7 +76,7 @@ const adminTabs: TabConfig[] = [
     icon: ShieldCheck,
     showBadge: true,
   },
-  { label: "Courts", href: appRoutes.admin.courts.base, icon: Building2 },
+  { label: "Venues", href: appRoutes.admin.courts.base, icon: Building2 },
   { label: "Venues", href: appRoutes.admin.venues.base, icon: MapPin },
 ];
 

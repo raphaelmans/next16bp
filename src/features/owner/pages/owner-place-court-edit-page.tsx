@@ -60,7 +60,7 @@ export default function EditPlaceCourtPage({
   const { submitAsync, isSubmitting } = useModCourtForm({
     courtId,
     onSuccess: () => {
-      toast.success("Court updated successfully!");
+      toast.success("Venue updated successfully!");
     },
   });
 
@@ -173,7 +173,7 @@ export default function EditPlaceCourtPage({
             </CardHeader>
             <CardContent className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-sm text-muted-foreground">
-                Court photos are not configurable yet. You can manage venue
+                Venue photos are not configurable yet. You can manage venue
                 photos in the venue settings.
               </p>
               <Button asChild variant="outline">

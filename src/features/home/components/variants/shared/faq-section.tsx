@@ -42,7 +42,7 @@ export function FaqSection({ variant }: FaqSectionProps) {
               Frequently asked questions
             </h2>
             <p className="text-muted-foreground max-w-[440px]">
-              Direct answers for players exploring courts on KudosCourts.
+              Direct answers for players exploring venues on KudosCourts.
             </p>
             <p className="text-xs text-muted-foreground">
               Last updated: {HOME_LAST_UPDATED_LABEL}
@@ -59,7 +59,7 @@ export function FaqSection({ variant }: FaqSectionProps) {
                     )}
                     className="rounded-full border border-border px-3 py-1 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30"
                   >
-                    {location.label} courts
+                    {location.label} venues
                   </Link>
                 ))}
               </div>

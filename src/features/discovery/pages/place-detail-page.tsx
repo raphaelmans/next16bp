@@ -35,7 +35,7 @@ import { publicCaller } from "@/trpc/server";
 const appUrl = getCanonicalOrigin();
 
 const formatCourtCount = (count: number) =>
-  `${count} court${count === 1 ? "" : "s"}`;
+  `${count} venue${count === 1 ? "" : "s"}`;
 
 /**
  * Return the dominant sport name when one sport covers ≥60 % of courts.
@@ -128,7 +128,7 @@ export async function generatePlaceDetailMetadata(
 
   const fallbackName = humanizeSlug(placeIdOrSlug);
   let title = fallbackName;
-  let description = `View ${fallbackName} venue details, courts, and availability on KudosCourts Philippines.`;
+  let description = `View ${fallbackName} venue details and availability on KudosCourts Philippines.`;
   let imageUrl: string | undefined;
 
   try {
@@ -147,7 +147,7 @@ export async function generatePlaceDetailMetadata(
 
     // Title: include dominant sport when one exists
     if (dominantSport && locationLabel) {
-      title = `${place.name} \u2013 ${dominantSport} Courts in ${locationLabel}`;
+      title = `${place.name} \u2013 ${dominantSport} Venues in ${locationLabel}`;
     } else if (locationLabel) {
       title = `${place.name} (${locationLabel})`;
     } else {
@@ -339,7 +339,7 @@ async function PlaceDetailPageServerSection({
           }
         : undefined;
     const courtCount = placeDetails.courts.length;
-    const courtCountLabel = `${courtCount} court${courtCount === 1 ? "" : "s"}`;
+    const courtCountLabel = `${courtCount} venue${courtCount === 1 ? "" : "s"}`;
     const locationLabel = [placeDetails.place.city, placeDetails.place.province]
       .map((value) => value?.trim())
       .filter(Boolean)
@@ -406,7 +406,7 @@ async function PlaceDetailPageServerSection({
       {
         "@type": "ListItem",
         position: 2,
-        name: "Courts",
+        name: "Venues",
         item: new URL(appRoutes.courts.base, appUrl).toString(),
       },
     ];
@@ -511,7 +511,7 @@ async function PlaceDetailPageServerSection({
                 href={appRoutes.courts.base}
                 className="hover:text-foreground"
               >
-                All Courts
+                All Venues
               </Link>
               {matchedProvince && (
                 <>

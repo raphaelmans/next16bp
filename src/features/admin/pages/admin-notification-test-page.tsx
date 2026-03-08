@@ -436,7 +436,7 @@ export default function AdminNotificationTestPage() {
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="rCourt">Court label</Label>
+                <Label htmlFor="rCourt">Venue label</Label>
                 <Input
                   id="rCourt"
                   value={reservationCourtLabel}

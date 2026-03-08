@@ -62,11 +62,11 @@ export function ClaimReviewActions({
 
   const approveDescription = isRemoval
     ? "The venue will be returned to CURATED and UNCLAIMED. The organization will lose ownership."
-    : "The court will become RESERVABLE and the organization will gain full ownership.";
+    : "The venue will become RESERVABLE and the organization will gain full ownership.";
 
   const rejectDescription = isRemoval
-    ? "The court will remain active under the current organization's ownership."
-    : "The claim will be rejected and the court will remain CURATED.";
+    ? "The venue will remain active under the current organization's ownership."
+    : "The claim will be rejected and the venue will remain CURATED.";
 
   return (
     <>
@@ -174,7 +174,7 @@ export function ClaimReviewActions({
                 ) : (
                   <>
                     This will transfer ownership of <strong>{courtName}</strong>{" "}
-                    to <strong>{organizationName}</strong>. The court type will
+                    to <strong>{organizationName}</strong>. The venue type will
                     change to RESERVABLE.
                   </>
                 )

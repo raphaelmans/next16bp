@@ -3,7 +3,7 @@ import { OG_BRAND, OG_GRADIENTS } from "@/common/og-brand";
 
 // OG Image metadata - 1200x630 is the standard for Facebook/LinkedIn
 export const alt =
-  "KudosCourts - Court discovery + free reservation system for venues.";
+  "KudosCourts - Venue discovery + free reservation system for venues.";
 export const size = {
   width: 1200,
   height: 630,
@@ -99,7 +99,7 @@ export default function OpenGraphImage() {
           lineHeight: 1.4,
         }}
       >
-        Court discovery for players. Free reservation system for venues.
+        Venue discovery for players. Free reservation system for venues.
       </div>
 
       {/* Bottom accent bar */}

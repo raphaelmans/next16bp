@@ -15,7 +15,7 @@ const HIGHLIGHTS = [
   },
   {
     title: "Venue partnerships",
-    description: "Get help listing courts or managing bookings.",
+    description: "Get help listing venues or managing bookings.",
     icon: MapPinned,
   },
   {
@@ -52,7 +52,7 @@ export function ContactUsPageView() {
 
               <div className="space-y-3">
                 <h1 className="font-heading text-3xl font-bold tracking-tight sm:text-4xl">
-                  Let&apos;s talk about your courts
+                  Let&apos;s talk about your venues
                 </h1>
                 <p className="text-base text-muted-foreground sm:text-lg">
                   Send us a message and our team will follow up with next steps

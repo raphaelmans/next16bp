@@ -364,7 +364,7 @@ export function OwnerSidebar({
                   {/* Courts discovery (cross-portal link to /courts) */}
                   <SidebarNavItem
                     href={appRoutes.courts.base}
-                    title="Courts"
+                    title="Venues"
                     icon={LayoutGrid}
                     isActive={isActive(appRoutes.courts.base)}
                     activeClassName="bg-primary text-primary-foreground"

@@ -40,7 +40,7 @@ export function ConfigureCourtsCard({
             </div>
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
-                <p className="font-heading font-semibold">Courts configured</p>
+                <p className="font-heading font-semibold">Venues configured</p>
                 <Badge variant="outline" className="text-xs">
                   Complete
                 </Badge>
@@ -56,7 +56,7 @@ export function ConfigureCourtsCard({
                       onClick={onManageCourtsClick}
                       disabled={!onManageCourtsClick}
                     >
-                      Manage courts
+                      Manage venues
                     </Button>
                     {courtId && (
                       <Button
@@ -97,14 +97,14 @@ export function ConfigureCourtsCard({
             <div className="flex-1 space-y-1">
               <div className="flex items-center gap-2">
                 <p className="font-heading font-semibold">
-                  Courts need updates
+                  Venues need updates
                 </p>
                 <Badge variant="outline" className="text-xs text-warning">
                   Action needed
                 </Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Add {missingItems.join(" and ")} to at least one active court to
+                Add {missingItems.join(" and ")} to at least one active venue to
                 enable bookings.
               </p>
               <div className="flex flex-wrap gap-2 pt-2">
@@ -115,7 +115,7 @@ export function ConfigureCourtsCard({
                       onClick={onManageCourtsClick}
                       disabled={!onManageCourtsClick}
                     >
-                      Manage courts
+                      Manage venues
                     </Button>
                     {courtId && (
                       <Button
@@ -150,17 +150,15 @@ export function ConfigureCourtsCard({
           <div className="flex-1 space-y-3">
             <div>
               <div className="flex items-center gap-2">
-                <p className="font-heading font-semibold">
-                  Configure venue courts
-                </p>
+                <p className="font-heading font-semibold">Configure venues</p>
                 <Badge>Required</Badge>
               </div>
               <p className="text-sm text-muted-foreground">
-                Add courts and set up schedules so players can book.
+                Add venues and set up schedules so players can book.
               </p>
             </div>
             <Button onClick={onConfigureClick} disabled={!hasVenue}>
-              Set up courts
+              Set up venues
               <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
           </div>

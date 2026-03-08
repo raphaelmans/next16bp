@@ -53,8 +53,8 @@ export default function OwnerPlaceCourtsPage({
     deactivateMutation.mutate(
       { courtId },
       {
-        onSuccess: () => toast.success("Court deactivated successfully"),
-        onError: () => toast.error("Failed to deactivate court"),
+        onSuccess: () => toast.success("Venue deactivated successfully"),
+        onError: () => toast.error("Failed to deactivate venue"),
       },
     );
   };
@@ -128,16 +128,16 @@ export default function OwnerPlaceCourtsPage({
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Courts at {place?.name ?? "Venue"}
+              Venues at {place?.name ?? "Venue"}
             </h1>
             <p className="text-muted-foreground">
-              Manage courts, hours, and pricing rules
+              Manage venues, hours, and pricing rules
             </p>
           </div>
           <Button asChild>
             <Link href={addCourtHref}>
               <Plus className="mr-2 h-4 w-4" />
-              Add Court
+              Add Venue
             </Link>
           </Button>
         </div>

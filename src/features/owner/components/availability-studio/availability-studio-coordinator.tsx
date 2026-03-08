@@ -935,7 +935,7 @@ function OwnerAvailabilityStudioInner() {
       isSubmittingGuestBookingRef.current = true;
       try {
         if (!courtId) {
-          toast.error("Select a court first");
+          toast.error("Select a venue first");
           return;
         }
         const start = parseDateTimeInput(values.startTime, placeTimeZone);
@@ -1549,7 +1549,7 @@ function OwnerAvailabilityStudioInner() {
   const handleCustomSubmit = React.useCallback(
     async (values: CustomBlockFormValues) => {
       if (!courtId) {
-        toast.error("Select a court first");
+        toast.error("Select a venue first");
         return;
       }
       const start = parseDateTimeInput(values.startTime, placeTimeZone);
@@ -1670,7 +1670,7 @@ function OwnerAvailabilityStudioInner() {
     isSubmittingSelectionRef.current = true;
     try {
       if (!courtId || !committedRange) {
-        toast.error("Select a court and time range first");
+        toast.error("Select a venue and time range first");
         return;
       }
       const effectiveDayKey = weekCommittedDayKey ?? dayKey;
@@ -2152,9 +2152,9 @@ function OwnerAvailabilityStudioInner() {
 
               {!placeId || !courtId ? (
                 <Alert>
-                  <AlertTitle>Select a venue and court</AlertTitle>
+                  <AlertTitle>Select a venue</AlertTitle>
                   <AlertDescription>
-                    Choose a venue and court to load the week grid.
+                    Choose a venue to load the week grid.
                   </AlertDescription>
                 </Alert>
               ) : blocksQuery.error ? (

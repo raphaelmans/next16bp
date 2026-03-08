@@ -20,7 +20,7 @@ const HOW_IT_WORKS = [
     step: 1,
     title: "Search",
     description:
-      "Pick a sport and city. Browse every court in the area with reviews, photos, and amenities.",
+      "Pick a sport and city. Browse every venue in the area with reviews, photos, and amenities.",
   },
   {
     step: 2,
@@ -60,12 +60,12 @@ export function CleanMinimalPage({ featuredPlaces }: CleanMinimalPageProps) {
             <div className="animate-in fade-in duration-500">
               <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1.08] tracking-tight mb-6">
                 Where Filipino players
-                <span className="block">discover sports courts.</span>
+                <span className="block">discover sports venues.</span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[460px] mb-10">
                 Stop hopping between Facebook pages and reservation sites.
-                Search courts, read player reviews, check amenities and
+                Search venues, read player reviews, check amenities and
                 availability — all in one place.
               </p>
 

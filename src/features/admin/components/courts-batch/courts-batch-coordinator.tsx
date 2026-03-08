@@ -66,7 +66,7 @@ const SAMPLE_GOOGLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 const MAX_PHOTOS = 10;
 
 const DEFAULT_COURT_UNIT = {
-  label: "Court 1",
+  label: "Venue 1",
   sportId: "",
   tierLabel: "",
 };
@@ -116,7 +116,7 @@ function CourtList({
             className="rounded-lg border border-border/60 bg-background p-4 shadow-sm"
           >
             <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="text-sm font-medium">{`Court ${courtIndex + 1}`}</div>
+              <div className="text-sm font-medium">{`Venue ${courtIndex + 1}`}</div>
               <Button
                 type="button"
                 variant="ghost"
@@ -131,8 +131,8 @@ function CourtList({
             <div className="mt-4 grid gap-4 md:grid-cols-3">
               <StandardFormInput<CuratedCourtBatchFormData>
                 name={`courts.${placeIndex}.courts.${courtIndex}.label`}
-                label="Court Label"
-                placeholder="Court 1"
+                label="Venue Label"
+                placeholder="Venue 1"
                 required
               />
               <StandardFormSelect<CuratedCourtBatchFormData>
@@ -157,14 +157,14 @@ function CourtList({
         variant="outline"
         onClick={() =>
           append({
-            label: `Court ${fields.length + 1}`,
+            label: `Venue ${fields.length + 1}`,
             sportId: "",
             tierLabel: "",
           })
         }
       >
         <Plus className="mr-2 h-4 w-4" />
-        Add Court
+        Add Venue
       </Button>
     </div>
   );
@@ -286,7 +286,7 @@ export default function AdminCourtsBatchView() {
       const current = prev[fieldId] ?? [];
       const next = [...current, ...Array.from(fileList)];
       if (next.length > MAX_PHOTOS) {
-        toast.error(`Maximum ${MAX_PHOTOS} photos per court`);
+        toast.error(`Maximum ${MAX_PHOTOS} photos per venue`);
       }
       return {
         ...prev,
@@ -510,7 +510,7 @@ export default function AdminCourtsBatchView() {
       });
       if (failedUploads > 0) {
         toast.error("Some photos failed to upload", {
-          description: "You can retry uploads from each court detail page.",
+          description: "You can retry uploads from each venue detail page.",
         });
       }
     } catch (error) {
@@ -554,10 +554,10 @@ export default function AdminCourtsBatchView() {
     >
       <div className="space-y-6">
         <PageHeader
-          title="Batch Add Curated Courts"
-          description="Create multiple curated court listings in one submission"
+          title="Batch Add Curated Venues"
+          description="Create multiple curated venue listings in one submission"
           breadcrumbs={[
-            { label: "Courts", href: appRoutes.admin.courts.base },
+            { label: "Venues", href: appRoutes.admin.courts.base },
             { label: "Batch Add" },
           ]}
           backHref={appRoutes.admin.courts.base}
@@ -570,9 +570,9 @@ export default function AdminCourtsBatchView() {
         >
           <div className="flex flex-wrap items-center justify-between gap-3">
             <div>
-              <h2 className="text-lg font-semibold">Courts in this batch</h2>
+              <h2 className="text-lg font-semibold">Venues in this batch</h2>
               <p className="text-sm text-muted-foreground">
-                Add as many curated courts as you need before submitting.
+                Add as many curated venues as you need before submitting.
               </p>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -618,9 +618,9 @@ export default function AdminCourtsBatchView() {
                 >
                   <AccordionTrigger className="text-base font-semibold">
                     <div className="space-y-1 text-left">
-                      <div>{`Court ${index + 1}`}</div>
+                      <div>{`Venue ${index + 1}`}</div>
                       <div className="text-sm font-normal text-muted-foreground">
-                        {courts?.[index]?.name?.trim() || "Enter court details"}
+                        {courts?.[index]?.name?.trim() || "Enter venue details"}
                       </div>
                     </div>
                   </AccordionTrigger>
@@ -629,10 +629,10 @@ export default function AdminCourtsBatchView() {
                       <Card>
                         <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
                           <div>
-                            <CardTitle>{`Court ${index + 1}`}</CardTitle>
+                            <CardTitle>{`Venue ${index + 1}`}</CardTitle>
                             <CardDescription>
                               {courts?.[index]?.name?.trim() ||
-                                "Enter court details"}
+                                "Enter venue details"}
                             </CardDescription>
                           </div>
                           <Button
@@ -652,13 +652,13 @@ export default function AdminCourtsBatchView() {
                         <CardHeader>
                           <CardTitle>Basic Information</CardTitle>
                           <CardDescription>
-                            Enter the court&apos;s basic details
+                            Enter the venue&apos;s basic details
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
                           <StandardFormInput<CuratedCourtBatchFormData>
                             name={`courts.${index}.name`}
-                            label="Court Name"
+                            label="Venue Name"
                             placeholder="Makati Sports Club (Pickleball)"
                             required
                           />
@@ -829,9 +829,9 @@ export default function AdminCourtsBatchView() {
 
                       <Card>
                         <CardHeader>
-                          <CardTitle>Court Inventory</CardTitle>
+                          <CardTitle>Venue Inventory</CardTitle>
                           <CardDescription>
-                            Define each court unit and its sport
+                            Define each venue unit and its sport
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -848,7 +848,7 @@ export default function AdminCourtsBatchView() {
                         <CardHeader>
                           <CardTitle>Contact Information</CardTitle>
                           <CardDescription>
-                            How players can reach or find this court
+                            How players can reach or find this venue
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-6">
@@ -896,7 +896,7 @@ export default function AdminCourtsBatchView() {
                         <CardHeader>
                           <CardTitle>Amenities</CardTitle>
                           <CardDescription>
-                            Select the amenities available at this court
+                            Select the amenities available at this venue
                           </CardDescription>
                         </CardHeader>
                         <CardContent>
@@ -946,7 +946,7 @@ export default function AdminCourtsBatchView() {
                         <CardHeader>
                           <CardTitle>Photos</CardTitle>
                           <CardDescription>
-                            Upload court photos for this listing
+                            Upload venue photos for this listing
                           </CardDescription>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -1061,7 +1061,7 @@ export default function AdminCourtsBatchView() {
 
           <div className="flex flex-wrap items-center justify-between gap-3">
             <Button variant="outline" asChild>
-              <Link href={appRoutes.admin.courts.base}>Back to Courts</Link>
+              <Link href={appRoutes.admin.courts.base}>Back to Venues</Link>
             </Button>
             <Button type="submit" disabled={isSubmitDisabled}>
               {submitting && <Spinner />}

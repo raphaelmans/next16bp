@@ -20,9 +20,9 @@ export function CourtsEmptyState() {
         <EmptyMedia variant="icon">
           <MapPin />
         </EmptyMedia>
-        <EmptyTitle>No courts yet</EmptyTitle>
+        <EmptyTitle>No venues yet</EmptyTitle>
         <EmptyDescription>
-          Create a venue and add courts to start accepting bookings
+          Create a venue and add venues to start accepting bookings
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
@@ -30,7 +30,7 @@ export function CourtsEmptyState() {
           <Button asChild>
             <Link href={appRoutes.organization.courts.setupCreate}>
               <Tag className="mr-2 h-4 w-4" />
-              Add a Court
+              Add a Venue
             </Link>
           </Button>
         </div>

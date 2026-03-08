@@ -50,7 +50,7 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
   const { submitAsync, isSubmitting } = useModCourtForm({
     courtId,
     onSuccess: () => {
-      toast.success("Court updated successfully!");
+      toast.success("Venue updated successfully!");
     },
   });
 
@@ -130,10 +130,10 @@ export default function EditCourtPage({ courtId }: OwnerCourtEditPageProps) {
       >
         <div className="space-y-6">
           <PageHeader
-            title={`Edit Court: ${courtData.court.label}`}
-            description="Update court details and sport assignments"
+            title={`Edit Venue: ${courtData.court.label}`}
+            description="Update venue details and sport assignments"
             breadcrumbs={[
-              { label: "My Courts", href: appRoutes.organization.courts.base },
+              { label: "My Venues", href: appRoutes.organization.courts.base },
               { label: courtData.court.label },
               { label: "Edit" },
             ]}

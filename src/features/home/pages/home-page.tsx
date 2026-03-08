@@ -111,7 +111,7 @@ export default function HomePage() {
           startTime,
           status: reservation.status,
           court: {
-            name: reservation.courtName || "Court",
+            name: reservation.courtName || "Venue",
             address: reservation.placeAddress || undefined,
           },
         };

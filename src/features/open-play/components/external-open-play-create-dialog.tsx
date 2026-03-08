@@ -256,9 +256,9 @@ export function ExternalOpenPlayCreateDialog({
           <div className="space-y-3">
             <div className="flex items-center justify-between gap-3">
               <div className="space-y-1">
-                <Label>Courts</Label>
+                <Label>Venues</Label>
                 <p className="text-xs text-muted-foreground">
-                  Add each court included in this external session.
+                  Add each venue included in this external session.
                 </p>
               </div>
               <Button
@@ -269,7 +269,7 @@ export function ExternalOpenPlayCreateDialog({
                   setCourtFields((current) => [...current, createCourtField()])
                 }
               >
-                Add court
+                Add venue
               </Button>
             </div>
             <div className="space-y-2">
@@ -286,7 +286,7 @@ export function ExternalOpenPlayCreateDialog({
                         ),
                       );
                     }}
-                    placeholder={`e.g. Court ${String.fromCharCode(65 + index)}`}
+                    placeholder={`e.g. Venue ${String.fromCharCode(65 + index)}`}
                   />
                   <Button
                     type="button"
@@ -425,7 +425,7 @@ export function ExternalOpenPlayCreateDialog({
                   .map((courtField) => courtField.label.trim())
                   .filter((courtLabel) => courtLabel.length > 0);
                 if (normalizedCourts.length === 0) {
-                  toast.error("Add at least one court.");
+                  toast.error("Add at least one venue.");
                   return;
                 }
                 if (!startDate || !startHour || !endDate || !endHour) {

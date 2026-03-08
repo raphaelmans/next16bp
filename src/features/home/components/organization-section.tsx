@@ -49,7 +49,7 @@ export function OrganizationSection({
           <div className="grid grid-cols-2 gap-4">
             <div className="rounded-lg border p-3">
               <p className="text-sm font-medium text-muted-foreground">
-                Courts
+                Venues
               </p>
               {/* Mock count for now */}
               <p className="text-2xl font-bold">--</p>
@@ -76,7 +76,7 @@ export function OrganizationSection({
   return (
     <Card className="bg-primary/5 border-primary/20">
       <CardHeader>
-        <CardTitle className="text-primary">Own a Court?</CardTitle>
+        <CardTitle className="text-primary">Own a Venue?</CardTitle>
         <CardDescription>
           List your facility on Kudos and manage reservations efficiently.
         </CardDescription>

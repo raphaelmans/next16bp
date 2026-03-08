@@ -17,7 +17,7 @@ export function BlogPageView() {
         </div>
 
         <div className="rounded-2xl border border-border/60 bg-card/60 p-6 text-sm text-muted-foreground">
-          We&apos;re preparing our first articles. Check back for tips on court
+          We&apos;re preparing our first articles. Check back for tips on venue
           discovery, venue management, and community highlights.
         </div>
       </div>

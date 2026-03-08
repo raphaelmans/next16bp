@@ -43,7 +43,7 @@ export function BookingSummaryCard({
         <CardTitle>Booking Summary</CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Court image */}
+        {/* Venue image */}
         <div className="relative aspect-video w-full overflow-hidden rounded-lg bg-muted">
           {court.coverImageUrl ? (
             <Image
@@ -61,7 +61,7 @@ export function BookingSummaryCard({
           )}
         </div>
 
-        {/* Court info */}
+        {/* Venue info */}
         <div>
           <h3 className="font-heading font-semibold text-lg">{court.name}</h3>
           <div className="flex items-center gap-1 text-sm text-muted-foreground mt-1">

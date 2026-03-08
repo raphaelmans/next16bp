@@ -15,7 +15,7 @@ export function AboutPageView() {
             About KudosCourts
           </h1>
           <p className="text-muted-foreground">
-            KudosCourts is built to make sports court reservations
+            KudosCourts is built to make sports venue reservations
             accessible—especially for small and newly opened venues that still
             manage bookings in spreadsheets, notebooks, and DMs.
           </p>
@@ -40,7 +40,7 @@ export function AboutPageView() {
               What we do
             </h2>
             <p>
-              We help players discover courts and see real availability. For
+              We help players discover venues and see real availability. For
               venue owners, KudosCourts is a free reservation system with
               verification to build trust and built-in chat so players and
               venues can coordinate. We do not process payments—venues keep
@@ -66,7 +66,7 @@ export function AboutPageView() {
               </Link>
             </Button>
             <Button asChild variant="outline" className="font-heading">
-              <Link href={appRoutes.courts.base}>Browse courts</Link>
+              <Link href={appRoutes.courts.base}>Browse venues</Link>
             </Button>
           </div>
         </div>

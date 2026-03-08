@@ -189,12 +189,12 @@ export default function CourtSetupWizardPage({
     courtId: courtIdParam ?? undefined,
     onSuccess: (result) => {
       if (!courtIdParam) {
-        toast.success("Court created successfully!");
+        toast.success("Venue created successfully!");
         setCourtIdParam(result.courtId);
         setStep("schedule");
         return;
       }
-      toast.success("Court details saved");
+      toast.success("Venue details saved");
       setStep("schedule");
     },
   });
@@ -343,8 +343,8 @@ export default function CourtSetupWizardPage({
   }
 
   const headerTitle = courtIdParam
-    ? `Court Setup · ${courtData?.court.label ?? "Court"}`
-    : `Court Setup · ${placeData.place.name}`;
+    ? `Venue Setup · ${courtData?.court.label ?? "Venue"}`
+    : `Venue Setup · ${placeData.place.name}`;
 
   const shellClassName =
     currentStep === "schedule" ? "overflow-x-visible" : undefined;
@@ -589,7 +589,7 @@ export default function CourtSetupWizardPage({
                           <CardContent className="p-4 space-y-3">
                             <div className="flex items-center justify-between gap-2">
                               <p className="text-sm font-semibold">
-                                Court details
+                                Venue details
                               </p>
                               <Badge
                                 variant={
@@ -606,7 +606,7 @@ export default function CourtSetupWizardPage({
                             <div className="space-y-3 text-sm">
                               <div className="space-y-1">
                                 <span className="text-xs uppercase text-muted-foreground">
-                                  Court
+                                  Venue
                                 </span>
                                 <p className="font-medium">
                                   {courtData?.court.label ?? "—"}

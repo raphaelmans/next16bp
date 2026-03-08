@@ -12,9 +12,9 @@ import { HydrateClient } from "@/trpc/server";
 const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL("/", appUrl);
 const title =
-  "Discover Sports Courts in the Philippines — Badminton, Basketball, Tennis & More";
+  "Discover Sports Venues in the Philippines — Badminton, Basketball, Tennis & More";
 const description =
-  "Find sports courts across the Philippines by city or sport. Read player reviews, check amenities and availability, and discover your next game — all in one place.";
+  "Find sports venues across the Philippines by city or sport. Read player reviews, check amenities and availability, and discover your next game — all in one place.";
 
 const homeStructuredData = {
   "@context": "https://schema.org",

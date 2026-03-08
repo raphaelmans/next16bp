@@ -421,7 +421,7 @@ function CourtsPageContent({
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
-              {locationLabel ? `Courts in ${locationLabel}` : "Browse Courts"}
+              {locationLabel ? `Venues in ${locationLabel}` : "Browse Venues"}
             </h1>
             <div className="mt-0.5 flex items-center gap-2 text-sm text-muted-foreground">
               {isLoading ? (

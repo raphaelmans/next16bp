@@ -97,7 +97,7 @@ export default function AdminDashboardPage() {
             Admin Dashboard
           </h1>
           <p className="text-muted-foreground">
-            Manage courts, claims, and platform settings
+            Manage venues, claims, and platform settings
           </p>
         </div>
 
@@ -124,13 +124,13 @@ export default function AdminDashboardPage() {
               href={appRoutes.admin.placeVerification.base}
             />
             <StatsCard
-              title="Total Courts"
+              title="Total Venues"
               value={stats?.totalCourts || 0}
               icon={Building2}
               href={appRoutes.admin.courts.base}
             />
             <StatsCard
-              title="Reservable Courts"
+              title="Reservable Venues"
               value={stats?.reservableCourts || 0}
               icon={Calendar}
             />

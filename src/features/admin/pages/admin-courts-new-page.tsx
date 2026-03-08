@@ -91,7 +91,7 @@ export default function NewCuratedCourtPage() {
       websiteUrl: "",
       otherContactInfo: "",
       amenities: [],
-      courts: [{ label: "Court 1", sportId: "", tierLabel: "" }],
+      courts: [{ label: "Venue 1", sportId: "", tierLabel: "" }],
     },
   });
 
@@ -254,7 +254,7 @@ export default function NewCuratedCourtPage() {
     setPendingPhotos((current) => {
       const next = [...current, ...files];
       if (next.length > MAX_PHOTOS) {
-        toast.error(`Maximum ${MAX_PHOTOS} photos per court`);
+        toast.error(`Maximum ${MAX_PHOTOS} photos per venue`);
       }
       return next.slice(0, MAX_PHOTOS);
     });
@@ -314,15 +314,15 @@ export default function NewCuratedCourtPage() {
         }
       }
 
-      toast.success("Court created successfully");
+      toast.success("Venue created successfully");
       if (failedUploads > 0) {
         toast.error("Some photos failed to upload", {
-          description: "You can retry uploads from the court detail page.",
+          description: "You can retry uploads from the venue detail page.",
         });
       }
       router.push(appRoutes.admin.courts.detail(created.place.id));
     } catch (error) {
-      toast.error("Failed to create court", {
+      toast.error("Failed to create venue", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     } finally {
@@ -368,10 +368,10 @@ export default function NewCuratedCourtPage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title="Add Curated Court"
-          description="Add a new curated court to the platform"
+          title="Add Curated Venue"
+          description="Add a new curated venue to the platform"
           breadcrumbs={[
-            { label: "Courts", href: appRoutes.admin.courts.base },
+            { label: "Venues", href: appRoutes.admin.courts.base },
             { label: "Create" },
           ]}
           backHref={appRoutes.admin.courts.base}
@@ -386,13 +386,13 @@ export default function NewCuratedCourtPage() {
             <CardHeader>
               <CardTitle>Basic Information</CardTitle>
               <CardDescription>
-                Enter the court&apos;s basic details
+                Enter the venue&apos;s basic details
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <StandardFormInput<CuratedCourtFormData>
                 name="name"
-                label="Court Name"
+                label="Venue Name"
                 placeholder="Makati Sports Club (Pickleball)"
                 required
               />
@@ -575,9 +575,9 @@ export default function NewCuratedCourtPage() {
 
           <Card>
             <CardHeader>
-              <CardTitle>Court Inventory</CardTitle>
+              <CardTitle>Venue Inventory</CardTitle>
               <CardDescription>
-                Define each court unit and its sport
+                Define each venue unit and its sport
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -588,7 +588,7 @@ export default function NewCuratedCourtPage() {
                     className="rounded-lg border border-border/60 bg-background p-4 shadow-sm"
                   >
                     <div className="flex flex-wrap items-center justify-between gap-2">
-                      <div className="text-sm font-medium">{`Court ${index + 1}`}</div>
+                      <div className="text-sm font-medium">{`Venue ${index + 1}`}</div>
                       <Button
                         type="button"
                         variant="ghost"
@@ -603,8 +603,8 @@ export default function NewCuratedCourtPage() {
                     <div className="mt-4 grid gap-4 md:grid-cols-3">
                       <StandardFormInput<CuratedCourtFormData>
                         name={`courts.${index}.label`}
-                        label="Court Label"
-                        placeholder="Court 1"
+                        label="Venue Label"
+                        placeholder="Venue 1"
                         required
                       />
                       <StandardFormSelect<CuratedCourtFormData>
@@ -629,14 +629,14 @@ export default function NewCuratedCourtPage() {
                 variant="outline"
                 onClick={() =>
                   appendCourt({
-                    label: `Court ${courtFields.length + 1}`,
+                    label: `Venue ${courtFields.length + 1}`,
                     sportId: "",
                     tierLabel: "",
                   })
                 }
               >
                 <Plus className="mr-2 h-4 w-4" />
-                Add Court
+                Add Venue
               </Button>
             </CardContent>
           </Card>
@@ -645,7 +645,7 @@ export default function NewCuratedCourtPage() {
             <CardHeader>
               <CardTitle>Contact Information</CardTitle>
               <CardDescription>
-                How players can reach or find this court
+                How players can reach or find this venue
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -708,7 +708,7 @@ export default function NewCuratedCourtPage() {
             <CardHeader>
               <CardTitle>Amenities</CardTitle>
               <CardDescription>
-                Select the amenities available at this court
+                Select the amenities available at this venue
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -751,7 +751,7 @@ export default function NewCuratedCourtPage() {
             <CardHeader>
               <CardTitle>Photos</CardTitle>
               <CardDescription>
-                Upload photos for this court listing
+                Upload photos for this venue listing
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -813,7 +813,7 @@ export default function NewCuratedCourtPage() {
               )}
 
               <p className="text-xs text-muted-foreground">
-                Photos upload after the court is created. The first photo
+                Photos upload after the venue is created. The first photo
                 becomes the cover image.
               </p>
             </CardContent>
@@ -825,7 +825,7 @@ export default function NewCuratedCourtPage() {
             </Button>
             <Button type="submit" disabled={isSubmitDisabled}>
               {submitting && <Spinner className="mr-2" />}
-              Create Court
+              Create Venue
             </Button>
           </div>
         </StandardFormProvider>

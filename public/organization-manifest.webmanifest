@@ -1,7 +1,7 @@
 {
   "name": "KudosCourts Organization",
   "short_name": "KudosCourts",
-  "description": "Manage your courts, reservations, and bookings.",
+  "description": "Manage your venues, reservations, and bookings.",
   "start_url": "/organization/reservations",
   "scope": "/",
   "display": "standalone",

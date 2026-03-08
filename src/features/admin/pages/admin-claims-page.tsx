@@ -117,7 +117,7 @@ export default function AdminClaimsPage() {
               Claim Requests
             </h1>
             <p className="text-muted-foreground">
-              Review and manage court ownership claims
+              Review and manage venue ownership claims
             </p>
           </div>
           <Button
@@ -162,7 +162,7 @@ export default function AdminClaimsPage() {
           <div className="relative flex-1 max-w-sm">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search courts or organizations..."
+              placeholder="Search venues or organizations..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-9"
@@ -207,7 +207,7 @@ export default function AdminClaimsPage() {
                     <TableHeader>
                       <TableRow>
                         <TableHead>Type</TableHead>
-                        <TableHead>Court</TableHead>
+                        <TableHead>Venue</TableHead>
                         <TableHead>Organization</TableHead>
                         <TableHead>Submitted</TableHead>
                         <TableHead className="text-right">Action</TableHead>

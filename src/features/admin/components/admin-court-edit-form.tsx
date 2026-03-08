@@ -145,7 +145,7 @@ export function AdminCourtEditForm({
           <AlertDialogHeader>
             <AlertDialogTitle>Remove Photo</AlertDialogTitle>
             <AlertDialogDescription>
-              This will remove the photo from this court and cannot be undone.
+              This will remove the photo from this venue and cannot be undone.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -177,13 +177,13 @@ export function AdminCourtEditForm({
         <CardHeader>
           <CardTitle>Basic Information</CardTitle>
           <CardDescription>
-            Update the court&apos;s basic details
+            Update the venue&apos;s basic details
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <StandardFormInput<AdminCourtEditFormData>
             name="name"
-            label="Court Name"
+            label="Venue Name"
             placeholder="Makati Sports Club (Pickleball)"
             required
           />
@@ -363,9 +363,9 @@ export function AdminCourtEditForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Court Inventory</CardTitle>
+          <CardTitle>Venue Inventory</CardTitle>
           <CardDescription>
-            Define each court unit and its sport
+            Define each venue unit and its sport
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -380,7 +380,7 @@ export function AdminCourtEditForm({
                   {...register(`courts.${index}.id` as const)}
                 />
                 <div className="flex flex-wrap items-center justify-between gap-2">
-                  <div className="text-sm font-medium">{`Court ${index + 1}`}</div>
+                  <div className="text-sm font-medium">{`Venue ${index + 1}`}</div>
                   <Button
                     type="button"
                     variant="ghost"
@@ -395,8 +395,8 @@ export function AdminCourtEditForm({
                 <div className="mt-4 grid gap-4 md:grid-cols-3">
                   <StandardFormInput<AdminCourtEditFormData>
                     name={`courts.${index}.label`}
-                    label="Court Label"
-                    placeholder="Court 1"
+                    label="Venue Label"
+                    placeholder="Venue 1"
                     required
                   />
                   <StandardFormSelect<AdminCourtEditFormData>
@@ -420,11 +420,11 @@ export function AdminCourtEditForm({
             type="button"
             variant="outline"
             onClick={() =>
-              appendCourt({ label: "Court 1", sportId: "", tierLabel: "" })
+              appendCourt({ label: "Venue 1", sportId: "", tierLabel: "" })
             }
           >
             <Plus className="mr-2 h-4 w-4" />
-            Add Court
+            Add Venue
           </Button>
         </CardContent>
       </Card>
@@ -433,7 +433,7 @@ export function AdminCourtEditForm({
         <CardHeader>
           <CardTitle>Contact Information</CardTitle>
           <CardDescription>
-            How players can reach or find this court
+            How players can reach or find this venue
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -496,7 +496,7 @@ export function AdminCourtEditForm({
         <CardHeader>
           <CardTitle>Amenities</CardTitle>
           <CardDescription>
-            Select the amenities available at this court
+            Select the amenities available at this venue
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -538,7 +538,7 @@ export function AdminCourtEditForm({
       <Card>
         <CardHeader>
           <CardTitle>Photos</CardTitle>
-          <CardDescription>Upload court photos</CardDescription>
+          <CardDescription>Upload venue photos</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="flex items-center justify-between gap-4">
@@ -584,7 +584,7 @@ export function AdminCourtEditForm({
               >
                 <Image
                   src={photo.url}
-                  alt="Court photo"
+                  alt="Venue photo"
                   fill
                   className="object-cover"
                 />

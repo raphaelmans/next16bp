@@ -8,7 +8,7 @@ export function ReservationsPage() {
     <div className="space-y-6">
       <PageHeader
         title="My Reservations"
-        description="View and manage your court bookings"
+        description="View and manage your venue bookings"
         backHref={appRoutes.home.base}
       />
       <Suspense fallback={null}>

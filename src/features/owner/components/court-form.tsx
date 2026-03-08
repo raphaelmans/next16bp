@@ -152,16 +152,16 @@ export function CourtForm({
 
   const placeHelper = useMemo(() => {
     if (placeOptions.length === 0) {
-      return "Create a venue first to add courts.";
+      return "Create a venue first to add venues.";
     }
-    return "Select the venue where this court belongs.";
+    return "Select the venue where this venue belongs.";
   }, [placeOptions.length]);
 
   const sportHelper = useMemo(() => {
     if (sportOptions.length === 0) {
-      return "Add a sport before creating courts.";
+      return "Add a sport before creating venues.";
     }
-    return "Choose the sport for this court.";
+    return "Choose the sport for this venue.";
   }, [sportOptions.length]);
 
   const placeSelectDisabled =
@@ -195,7 +195,7 @@ export function CourtForm({
       reset(buildFormDefaults(normalized));
     } catch (error) {
       toast.error(
-        isEditing ? "Unable to save court" : "Unable to create court",
+        isEditing ? "Unable to save venue" : "Unable to create venue",
         {
           description: getClientErrorMessage(error, "Please try again"),
         },
@@ -219,7 +219,7 @@ export function CourtForm({
     >
       <Card>
         <CardHeader>
-          <CardTitle>Court Details</CardTitle>
+          <CardTitle>Venue Details</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <StandardFormSelect<CourtFormValues>
@@ -244,8 +244,8 @@ export function CourtForm({
 
           <StandardFormInput<CourtFormValues>
             name="label"
-            label="Court Label"
-            placeholder="e.g., Court A"
+            label="Venue Label"
+            placeholder="e.g., Venue A"
             required
           />
 
@@ -253,13 +253,13 @@ export function CourtForm({
             name="tierLabel"
             label="Tier Label"
             placeholder="e.g., Premium"
-            description="Optional label to distinguish premium or standard courts."
+            description="Optional label to distinguish premium or standard venues."
           />
 
           {isEditing && (
             <StandardFormCheckbox<CourtFormValues>
               name="isActive"
-              label="Court is active"
+              label="Venue is active"
             />
           )}
         </CardContent>
@@ -287,7 +287,7 @@ export function CourtForm({
           <Button type="submit" disabled={isSubmitDisabled}>
             {submitting && <Spinner />}
             {primaryActionLabel ??
-              (isEditing ? "Save Changes" : "Create Court")}
+              (isEditing ? "Save Changes" : "Create Venue")}
           </Button>
         </div>
       </div>

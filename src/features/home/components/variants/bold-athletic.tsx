@@ -21,7 +21,7 @@ const HOW_IT_WORKS = [
     step: 1,
     title: "Search",
     description:
-      "Pick a sport and city. Browse every court in the area with reviews, photos, and amenities.",
+      "Pick a sport and city. Browse every venue in the area with reviews, photos, and amenities.",
     icon: Search,
   },
   {
@@ -67,18 +67,18 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
             <div className="animate-fade-in-up">
               <div className="inline-flex items-center gap-2 font-mono text-[11px] font-medium text-primary bg-primary/5 border border-primary/12 px-3.5 py-1.5 rounded-full mb-6 uppercase tracking-[0.05em]">
                 <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse" />
-                Sports Court Discovery
+                Sports Venue Discovery
               </div>
 
               <h1 className="font-heading text-5xl md:text-7xl font-extrabold leading-[1.04] tracking-tight mb-5 uppercase">
                 Where Filipino
                 <span className="block">players discover</span>
-                <span className="block text-primary">sports courts.</span>
+                <span className="block text-primary">sports venues.</span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[430px] mb-8">
                 Stop hopping between Facebook pages and reservation sites.
-                Search courts, read player reviews, and check availability — all
+                Search venues, read player reviews, and check availability — all
                 in one place.
               </p>
 
@@ -105,7 +105,7 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
               How it works
             </p>
             <h2 className="font-heading text-3xl md:text-5xl font-extrabold tracking-[-0.03em]">
-              Discover a court in 3 steps
+              Discover a venue in 3 steps
             </h2>
           </div>
           <div className="relative grid grid-cols-1 md:grid-cols-3 gap-8 max-w-[900px] mx-auto">

@@ -3,7 +3,7 @@ import { OG_BRAND, OG_GRADIENTS } from "@/common/og-brand";
 
 // Twitter/X Image metadata - 1200x630 for summary_large_image card
 export const alt =
-  "KudosCourts - Court discovery + free reservation system for venues.";
+  "KudosCourts - Venue discovery + free reservation system for venues.";
 export const size = {
   width: 1200,
   height: 630,
@@ -70,7 +70,7 @@ export default function TwitterImage() {
             lineHeight: 1.5,
           }}
         >
-          Find sports courts in the Philippines and reserve time faster. Free
+          Find sports venues in the Philippines and reserve time faster. Free
           reservation system for venues.
         </div>
 

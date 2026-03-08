@@ -669,9 +669,7 @@ export default function OwnerBookingsImportReviewView({
                               Your files will be parsed and converted to booking
                               rows
                             </li>
-                            <li>
-                              Court names will be matched to your venue courts
-                            </li>
+                            <li>Venue names will be matched to your venues</li>
                             <li>
                               Time slots will be validated for hour-alignment
                             </li>
@@ -822,7 +820,7 @@ export default function OwnerBookingsImportReviewView({
                               <TableRow>
                                 <TableHead className="w-16">#</TableHead>
                                 <TableHead>Source</TableHead>
-                                <TableHead>Court</TableHead>
+                                <TableHead>Venue</TableHead>
                                 <TableHead>Start</TableHead>
                                 <TableHead>End</TableHead>
                                 <TableHead>Reason</TableHead>
@@ -1057,11 +1055,11 @@ export default function OwnerBookingsImportReviewView({
                   <span>{sourceTypeLabel}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Court scope</span>
+                  <span className="text-muted-foreground">Venue scope</span>
                   <span>
                     {selectedCourtId
-                      ? `${selectedCourtLabel ?? "Single court"}`
-                      : "Multiple courts"}
+                      ? `${selectedCourtLabel ?? "Single venue"}`
+                      : "Multiple venues"}
                   </span>
                 </div>
                 <div className="flex justify-between">
@@ -1090,17 +1088,17 @@ export default function OwnerBookingsImportReviewView({
             <div className="space-y-2">
               {selectedCourtId ? (
                 <>
-                  <Label className="text-sm">Court</Label>
+                  <Label className="text-sm">Venue</Label>
                   <div className="rounded-md border bg-muted/30 px-3 py-2 text-sm">
-                    {selectedCourtLabel ?? "Selected court"}
+                    {selectedCourtLabel ?? "Selected venue"}
                   </div>
                 </>
               ) : (
                 <>
-                  <Label htmlFor="edit-court">Court</Label>
+                  <Label htmlFor="edit-court">Venue</Label>
                   <Select value={editCourtId} onValueChange={setEditCourtId}>
                     <SelectTrigger id="edit-court">
-                      <SelectValue placeholder="Select a court" />
+                      <SelectValue placeholder="Select a venue" />
                     </SelectTrigger>
                     <SelectContent>
                       {courts.map((c) => (
@@ -1217,7 +1215,7 @@ export default function OwnerBookingsImportReviewView({
           <AlertDialogHeader>
             <AlertDialogTitle>Commit import?</AlertDialogTitle>
             <AlertDialogDescription>
-              This will create {statusCounts.VALID} court blocks from the valid
+              This will create {statusCounts.VALID} venue blocks from the valid
               rows. These blocks will prevent double-booking for the specified
               time slots.
             </AlertDialogDescription>

@@ -131,7 +131,7 @@ const statusBannerConfig: Record<
   CONFIRMED: {
     icon: CheckCircle,
     title: "Reservation Confirmed",
-    description: "Your booking is confirmed! See you at the court.",
+    description: "Your booking is confirmed! See you at the venue.",
     className:
       "border-success/20 bg-success/5 text-success [&>svg]:text-success",
     variant: "default",

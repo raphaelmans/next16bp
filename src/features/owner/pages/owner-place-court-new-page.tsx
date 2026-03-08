@@ -46,7 +46,7 @@ export default function NewPlaceCourtPage({
 
   const { submitAsync, isSubmitting } = useModCourtForm({
     onSuccess: () => {
-      toast.success("Court created successfully!");
+      toast.success("Venue created successfully!");
       router.push(appRoutes.organization.verification.place(placeId));
     },
   });
@@ -104,7 +104,7 @@ export default function NewPlaceCourtPage({
                 Create an organization first
               </h2>
               <p className="text-sm text-muted-foreground">
-                You need an organization before creating courts.
+                You need an organization before creating venues.
               </p>
               <Button asChild>
                 <Link href={appRoutes.organization.getStarted}>
@@ -169,18 +169,18 @@ export default function NewPlaceCourtPage({
       >
         <div className="space-y-6">
           <PageHeader
-            title="Step 2 of 3 · Add a Court"
-            description="Create at least one court for this venue. Next: verification."
+            title="Step 2 of 3 · Add a Venue"
+            description="Create at least one venue for this location. Next: verification."
             breadcrumbs={[
               { label: "My Venues", href: appRoutes.organization.places.base },
               {
                 label: place.name,
                 href: appRoutes.organization.places.edit(place.id),
               },
-              { label: "Add court" },
+              { label: "Add venue" },
             ]}
             backHref={appRoutes.organization.places.courts.base(placeId)}
-            backLabel="Back to courts"
+            backLabel="Back to venues"
           />
 
           <CourtForm
@@ -191,7 +191,7 @@ export default function NewPlaceCourtPage({
             onCancel={handleCancel}
             isSubmitting={isSubmitting}
             disablePlaceSelect
-            primaryActionLabel="Create Court & Continue"
+            primaryActionLabel="Create Venue & Continue"
           />
         </div>
       </PermissionGate>

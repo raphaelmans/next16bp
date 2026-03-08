@@ -194,9 +194,9 @@ export function buildReservationCreatedContent(
     "",
     "You have a new reservation!",
     "",
-    `${payload.playerName} just booked a court at ${payload.placeName}. Review the details below and respond to confirm.`,
+    `${payload.playerName} just booked a venue at ${payload.placeName}. Review the details below and respond to confirm.`,
     "",
-    `Court: ${payload.courtLabel}`,
+    `Venue: ${payload.courtLabel}`,
     `Date: ${dateFormatted}`,
     `Time: ${timeFormatted}`,
     `Player: ${payload.playerName}`,
@@ -218,7 +218,7 @@ export function buildReservationCreatedContent(
   const smsText = `KudosCourts: ${payload.playerName} booked ${payload.courtLabel} at ${payload.placeName} on ${dateFormatted}. Review now: ${reservationUrl}`;
 
   const detailRows: { label: string; value: string }[] = [
-    { label: "Court", value: payload.courtLabel },
+    { label: "Venue", value: payload.courtLabel },
     { label: "Date", value: dateFormatted },
     { label: "Time", value: timeFormatted },
     { label: "Player", value: payload.playerName },
@@ -247,7 +247,7 @@ export function buildReservationCreatedContent(
         title: "You have a new reservation!",
         greeting: "Hi there,",
         bodyLines: [
-          `${payload.playerName} just booked a court at ${payload.placeName}. Review the details below and respond to confirm.`,
+          `${payload.playerName} just booked a venue at ${payload.placeName}. Review the details below and respond to confirm.`,
         ],
         detailRows,
         ctaText: "Review & Respond",
@@ -281,7 +281,7 @@ export function buildReservationGroupCreatedContent(
     payload.totalPriceCents,
     payload.currency,
   );
-  const courtsLabel = `${payload.itemCount} court${payload.itemCount === 1 ? "" : "s"}`;
+  const courtsLabel = `${payload.itemCount} venue${payload.itemCount === 1 ? "" : "s"}`;
 
   const subject = `New group booking at ${payload.placeName}`;
 
@@ -292,7 +292,7 @@ export function buildReservationGroupCreatedContent(
     "",
     `${payload.playerName} just booked ${courtsLabel} at ${payload.placeName}. Review the details below and respond to confirm.`,
     "",
-    `Courts: ${courtsLabel}`,
+    `Venues: ${courtsLabel}`,
     `Date: ${dateFormatted}`,
     `Time: ${timeFormatted}`,
     `Player: ${payload.playerName}`,
@@ -314,7 +314,7 @@ export function buildReservationGroupCreatedContent(
   const smsText = `KudosCourts: ${payload.playerName} booked ${courtsLabel} at ${payload.placeName} on ${dateFormatted}. Review now: ${reservationUrl}`;
 
   const detailRows: { label: string; value: string }[] = [
-    { label: "Courts", value: courtsLabel },
+    { label: "Venues", value: courtsLabel },
     { label: "Date", value: dateFormatted },
     { label: "Time", value: timeFormatted },
     { label: "Player", value: payload.playerName },
@@ -389,12 +389,12 @@ export function buildVerificationReviewedContent(
     `Details: ${verifyUrl}`,
     "",
     isApproved
-      ? "Players can now discover and book courts at your venue."
+      ? "Players can now discover and book your venue."
       : "We're looking forward to getting your venue listed!",
   ].join("\n");
 
   const smsText = isApproved
-    ? `KudosCourts: ${payload.placeName} is now verified! Players can find and book your courts.`
+    ? `KudosCourts: ${payload.placeName} is now verified! Players can find and book your venue.`
     : `KudosCourts: ${payload.placeName} verification needs updates. Log in to review the feedback.`;
 
   return {
@@ -433,7 +433,7 @@ export function buildVerificationReviewedContent(
         ctaText: isApproved ? "View Your Venue" : "Update Your Venue",
         ctaUrl: verifyUrl,
         footerNote: isApproved
-          ? "Players can now discover and book courts at your venue."
+          ? "Players can now discover and book your venue."
           : "We're looking forward to getting your venue listed!",
       },
     },
@@ -454,7 +454,7 @@ export function buildClaimReviewedContent(
     ? `Claim approved: ${payload.placeName} is yours`
     : `Claim update: ${payload.placeName}`;
 
-  const approvedBody = `Great news! Your ownership claim for ${payload.placeName} has been approved. You can now manage courts, set pricing, and accept bookings.`;
+  const approvedBody = `Great news! Your ownership claim for ${payload.placeName} has been approved. You can now manage venues, set pricing, and accept bookings.`;
   const rejectedBody = payload.reviewNotes
     ? `We were unable to approve your ownership claim for ${payload.placeName} at this time.\n\nReview notes: "${payload.reviewNotes}"\n\nIf you believe this was a mistake, please contact support for assistance.`
     : `We were unable to approve your ownership claim for ${payload.placeName} at this time. If you believe this was a mistake, please contact support for assistance.`;
@@ -470,7 +470,7 @@ export function buildClaimReviewedContent(
     "",
     `Dashboard: ${ownerPlacesUrl}`,
     "",
-    isApproved ? "Head to your dashboard to set up courts and pricing." : "",
+    isApproved ? "Head to your dashboard to set up venues and pricing." : "",
   ]
     .filter(Boolean)
     .join("\n");
@@ -515,7 +515,7 @@ export function buildClaimReviewedContent(
         ctaText: isApproved ? "Go to Dashboard" : "View Details",
         ctaUrl: ownerPlacesUrl,
         footerNote: isApproved
-          ? "Head to your dashboard to set up courts and pricing."
+          ? "Head to your dashboard to set up venues and pricing."
           : undefined,
       },
     },

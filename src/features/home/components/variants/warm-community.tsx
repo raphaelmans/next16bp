@@ -21,7 +21,7 @@ const HOW_IT_WORKS = [
     step: 1,
     title: "Search",
     description:
-      "Pick a sport and city. Browse every court in the area with reviews, photos, and amenities.",
+      "Pick a sport and city. Browse every venue in the area with reviews, photos, and amenities.",
     icon: Search,
   },
   {
@@ -63,18 +63,18 @@ export function WarmCommunityPage({ featuredPlaces }: WarmCommunityPageProps) {
             {/* Left */}
             <div className="animate-fade-in-up">
               <div className="inline-flex items-center gap-2 font-heading text-xs font-semibold text-primary bg-primary/8 border border-primary/12 px-4 py-2 rounded-full mb-6">
-                Court Discovery for Filipino Players
+                Venue Discovery for Filipino Players
               </div>
 
               <h1 className="font-heading text-4xl md:text-6xl font-bold leading-[1.08] tracking-tight mb-6">
                 Where Filipino players
                 <span className="block text-primary">
-                  discover sports courts.
+                  discover sports venues.
                 </span>
               </h1>
 
               <p className="text-lg leading-relaxed text-muted-foreground max-w-[440px] mb-8">
-                Find courts near you, read what other players think, and check
+                Find venues near you, read what other players think, and check
                 amenities and availability — all in one place.
               </p>
 
@@ -101,7 +101,7 @@ export function WarmCommunityPage({ featuredPlaces }: WarmCommunityPageProps) {
               How it works
             </p>
             <h2 className="font-heading text-3xl md:text-4xl font-bold tracking-[-0.03em]">
-              Discover a court in 3 steps
+              Discover a venue in 3 steps
             </h2>
           </div>
           <div className="mx-auto max-w-xl animate-fade-in-up">

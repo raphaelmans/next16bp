@@ -91,7 +91,7 @@ export function PlaceDetailListingHelpCard({
                   Claim this listing
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  Manage courts and enable bookings.
+                  Manage venues and enable bookings.
                 </p>
               </div>
             </div>

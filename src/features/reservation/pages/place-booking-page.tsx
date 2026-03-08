@@ -403,7 +403,7 @@ export default function PlaceBookingPage({
         courtLabel:
           matchedOption?.courtLabel ??
           courtLabelById.get(item.courtId) ??
-          "Assigned court",
+          "Assigned venue",
         startTime: item.startTime,
         endTime:
           matchedOption?.endTime ??
@@ -631,7 +631,7 @@ export default function PlaceBookingPage({
       }
       if (hasInvalidMultiCourtItems || multiCourtItems.length < 2) {
         toast.error(
-          "Multi-court selection is incomplete. Please reselect slots.",
+          "Multi-venue selection is incomplete. Please reselect slots.",
         );
         return;
       }
@@ -723,7 +723,7 @@ export default function PlaceBookingPage({
 
     if (!selectedSlot) return;
     if (mode === "court" && !courtId) {
-      toast.error("Select a court to continue.");
+      toast.error("Select a venue to continue.");
       return;
     }
     if (mode === "any" && !sportId) {
@@ -840,7 +840,7 @@ export default function PlaceBookingPage({
           <div className="text-center">
             <h1 className="text-2xl font-bold">Booking details missing</h1>
             <p className="text-muted-foreground mt-2">
-              Please return to the venue page and reselect your multi-court
+              Please return to the venue page and reselect your multi-venue
               slots.
             </p>
             <Link
@@ -930,7 +930,7 @@ export default function PlaceBookingPage({
           <div>
             <p className="font-medium">Almost there!</p>
             <p className="text-muted-foreground text-xs mt-0.5">
-              Add your name and contact so the court owner can reach you.
+              Add your name and contact so the venue owner can reach you.
             </p>
           </div>
           <button
@@ -953,7 +953,7 @@ export default function PlaceBookingPage({
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <p className="text-sm text-muted-foreground">
-                    You are booking {multiCourtSummaryItems.length} courts in
+                    You are booking {multiCourtSummaryItems.length} venues in
                     one request.
                   </p>
                   <div className="space-y-3">
@@ -1030,7 +1030,7 @@ export default function PlaceBookingPage({
           {!isMultiCourtBooking ? (
             <Card>
               <CardHeader>
-                <CardTitle>Assigned court</CardTitle>
+                <CardTitle>Assigned venue</CardTitle>
               </CardHeader>
               <CardContent className="flex items-center gap-2 text-sm">
                 {assignedCourt?.sportName && (
@@ -1093,7 +1093,7 @@ export default function PlaceBookingPage({
                 <CalendarCheck className="h-4 w-4 text-primary" />
                 <span>
                   {isMultiCourtBooking
-                    ? `${multiCourtSummaryItems.length} courts · ${formatCurrency(
+                    ? `${multiCourtSummaryItems.length} venues · ${formatCurrency(
                         totalPrice,
                         currency,
                       )}`
@@ -1127,7 +1127,7 @@ export default function PlaceBookingPage({
 
               {isMultiCourtBooking && hostAsOpenPlay ? (
                 <p className="text-xs text-muted-foreground">
-                  Open Play will be created across all courts in your booking.
+                  Open Play will be created across all venues in your booking.
                 </p>
               ) : null}
 

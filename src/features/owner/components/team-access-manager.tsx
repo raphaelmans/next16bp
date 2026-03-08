@@ -48,7 +48,7 @@ const PERMISSION_LABELS: Record<OrganizationMemberPermission, string> = {
   "reservation.chat": "Access reservation chat",
   "reservation.notification.receive": "Receive reservation notifications",
   "organization.member.manage": "Manage members and invitations",
-  "place.manage": "Manage venues and courts",
+  "place.manage": "Manage venues",
 };
 
 const ROLE_LABELS: Record<OrganizationMemberRole, string> = {

@@ -13,7 +13,7 @@ import {
 
 const playerNavItems = [
   { title: "Home", href: appRoutes.home.base, icon: Home },
-  { title: "Courts", href: appRoutes.courts.base, icon: MapPin },
+  { title: "Venues", href: appRoutes.courts.base, icon: MapPin },
   { title: "Saved", href: appRoutes.savedVenues.base, icon: Heart },
   {
     title: "Reservations",

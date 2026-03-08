@@ -149,7 +149,7 @@ export function CourtHoursEditor({
       },
       {
         onSuccess: () => {
-          toast.success("Court hours saved");
+          toast.success("Venue hours saved");
           onSaved?.();
         },
         onError: (error) => {
@@ -171,7 +171,7 @@ export function CourtHoursEditor({
               endTime: toTimeString(window.endMinute),
             })),
           );
-          toast.success("Court hours copied");
+          toast.success("Venue hours copied");
           setCopyOpen(false);
         },
         onError: (error) => {
@@ -313,7 +313,7 @@ export function CourtHoursEditor({
               onClick={() => setCopyOpen(true)}
               disabled={!organizationId || courts.length <= 1}
             >
-              Copy from another court
+              Copy from another venue
             </Button>
           )}
           <Button
@@ -331,8 +331,8 @@ export function CourtHoursEditor({
         <CourtConfigCopyDialog
           open={copyOpen}
           onOpenChange={setCopyOpen}
-          title="Copy court hours"
-          description="Select a source court to replace this court’s hours."
+          title="Copy venue hours"
+          description="Select a source venue to replace this venue’s hours."
           courts={courts}
           currentCourtId={courtId}
           isSubmitting={copyHours.isPending}

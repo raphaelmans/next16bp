@@ -298,9 +298,9 @@ export function BookingsImportUploadForm({
           </div>
 
           <div className="space-y-3">
-            <Label className="font-heading">Court scope (optional)</Label>
+            <Label className="font-heading">Venue scope (optional)</Label>
             <div className="text-xs text-muted-foreground">
-              Choose whether this import applies to a single court or uses court
+              Choose whether this import applies to a single venue or uses venue
               names from the file.
             </div>
 
@@ -332,10 +332,10 @@ export function BookingsImportUploadForm({
                 />
                 <div className="space-y-1">
                   <div className="font-heading text-sm font-semibold">
-                    Multiple courts
+                    Multiple venues
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Use court names in the file (you can remap rows during
+                    Use venue names in the file (you can remap rows during
                     review).
                   </div>
                 </div>
@@ -367,10 +367,10 @@ export function BookingsImportUploadForm({
                 />
                 <div className="space-y-1">
                   <div className="font-heading text-sm font-semibold">
-                    Single court
+                    Single venue
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    Assign every imported booking to one court (locked during
+                    Assign every imported booking to one venue (locked during
                     review).
                   </div>
                 </div>
@@ -383,23 +383,22 @@ export function BookingsImportUploadForm({
               ) : placeCourts.length === 0 ? (
                 <Alert>
                   <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>No courts found</AlertTitle>
+                  <AlertTitle>No venues found</AlertTitle>
                   <AlertDescription>
-                    Configure at least one court for this venue to use
-                    single-court imports.
+                    Configure at least one venue to use single-venue imports.
                   </AlertDescription>
                 </Alert>
               ) : (
                 <div className="space-y-2">
                   <Label htmlFor="court-select" className="text-sm">
-                    Court
+                    Venue
                   </Label>
                   <Select
                     value={selectedCourtId}
                     onValueChange={setSelectedCourtId}
                   >
                     <SelectTrigger id="court-select" className="w-full">
-                      <SelectValue placeholder="Select a court" />
+                      <SelectValue placeholder="Select a venue" />
                     </SelectTrigger>
                     <SelectContent>
                       {placeCourts.map((court) => (
@@ -411,8 +410,8 @@ export function BookingsImportUploadForm({
                   </Select>
                   {hasImageFiles ? (
                     <div className="text-xs text-muted-foreground">
-                      Tip: screenshots often don't include court names.
-                      Selecting a court avoids mapping errors.
+                      Tip: screenshots often don't include venue names.
+                      Selecting a venue avoids mapping errors.
                     </div>
                   ) : null}
                 </div>
