@@ -135,7 +135,14 @@ export function AdminCourtEditForm({
   const { register } = form;
 
   return (
-    <StandardFormProvider form={form} onSubmit={onSubmit} className="space-y-6">
+    <StandardFormProvider
+      form={form}
+      onSubmit={onSubmit}
+      onError={(errors) => {
+        console.error("[AdminCourtEditForm] Validation errors:", errors);
+      }}
+      className="space-y-6"
+    >
       <AlertDialog
         open={!!pendingPhotoId}
         onOpenChange={(open) => {

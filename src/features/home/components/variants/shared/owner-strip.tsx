@@ -1,9 +1,13 @@
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, BookOpen } from "lucide-react";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import type { LandingVariant } from "@/features/home/constants/landing-variant";
+
+const ORG_GUIDE_HREF = appRoutes.guides.detail(
+  "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+);
 
 interface OwnerStripProps {
   variant: LandingVariant;
@@ -43,7 +47,7 @@ function CleanMinimalOwnerStrip() {
   return (
     <section className="border-t border-gray-100 py-10">
       <Container>
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+        <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           <div className="text-center sm:text-left">
             <h3 className="font-heading text-lg font-bold tracking-[-0.02em]">
               Own a sports venue?
@@ -53,12 +57,24 @@ function CleanMinimalOwnerStrip() {
               control.
             </p>
           </div>
-          <Button asChild className="rounded-xl font-heading font-semibold">
-            <Link href={appRoutes.listYourVenue.base}>
-              List Your Venue
-              <ArrowRight className="ml-2 h-4 w-4" />
-            </Link>
-          </Button>
+          <div className="flex flex-col items-center gap-3 sm:flex-row">
+            <Button
+              asChild
+              variant="outline"
+              className="rounded-xl font-heading font-semibold"
+            >
+              <Link href={ORG_GUIDE_HREF}>
+                <BookOpen className="h-4 w-4" />
+                Read the setup guide
+              </Link>
+            </Button>
+            <Button asChild className="rounded-xl font-heading font-semibold">
+              <Link href={appRoutes.listYourVenue.base}>
+                List Your Venue
+                <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
         </div>
       </Container>
     </section>

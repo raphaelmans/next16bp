@@ -1,3 +1,6 @@
+import { BookOpen } from "lucide-react";
+import Link from "next/link";
+import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout/container";
 import type { PlaceSummary } from "@/features/discovery/helpers";
 import { HomePublicShell } from "@/features/home/components/home-public-shell";
@@ -76,6 +79,16 @@ export function CleanMinimalPage({
                 popularLocations={POPULAR_LOCATIONS}
                 variant="hero"
               />
+
+              <Link
+                href={appRoutes.guides.detail(
+                  "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+                )}
+                className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+              >
+                <BookOpen className="h-3.5 w-3.5" />
+                Venue guides
+              </Link>
             </div>
 
             {/* Right — showcase cards */}
