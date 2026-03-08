@@ -102,7 +102,7 @@ export function GuidesIndexPage({ guides }: GuidesIndexPageProps) {
           </div>
         </section>
 
-        <section className="space-y-5">
+        <section id="owner-guides" className="scroll-mt-24 space-y-5">
           <div className="space-y-2">
             <h2 className="font-heading text-2xl font-semibold tracking-tight">
               Guides for venue owners
