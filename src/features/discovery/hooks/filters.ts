@@ -1,15 +1,17 @@
 "use client";
 
 import { useQueryStates } from "nuqs";
-import { useEffect } from "react";
+import { useEffect, useTransition } from "react";
 import { searchParamsSchema } from "../schemas";
 
 /**
  * Hook to manage discovery filter state via URL
  */
 export function useModDiscoveryFilters() {
+  const [isPending, startTransition] = useTransition();
   const [filters, setFilters] = useQueryStates(searchParamsSchema, {
     shallow: false,
+    startTransition,
   });
 
   useEffect(() => {
@@ -96,6 +98,7 @@ export function useModDiscoveryFilters() {
 
   return {
     ...filters,
+    isPending,
     setProvince,
     setCity,
     setSportId,

@@ -38,6 +38,7 @@ import {
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
 import type { PublicCourtsPageData } from "@/features/discovery/public-courts-data";
 import type { DiscoveryResolvedLocationState } from "@/features/discovery/query-options";
+import { cn } from "@/lib/utils";
 
 type PaginationItemModel =
   | { type: "page"; page: number }
@@ -137,6 +138,7 @@ function CourtsPageContent({
   initialResolvedLocation,
 }: CourtsPageContentProps) {
   const filters = useModDiscoveryFilters();
+  const isFiltering = filters.isPending;
   const { data: sports = [] } = useQueryDiscoverySports();
 
   // ── Staged filter state (edits before Apply) ──
@@ -444,6 +446,19 @@ function CourtsPageContent({
           onRemoveAmenity={removeAmenity}
           onRemoveVerification={removeVerification}
         />
+
+        {/* Inline filter progress bar */}
+        <div
+          className={cn(
+            "relative h-[3px] w-full overflow-hidden rounded-full transition-opacity duration-200",
+            isFiltering ? "opacity-100 bg-primary/20" : "opacity-0",
+          )}
+          role="progressbar"
+          aria-label="Filtering"
+          aria-busy={isFiltering}
+        >
+          <div className="absolute inset-0 h-full w-1/3 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent animate-[filter-slide_1s_ease-in-out_infinite]" />
+        </div>
 
         {/* Results */}
         {filters.view === "map" ? (
