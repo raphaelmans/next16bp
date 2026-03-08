@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
+import { AppClientProviders } from "@/common/providers/app-client-providers";
 import { HOME_FAQS } from "@/features/home/constants/home-faq";
 import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
 import {
@@ -62,10 +63,12 @@ export default async function HomePage() {
       <Script id="home-faq-structured-data" type="application/ld+json">
         {JSON.stringify(homeStructuredData).replace(/</g, "\\u003c")}
       </Script>
-      <HomeLandingPage
-        featuredPlaces={featuredPlaces}
-        placeStats={placeStats}
-      />
+      <AppClientProviders>
+        <HomeLandingPage
+          featuredPlaces={featuredPlaces}
+          placeStats={placeStats}
+        />
+      </AppClientProviders>
     </>
   );
 }
