@@ -16,8 +16,14 @@ import {
   ReviewCard,
   StarRatingDisplay,
 } from "@/features/discovery/place-detail/components/review-display";
+import {
+  useMutPlaceDetailRemoveReview,
+  useMutPlaceDetailUpsertReview,
+  useQueryPlaceDetailReviewAggregate,
+  useQueryPlaceDetailReviews,
+  useQueryPlaceDetailViewerReview,
+} from "@/features/discovery/place-detail/hooks/use-place-detail-reviews";
 import { cn } from "@/lib/utils";
-import { trpc } from "@/trpc/client";
 
 interface PlaceDetailReviewsSectionProps {
   placeId: string;
@@ -69,47 +75,36 @@ export function PlaceDetailReviewsSection({
   const isAuthenticated = Boolean(session);
   const router = useRouter();
   const pathname = usePathname();
-  const utils = trpc.useUtils();
 
   const [rating, setRating] = useState(0);
   const [body, setBody] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const aggregateQuery = trpc.placeReview.aggregate.useQuery({ placeId });
-  const reviewsQuery = trpc.placeReview.list.useQuery({
+  const aggregateQuery = useQueryPlaceDetailReviewAggregate(placeId);
+  const reviewsQuery = useQueryPlaceDetailReviews({
     placeId,
     limit: 5,
     offset: 0,
   });
-  const viewerReviewQuery = trpc.placeReview.viewerReview.useQuery(
-    { placeId },
-    { enabled: isAuthenticated },
-  );
+  const viewerReviewQuery = useQueryPlaceDetailViewerReview(placeId, {
+    enabled: isAuthenticated,
+  });
 
-  const refreshReviewQueries = useCallback(async () => {
-    await Promise.all([
-      utils.placeReview.aggregate.invalidate({ placeId }),
-      utils.placeReview.list.invalidate(),
-      isAuthenticated
-        ? utils.placeReview.viewerReview.invalidate({ placeId })
-        : Promise.resolve(),
-    ]);
-    router.refresh();
-  }, [isAuthenticated, placeId, router, utils]);
-
-  const upsertMutation = trpc.placeReview.upsert.useMutation({
+  const upsertMutation = useMutPlaceDetailUpsertReview(placeId, {
+    isAuthenticated,
     onSuccess: async () => {
       setIsEditing(false);
-      await refreshReviewQueries();
+      router.refresh();
     },
   });
 
-  const removeMutation = trpc.placeReview.remove.useMutation({
+  const removeMutation = useMutPlaceDetailRemoveReview(placeId, {
+    isAuthenticated,
     onSuccess: async () => {
       setRating(0);
       setBody("");
       setIsEditing(false);
-      await refreshReviewQueries();
+      router.refresh();
     },
   });
 
@@ -124,7 +119,7 @@ export function PlaceDetailReviewsSection({
       setBody(existing.body ?? "");
     }
     setIsEditing(true);
-  }, [isAuthenticated, router, pathname, viewerReviewQuery.data]);
+  }, [isAuthenticated, pathname, router, viewerReviewQuery.data]);
 
   const handleSubmit = useCallback(() => {
     if (rating < 1 || rating > 5) return;
@@ -133,7 +128,7 @@ export function PlaceDetailReviewsSection({
       rating,
       body: body.trim() || undefined,
     });
-  }, [rating, body, placeId, upsertMutation]);
+  }, [body, placeId, rating, upsertMutation]);
 
   const handleRemove = useCallback(
     (reviewId: string) => {

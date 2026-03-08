@@ -5,14 +5,13 @@ import {
   MessageSquare,
   Phone,
   ShieldCheck,
-  Star,
 } from "lucide-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
 import { PlaceDetailBookmarkSlot } from "@/features/discovery/place-detail/components/place-detail-bookmark-slot";
-import { cn } from "@/lib/utils";
+import { PlaceDetailHeroReviewSummary } from "@/features/discovery/place-detail/components/place-detail-hero-review-summary";
 
 type PlaceDetailHeroServerSectionProps = {
   place: PlaceDetail;
@@ -88,46 +87,10 @@ export function PlaceDetailHeroServerSection({
               {place.city}
               {place.address ? ` · ${place.address}` : ""}
             </p>
-            <a
-              href="#reviews"
-              className="inline-flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors"
-            >
-              {reviewAggregate && reviewAggregate.reviewCount > 0 ? (
-                <>
-                  <span className="font-medium text-foreground">
-                    {reviewAggregate.averageRating.toFixed(1)}
-                  </span>
-                  <div className="flex gap-px">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className={cn(
-                          "h-3 w-3",
-                          s <= Math.round(reviewAggregate.averageRating)
-                            ? "fill-amber-400 text-amber-400"
-                            : "text-muted-foreground/20",
-                        )}
-                      />
-                    ))}
-                  </div>
-                  <span className="text-xs">
-                    ({reviewAggregate.reviewCount})
-                  </span>
-                </>
-              ) : (
-                <>
-                  <div className="flex gap-px">
-                    {[1, 2, 3, 4, 5].map((s) => (
-                      <Star
-                        key={s}
-                        className="h-3 w-3 text-muted-foreground/20"
-                      />
-                    ))}
-                  </div>
-                  <span className="text-xs">No reviews</span>
-                </>
-              )}
-            </a>
+            <PlaceDetailHeroReviewSummary
+              placeId={place.id}
+              initialReviewAggregate={reviewAggregate}
+            />
           </div>
         </div>
       </div>
