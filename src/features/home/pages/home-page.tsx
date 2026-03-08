@@ -1,5 +1,7 @@
 "use client";
 
+import { MapPinPlus } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -7,9 +9,10 @@ import {
   useOwnerOnboardingIntent,
   useSetOwnerOnboardingIntent,
 } from "@/common/hooks/owner-onboarding-intent";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { useQueryAuthSession } from "@/features/auth/hooks";
 import {
-  OrganizationSection,
   ProfileCompletionBanner,
   QuickActions,
   UpcomingReservations,
@@ -119,17 +122,18 @@ export default function HomePage() {
     [upcomingReservations],
   );
 
-  if (sessionLoading) {
-    return null;
+  if (sessionLoading || !sessionUser) {
+    return (
+      <div className="space-y-6">
+        <WelcomeHeader isLoading />
+        <QuickActions isAdmin={false} isOwner={false} />
+        <UpcomingReservations reservations={[]} isLoading />
+      </div>
+    );
   }
 
-  if (!sessionUser) return null;
-
-  // Use mock data if no reservations found (for demo purposes if needed, otherwise just empty)
-  // Per checklist, we might want to mock if endpoints aren't ready, but let's show empty state if truly empty
-
   return (
-    <div className="w-full px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+    <div className="space-y-6">
       <WelcomeHeader
         name={profile?.displayName || sessionUser.email?.split("@")[0]}
         isLoading={dataLoading}
@@ -142,20 +146,27 @@ export default function HomePage() {
         isOwner={!!organization}
       />
 
-      <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <UpcomingReservations
-            reservations={reservations}
-            isLoading={dataLoading}
-          />
-        </div>
-        <div>
-          <OrganizationSection
-            organization={organization}
-            isLoading={dataLoading}
-          />
-        </div>
-      </div>
+      <UpcomingReservations
+        reservations={reservations}
+        isLoading={dataLoading}
+      />
+
+      <Card className="border-dashed">
+        <CardContent className="flex items-center gap-4 py-4">
+          <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10">
+            <MapPinPlus className="size-5 text-primary" />
+          </div>
+          <div className="flex-1 space-y-0.5">
+            <p className="text-sm font-medium">Know a venue that's missing?</p>
+            <p className="text-xs text-muted-foreground">
+              Help the community by adding courts and clubs you play at.
+            </p>
+          </div>
+          <Button variant="outline" size="sm" asChild>
+            <Link href={appRoutes.submitVenue.base}>Submit a venue</Link>
+          </Button>
+        </CardContent>
+      </Card>
     </div>
   );
 }

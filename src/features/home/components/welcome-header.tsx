@@ -24,9 +24,7 @@ export function WelcomeHeader({ name, isLoading }: WelcomeHeaderProps) {
       <h1 className="text-3xl font-bold tracking-tight">
         Welcome back, {displayName}
       </h1>
-      <p className="text-muted-foreground">
-        Here's what's happening with your venues today.
-      </p>
+      <p className="text-muted-foreground">Here's what you have coming up.</p>
     </div>
   );
 }

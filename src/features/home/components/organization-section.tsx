@@ -46,16 +46,16 @@ export function OrganizationSection({
   }
 
   const highlights = organization
-    ? ["Expand your footprint", "Fast review flow", "Reach more players"]
-    : ["Share a new spot", "Review before publish", "Help grow discovery"];
+    ? ["Add a new location", "Reviewed before publish", "Manage from one place"]
+    : ["Suggest a venue", "We verify listings", "Keep the directory useful"];
 
   const description = organization
-    ? `Open another location for ${organization.name} and send the listing for review without leaving your home feed.`
-    : "Know a great court, club, or sports center that should be on Kudos? Send it in and we will review it before it goes live.";
+    ? `Add another location for ${organization.name}. We'll review it before it goes live.`
+    : "Know a great court or sports center? Submit it and we'll review it before it appears on Kudos.";
 
   const supportingCopy = organization
-    ? "New venue submissions are reviewed before publication, so you can expand cleanly without breaking your live listings."
-    : "Venue submissions go through a quick moderation pass so the directory stays accurate and useful for players.";
+    ? "New locations are reviewed before publication so your live listings stay clean."
+    : "Submissions are reviewed so the directory stays accurate for everyone.";
 
   return (
     <Card className="group relative overflow-hidden border-primary/15 bg-gradient-to-br from-primary/[0.10] via-background to-amber-500/[0.12] shadow-[0_18px_50px_-24px_rgba(15,23,42,0.45)]">
@@ -68,7 +68,7 @@ export function OrganizationSection({
               variant="outline"
               className="border-primary/20 bg-background/75 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.24em] text-primary"
             >
-              {organization ? "Expansion Mode" : "Community Signal"}
+              {organization ? "Your Organization" : "Suggest a Venue"}
             </Badge>
             <div className="space-y-2">
               <CardTitle className="text-2xl font-semibold tracking-tight text-balance">

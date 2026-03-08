@@ -24,6 +24,20 @@ export interface Reservation {
   } | null;
 }
 
+const STATUS_LABELS: Record<string, string> = {
+  CONFIRMED: "Confirmed",
+  PENDING: "Pending",
+  CHECKED_IN: "Checked in",
+  COMPLETED: "Completed",
+  NO_SHOW: "No show",
+};
+
+function formatStatus(status: string): string {
+  return (
+    STATUS_LABELS[status] ?? status.charAt(0) + status.slice(1).toLowerCase()
+  );
+}
+
 interface UpcomingReservationsProps {
   reservations: Reservation[];
   isLoading?: boolean;
@@ -38,7 +52,7 @@ export function UpcomingReservations({
       <Card>
         <CardHeader>
           <CardTitle>Upcoming Reservations</CardTitle>
-          <CardDescription>Your next scheduled games</CardDescription>
+          <CardDescription>Your next bookings</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -56,7 +70,7 @@ export function UpcomingReservations({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle>Upcoming Reservations</CardTitle>
-            <CardDescription>Your next scheduled games</CardDescription>
+            <CardDescription>Your next bookings</CardDescription>
           </div>
           <Button variant="outline" size="sm" asChild>
             <Link href={appRoutes.reservations.base}>View All</Link>
@@ -93,7 +107,7 @@ export function UpcomingReservations({
                     reservation.status === "CONFIRMED" ? "default" : "secondary"
                   }
                 >
-                  {reservation.status}
+                  {formatStatus(reservation.status)}
                 </Badge>
               </div>
             ))}
