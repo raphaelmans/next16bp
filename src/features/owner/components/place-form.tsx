@@ -1,11 +1,13 @@
 "use client";
 
 import { ChevronRight } from "lucide-react";
-import { PLACE_AMENITIES } from "@/common/amenities";
+import { useMemo } from "react";
+import { mergeAmenityOptions, PLACE_AMENITIES } from "@/common/amenities";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import {
+  StandardFormAmenities,
   StandardFormCheckbox,
   StandardFormCombobox,
-  StandardFormField,
   StandardFormInput,
   StandardFormProvider,
 } from "@/components/form";
@@ -17,7 +19,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import {
   Collapsible,
   CollapsibleContent,
@@ -80,6 +81,11 @@ export function PlaceForm({
   });
 
   const shouldHydrateDefaults = Boolean(defaultValues);
+  const amenitiesQuery = useAmenitiesQuery();
+  const amenitySuggestions = useMemo(
+    () => mergeAmenityOptions(PLACE_AMENITIES, amenitiesQuery.data ?? []),
+    [amenitiesQuery.data],
+  );
 
   if (shouldHydrateDefaults && !isFormReady) {
     return (
@@ -204,42 +210,16 @@ export function PlaceForm({
         <CardHeader>
           <CardTitle>Amenities</CardTitle>
           <CardDescription>
-            Select the amenities available at this venue.
+            Search, create, or tap the amenities available at this venue.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <StandardFormField<PlaceFormValues> name="amenities">
-            {({ field }) => {
-              const current = Array.isArray(field.value)
-                ? (field.value as string[])
-                : [];
-
-              return (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                  {PLACE_AMENITIES.map((amenity) => (
-                    <div
-                      key={amenity}
-                      className="flex items-start gap-3 text-sm font-normal"
-                    >
-                      <Checkbox
-                        checked={current.includes(amenity)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            field.onChange([...current, amenity]);
-                          } else {
-                            field.onChange(
-                              current.filter((value) => value !== amenity),
-                            );
-                          }
-                        }}
-                      />
-                      <span>{amenity}</span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          </StandardFormField>
+          <StandardFormAmenities<PlaceFormValues>
+            name="amenities"
+            suggestions={amenitySuggestions}
+            quickPicks={PLACE_AMENITIES}
+            searchPlaceholder="Search or create amenities..."
+          />
         </CardContent>
       </Card>
 

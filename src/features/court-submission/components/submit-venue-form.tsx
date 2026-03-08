@@ -5,7 +5,8 @@ import { CheckCircle, MapPin, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
-import { PLACE_AMENITIES } from "@/common/amenities";
+import { mergeAmenityOptions, PLACE_AMENITIES } from "@/common/amenities";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import { toAppError } from "@/common/errors/to-app-error";
@@ -18,6 +19,7 @@ import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
+  StandardFormAmenities,
   StandardFormCombobox,
   StandardFormInput,
   StandardFormProvider,
@@ -30,7 +32,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -123,6 +124,7 @@ export function SubmitVenueForm() {
     useQueryDiscoverySports();
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const googleLocPreview = useGoogleLocPreviewMutation();
+  const amenitiesQuery = useAmenitiesQuery();
   const [isSubmitted, setIsSubmitted] = React.useState(false);
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
@@ -156,6 +158,10 @@ export function SubmitVenueForm() {
   const locationMode = form.watch("locationMode");
   const selectedProvince = form.watch("province");
   const watchedCourts = form.watch("courts");
+  const amenitySuggestions = React.useMemo(
+    () => mergeAmenityOptions(PLACE_AMENITIES, amenitiesQuery.data ?? []),
+    [amenitiesQuery.data],
+  );
 
   const selectedSportIds = React.useMemo(
     () => new Set(watchedCourts.map((c) => c.sportId).filter(Boolean)),
@@ -245,20 +251,6 @@ export function SubmitVenueForm() {
         },
       },
     );
-  };
-
-  const amenities = form.watch("amenities");
-
-  const toggleAmenity = (amenity: string) => {
-    const current = form.getValues("amenities");
-    if (current.includes(amenity)) {
-      form.setValue(
-        "amenities",
-        current.filter((a) => a !== amenity),
-      );
-    } else {
-      form.setValue("amenities", [...current, amenity]);
-    }
   };
 
   const sportOptions = React.useMemo(
@@ -519,25 +511,16 @@ export function SubmitVenueForm() {
         <CardHeader>
           <CardTitle>Amenities (optional)</CardTitle>
           <CardDescription>
-            Select the amenities available at this venue.
+            Search, create, or tap the amenities available at this venue.
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
-            {PLACE_AMENITIES.map((amenity) => (
-              // biome-ignore lint/a11y/noLabelWithoutControl: label wraps input
-              <label
-                key={amenity}
-                className="flex items-center gap-2 text-sm cursor-pointer"
-              >
-                <Checkbox
-                  checked={amenities.includes(amenity)}
-                  onCheckedChange={() => toggleAmenity(amenity)}
-                />
-                {amenity}
-              </label>
-            ))}
-          </div>
+          <StandardFormAmenities<SubmitVenueFormData>
+            name="amenities"
+            suggestions={amenitySuggestions}
+            quickPicks={PLACE_AMENITIES}
+            searchPlaceholder="Search or create amenities..."
+          />
         </CardContent>
       </Card>
 

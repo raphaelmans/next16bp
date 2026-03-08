@@ -1,4 +1,5 @@
 import { randomUUID } from "node:crypto";
+import { normalizeAmenityValues } from "@/common/amenities";
 import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import type { ICourtHoursRepository } from "@/lib/modules/court-hours/repositories/court-hours.repository";
 import type { ICourtRateRuleRepository } from "@/lib/modules/court-rate-rule/repositories/court-rate-rule.repository";
@@ -208,8 +209,9 @@ export class AdminCourtService implements IAdminCourtService {
       // 4. Create amenities
       // biome-ignore lint/suspicious/noExplicitAny: repository return type varies
       const amenities: any[] = [];
-      if (data.amenities?.length) {
-        for (const name of data.amenities) {
+      const normalizedAmenities = normalizeAmenityValues(data.amenities ?? []);
+      if (normalizedAmenities.length > 0) {
+        for (const name of normalizedAmenities) {
           const created = await this.adminCourtRepository.createAmenity(
             {
               placeId: placeRecord.id,
@@ -592,11 +594,12 @@ export class AdminCourtService implements IAdminCourtService {
       }
 
       if (data.amenities) {
+        const normalizedAmenities = normalizeAmenityValues(data.amenities);
         await this.adminCourtRepository.deleteAmenitiesByPlaceId(
           data.placeId,
           ctx,
         );
-        for (const name of data.amenities) {
+        for (const name of normalizedAmenities) {
           await this.adminCourtRepository.createAmenity(
             {
               placeId: data.placeId,

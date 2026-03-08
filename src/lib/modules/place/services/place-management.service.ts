@@ -1,4 +1,5 @@
 import { v4 as uuidv4 } from "uuid";
+import { normalizeAmenityValues } from "@/common/amenities";
 import { DEFAULT_COUNTRY, DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   NotOrganizationOwnerError,
@@ -137,13 +138,7 @@ export class PlaceManagementService implements IPlaceManagementService {
       );
 
       if (data.amenities && data.amenities.length > 0) {
-        const normalizedAmenities = Array.from(
-          new Set(
-            data.amenities
-              .map((amenity) => amenity.trim())
-              .filter((amenity) => amenity.length > 0),
-          ),
-        );
+        const normalizedAmenities = normalizeAmenityValues(data.amenities);
 
         await this.placeRepository.createAmenities(
           created.id,
@@ -232,13 +227,7 @@ export class PlaceManagementService implements IPlaceManagementService {
       );
 
       if (amenities !== undefined) {
-        const normalizedAmenities = Array.from(
-          new Set(
-            amenities
-              .map((amenity) => amenity.trim())
-              .filter((amenity) => amenity.length > 0),
-          ),
-        );
+        const normalizedAmenities = normalizeAmenityValues(amenities);
 
         await this.placeRepository.replaceAmenitiesByPlaceId(
           placeId,

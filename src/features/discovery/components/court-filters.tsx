@@ -19,6 +19,9 @@ import {
   findCityBySlug,
   findCityBySlugAcrossProvinces,
   findProvinceBySlug,
+  getAmenityDisplayLabel,
+  getAmenityKey,
+  mergeAmenityOptions,
 } from "@/common/ph-location-data";
 import { getZonedDayKey } from "@/common/time-zone";
 import { KudosDatePicker } from "@/components/kudos";
@@ -155,17 +158,27 @@ export function PlaceFilters({
   type LocationOption = { label: string; value: string };
 
   const amenitiesOptions = useMemo(
-    () =>
-      amenitiesList
-        .map((item) => item.trim())
-        .filter((item) => item.length > 0)
-        .sort((a, b) => a.localeCompare(b)),
+    () => mergeAmenityOptions(amenitiesList),
     [amenitiesList],
+  );
+  const amenitiesOptionMap = useMemo(
+    () =>
+      new Map(
+        amenitiesOptions.map((amenity) => [getAmenityKey(amenity), amenity]),
+      ),
+    [amenitiesOptions],
   );
 
   const selectedAmenities = useMemo(
-    () => (amenities ?? []).filter((item) => amenitiesOptions.includes(item)),
-    [amenities, amenitiesOptions],
+    () =>
+      Array.from(
+        new Set(
+          (amenities ?? [])
+            .map((amenity) => amenitiesOptionMap.get(getAmenityKey(amenity)))
+            .filter((amenity): amenity is string => Boolean(amenity)),
+        ),
+      ),
+    [amenities, amenitiesOptionMap],
   );
 
   useEffect(() => {
@@ -174,15 +187,30 @@ export function PlaceFilters({
     }
 
     const next = Array.from(
-      new Set(amenities.filter((item) => amenitiesOptions.includes(item))),
-    );
+      new Set(
+        amenities
+          .map((amenity) => amenitiesOptionMap.get(getAmenityKey(amenity)))
+          .filter((amenity): amenity is string => Boolean(amenity)),
+      ),
+    ).sort((a, b) => a.localeCompare(b));
 
-    if (next.length !== amenities.length) {
-      onAmenitiesChange(
-        next.length > 0 ? next.sort((a, b) => a.localeCompare(b)) : undefined,
-      );
+    const currentKeys = new Set(
+      amenities.map((amenity) => getAmenityKey(amenity)),
+    );
+    const nextKeys = new Set(next.map((amenity) => getAmenityKey(amenity)));
+    const hasChanged =
+      currentKeys.size !== nextKeys.size ||
+      Array.from(currentKeys).some((key) => !nextKeys.has(key));
+
+    if (hasChanged) {
+      onAmenitiesChange(next.length > 0 ? next : undefined);
     }
-  }, [amenities, amenitiesOptions, onAmenitiesChange]);
+  }, [
+    amenities,
+    amenitiesOptionMap,
+    amenitiesOptions.length,
+    onAmenitiesChange,
+  ]);
 
   const provinceOptions = useMemo<LocationOption[]>(() => {
     if (!provincesCities) return [];
@@ -196,7 +224,7 @@ export function PlaceFilters({
 
   const amenitiesPlaceholder = amenitiesQuery.isLoading
     ? "Amenities..."
-    : "Amenities";
+    : "Select amenities";
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Province..."
@@ -208,12 +236,6 @@ export function PlaceFilters({
       ? "City..."
       : "City";
 
-  const amenitiesTriggerLabel =
-    selectedAmenities.length > 0
-      ? `${selectedAmenities.length} ${
-          selectedAmenities.length === 1 ? "amenity" : "amenities"
-        }`
-      : amenitiesPlaceholder;
   const provinceTriggerLabel = provinceOptions.find(
     (item: LocationOption) => item.value === province,
   )?.label;
@@ -231,12 +253,12 @@ export function PlaceFilters({
   }, [date]);
   const isTimeEnabled = Boolean(date);
 
-  const [amenitiesOpen, setAmenitiesOpen] = useState(false);
   const [provinceOpen, setProvinceOpen] = useState(false);
   const [cityOpen, setCityOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
 
   const selectedTimes = time ?? [];
+  const amenitiesAnchorRef = useRef<HTMLDivElement | null>(null);
   const timeAnchorRef = useRef<HTMLDivElement | null>(null);
 
   const comboTriggerClassName = cn(
@@ -248,17 +270,6 @@ export function PlaceFilters({
     "p-0",
     isSheet ? "w-[var(--radix-popover-trigger-width)] z-[60]" : "w-56",
   );
-
-  const handleAmenitiesChange = (amenity: string) => {
-    const current = new Set(selectedAmenities);
-    if (current.has(amenity)) {
-      current.delete(amenity);
-    } else {
-      current.add(amenity);
-    }
-    const next = Array.from(current).sort((a, b) => a.localeCompare(b));
-    onAmenitiesChange(next.length > 0 ? next : undefined);
-  };
 
   const handleProvinceChange = (value: string) => {
     const nextProvince = value === "all" ? undefined : value;
@@ -580,58 +591,54 @@ export function PlaceFilters({
   );
 
   const amenitiesCombobox = (
-    <Popover open={amenitiesOpen} onOpenChange={setAmenitiesOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant={isSheet ? "outline" : "ghost"}
-          size={isSheet ? "default" : "sm"}
-          role="combobox"
-          aria-expanded={amenitiesOpen}
-          disabled={isAmenitiesDisabled}
+    <div
+      ref={amenitiesAnchorRef}
+      className={cn(isSheet ? "w-full" : "w-auto min-w-[220px]")}
+    >
+      <Combobox
+        items={amenitiesOptions}
+        multiple
+        value={selectedAmenities}
+        onValueChange={(nextValues) => {
+          const next = Array.from(new Set(nextValues)).sort((a, b) =>
+            a.localeCompare(b),
+          );
+          onAmenitiesChange(next.length > 0 ? next : undefined);
+        }}
+        disabled={isAmenitiesDisabled}
+      >
+        <ComboboxChips
           className={cn(
-            "justify-between",
-            isSheet ? "w-full" : "text-xs text-muted-foreground",
+            "min-h-9 text-sm",
+            !isSheet && "border-none bg-transparent px-0 shadow-none",
+            isAmenitiesDisabled && "pointer-events-none opacity-50",
           )}
         >
-          <span className="truncate">{amenitiesTriggerLabel}</span>
-          <ChevronsUpDown
-            className={cn(
-              "shrink-0 opacity-50",
-              isSheet ? "ml-2 h-4 w-4" : "ml-1.5 h-3 w-3",
-            )}
+          <ComboboxValue>
+            {selectedAmenities.map((amenity) => (
+              <ComboboxChip key={amenity}>
+                {getAmenityDisplayLabel(amenity)}
+              </ComboboxChip>
+            ))}
+          </ComboboxValue>
+          <ComboboxChipsInput
+            placeholder={
+              selectedAmenities.length > 0 ? "" : amenitiesPlaceholder
+            }
           />
-        </Button>
-      </PopoverTrigger>
-      <PopoverContent className={comboPopoverClassName} align="start">
-        <Command>
-          <CommandInput placeholder="Search amenities..." />
-          <CommandList>
-            <CommandEmpty>No amenities found.</CommandEmpty>
-            <CommandGroup>
-              {amenitiesOptions.map((amenity) => (
-                <CommandItem
-                  key={amenity}
-                  value={amenity}
-                  onSelect={() => {
-                    handleAmenitiesChange(amenity);
-                  }}
-                >
-                  <Check
-                    className={cn(
-                      "mr-2 h-4 w-4",
-                      selectedAmenities.includes(amenity)
-                        ? "opacity-100"
-                        : "opacity-0",
-                    )}
-                  />
-                  {amenity}
-                </CommandItem>
-              ))}
-            </CommandGroup>
-          </CommandList>
-        </Command>
-      </PopoverContent>
-    </Popover>
+        </ComboboxChips>
+        <ComboboxContent anchor={amenitiesAnchorRef}>
+          <ComboboxEmpty>No amenities found.</ComboboxEmpty>
+          <ComboboxList>
+            {(amenity) => (
+              <ComboboxItem key={amenity} value={amenity}>
+                {getAmenityDisplayLabel(amenity)}
+              </ComboboxItem>
+            )}
+          </ComboboxList>
+        </ComboboxContent>
+      </Combobox>
+    </div>
   );
 
   // ── Sheet layout ──

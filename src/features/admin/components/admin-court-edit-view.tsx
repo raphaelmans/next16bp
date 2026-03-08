@@ -6,7 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { mergeAmenityOptions } from "@/common/amenities";
 import { appRoutes } from "@/common/app-routes";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import { useDebouncedValue } from "@/common/hooks/use-debounced-value";
@@ -90,6 +92,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
   const [isSavingProvinceRank, setIsSavingProvinceRank] = React.useState(false);
 
   const { data: rawSports, isLoading: sportsLoading } = useQueryAdminSports();
+  const amenitiesQuery = useAmenitiesQuery();
   const sports = (rawSports ?? []) as Array<{ id: string; name: string }>;
 
   const debouncedOrgSearch = useDebouncedValue(orgSearch, 2000);
@@ -295,6 +298,14 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
 
     return buildCityOptions(selectedProvince, "name");
   }, [provincesCities, selectedProvince]);
+  const amenitySuggestions = React.useMemo(
+    () =>
+      mergeAmenityOptions(
+        courtData?.amenities.map((amenity) => amenity.name) ?? [],
+        amenitiesQuery.data ?? [],
+      ),
+    [amenitiesQuery.data, courtData?.amenities],
+  );
 
   const provincePlaceholder = provincesCitiesQuery.isLoading
     ? "Loading provinces..."
@@ -722,6 +733,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
           cityPlaceholder={cityPlaceholder}
           isProvinceDisabled={isProvinceDisabled}
           isCityDisabled={isCityDisabled}
+          amenitySuggestions={amenitySuggestions}
           sportOptions={sportOptions}
           sportsLoading={sportsLoading}
           courtFields={courtFields}

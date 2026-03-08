@@ -1,4 +1,5 @@
 export { useStandardFormContext } from "./context";
+export { StandardFormAmenities } from "./fields/StandardFormAmenities";
 export { StandardFormCheckbox } from "./fields/StandardFormCheckbox";
 export { StandardFormCombobox } from "./fields/StandardFormCombobox";
 export { StandardFormField } from "./fields/StandardFormField";
@@ -12,6 +13,7 @@ export type {
   FieldSize,
   FieldVariant,
   FormLayout,
+  StandardAmenitiesProps,
   StandardComboboxProps,
   StandardFieldProps,
   StandardFormFieldProps,

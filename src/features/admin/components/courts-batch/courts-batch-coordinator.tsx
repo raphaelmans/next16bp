@@ -5,7 +5,9 @@ import { Image as ImageIcon, Plus, Trash2 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
 import { type Control, useFieldArray, useForm } from "react-hook-form";
+import { mergeAmenityOptions } from "@/common/amenities";
 import { appRoutes } from "@/common/app-routes";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import {
   type GoogleLocResult,
   useGoogleLocPreviewMutation,
@@ -20,8 +22,8 @@ import {
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
+  StandardFormAmenities,
   StandardFormCombobox,
-  StandardFormField,
   StandardFormInput,
   StandardFormProvider,
   StandardFormSelect,
@@ -42,7 +44,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
 import { Spinner } from "@/components/ui/spinner";
@@ -180,6 +181,7 @@ export default function AdminCourtsBatchView() {
   const uploadPhotoMutation = useMutAdminCourtUploadPhoto();
   const previewMutation = useGoogleLocPreviewMutation();
   const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports();
+  const amenitiesQuery = useAmenitiesQuery();
   const [batchResult, setBatchResult] =
     React.useState<CuratedCourtBatchResult | null>(null);
   const [googleUrls, setGoogleUrls] = React.useState<Record<string, string>>(
@@ -201,6 +203,10 @@ export default function AdminCourtsBatchView() {
   );
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
+  const amenitySuggestions = React.useMemo(
+    () => mergeAmenityOptions(AMENITIES, amenitiesQuery.data ?? []),
+    [amenitiesQuery.data],
+  );
 
   const form = useForm<CuratedCourtBatchFormData>({
     resolver: zodResolver(curatedCourtBatchSchema),
@@ -901,49 +907,17 @@ export default function AdminCourtsBatchView() {
                         <CardHeader>
                           <CardTitle>Amenities</CardTitle>
                           <CardDescription>
-                            Select the amenities available at this venue
+                            Search, create, or tap the amenities available at
+                            this venue
                           </CardDescription>
                         </CardHeader>
                         <CardContent>
-                          <StandardFormField<CuratedCourtBatchFormData>
+                          <StandardFormAmenities<CuratedCourtBatchFormData>
                             name={`courts.${index}.amenities`}
-                          >
-                            {({ field }) => {
-                              const current = Array.isArray(field.value)
-                                ? (field.value as string[])
-                                : [];
-
-                              return (
-                                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                                  {AMENITIES.map((amenity) => (
-                                    <div
-                                      key={amenity}
-                                      className="flex items-start gap-3 text-sm font-normal"
-                                    >
-                                      <Checkbox
-                                        checked={current.includes(amenity)}
-                                        onCheckedChange={(checked) => {
-                                          if (checked) {
-                                            field.onChange([
-                                              ...current,
-                                              amenity,
-                                            ]);
-                                          } else {
-                                            field.onChange(
-                                              current.filter(
-                                                (value) => value !== amenity,
-                                              ),
-                                            );
-                                          }
-                                        }}
-                                      />
-                                      <span>{amenity}</span>
-                                    </div>
-                                  ))}
-                                </div>
-                              );
-                            }}
-                          </StandardFormField>
+                            suggestions={amenitySuggestions}
+                            quickPicks={AMENITIES}
+                            searchPlaceholder="Search or create amenities..."
+                          />
                         </CardContent>
                       </Card>
 

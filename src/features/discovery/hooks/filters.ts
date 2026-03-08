@@ -2,6 +2,7 @@
 
 import { useQueryStates } from "nuqs";
 import { useEffect, useTransition } from "react";
+import { normalizeAmenityValues } from "@/common/amenities";
 import { searchParamsSchema } from "../schemas";
 
 /**
@@ -68,8 +69,13 @@ export function useModDiscoveryFilters() {
   };
 
   const setAmenities = (amenities: string[] | undefined) => {
+    const normalizedAmenities =
+      amenities && amenities.length > 0
+        ? normalizeAmenityValues(amenities)
+        : null;
+
     setFilters({
-      amenities: amenities && amenities.length > 0 ? amenities : null,
+      amenities: normalizedAmenities,
       page: 1,
     });
   };

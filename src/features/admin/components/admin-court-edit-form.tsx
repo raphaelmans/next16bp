@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { UseFormReturn } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import {
+  StandardFormAmenities,
   StandardFormCombobox,
   StandardFormField,
   StandardFormInput,
@@ -30,7 +31,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
@@ -80,6 +80,7 @@ type AdminCourtEditFormProps = {
   cityPlaceholder: string;
   isProvinceDisabled: boolean;
   isCityDisabled: boolean;
+  amenitySuggestions: string[];
   sportOptions: { label: string; value: string }[];
   sportsLoading: boolean;
   courtFields: { fieldId: string }[];
@@ -121,6 +122,7 @@ export function AdminCourtEditForm({
   cityPlaceholder,
   isProvinceDisabled,
   isCityDisabled,
+  amenitySuggestions,
   sportOptions,
   sportsLoading,
   courtFields,
@@ -501,42 +503,16 @@ export function AdminCourtEditForm({
         <CardHeader>
           <CardTitle>Amenities</CardTitle>
           <CardDescription>
-            Select the amenities available at this venue
+            Search, create, or tap the amenities available at this venue
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <StandardFormField<AdminCourtEditFormData> name="amenities">
-            {({ field }) => {
-              const current = Array.isArray(field.value)
-                ? (field.value as string[])
-                : [];
-
-              return (
-                <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
-                  {AMENITIES.map((amenity) => (
-                    <div
-                      key={amenity}
-                      className="flex items-start gap-3 text-sm font-normal"
-                    >
-                      <Checkbox
-                        checked={current.includes(amenity)}
-                        onCheckedChange={(checked) => {
-                          if (checked) {
-                            field.onChange([...current, amenity]);
-                          } else {
-                            field.onChange(
-                              current.filter((value) => value !== amenity),
-                            );
-                          }
-                        }}
-                      />
-                      <span>{amenity}</span>
-                    </div>
-                  ))}
-                </div>
-              );
-            }}
-          </StandardFormField>
+          <StandardFormAmenities<AdminCourtEditFormData>
+            name="amenities"
+            suggestions={amenitySuggestions}
+            quickPicks={AMENITIES}
+            searchPlaceholder="Search or create amenities..."
+          />
         </CardContent>
       </Card>
 

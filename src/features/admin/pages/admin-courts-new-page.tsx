@@ -6,7 +6,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { mergeAmenityOptions } from "@/common/amenities";
 import { appRoutes } from "@/common/app-routes";
+import { useAmenitiesQuery } from "@/common/clients/amenities-client";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
@@ -18,6 +20,7 @@ import {
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import {
+  StandardFormAmenities,
   StandardFormCombobox,
   StandardFormField,
   StandardFormInput,
@@ -33,7 +36,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
@@ -66,6 +68,7 @@ export default function NewCuratedCourtPage() {
   const createMutation = useMutCreateCuratedCourt();
   const uploadPhotoMutation = useMutAdminCourtUploadPhoto();
   const { data: sports = [], isLoading: sportsLoading } = useQueryAdminSports();
+  const amenitiesQuery = useAmenitiesQuery();
 
   const hasEmbedKey = Boolean(env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY);
   const [googleUrl, setGoogleUrl] = React.useState("");
@@ -193,6 +196,10 @@ export default function NewCuratedCourtPage() {
     : provincesCitiesQuery.isLoading
       ? "Loading cities..."
       : "Select city";
+  const amenitySuggestions = React.useMemo(
+    () => mergeAmenityOptions(AMENITIES, amenitiesQuery.data ?? []),
+    [amenitiesQuery.data],
+  );
 
   const isProvinceDisabled = provincesCitiesQuery.isLoading || !provincesCities;
   const isCityDisabled = isProvinceDisabled || !provinceValue;
@@ -713,42 +720,16 @@ export default function NewCuratedCourtPage() {
             <CardHeader>
               <CardTitle>Amenities</CardTitle>
               <CardDescription>
-                Select the amenities available at this venue
+                Search, create, or tap the amenities available at this venue
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <StandardFormField<CuratedCourtFormData> name="amenities">
-                {({ field }) => {
-                  const current = Array.isArray(field.value)
-                    ? (field.value as string[])
-                    : [];
-
-                  return (
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                      {AMENITIES.map((amenity) => (
-                        <div
-                          key={amenity}
-                          className="flex items-start gap-3 text-sm font-normal"
-                        >
-                          <Checkbox
-                            checked={current.includes(amenity)}
-                            onCheckedChange={(checked) => {
-                              if (checked) {
-                                field.onChange([...current, amenity]);
-                              } else {
-                                field.onChange(
-                                  current.filter((value) => value !== amenity),
-                                );
-                              }
-                            }}
-                          />
-                          <span>{amenity}</span>
-                        </div>
-                      ))}
-                    </div>
-                  );
-                }}
-              </StandardFormField>
+              <StandardFormAmenities<CuratedCourtFormData>
+                name="amenities"
+                suggestions={amenitySuggestions}
+                quickPicks={AMENITIES}
+                searchPlaceholder="Search or create amenities..."
+              />
             </CardContent>
           </Card>
 

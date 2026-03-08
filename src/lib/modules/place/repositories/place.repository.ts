@@ -11,6 +11,10 @@ import {
   sql,
 } from "drizzle-orm";
 import {
+  mergeAmenityOptions,
+  normalizeAmenityValues,
+} from "@/common/amenities";
+import {
   court,
   courtRateRule,
   type InsertPlace,
@@ -1299,11 +1303,7 @@ export class PlaceRepository implements IPlaceRepository {
       .from(placeAmenity)
       .groupBy(placeAmenity.name);
 
-    const normalized = rows
-      .map((row) => row.name.trim())
-      .filter((name) => name.length > 0);
-
-    return Array.from(new Set(normalized)).sort((a, b) => a.localeCompare(b));
+    return mergeAmenityOptions(rows.map((row) => row.name));
   }
 
   async deleteAmenitiesByPlaceId(
@@ -1320,11 +1320,7 @@ export class PlaceRepository implements IPlaceRepository {
     ctx?: RequestContext,
   ): Promise<void> {
     const client = this.getClient(ctx);
-    const normalized = Array.from(
-      new Set(
-        names.map((name) => name.trim()).filter((name) => name.length > 0),
-      ),
-    );
+    const normalized = normalizeAmenityValues(names);
 
     if (normalized.length === 0) return;
 

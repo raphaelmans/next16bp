@@ -1,4 +1,5 @@
 import { queryOptions, type UseQueryOptions } from "@tanstack/react-query";
+import { normalizeAmenityValues } from "@/common/amenities";
 import type { AppError } from "@/common/errors/app-error";
 import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
@@ -81,17 +82,6 @@ const normalizeString = (value?: string | null) => {
 const DAY_KEY_PATTERN = /^\d{4}-\d{2}-\d{2}$/;
 const TIME_KEY_PATTERN = /^\d{2}:\d{2}$/;
 
-const normalizeStringArray = (values?: string[]) => {
-  const normalized = Array.from(
-    new Set(
-      (values ?? [])
-        .map((value) => value.trim())
-        .filter((value) => value.length > 0),
-    ),
-  );
-  return normalized.length > 0 ? normalized : undefined;
-};
-
 export const normalizeDiscoveryAvailabilityInput = (input: {
   sportId?: string;
   date?: string | null;
@@ -147,7 +137,10 @@ export const buildDiscoveryPlaceListSummaryQueryInput = (input: {
     sportId: normalizeString(input.sportId),
     date: availability.date,
     time: availability.time,
-    amenities: normalizeStringArray(input.amenities),
+    amenities:
+      input.amenities && input.amenities.length > 0
+        ? normalizeAmenityValues(input.amenities)
+        : undefined,
     verificationTier: input.verificationTier,
     limit,
     offset: (page - 1) * limit,

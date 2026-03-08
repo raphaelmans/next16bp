@@ -58,6 +58,17 @@ export interface StandardComboboxProps<
   emptyMessage?: string;
 }
 
+export interface StandardAmenitiesProps<
+  TFieldValues extends FieldValues = FieldValues,
+  TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
+> extends Omit<StandardFieldProps<TFieldValues, TName>, "placeholder"> {
+  suggestions: readonly string[];
+  quickPicks?: readonly string[];
+  searchPlaceholder?: string;
+  emptyMessage?: string;
+  createPrefix?: string;
+}
+
 export interface StandardFormFieldProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,
