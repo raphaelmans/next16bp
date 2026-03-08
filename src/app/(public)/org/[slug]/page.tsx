@@ -1,10 +1,8 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { isSeoIndexableOrganizationSurface } from "@/common/seo-indexability";
 import { PublicOrganizationPage } from "@/features/organization/pages/public-organization-page";
-import {
-  getOrganizationBySlugForMetadata,
-  getOrganizationLandingBySlug,
-} from "@/lib/modules/organization/server/public-organization-page";
+import { getOrganizationLandingBySlug } from "@/lib/modules/organization/server/public-organization-page";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 
 type Props = {
@@ -16,10 +14,24 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const canonical = `/org/${slug}`;
 
   try {
-    const result = await getOrganizationBySlugForMetadata(slug);
+    const result = await getOrganizationLandingBySlug(slug);
     const description =
       result.profile?.description ??
       "Explore our venues in the Philippines, see what sports we host, and book your next game in minutes.";
+    const hasProfileContent = Boolean(
+      result.profile?.description?.trim() ||
+        result.profile?.logoUrl?.trim() ||
+        result.profile?.contactEmail?.trim() ||
+        result.profile?.contactPhone?.trim() ||
+        result.profile?.address?.trim(),
+    );
+    const shouldIndex = isSeoIndexableOrganizationSurface({
+      slug: result.organization.slug,
+      name: result.organization.name,
+      venueCount: result.stats.venueCount,
+      totalCourts: result.stats.totalCourts,
+      hasProfileContent,
+    });
 
     return {
       title: result.organization.name,
@@ -27,6 +39,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       alternates: {
         canonical,
       },
+      robots: shouldIndex
+        ? undefined
+        : {
+            index: false,
+            follow: true,
+          },
       openGraph: {
         title: result.organization.name,
         description,

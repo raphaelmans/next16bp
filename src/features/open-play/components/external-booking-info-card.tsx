@@ -21,12 +21,13 @@ export function ExternalBookingInfoCard({
           <AlertTriangle className="mt-0.5 h-4 w-4 text-warning" />
           <div className="space-y-1">
             <h3 className="font-heading text-sm font-semibold text-warning-foreground">
-              Booked in Reclub?
+              Booked externally?
             </h3>
             <p className="text-sm text-warning-foreground">
-              You can still host as an External Open Play (unverified) if your
-              booking was made outside KudosCourts. For a verified Open Play,
-              book in KudosCourts and host from your reservation.
+              Even if you booked outside KudosCourts, you can still list it as
+              an Open Play so other players can find and join your session. For
+              a verified Open Play, book through KudosCourts and host from your
+              reservation.
             </p>
           </div>
         </div>

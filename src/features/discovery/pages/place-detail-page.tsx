@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import Script from "next/script";
 import { Suspense } from "react";
 import { appRoutes } from "@/common/app-routes";
+import { findCityByName, findProvinceByName } from "@/common/ph-location-data";
 import { toDialablePhone } from "@/common/phone";
 import { buildLocationLabel, humanizeSlug } from "@/common/seo-helpers";
+import { isSeoIndexablePlaceSurface } from "@/common/seo-indexability";
 import { Container } from "@/components/layout";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { PlaceDetailAvailabilityStudioSlot } from "@/features/discovery/place-detail/components/place-detail-availability-studio-slot";
 import {
@@ -169,6 +173,59 @@ export async function generatePlaceDetailMetadata(
     imageUrl = toAbsoluteUrl(
       placeDetails.photos?.[0]?.url ?? placeDetails.organizationLogoUrl,
     );
+    const openGraphImages = imageUrl
+      ? [{ url: imageUrl, alt: `${title} photo` }]
+      : undefined;
+    const twitterImages = imageUrl ? [imageUrl] : undefined;
+
+    const hasContactDetails = Boolean(
+      placeDetails.contactDetail?.phoneNumber?.trim() ||
+        placeDetails.contactDetail?.websiteUrl?.trim() ||
+        placeDetails.contactDetail?.facebookUrl?.trim() ||
+        placeDetails.contactDetail?.instagramUrl?.trim() ||
+        placeDetails.contactDetail?.viberInfo?.trim() ||
+        placeDetails.contactDetail?.otherContactInfo?.trim(),
+    );
+    const shouldIndex = isSeoIndexablePlaceSurface({
+      slug: place.slug ?? place.id,
+      name: place.name,
+      address: place.address,
+      city: place.city,
+      province: place.province,
+      activeCourtCount: placeDetails.courts.filter((court) => court.isActive)
+        .length,
+      photoCount: placeDetails.photos.length,
+      hasContactDetails,
+      verificationStatus: placeDetails.verification?.status ?? null,
+    });
+
+    if (!shouldIndex) {
+      return {
+        title,
+        description,
+        alternates: {
+          canonical: canonicalPath,
+        },
+        robots: {
+          index: false,
+          follow: true,
+        },
+        openGraph: {
+          title,
+          description,
+          url: canonicalPath,
+          siteName: "KudosCourts",
+          type: "website",
+          images: openGraphImages,
+        },
+        twitter: {
+          card: "summary_large_image",
+          title,
+          description,
+          images: twitterImages,
+        },
+      };
+    }
   } catch {
     // Keep slug-based fallback metadata when place lookup fails.
   }
@@ -224,6 +281,13 @@ async function PlaceDetailPageServerSection({
 
     const courtsSectionPromise = getPlaceCourtsSectionData(canonicalId);
     const venueSectionPromise = getPlaceVenueSectionData(canonicalId);
+
+    // Resolve province/city slugs for breadcrumb navigation
+    const provinces = await getPHProvincesCities();
+    const matchedProvince = findProvinceByName(provinces, place.province);
+    const matchedCity = matchedProvince
+      ? findCityByName(matchedProvince, place.city)
+      : undefined;
 
     let reviewAggregate: {
       averageRating: number;
@@ -323,29 +387,61 @@ async function PlaceDetailPageServerSection({
         : {}),
     };
 
+    const breadcrumbItems: {
+      "@type": string;
+      position: number;
+      name: string;
+      item: string;
+    }[] = [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: appUrl,
+      },
+      {
+        "@type": "ListItem",
+        position: 2,
+        name: "Courts",
+        item: new URL(appRoutes.courts.base, appUrl).toString(),
+      },
+    ];
+    let nextPosition = 3;
+    if (matchedProvince) {
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        position: nextPosition++,
+        name: matchedProvince.displayName,
+        item: new URL(
+          appRoutes.courts.locations.province(matchedProvince.slug),
+          appUrl,
+        ).toString(),
+      });
+    }
+    if (matchedProvince && matchedCity) {
+      breadcrumbItems.push({
+        "@type": "ListItem",
+        position: nextPosition++,
+        name: matchedCity.displayName,
+        item: new URL(
+          appRoutes.courts.locations.city(
+            matchedProvince.slug,
+            matchedCity.slug,
+          ),
+          appUrl,
+        ).toString(),
+      });
+    }
+    breadcrumbItems.push({
+      "@type": "ListItem",
+      position: nextPosition,
+      name: placeDetails.place.name,
+      item: canonicalUrl,
+    });
     const breadcrumbStructuredData = {
       "@context": "https://schema.org",
       "@type": "BreadcrumbList",
-      itemListElement: [
-        {
-          "@type": "ListItem",
-          position: 1,
-          name: "Home",
-          item: appUrl,
-        },
-        {
-          "@type": "ListItem",
-          position: 2,
-          name: "Courts",
-          item: new URL(appRoutes.courts.base, appUrl).toString(),
-        },
-        {
-          "@type": "ListItem",
-          position: 3,
-          name: placeDetails.place.name,
-          item: canonicalUrl,
-        },
-      ],
+      itemListElement: breadcrumbItems,
     };
 
     const {
@@ -403,6 +499,54 @@ async function PlaceDetailPageServerSection({
         <Script id="place-breadcrumbs" type="application/ld+json">
           {JSON.stringify(breadcrumbStructuredData).replace(/</g, "\\u003c")}
         </Script>
+
+        <section className="border-b border-border bg-card/50 py-3">
+          <Container>
+            <nav className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
+              <Link
+                href={appRoutes.courts.base}
+                className="hover:text-foreground"
+              >
+                All Courts
+              </Link>
+              {matchedProvince && (
+                <>
+                  <span aria-hidden="true" className="text-border">
+                    /
+                  </span>
+                  <Link
+                    href={appRoutes.courts.locations.province(
+                      matchedProvince.slug,
+                    )}
+                    className="hover:text-foreground"
+                  >
+                    {matchedProvince.displayName}
+                  </Link>
+                </>
+              )}
+              {matchedProvince && matchedCity && (
+                <>
+                  <span aria-hidden="true" className="text-border">
+                    /
+                  </span>
+                  <Link
+                    href={appRoutes.courts.locations.city(
+                      matchedProvince.slug,
+                      matchedCity.slug,
+                    )}
+                    className="hover:text-foreground"
+                  >
+                    {matchedCity.displayName}
+                  </Link>
+                </>
+              )}
+              <span aria-hidden="true" className="text-border">
+                /
+              </span>
+              <span className="text-foreground">{place.name}</span>
+            </nav>
+          </Container>
+        </section>
 
         <Container className="pt-4 sm:pt-6">
           <PlaceDetailHeroServerSection

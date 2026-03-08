@@ -12,8 +12,6 @@ import { getAuthApi } from "./api.runtime";
 
 const authApi = getAuthApi();
 
-export const PORTAL_STORAGE_KEY = "kudos.default-portal";
-
 export interface AuthSessionUser {
   id?: string;
   email?: string;
@@ -109,9 +107,6 @@ export function useMutAuthLogout() {
       await queryClient.cancelQueries(undefined, { silent: true });
       queryClient.clear();
       setOwnerOnboardingIntent.mutate(false);
-      try {
-        localStorage.removeItem(PORTAL_STORAGE_KEY);
-      } catch {}
     },
   });
 
@@ -190,9 +185,6 @@ export function useMutSetDefaultPortal(
         preferenceQueryKey,
         (old) => ({ ...old, defaultPortal: variables.defaultPortal }),
       );
-      try {
-        localStorage.setItem(PORTAL_STORAGE_KEY, variables.defaultPortal);
-      } catch {}
       return { previousPreference };
     },
     onSuccess: async (data, variables, context) => {
@@ -204,12 +196,6 @@ export function useMutSetDefaultPortal(
           preferenceQueryKey,
           context.previousPreference,
         );
-        try {
-          localStorage.setItem(
-            PORTAL_STORAGE_KEY,
-            context.previousPreference.defaultPortal,
-          );
-        } catch {}
       }
       options?.onError?.(error);
     },

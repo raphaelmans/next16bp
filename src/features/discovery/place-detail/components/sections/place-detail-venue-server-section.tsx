@@ -39,7 +39,10 @@ export async function PlaceDetailVenueServerSection({
         viberLink={viberLink}
       />
       <PlaceDetailAmenitiesCard amenities={data.amenities} />
-      <PlaceDetailReviewsSection placeId={data.placeId} />
+      <PlaceDetailReviewsSection
+        placeId={data.placeId}
+        placeSlug={data.placeSlug}
+      />
     </div>
   );
 }

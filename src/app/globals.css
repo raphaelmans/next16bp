@@ -304,3 +304,12 @@
 .stagger-6 {
   animation-delay: 0.3s;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in-up,
+  .animate-slide-in-right {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

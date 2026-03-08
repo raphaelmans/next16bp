@@ -1,28 +1,28 @@
-export const HOME_LAST_UPDATED_LABEL = "February 23, 2026";
+export const HOME_LAST_UPDATED_LABEL = "March 8, 2026";
 
 export const HOME_FAQS = [
   {
-    id: "book-online",
-    question: "Can I book sports courts online in the Philippines?",
+    id: "what-is-kudoscourts",
+    question: "What is KudosCourts?",
     answer:
-      "Yes. KudosCourts lets you search available pickleball, badminton, basketball, and tennis courts, then request or book your slot online.",
+      "KudosCourts is a sports court discovery platform for the Philippines. Search for badminton, basketball, tennis, and other courts by city or sport, read player reviews, and check amenities — all in one place.",
   },
   {
-    id: "real-time-availability",
-    question: "Is court availability updated in real time?",
+    id: "is-it-free",
+    question: "Is KudosCourts free for players?",
     answer:
-      "Available slots are updated from each venue's booking settings so you can see open times before sending a request.",
+      "Yes. Searching, browsing reviews, and checking court details is completely free. When a venue offers online reservations, you can request a slot directly through the platform.",
   },
   {
-    id: "how-payments-work",
-    question: "How do venue payments work?",
+    id: "availability",
+    question: "How do I know if a court is available?",
     answer:
-      "Players pay venues directly through the venue's preferred method (for example GCash, Maya, bank transfer, or cash). KudosCourts coordinates reservations.",
+      "Venues that manage their availability on KudosCourts show open time slots you can check before visiting. Not all venues manage availability online — in those cases you'll find contact details, reviews, and amenities to help you plan.",
   },
   {
-    id: "list-venue",
-    question: "How can venue owners list their courts?",
+    id: "reviews",
+    question: "Can I leave a review for a court I played at?",
     answer:
-      "Owners can create a free account, add or claim a venue listing, complete verification, and start managing court availability online.",
+      "Yes. After playing at a venue, you can leave a rating and review to help other players discover great courts. All reviews come from real players who visited the venue.",
   },
 ] as const;

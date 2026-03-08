@@ -53,6 +53,7 @@ export const appRoutes = {
     detail: (placeId: string) => `/venues/${placeId}`,
     schedule: (placeId: string) => `/venues/${placeId}/schedule`,
     book: (placeId: string) => `/venues/${placeId}/book`,
+    reviews: (placeIdOrSlug: string) => `/venues/${placeIdOrSlug}/reviews`,
     courts: {
       detail: (venueSlugOrId: string, courtId: string) =>
         `/venues/${venueSlugOrId}/courts/${courtId}`,

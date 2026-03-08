@@ -9,12 +9,7 @@ import { DashboardNavbar } from "@/components/layout/dashboard-navbar";
 import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 import type { Portal } from "@/components/layout/portal-switcher";
 import { getCurrentPortal } from "@/components/layout/portal-tabs-sidebar";
-import {
-  PORTAL_STORAGE_KEY,
-  useMutAuthLogout,
-  useQueryAuthSession,
-  useQueryAuthUserPreference,
-} from "@/features/auth/hooks";
+import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth/hooks";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { OwnerPortalBootLoader } from "@/features/owner/components/owner-portal-boot-loader";
 import { ReservationAlertsPanel } from "@/features/owner/components/reservation-alerts-panel";
@@ -35,38 +30,17 @@ export function DashboardShell({
   const pathname = usePathname();
   const currentPortal = getCurrentPortal(pathname);
   const { data: sessionUser } = useQueryAuthSession();
-  const { data: userPreference } = useQueryAuthUserPreference(!!sessionUser);
   const logoutMutation = useMutAuthLogout();
   const isAdmin = sessionUser?.role === "admin";
 
-  // ─── Portal storage sync ─────────────────────────────
+  // Keep the last non-admin portal available for portal-neutral routes.
   useEffect(() => {
-    try {
-      const current = localStorage.getItem(PORTAL_STORAGE_KEY);
-      if (current === "owner") {
-        localStorage.setItem(PORTAL_STORAGE_KEY, "organization");
-      } else if (!current) {
-        localStorage.setItem(
-          PORTAL_STORAGE_KEY,
-          currentPortal === "admin" ? "player" : currentPortal,
-        );
-      }
-    } catch {}
     const isPortalNeutral = pathname.startsWith(appRoutes.account.base);
     if (currentPortal !== "admin" && !isPortalNeutral) {
       // biome-ignore lint/suspicious/noDocumentCookie: Cookie Store API lacks Safari/Firefox support
       document.cookie = `kudos.portal-context=${currentPortal}; path=/; max-age=31536000; samesite=lax`;
     }
   }, [currentPortal, pathname]);
-
-  // Sync from DB preference (authoritative — overrides stale localStorage)
-  useEffect(() => {
-    if (userPreference?.defaultPortal) {
-      try {
-        localStorage.setItem(PORTAL_STORAGE_KEY, userPreference.defaultPortal);
-      } catch {}
-    }
-  }, [userPreference?.defaultPortal]);
 
   // ─── Logout handler ──────────────────────────────────
   const handleLogout = async () => {

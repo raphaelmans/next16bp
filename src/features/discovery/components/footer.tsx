@@ -42,7 +42,7 @@ export function Footer() {
                 <KudosLogo size={40} variant="full" />
               </Link>
               <p className="mt-4 text-sm text-muted-foreground">
-                Court discovery for players. Free reservation system for venues.
+                Every sports court in the Philippines, discoverable in seconds.
               </p>
               <Button asChild variant="outline" size="sm" className="mt-5">
                 <Link href={appRoutes.contactUs.base}>Contact us</Link>
