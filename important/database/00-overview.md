@@ -23,7 +23,8 @@ This set of docs records the current database approach and defines a portability
 3. [Migrations and Script Operations](./03-migrations-and-scripts.md)
 4. [Supabase Coupling Map](./04-supabase-coupling-map.md)
 5. [Portability Roadmap](./05-portability-roadmap.md)
-6. [Official Sources](./99-official-sources.md)
+6. [Curated Court Ingestion Pipeline](./06-curated-court-ingestion.md)
+7. [Official Sources](./99-official-sources.md)
 
 ## Decision Statement
 

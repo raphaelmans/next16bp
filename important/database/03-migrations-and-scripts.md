@@ -14,6 +14,7 @@ Database commands are centralized in `package.json`:
 - `pnpm db:check:journal`
 - `pnpm db:validate:default-portal`
 - plus backfill/import/export helpers
+- plus curated-ingestion helpers (`db:check:curated-duplicates*`, `db:backfill:place-embeddings*`)
 
 All run with `dotenvx` and `DATABASE_URL`.
 
@@ -51,6 +52,8 @@ These semantics come from official Drizzle docs; see `important/database/99-offi
   - `scripts/backfill-place-slugs.ts`
   - `scripts/list-place-locations.ts`
   - `scripts/import-curated-courts.ts`
+  - `scripts/backfill-place-embeddings.ts`
+  - `scripts/check-curated-court-duplicates.ts`
   - `scripts/backfill-court-addon-pricing-type.ts`
   - `scripts/validate-addon-pricing-migration.ts`
   - `scripts/validate-default-portal-migration.ts`
