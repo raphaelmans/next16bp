@@ -119,7 +119,11 @@ export function FileUpload({
       <div className={cn("relative", className)}>
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
           {/* eslint-disable-next-line @next/next/no-img-element -- blob: URLs are local previews, no optimization needed */}
-          <img src={preview} alt="Preview" className="absolute inset-0 h-full w-full object-cover" />
+          <img
+            src={preview}
+            alt="Preview"
+            className="absolute inset-0 h-full w-full object-cover"
+          />
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80">
               <Spinner className="size-8" />

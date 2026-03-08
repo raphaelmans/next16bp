@@ -494,6 +494,24 @@ export default function OwnersGetStartedPage() {
               </Button>
             </div>
 
+            <Link
+              href={appRoutes.guides.detail(
+                "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+              )}
+              className="group mx-auto flex max-w-md items-center gap-3 rounded-xl border border-border/60 bg-card px-5 py-3 text-left transition-colors hover:border-primary/30 hover:bg-primary/[0.03]"
+            >
+              <BookOpen className="h-5 w-5 shrink-0 text-primary" />
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-medium text-foreground">
+                  New to KudosCourts?
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  Read the step-by-step setup guide
+                </p>
+              </div>
+              <ArrowRight className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 group-hover:text-primary" />
+            </Link>
+
             <div className="text-sm text-muted-foreground">
               Already have an account?{" "}
               <Link
