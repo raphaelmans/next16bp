@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
-  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -21,6 +20,8 @@ interface PlaceFiltersSheetProps {
   province?: string;
   city?: string;
   sportId?: string;
+  date?: string;
+  time?: string[];
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
   hasClearableFilters?: boolean;
   resetLocationHref?: string;
@@ -28,6 +29,8 @@ interface PlaceFiltersSheetProps {
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
   onSportChange: (sportId: string | undefined) => void;
+  onDateChange: (date: string | undefined) => void;
+  onTimeChange: (time: string[] | undefined) => void;
   onVerificationChange: (
     verification:
       | "verified_reservable"
@@ -36,6 +39,7 @@ interface PlaceFiltersSheetProps {
       | undefined,
   ) => void;
   onClearAll: () => void;
+  onApply?: () => void;
   className?: string;
 }
 
@@ -44,6 +48,8 @@ export function PlaceFiltersSheet({
   province,
   city,
   sportId,
+  date,
+  time,
   verification,
   hasClearableFilters,
   resetLocationHref,
@@ -51,8 +57,11 @@ export function PlaceFiltersSheet({
   onProvinceChange,
   onCityChange,
   onSportChange,
+  onDateChange,
+  onTimeChange,
   onVerificationChange,
   onClearAll,
+  onApply,
   className,
 }: PlaceFiltersSheetProps) {
   const [open, setOpen] = useState(false);
@@ -63,14 +72,19 @@ export function PlaceFiltersSheet({
       (province ? 1 : 0) +
       (city ? 1 : 0) +
       (sportId ? 1 : 0) +
+      (date ? 1 : 0) +
+      (time?.length ?? 0) +
       (verification ? 1 : 0)
     );
-  }, [amenities, province, city, sportId, verification]);
+  }, [amenities, province, city, sportId, date, time, verification]);
 
   const hasFilters = activeCount > 0;
   const canClearFilters = hasClearableFilters ?? hasFilters;
 
-  const activeCountLabel = activeCount > 9 ? "9+" : String(activeCount);
+  const handleApply = () => {
+    onApply?.();
+    setOpen(false);
+  };
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -83,8 +97,8 @@ export function PlaceFiltersSheet({
         >
           <SlidersHorizontal className="h-4 w-4" />
           {hasFilters && (
-            <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-semibold text-primary-foreground">
-              {activeCountLabel}
+            <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-0.5 text-[9px] font-bold text-primary-foreground">
+              {activeCount > 9 ? "9+" : activeCount}
             </span>
           )}
         </Button>
@@ -95,13 +109,8 @@ export function PlaceFiltersSheet({
         className="h-[85vh] p-0 sm:h-[75vh] sm:rounded-t-xl"
       >
         <div className="flex h-full flex-col">
-          <SheetHeader className="border-b px-4 py-4">
-            <SheetTitle className="font-heading">Filters</SheetTitle>
-            <p className="text-sm text-muted-foreground">
-              {hasFilters
-                ? `${activeCount} selected`
-                : "Refine courts by location, amenities, and more."}
-            </p>
+          <SheetHeader className="border-b px-4 py-3">
+            <SheetTitle className="font-heading text-base">Filters</SheetTitle>
           </SheetHeader>
 
           <ScrollArea className="flex-1">
@@ -113,39 +122,48 @@ export function PlaceFiltersSheet({
                 province={province}
                 city={city}
                 sportId={sportId}
+                date={date}
+                time={time}
                 verification={verification}
                 onAmenitiesChange={onAmenitiesChange}
                 onProvinceChange={onProvinceChange}
                 onCityChange={onCityChange}
                 onSportChange={onSportChange}
+                onDateChange={onDateChange}
+                onTimeChange={onTimeChange}
                 onVerificationChange={onVerificationChange}
                 onClearAll={onClearAll}
               />
             </div>
           </ScrollArea>
 
-          <div className="border-t bg-background px-4 pt-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+          <div className="border-t bg-background px-4 pt-3 pb-[calc(0.75rem+env(safe-area-inset-bottom))]">
             <div className="flex gap-2">
               <Button
                 type="button"
                 variant="outline"
+                size="sm"
                 className="flex-1"
                 disabled={!canClearFilters}
                 onClick={onClearAll}
               >
                 Clear all
               </Button>
-              <SheetClose asChild>
-                <Button type="button" className="flex-1">
-                  Show results
-                </Button>
-              </SheetClose>
+              <Button
+                type="button"
+                size="sm"
+                className="flex-1"
+                onClick={handleApply}
+              >
+                Show results
+              </Button>
             </div>
             {resetLocationHref && (
               <Button
                 type="button"
                 variant="ghost"
-                className="mt-2 w-full"
+                size="sm"
+                className="mt-1 w-full text-xs"
                 asChild
               >
                 <Link href={resetLocationHref}>Reset location</Link>

@@ -80,6 +80,7 @@ import {
   useMutToggleCourtStatus,
   useQueryAdminCourt,
 } from "@/features/admin/hooks";
+import { useModAdminCourtFilters } from "@/features/admin/hooks/admin-court-filters";
 import { cn } from "@/lib/utils";
 import { AdminPlacesFilters } from "./admin-places-filters";
 
@@ -136,27 +137,21 @@ export function AdminPlacesList({
   primaryActions,
   entityLabel,
 }: AdminPlacesListProps) {
-  const [typeFilter, setTypeFilter] = React.useState<CourtType | "all">(
-    defaultTypeFilter,
-  );
-  const [statusFilter, setStatusFilter] = React.useState<CourtStatus | "all">(
-    "all",
-  );
-  const [provinceFilter, setProvinceFilter] = React.useState<string>("all");
-  const [cityFilter, setCityFilter] = React.useState<string>("all");
-  const [claimStatusFilter, setClaimStatusFilter] = React.useState<
-    ClaimStatusFilter | "all"
-  >("all");
-  const [featuredFilter, setFeaturedFilter] =
-    React.useState<FeaturedFilter>("all");
-  const [sourceFilter, setSourceFilter] = React.useState<CourtSource | "all">(
-    "all",
-  );
-  const [sortBy, setSortBy] = React.useState<CourtSortBy>("createdAt");
-  const [sortOrder, setSortOrder] = React.useState<SortOrder>("desc");
-  const [search, setSearch] = React.useState("");
+  const f = useModAdminCourtFilters();
+  const typeFilter = (defaultTypeFilter !== "all" && lockTypeFilter
+    ? defaultTypeFilter
+    : f.type) as CourtType | "all";
+  const statusFilter = f.status as CourtStatus | "all";
+  const provinceFilter = f.province;
+  const cityFilter = f.city;
+  const claimStatusFilter = f.claimStatus as ClaimStatusFilter | "all";
+  const featuredFilter = f.featured as FeaturedFilter;
+  const sourceFilter = f.source as CourtSource | "all";
+  const sortBy = f.sortBy as CourtSortBy;
+  const sortOrder = f.sortOrder as SortOrder;
+  const search = f.search;
   const debouncedSearch = useDebouncedValue(search, 2000);
-  const [page, setPage] = React.useState(1);
+  const page = f.page;
   const [expandedPlaceId, setExpandedPlaceId] = React.useState<string | null>(
     null,
   );
@@ -169,11 +164,7 @@ export function AdminPlacesList({
 
   const entityName = entityLabel?.singular ?? "Court";
 
-  React.useEffect(() => {
-    if (lockTypeFilter) {
-      setTypeFilter(defaultTypeFilter);
-    }
-  }, [defaultTypeFilter, lockTypeFilter]);
+  // Type filter locked by parent — handled inline above
 
   const provincesCitiesQuery = usePHProvincesCitiesQuery();
   const provincesCities = provincesCitiesQuery.data ?? null;
@@ -287,13 +278,7 @@ export function AdminPlacesList({
   };
 
   const handleSort = (column: CourtSortBy) => {
-    if (sortBy === column) {
-      setSortOrder((prev) => (prev === "asc" ? "desc" : "asc"));
-    } else {
-      setSortBy(column);
-      setSortOrder("asc");
-    }
-    setPage(1);
+    f.handleSort(column);
   };
 
   const allSelected =
@@ -338,16 +323,7 @@ export function AdminPlacesList({
     setSelectedIds(new Set());
   };
 
-  const filterKey = `${typeFilter}-${statusFilter}-${provinceFilter}-${cityFilter}-${claimStatusFilter}-${featuredFilter}-${sourceFilter}-${debouncedSearch}`;
-
-  React.useEffect(() => {
-    if (!filterKey) {
-      return;
-    }
-    if (page !== 1) {
-      setPage(1);
-    }
-  }, [filterKey, page]);
+  // Page reset on filter change is handled by nuqs setters (each sets page: 1)
 
   React.useEffect(() => {
     if (!expandedPlaceId) {
@@ -394,24 +370,19 @@ export function AdminPlacesList({
         cityPlaceholder={cityPlaceholder}
         isProvinceDisabled={isProvinceDisabled}
         isCityDisabled={isCityDisabled}
-        onTypeFilterChange={setTypeFilter}
-        onStatusFilterChange={setStatusFilter}
-        onFeaturedFilterChange={setFeaturedFilter}
-        onProvinceFilterChange={(value) => {
-          setProvinceFilter(value);
-          if (value !== provinceFilter) {
-            setCityFilter("all");
-          }
-        }}
-        onCityFilterChange={setCityFilter}
-        onClaimStatusFilterChange={setClaimStatusFilter}
+        onTypeFilterChange={f.setType}
+        onStatusFilterChange={f.setStatus}
+        onFeaturedFilterChange={f.setFeatured}
+        onProvinceFilterChange={f.setProvince}
+        onCityFilterChange={f.setCity}
+        onClaimStatusFilterChange={f.setClaimStatus}
         sourceFilter={sourceFilter}
-        onSourceFilterChange={setSourceFilter}
+        onSourceFilterChange={f.setSource}
         sortBy={sortBy}
         sortOrder={sortOrder}
-        onSortByChange={setSortBy}
-        onSortOrderChange={setSortOrder}
-        onSearchChange={setSearch}
+        onSortByChange={f.setSortBy}
+        onSortOrderChange={f.setSortOrder}
+        onSearchChange={f.setSearch}
       />
 
       {isLoading ? (
@@ -1098,7 +1069,7 @@ export function AdminPlacesList({
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      onClick={() => f.setPage(Math.max(1, page - 1))}
                       className={
                         page === 1
                           ? "pointer-events-none opacity-50"
@@ -1112,7 +1083,7 @@ export function AdminPlacesList({
                   ).map((pageNum) => (
                     <PaginationItem key={pageNum}>
                       <PaginationLink
-                        onClick={() => setPage(pageNum)}
+                        onClick={() => f.setPage(pageNum)}
                         isActive={page === pageNum}
                         className="cursor-pointer"
                       >
@@ -1123,7 +1094,7 @@ export function AdminPlacesList({
                   <PaginationItem>
                     <PaginationNext
                       onClick={() =>
-                        setPage((p) => Math.min(courtsData.totalPages, p + 1))
+                        f.setPage(Math.min(courtsData.totalPages, page + 1))
                       }
                       className={
                         page === courtsData.totalPages

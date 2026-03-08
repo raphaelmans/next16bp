@@ -1,9 +1,9 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle, MapPin } from "lucide-react";
+import { CheckCircle, MapPin, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
-import { useForm } from "react-hook-form";
+import { useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { PLACE_AMENITIES } from "@/common/amenities";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
@@ -16,6 +16,7 @@ import {
 import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
+import { Controller } from "react-hook-form";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -32,6 +33,13 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Spinner } from "@/components/ui/spinner";
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
 import { env } from "@/lib/env";
@@ -44,10 +52,24 @@ const optionalUrl = z
   .optional()
   .or(z.literal(""));
 
+const courtEntrySchema = z.object({
+  sportId: S.ids.sportId,
+  count: z.number().int().min(1).max(20),
+});
+
 const submitCourtFormSchema = z
   .object({
     name: S.place.name,
-    sportId: S.ids.sportId,
+    courts: z
+      .array(courtEntrySchema)
+      .min(1, { error: "At least one sport is required" })
+      .refine(
+        (courts) => {
+          const sportIds = courts.map((c) => c.sportId);
+          return new Set(sportIds).size === sportIds.length;
+        },
+        { message: "Each sport can only be added once" },
+      ),
     city: S.place.city,
     province: S.place.province,
     locationMode: z.enum(["link", "manual"]),
@@ -63,14 +85,16 @@ const submitCourtFormSchema = z
   })
   .refine(
     (data) => {
-      if (data.locationMode === "link") {
-        return !!data.googleMapsLink;
-      }
-      return !!data.latitude && !!data.longitude;
+      // Location is optional — only validate if user started filling it in
+      const hasLink = !!data.googleMapsLink;
+      const hasCoords = !!data.latitude && !!data.longitude;
+      if (!hasLink && !hasCoords) return true;
+      if (data.locationMode === "link") return hasLink;
+      return hasCoords;
     },
     {
       message:
-        "Google Maps link is required for link mode, coordinates are required for manual mode",
+        "Provide a Google Maps link or both coordinates",
       path: ["googleMapsLink"],
     },
   );
@@ -92,7 +116,7 @@ export function SubmitCourtForm() {
     mode: "onChange",
     defaultValues: {
       name: "",
-      sportId: "",
+      courts: [{ sportId: "", count: 1 }],
       city: "",
       province: "",
       locationMode: "link",
@@ -108,8 +132,19 @@ export function SubmitCourtForm() {
     },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "courts",
+  });
+
   const locationMode = form.watch("locationMode");
   const selectedProvince = form.watch("province");
+  const watchedCourts = form.watch("courts");
+
+  const selectedSportIds = React.useMemo(
+    () => new Set(watchedCourts.map((c) => c.sportId).filter(Boolean)),
+    [watchedCourts],
+  );
 
   const provincesCities = provincesCitiesQuery.data ?? null;
   const provinceOptions = React.useMemo(() => {
@@ -158,7 +193,10 @@ export function SubmitCourtForm() {
     submitMutation.mutate(
       {
         name: data.name,
-        sportId: data.sportId,
+        courts: data.courts.map((c) => ({
+          sportId: c.sportId,
+          count: c.count,
+        })),
         city: data.city,
         province: data.province,
         locationMode: data.locationMode,
@@ -197,16 +235,29 @@ export function SubmitCourtForm() {
     }
   };
 
+  const sportOptions = React.useMemo(
+    () =>
+      sportsLoading
+        ? []
+        : (sports as { id: string; name: string }[]).map((s) => ({
+            label: s.name,
+            value: s.id,
+          })),
+    [sports, sportsLoading],
+  );
+
   if (isSubmitted) {
     return (
       <Card className="max-w-lg mx-auto">
         <CardContent className="pt-6">
           <div className="flex flex-col items-center gap-4 text-center py-8">
             <CheckCircle className="h-12 w-12 text-success" />
-            <h2 className="text-xl font-heading font-bold">Court Submitted!</h2>
+            <h2 className="text-xl font-heading font-bold">
+              Venue Submitted!
+            </h2>
             <p className="text-muted-foreground">
-              Your court submission is now pending admin review. Once approved,
-              it will appear in the courts directory.
+              Your venue submission is now pending admin review. Once approved,
+              it will appear in the directory.
             </p>
             <Button
               variant="outline"
@@ -227,28 +278,99 @@ export function SubmitCourtForm() {
     <StandardFormProvider form={form} onSubmit={handleSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>Court Details</CardTitle>
+          <CardTitle>Venue Details</CardTitle>
           <CardDescription>
-            Tell us about the court you want to add.
+            Tell us about the venue you want to add.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <StandardFormInput name="name" label="Court Name" required />
+          <StandardFormInput name="name" label="Venue Name" required />
 
-          <StandardFormSelect
-            name="sportId"
-            label="Sport"
-            required
-            options={
-              sportsLoading
-                ? []
-                : (sports as { id: string; name: string }[]).map((s) => ({
-                    label: s.name,
-                    value: s.id,
-                  }))
-            }
-            placeholder="Select a sport"
-          />
+          <div className="space-y-2">
+            <div className="grid grid-cols-[1fr_5rem_2rem] items-center gap-2">
+              <Label>
+                Sport<span className="ml-1 text-destructive">*</span>
+              </Label>
+              <Label>
+                Courts<span className="ml-1 text-destructive">*</span>
+              </Label>
+              <span />
+            </div>
+            {fields.map((field, index) => {
+              const availableOptions = sportOptions.filter(
+                (opt) =>
+                  opt.value === watchedCourts[index]?.sportId ||
+                  !selectedSportIds.has(opt.value),
+              );
+
+              return (
+                <div
+                  key={field.id}
+                  className="grid grid-cols-[1fr_5rem_2rem] items-center gap-2"
+                >
+                  <Controller
+                    control={form.control}
+                    name={`courts.${index}.sportId`}
+                    render={({ field }) => (
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        disabled={sportsLoading}
+                      >
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Select a sport" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {availableOptions.map((opt) => (
+                            <SelectItem key={opt.value} value={opt.value}>
+                              {opt.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    )}
+                  />
+                  <Input
+                    type="number"
+                    min={1}
+                    max={20}
+                    {...form.register(`courts.${index}.count`, {
+                      valueAsNumber: true,
+                    })}
+                  />
+                  {fields.length > 1 ? (
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-8"
+                      onClick={() => remove(index)}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  ) : (
+                    <span />
+                  )}
+                </div>
+              );
+            })}
+            {sportOptions.length > fields.length && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={() => append({ sportId: "", count: 1 })}
+              >
+                <Plus className="mr-1 h-4 w-4" />
+                Add Sport
+              </Button>
+            )}
+            {form.formState.errors.courts?.root && (
+              <p className="text-sm text-destructive">
+                {form.formState.errors.courts.root.message}
+              </p>
+            )}
+          </div>
 
           <div className="grid gap-4 sm:grid-cols-2">
             <StandardFormSelect
@@ -259,7 +381,7 @@ export function SubmitCourtForm() {
               options={provinceOptions}
               placeholder={
                 provincesCitiesQuery.isLoading
-                  ? "Loading..."
+                  ? "Select province"
                   : "Select province"
               }
             />
@@ -281,7 +403,7 @@ export function SubmitCourtForm() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Location</CardTitle>
+          <CardTitle>Location (optional)</CardTitle>
           <CardDescription>
             Help us pinpoint the exact location.
           </CardDescription>
@@ -357,13 +479,11 @@ export function SubmitCourtForm() {
               <StandardFormInput
                 name="latitude"
                 label="Latitude"
-                required
                 placeholder="e.g. 14.5995"
               />
               <StandardFormInput
                 name="longitude"
                 label="Longitude"
-                required
                 placeholder="e.g. 120.9842"
               />
             </div>
@@ -375,7 +495,7 @@ export function SubmitCourtForm() {
         <CardHeader>
           <CardTitle>Amenities (optional)</CardTitle>
           <CardDescription>
-            Select the amenities available at this court.
+            Select the amenities available at this venue.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -400,7 +520,7 @@ export function SubmitCourtForm() {
         <CardHeader>
           <CardTitle>Contact Info (optional)</CardTitle>
           <CardDescription>
-            Help others reach out to this court.
+            Help others reach out to this venue.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -418,7 +538,7 @@ export function SubmitCourtForm() {
         className="w-full"
         disabled={submitMutation.isPending}
       >
-        {submitMutation.isPending ? <Spinner /> : "Submit Court"}
+        {submitMutation.isPending ? <Spinner /> : "Submit Venue"}
       </Button>
     </StandardFormProvider>
   );

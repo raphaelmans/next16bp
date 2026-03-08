@@ -1,9 +1,11 @@
 import { and, count, eq, gte, sql } from "drizzle-orm";
 import {
+  court,
   courtSubmission,
   type CourtSubmissionRecord,
   type InsertCourtSubmission,
   place,
+  sport,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
@@ -136,8 +138,47 @@ export class CourtSubmissionRepository {
       client.select({ count: count() }).from(courtSubmission).where(conditions),
     ]);
 
+    // Fetch court/sport data for all submissions
+    const placeIds = items.map((i) => i.submission.placeId);
+    const courtSportRows =
+      placeIds.length > 0
+        ? await client
+            .select({
+              placeId: court.placeId,
+              sportName: sport.name,
+              sportId: court.sportId,
+            })
+            .from(court)
+            .innerJoin(sport, eq(court.sportId, sport.id))
+            .where(sql`${court.placeId} IN ${placeIds}`)
+        : [];
+
+    // Group courts by place, then by sport
+    const courtsByPlace = new Map<
+      string,
+      { sportName: string; count: number }[]
+    >();
+    for (const row of courtSportRows) {
+      if (!row.placeId) continue;
+      if (!courtsByPlace.has(row.placeId)) {
+        courtsByPlace.set(row.placeId, []);
+      }
+      const sports = courtsByPlace.get(row.placeId)!;
+      const existing = sports.find((s) => s.sportName === row.sportName);
+      if (existing) {
+        existing.count++;
+      } else {
+        sports.push({ sportName: row.sportName, count: 1 });
+      }
+    }
+
+    const enrichedItems = items.map((item) => ({
+      ...item,
+      courts: courtsByPlace.get(item.submission.placeId) ?? [],
+    }));
+
     return {
-      items,
+      items: enrichedItems,
       total: totalResult[0]?.count ?? 0,
     };
   }

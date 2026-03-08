@@ -35,6 +35,8 @@ import { placeRouter } from "@/lib/modules/place/place.router";
 import { placeManagementRouter } from "@/lib/modules/place/place-management.router";
 import { placeAddonRouter } from "@/lib/modules/place-addon/place-addon.router";
 import { placeBookmarkRouter } from "@/lib/modules/place-bookmark/place-bookmark.router";
+import { placeReviewAdminRouter } from "@/lib/modules/place-review/admin/place-review-admin.router";
+import { placeReviewRouter } from "@/lib/modules/place-review/place-review.router";
 import { placeVerificationAdminRouter } from "@/lib/modules/place-verification/admin/place-verification-admin.router";
 import { placeVerificationRouter } from "@/lib/modules/place-verification/place-verification.router";
 import { profileRouter } from "@/lib/modules/profile/profile.router";
@@ -65,6 +67,7 @@ export const appRouter = router({
   placeAddon: placeAddonRouter,
   placeBookmark: placeBookmarkRouter,
   placeManagement: placeManagementRouter,
+  placeReview: placeReviewRouter,
   placeVerification: placeVerificationRouter,
   sport: sportRouter,
   profile: profileRouter,
@@ -97,6 +100,7 @@ export const appRouter = router({
     placeVerification: placeVerificationAdminRouter,
     notificationDelivery: notificationDeliveryAdminRouter,
     courtSubmission: adminSubmissionRouter,
+    placeReview: placeReviewAdminRouter,
   }),
 });
 

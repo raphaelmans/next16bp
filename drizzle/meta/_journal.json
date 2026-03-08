@@ -309,6 +309,13 @@
       "when": 1772893800000,
       "tag": "0040_remove_place_verification_requires_verified",
       "breakpoints": true
+    },
+    {
+      "idx": 44,
+      "version": "7",
+      "when": 1772956800000,
+      "tag": "0041_place_review",
+      "breakpoints": true
     }
   ]
 }

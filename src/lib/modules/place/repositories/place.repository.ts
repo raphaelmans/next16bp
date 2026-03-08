@@ -61,11 +61,21 @@ export interface PlaceSummaryItem {
     address: string;
     city: string;
     province: string;
+    timeZone: string;
     latitude: string | null;
     longitude: string | null;
     placeType?: "CURATED" | "RESERVABLE";
     featuredRank?: number | null;
     provinceRank?: number | null;
+  };
+  availabilityPreview?: {
+    requestedDate: string;
+    requestedTime?: string[];
+    matchedStartTime: string;
+    matchCount: number;
+    timeZone: string;
+    sportName?: string;
+    sportId?: string;
   };
 }
 
@@ -84,6 +94,8 @@ export interface PlaceCardMetaItem {
   verificationStatus?: typeof placeVerification.$inferSelect.status | null;
   reservationsEnabled?: boolean | null;
   hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
 }
 
 type PlaceVerificationProjection = {
@@ -874,6 +886,7 @@ export class PlaceRepository implements IPlaceRepository {
           address: placeRecord.address,
           city: placeRecord.city,
           province: placeRecord.province,
+          timeZone: placeRecord.timeZone,
           latitude: placeRecord.latitude ?? null,
           longitude: placeRecord.longitude ?? null,
           placeType: placeRecord.placeType,

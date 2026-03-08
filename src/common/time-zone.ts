@@ -49,6 +49,11 @@ export const getZonedDayRangeFromDayKey = (
   return { start, end };
 };
 
+export const getZonedDayStartIsoFromDayKey = (
+  dayKey: string,
+  timeZone?: string,
+) => toUtcISOString(getZonedDayRangeFromDayKey(dayKey, timeZone).start);
+
 export const getZonedWeekdayMinuteOfDay = (
   instant: Date | string,
   timeZone?: string,

@@ -1,6 +1,7 @@
 "use client";
 
 import { useQueryStates } from "nuqs";
+import { useEffect } from "react";
 import { searchParamsSchema } from "../schemas";
 
 /**
@@ -11,12 +12,23 @@ export function useModDiscoveryFilters() {
     shallow: false,
   });
 
+  useEffect(() => {
+    if (!filters.date && filters.time) {
+      setFilters({
+        time: null,
+        page: 1,
+      });
+    }
+  }, [filters.date, filters.time, setFilters]);
+
   const clearAll = () => {
     setFilters({
       q: null,
       province: null,
       city: null,
       sportId: null,
+      date: null,
+      time: null,
       amenities: null,
       verification: null,
       page: 1,
@@ -32,7 +44,25 @@ export function useModDiscoveryFilters() {
   };
 
   const setSportId = (sportId: string | undefined) => {
-    setFilters({ sportId: sportId || null, page: 1 });
+    setFilters({
+      sportId: sportId || null,
+      page: 1,
+    });
+  };
+
+  const setDate = (date: string | undefined) => {
+    setFilters({
+      date: date || null,
+      time: date ? filters.time : null,
+      page: 1,
+    });
+  };
+
+  const setTime = (time: string[] | undefined) => {
+    setFilters({
+      time: time && time.length > 0 ? time : null,
+      page: 1,
+    });
   };
 
   const setAmenities = (amenities: string[] | undefined) => {
@@ -69,6 +99,8 @@ export function useModDiscoveryFilters() {
     setProvince,
     setCity,
     setSportId,
+    setDate,
+    setTime,
     setAmenities,
     setVerification,
     setView,

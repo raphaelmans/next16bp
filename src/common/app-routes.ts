@@ -218,6 +218,9 @@ export const appRoutes = {
     venues: {
       base: "/admin/venues",
     },
+    reviews: {
+      base: "/admin/reviews",
+    },
     submissions: {
       base: "/admin/submissions",
     },

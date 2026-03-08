@@ -21,6 +21,8 @@ export const searchParamsSchema = {
   province: parseAsString,
   city: parseAsString,
   sportId: parseAsString,
+  date: parseAsString,
+  time: parseAsArrayOf(parseAsString),
   amenities: parseAsArrayOf(parseAsString),
   verification: parseAsStringLiteral([
     "verified_reservable",
@@ -41,6 +43,8 @@ export type SearchParams = {
   province: string | null;
   city: string | null;
   sportId: string | null;
+  date: string | null;
+  time: string[] | null;
   amenities: string[] | null;
   verification:
     | "verified_reservable"

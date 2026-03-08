@@ -125,6 +125,7 @@ export default function AdminSubmissionsPage() {
     rejectionReason: string | null;
     createdAt: string;
     place: { name: string; city: string; province: string };
+    courts?: { sportName: string; count: number }[];
   };
 
   const submissions =
@@ -152,8 +153,8 @@ export default function AdminSubmissionsPage() {
     >
       <div className="space-y-6">
         <PageHeader
-          title="Court Submissions"
-          description="Review user-submitted courts."
+          title="Venue Submissions"
+          description="Review user-submitted venues."
         />
 
         <div className="flex items-center gap-4">
@@ -215,6 +216,15 @@ export default function AdminSubmissionsPage() {
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
+                  {submission.courts && submission.courts.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 mb-2">
+                      {submission.courts.map((c) => (
+                        <Badge key={c.sportName} variant="outline">
+                          {c.sportName} &times;{c.count}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-xs text-muted-foreground">
                       User: {submission.submittedByUserId.slice(0, 8)}...
@@ -280,7 +290,7 @@ export default function AdminSubmissionsPage() {
           <DialogHeader>
             <DialogTitle>Reject Submission</DialogTitle>
             <DialogDescription>
-              Provide a reason for rejecting this court submission.
+              Provide a reason for rejecting this venue submission.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">
@@ -314,7 +324,7 @@ export default function AdminSubmissionsPage() {
           <DialogHeader>
             <DialogTitle>Ban User</DialogTitle>
             <DialogDescription>
-              This user will be prevented from submitting courts.
+              This user will be prevented from submitting venues.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-2">

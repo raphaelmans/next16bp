@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { PlaceDetailAmenitiesCard } from "@/features/discovery/place-detail/components/place-detail-amenities-card";
 import { PlaceDetailContactCard } from "@/features/discovery/place-detail/components/place-detail-contact-card";
+import { PlaceDetailReviewsSection } from "@/features/discovery/place-detail/components/place-detail-reviews-section";
 import type { PlaceVenueSectionData } from "@/features/discovery/place-detail/server/place-detail-section-data";
 
 type PlaceDetailVenueServerSectionProps = {
@@ -38,6 +39,7 @@ export async function PlaceDetailVenueServerSection({
         viberLink={viberLink}
       />
       <PlaceDetailAmenitiesCard amenities={data.amenities} />
+      <PlaceDetailReviewsSection placeId={data.placeId} />
     </div>
   );
 }

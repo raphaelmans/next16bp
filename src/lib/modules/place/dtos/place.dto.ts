@@ -5,6 +5,8 @@ export const ListPlacesSchema = z.object({
   q: S.place.searchQuery.optional(),
   province: S.place.province.optional(),
   city: S.common.requiredText.optional(),
+  date: z.string().trim().optional(),
+  time: z.array(z.string().trim()).optional(),
   lat: z.number().optional(),
   lng: z.number().optional(),
   sportId: S.ids.sportId.optional(),

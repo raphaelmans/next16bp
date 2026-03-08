@@ -1,7 +1,9 @@
+export { AppliedFilterChips } from "./applied-filter-chips";
 export { BookingCard } from "./booking-card";
 export { ContactSection } from "./contact-section";
 export { PlaceFilters } from "./court-filters";
 export { PlaceMap } from "./court-map";
+export { DiscoveryPlaceCard } from "./discovery-place-card";
 export { EmptyResults } from "./empty-results";
 export { Footer } from "./footer";
 export { HeroSection } from "./hero-section";

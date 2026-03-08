@@ -11,6 +11,7 @@ import {
   buildDiscoveryPlaceListSummaryQueryInput,
   buildDiscoveryTier1CacheTags,
   createDiscoveryPlaceSummariesQueryOptions,
+  DISCOVERY_AVAILABILITY_STALE_TIME_MS,
   DISCOVERY_TIER1_REVALIDATE_SECONDS,
   DISCOVERY_TIER1_STALE_TIME_MS,
   type DiscoveryListFilterState,
@@ -98,6 +99,8 @@ export const parseDiscoverySearchParams = (
   province: normalizeString(getFirstValue(searchParams?.province)),
   city: normalizeString(getFirstValue(searchParams?.city)),
   sportId: normalizeString(getFirstValue(searchParams?.sportId)),
+  date: normalizeString(getFirstValue(searchParams?.date)),
+  time: getArrayValue(searchParams?.time),
   amenities: getArrayValue(searchParams?.amenities),
   verificationTier: parseVerificationTier(
     normalizeString(getFirstValue(searchParams?.verification)),
@@ -127,6 +130,8 @@ export const resolveDiscoveryPrefetchState = async (input: {
     provinceName: resolvedLocation.provinceName,
     cityName: resolvedLocation.cityName,
     sportId: effectiveFilters.sportId,
+    date: effectiveFilters.date,
+    time: effectiveFilters.time,
     amenities: effectiveFilters.amenities,
     verificationTier: effectiveFilters.verificationTier,
     page: effectiveFilters.page,
@@ -159,6 +164,17 @@ const getCachedDiscoveryPlaceSummaries = async (
   return cachedQuery();
 };
 
+const getDiscoveryPlaceSummaries = async (
+  input: ReturnType<typeof buildDiscoveryPlaceListSummaryQueryInput>,
+  location: DiscoveryResolvedLocation,
+) => {
+  if (input.date) {
+    return publicCaller.place.listSummary(input);
+  }
+
+  return getCachedDiscoveryPlaceSummaries(input, location);
+};
+
 type DiscoveryHydratedCourtsPageProps = {
   initialFilters?: DiscoveryLocationDefaults;
   initialLocationLabel?: string;
@@ -186,10 +202,12 @@ export async function DiscoveryHydratedCourtsPage({
   await queryClient.prefetchQuery(
     createDiscoveryPlaceSummariesQueryOptions(
       (input) =>
-        getCachedDiscoveryPlaceSummaries(input, prefetchState.resolvedLocation),
+        getDiscoveryPlaceSummaries(input, prefetchState.resolvedLocation),
       prefetchState.summaryInput,
       {
-        staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
+        staleTime: prefetchState.summaryInput.date
+          ? DISCOVERY_AVAILABILITY_STALE_TIME_MS
+          : DISCOVERY_TIER1_STALE_TIME_MS,
       },
     ),
   );

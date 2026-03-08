@@ -15,14 +15,14 @@ export class CourtSubmissionNotFoundError extends NotFoundError {
 export class UserBannedFromSubmissionsError extends AuthorizationError {
   readonly code = "USER_BANNED_FROM_SUBMISSIONS";
   constructor() {
-    super("You are not allowed to submit courts");
+    super("You are not allowed to submit venues");
   }
 }
 
 export class DailySubmissionQuotaExceededError extends BusinessRuleError {
   readonly code = "DAILY_SUBMISSION_QUOTA_EXCEEDED";
   constructor() {
-    super("You have reached the daily submission limit of 10 courts");
+    super("You have reached the daily submission limit of 10 venues");
   }
 }
 

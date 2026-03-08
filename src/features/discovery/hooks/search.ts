@@ -28,8 +28,10 @@ import {
 import {
   buildDiscoveryPlaceListSummaryQueryInput,
   createDiscoveryPlaceSummariesQueryOptions,
+  DISCOVERY_AVAILABILITY_STALE_TIME_MS,
   DISCOVERY_SUMMARIES_DEFAULT_LIMIT,
   DISCOVERY_TIER1_STALE_TIME_MS,
+  type DiscoveryAvailabilityPreview,
   type DiscoveryResolvedLocationState,
 } from "@/features/discovery/query-options";
 import { getDiscoveryApi } from "../api.runtime";
@@ -161,6 +163,8 @@ interface UseDiscoveryOptions {
   province?: string;
   city?: string;
   sportId?: string;
+  date?: string;
+  time?: string[];
   amenities?: string[];
   verificationTier?:
     | "verified_reservable"
@@ -182,6 +186,7 @@ export interface DiscoveryPlaceSummary {
   provinceRank?: number;
   latitude?: number;
   longitude?: number;
+  availabilityPreview?: DiscoveryAvailabilityPreview;
 }
 
 export interface PlaceCardMedia {
@@ -196,6 +201,8 @@ export interface PlaceCardMeta {
   currency?: string;
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
 }
 
 interface PlaceSummaryListItem {
@@ -211,6 +218,7 @@ interface PlaceSummaryListItem {
     featuredRank?: number | null;
     provinceRank?: number | null;
   };
+  availabilityPreview?: DiscoveryAvailabilityPreview;
 }
 
 interface DiscoveryResult {
@@ -248,6 +256,7 @@ const mapPlaceSummaryItem = (
     provinceRank: item.place.provinceRank ?? 0,
     latitude: Number.isFinite(latitude) ? latitude : undefined,
     longitude: Number.isFinite(longitude) ? longitude : undefined,
+    availabilityPreview: item.availabilityPreview,
   };
 };
 
@@ -322,6 +331,8 @@ export function useModDiscoveryPlaceSummaries(
     province,
     city,
     sportId,
+    date,
+    time,
     amenities,
     verificationTier,
     page = 1,
@@ -375,6 +386,8 @@ export function useModDiscoveryPlaceSummaries(
         provinceName: resolvedLocation?.province,
         cityName: resolvedLocation?.city,
         sportId,
+        date,
+        time,
         amenities,
         verificationTier,
         limit,
@@ -388,6 +401,8 @@ export function useModDiscoveryPlaceSummaries(
       resolvedLocation?.city,
       resolvedLocation?.province,
       sportId,
+      date,
+      time,
       verificationTier,
     ],
   );
@@ -397,7 +412,9 @@ export function useModDiscoveryPlaceSummaries(
       discoveryApi.queryPlaceListSummary,
       currentQueryInput,
       {
-        staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
+        staleTime: currentQueryInput.date
+          ? DISCOVERY_AVAILABILITY_STALE_TIME_MS
+          : DISCOVERY_TIER1_STALE_TIME_MS,
         placeholderData: keepPreviousData,
       },
     ),
@@ -420,7 +437,7 @@ export function useModDiscoveryPlaceSummaries(
   );
 
   useEffect(() => {
-    if (!transformedData?.hasMore) {
+    if (!transformedData?.hasMore || page !== 1) {
       return;
     }
 
@@ -429,6 +446,8 @@ export function useModDiscoveryPlaceSummaries(
       provinceName: resolvedLocation?.province,
       cityName: resolvedLocation?.city,
       sportId,
+      date,
+      time,
       amenities,
       verificationTier,
       limit,
@@ -440,7 +459,9 @@ export function useModDiscoveryPlaceSummaries(
         discoveryApi.queryPlaceListSummary,
         nextQueryInput,
         {
-          staleTime: DISCOVERY_TIER1_STALE_TIME_MS,
+          staleTime: nextQueryInput.date
+            ? DISCOVERY_AVAILABILITY_STALE_TIME_MS
+            : DISCOVERY_TIER1_STALE_TIME_MS,
         },
       ),
     );
@@ -453,6 +474,8 @@ export function useModDiscoveryPlaceSummaries(
     resolvedLocation?.city,
     resolvedLocation?.province,
     sportId,
+    date,
+    time,
     transformedData?.hasMore,
     verificationTier,
   ]);

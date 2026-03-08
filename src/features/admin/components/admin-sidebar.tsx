@@ -4,6 +4,7 @@ import {
   Building2,
   LayoutDashboard,
   MapPin,
+  MessageSquare,
   ShieldCheck,
   Tag,
 } from "lucide-react";
@@ -63,6 +64,12 @@ const navItems = [
     title: "Venues",
     href: appRoutes.admin.venues.base,
     icon: MapPin,
+    badgeKey: null,
+  },
+  {
+    title: "Reviews",
+    href: appRoutes.admin.reviews.base,
+    icon: MessageSquare,
     badgeKey: null,
   },
 ] as const;

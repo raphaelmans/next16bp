@@ -36,6 +36,8 @@ export interface PlaceCardPlace {
   reservationsEnabled?: boolean;
   featuredRank?: number;
   provinceRank?: number;
+  averageRating?: number | null;
+  reviewCount?: number | null;
 }
 
 export type PlaceCardLinkScope = "card" | "title" | "none";
@@ -265,6 +267,29 @@ export function PlaceCard({
             >
               {place.city}
             </span>
+            {place.averageRating != null &&
+              place.reviewCount != null &&
+              place.reviewCount > 0 && (
+                <span className="ml-auto flex items-center gap-0.5 shrink-0">
+                  <Star className="h-3 w-3 fill-amber-400 text-amber-400" />
+                  <span
+                    className={cn(
+                      "font-medium text-foreground",
+                      variant === "compact" ? "text-[11px]" : "text-xs",
+                    )}
+                  >
+                    {place.averageRating.toFixed(1)}
+                  </span>
+                  <span
+                    className={cn(
+                      "text-muted-foreground",
+                      variant === "compact" ? "text-[10px]" : "text-[11px]",
+                    )}
+                  >
+                    ({place.reviewCount})
+                  </span>
+                </span>
+              )}
           </div>
           <div
             className={cn(

@@ -6,6 +6,7 @@ import { placeContactDetail } from "@/lib/shared/infra/db/schema";
 import type { PlaceRepository } from "@/lib/modules/place/repositories/place.repository";
 import { resolvePlaceSlug } from "@/lib/modules/place/helpers";
 import type { GoogleLocService } from "@/lib/modules/google-loc/services/google-loc.service";
+import type { CourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { CourtSubmissionRepository } from "../repositories/court-submission.repository";
 import type { CourtSubmissionBanRepository } from "../repositories/court-submission-ban.repository";
@@ -25,6 +26,7 @@ export class CourtSubmissionService {
     private submissionRepo: CourtSubmissionRepository,
     private banRepo: CourtSubmissionBanRepository,
     private placeRepo: PlaceRepository,
+    private courtRepo: CourtRepository,
     private googleLocService: GoogleLocService,
     private transactionManager: TransactionManager,
   ) {}
@@ -45,22 +47,22 @@ export class CourtSubmissionService {
       throw new DailySubmissionQuotaExceededError();
     }
 
-    // 3. Resolve coordinates
-    let latitude: string;
-    let longitude: string;
+    // 3. Resolve coordinates (optional)
+    let latitude: string | null = null;
+    let longitude: string | null = null;
 
-    if (input.locationMode === "link") {
+    if (input.locationMode === "link" && input.googleMapsLink) {
       const preview = await this.googleLocService.preview({
-        url: input.googleMapsLink!,
+        url: input.googleMapsLink,
       });
       if (preview.lat == null || preview.lng == null) {
         throw new InvalidGoogleMapsLinkError();
       }
       latitude = preview.lat.toString();
       longitude = preview.lng.toString();
-    } else {
-      latitude = input.latitude!;
-      longitude = input.longitude!;
+    } else if (input.latitude && input.longitude) {
+      latitude = input.latitude;
+      longitude = input.longitude;
     }
 
     // 4. Transaction: create place + submission
@@ -123,6 +125,23 @@ export class CourtSubmissionService {
         );
       }
 
+      // Create court records with sequential labels across all sports
+      let courtIndex = 1;
+      for (const entry of input.courts) {
+        for (let i = 0; i < entry.count; i++) {
+          await this.courtRepo.create(
+            {
+              placeId: placeRecord.id,
+              sportId: entry.sportId,
+              label: `Court ${courtIndex}`,
+              isActive: true,
+            },
+            ctx,
+          );
+          courtIndex++;
+        }
+      }
+
       const submission = await this.submissionRepo.create(
         {
           placeId: placeRecord.id,
@@ -132,14 +151,17 @@ export class CourtSubmissionService {
         ctx,
       );
 
+      const totalCourts = input.courts.reduce((sum, e) => sum + e.count, 0);
       logger.info(
         {
           event: "court_submission.created",
           submissionId: submission.id,
           placeId: placeRecord.id,
           userId,
+          courtCount: totalCourts,
+          sports: input.courts.length,
         },
-        "Court submitted by user",
+        "Venue submitted by user",
       );
 
       return submission;

@@ -1,0 +1,4 @@
+name: venue-submission-multi-sport
+status: implementing
+created: 2026-03-08
+summary: Replace single sportId with multi-sport courts array in venue submission, create court records, update all copy from "court" to "venue"

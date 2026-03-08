@@ -7,6 +7,7 @@ export { AdminNavbar } from "./admin-navbar";
 export { AdminOnly } from "./admin-only";
 export { AdminPageFrame } from "./admin-page-frame";
 export { AdminPlacesList } from "./admin-places-list";
+export { AdminReviewsList } from "./admin-reviews-list";
 export { AdminSidebar } from "./admin-sidebar";
 export { ClaimReviewActions } from "./claim-review-actions";
 export { PlaceVerificationReviewActions } from "./place-verification-review-actions";

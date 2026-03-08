@@ -26,6 +26,7 @@ import {
 } from "@/features/discovery/place-detail/server/place-detail-section-data";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { isUuid } from "@/lib/slug";
+import { publicCaller } from "@/trpc/server";
 
 const appUrl = getCanonicalOrigin();
 
@@ -224,6 +225,21 @@ async function PlaceDetailPageServerSection({
     const courtsSectionPromise = getPlaceCourtsSectionData(canonicalId);
     const venueSectionPromise = getPlaceVenueSectionData(canonicalId);
 
+    let reviewAggregate: {
+      averageRating: number;
+      reviewCount: number;
+    } | null = null;
+    try {
+      const agg = await publicCaller.placeReview.aggregate({
+        placeId: place.id,
+      });
+      if (agg.reviewCount > 0) {
+        reviewAggregate = agg;
+      }
+    } catch {
+      // Reviews aggregate is non-critical for page rendering
+    }
+
     const imageUrls = placeDetails.photos
       .map((photo) => photo.url)
       .filter((url): url is string => Boolean(url));
@@ -293,6 +309,17 @@ async function PlaceDetailPageServerSection({
         : {}),
       ...(placeDetails.contactDetail?.phoneNumber?.trim()
         ? { telephone: placeDetails.contactDetail.phoneNumber.trim() }
+        : {}),
+      ...(reviewAggregate
+        ? {
+            aggregateRating: {
+              "@type": "AggregateRating",
+              ratingValue: reviewAggregate.averageRating.toFixed(1),
+              reviewCount: reviewAggregate.reviewCount,
+              bestRating: 5,
+              worstRating: 1,
+            },
+          }
         : {}),
     };
 

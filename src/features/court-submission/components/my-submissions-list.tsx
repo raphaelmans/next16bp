@@ -61,7 +61,7 @@ export function MySubmissionsList() {
       <Card>
         <CardContent className="py-12 text-center">
           <p className="text-muted-foreground">
-            You haven&apos;t submitted any courts yet.
+            You haven&apos;t submitted any venues yet.
           </p>
         </CardContent>
       </Card>

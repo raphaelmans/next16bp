@@ -11,10 +11,10 @@ export default function MySubmissionsPage() {
     <div className="container max-w-2xl py-6 space-y-6">
       <PageHeader
         title="My Submissions"
-        description="Courts you've submitted for review."
+        description="Venues you've submitted for review."
         actions={
           <Button asChild>
-            <Link href={appRoutes.submitCourt.base}>Submit a Court</Link>
+            <Link href={appRoutes.submitCourt.base}>Submit a Venue</Link>
           </Button>
         }
       />

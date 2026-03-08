@@ -3,10 +3,26 @@ import { S } from "@/common/schemas";
 
 const optionalUrl = z.string().trim().check(z.url()).optional();
 
+export const CourtEntrySchema = z.object({
+  sportId: S.ids.sportId,
+  count: z.number().int().min(1).max(20).default(1),
+});
+
+export type CourtEntry = z.infer<typeof CourtEntrySchema>;
+
 export const SubmitCourtInputSchema = z
   .object({
     name: S.place.name,
-    sportId: S.ids.sportId,
+    courts: z
+      .array(CourtEntrySchema)
+      .min(1, { error: "At least one sport is required" })
+      .refine(
+        (courts) => {
+          const sportIds = courts.map((c) => c.sportId);
+          return new Set(sportIds).size === sportIds.length;
+        },
+        { message: "Each sport can only be added once" },
+      ),
     city: S.place.city,
     province: S.place.province,
     locationMode: z.enum(["link", "manual"]),
@@ -24,14 +40,14 @@ export const SubmitCourtInputSchema = z
   })
   .refine(
     (data) => {
-      if (data.locationMode === "link") {
-        return !!data.googleMapsLink;
-      }
-      return !!data.latitude && !!data.longitude;
+      const hasLink = !!data.googleMapsLink;
+      const hasCoords = !!data.latitude && !!data.longitude;
+      if (!hasLink && !hasCoords) return true;
+      if (data.locationMode === "link") return hasLink;
+      return hasCoords;
     },
     {
-      message:
-        "Google Maps link is required for link mode, coordinates are required for manual mode",
+      message: "Provide a Google Maps link or both coordinates",
     },
   );
 

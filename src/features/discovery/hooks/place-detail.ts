@@ -17,7 +17,6 @@ import {
   createDiscoveryPlaceCardMediaQueryOptions,
   createDiscoveryPlaceCardMetaQueryOptions,
   DISCOVERY_TIER2_STALE_TIME_MS,
-  DISCOVERY_VISIBLE_CHUNK_SIZE,
 } from "@/features/discovery/query-options";
 import { getDiscoveryApi } from "../api.runtime";
 import { useModDiscoveryAvailabilityRealtimeSync } from "../realtime";
@@ -138,6 +137,8 @@ export interface PlaceCardMeta {
   verificationStatus?: "UNVERIFIED" | "PENDING" | "VERIFIED" | "REJECTED";
   reservationsEnabled?: boolean;
   hasPaymentMethods?: boolean;
+  averageRating?: number | null;
+  reviewCount?: number | null;
 }
 
 export const buildDiscoveryPlaceCard = (
@@ -161,6 +162,8 @@ export const buildDiscoveryPlaceCard = (
   reservationsEnabled: meta?.reservationsEnabled,
   featuredRank: summary.featuredRank,
   provinceRank: summary.provinceRank,
+  averageRating: meta?.averageRating,
+  reviewCount: meta?.reviewCount,
 });
 
 export function useModDiscoveryPlaceCardDetails(
@@ -220,156 +223,78 @@ export function useModDiscoveryPlaceCardDetails(
   };
 }
 
-const chunkPlaceIds = (placeIds: string[], chunkSize: number) => {
-  const chunks: string[][] = [];
-  for (let index = 0; index < placeIds.length; index += chunkSize) {
-    chunks.push(placeIds.slice(index, index + chunkSize));
-  }
-  return chunks;
-};
-
-type ProgressiveMediaQueryResult = {
-  data?: Array<{
-    placeId: string;
-    coverImageUrl: string | null;
-    organizationLogoUrl: string | null;
-  }>;
-  isLoading?: boolean;
-};
-
-type ProgressiveMetaQueryResult = {
-  data?: Array<{
-    placeId: string;
-    sports?: { id: string; name: string; slug: string }[];
-    courtCount: number;
-    lowestPriceCents: number | null;
-    currency: string | null;
-    verificationStatus?:
-      | "UNVERIFIED"
-      | "PENDING"
-      | "VERIFIED"
-      | "REJECTED"
-      | null;
-    reservationsEnabled?: boolean | null;
-    hasPaymentMethods?: boolean;
-  }>;
-  isLoading?: boolean;
-};
-
 export function useModDiscoveryProgressivePlaceCardDetails(
   placeIds: string[],
   sportId: string | undefined,
-  enabledChunkCount: number,
 ) {
-  const placeIdChunks = useMemo(
-    () => chunkPlaceIds(placeIds, DISCOVERY_VISIBLE_CHUNK_SIZE),
-    [placeIds],
-  );
+  const queries = useFeatureQueries([
+    createDiscoveryPlaceCardMediaQueryOptions(
+      discoveryApi.queryPlaceCardMediaByIds,
+      { placeIds },
+      {
+        enabled: placeIds.length > 0,
+        staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
+      },
+    ),
+    createDiscoveryPlaceCardMetaQueryOptions(
+      discoveryApi.queryPlaceCardMetaByIds,
+      { placeIds, sportId },
+      {
+        enabled: placeIds.length > 0,
+        staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
+      },
+    ),
+  ] as const);
 
-  const queries = useFeatureQueries(
-    placeIdChunks.flatMap((chunkPlaceIds, index) => {
-      const isEnabled = chunkPlaceIds.length > 0 && index < enabledChunkCount;
-
-      return [
-        createDiscoveryPlaceCardMediaQueryOptions(
-          discoveryApi.queryPlaceCardMediaByIds,
-          { placeIds: chunkPlaceIds },
-          {
-            enabled: isEnabled,
-            staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
-          },
-        ),
-        createDiscoveryPlaceCardMetaQueryOptions(
-          discoveryApi.queryPlaceCardMetaByIds,
-          { placeIds: chunkPlaceIds, sportId },
-          {
-            enabled: isEnabled,
-            staleTime: DISCOVERY_TIER2_STALE_TIME_MS,
-          },
-        ),
-      ];
-    }),
-  );
+  const mediaQuery = queries[0];
+  const metaQuery = queries[1];
 
   const mediaById = useMemo(() => {
     const record: Record<string, PlaceCardMedia> = {};
-
-    for (let index = 0; index < placeIdChunks.length; index += 1) {
-      const mediaQuery = queries[index * 2] as ProgressiveMediaQueryResult;
-
-      for (const item of mediaQuery?.data ?? []) {
-        record[item.placeId] = {
-          coverImageUrl: item.coverImageUrl ?? undefined,
-          organizationLogoUrl: item.organizationLogoUrl ?? undefined,
-        };
-      }
+    for (const item of mediaQuery?.data ?? []) {
+      record[item.placeId] = {
+        coverImageUrl: item.coverImageUrl ?? undefined,
+        organizationLogoUrl: item.organizationLogoUrl ?? undefined,
+      };
     }
-
     return record;
-  }, [placeIdChunks.length, queries]);
+  }, [mediaQuery?.data]);
 
   const metaById = useMemo(() => {
     const record: Record<string, PlaceCardMeta> = {};
-
-    for (let index = 0; index < placeIdChunks.length; index += 1) {
-      const metaQuery = queries[index * 2 + 1] as ProgressiveMetaQueryResult;
-
-      for (const item of metaQuery?.data ?? []) {
-        record[item.placeId] = {
-          sports: item.sports ?? [],
-          courtCount: item.courtCount,
-          lowestPriceCents: item.lowestPriceCents ?? undefined,
-          currency: item.currency ?? undefined,
-          verificationStatus: item.verificationStatus ?? undefined,
-          reservationsEnabled: item.reservationsEnabled ?? undefined,
-          hasPaymentMethods: item.hasPaymentMethods ?? undefined,
-        };
-      }
+    for (const item of metaQuery?.data ?? []) {
+      record[item.placeId] = {
+        sports: item.sports ?? [],
+        courtCount: item.courtCount,
+        lowestPriceCents: item.lowestPriceCents ?? undefined,
+        currency: item.currency ?? undefined,
+        verificationStatus: item.verificationStatus ?? undefined,
+        reservationsEnabled: item.reservationsEnabled ?? undefined,
+        hasPaymentMethods: item.hasPaymentMethods ?? undefined,
+      };
     }
-
     return record;
-  }, [placeIdChunks.length, queries]);
+  }, [metaQuery?.data]);
 
   const mediaLoadingIds = useMemo(() => {
-    const loadingIds = new Set<string>();
-
-    for (let index = 0; index < placeIdChunks.length; index += 1) {
-      const mediaQuery = queries[index * 2] as ProgressiveMediaQueryResult;
-      const isEnabled = index < enabledChunkCount;
-
-      if (isEnabled && (mediaQuery?.isLoading ?? false)) {
-        for (const placeId of placeIdChunks[index] ?? []) {
-          loadingIds.add(placeId);
-        }
-      }
+    if (!(mediaQuery?.isLoading ?? false)) {
+      return new Set<string>();
     }
-
-    return loadingIds;
-  }, [enabledChunkCount, placeIdChunks, queries]);
+    return new Set(placeIds);
+  }, [mediaQuery?.isLoading, placeIds]);
 
   const metaLoadingIds = useMemo(() => {
-    const loadingIds = new Set<string>();
-
-    for (let index = 0; index < placeIdChunks.length; index += 1) {
-      const metaQuery = queries[index * 2 + 1] as ProgressiveMetaQueryResult;
-      const isEnabled = index < enabledChunkCount;
-
-      if (isEnabled && (metaQuery?.isLoading ?? false)) {
-        for (const placeId of placeIdChunks[index] ?? []) {
-          loadingIds.add(placeId);
-        }
-      }
+    if (!(metaQuery?.isLoading ?? false)) {
+      return new Set<string>();
     }
-
-    return loadingIds;
-  }, [enabledChunkCount, placeIdChunks, queries]);
+    return new Set(placeIds);
+  }, [metaQuery?.isLoading, placeIds]);
 
   return {
     mediaById,
     metaById,
     mediaLoadingIds,
     metaLoadingIds,
-    totalChunks: placeIdChunks.length,
   };
 }
 

@@ -1,6 +1,8 @@
+import { makeAvailabilityService } from "@/lib/modules/availability/factories/availability.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
 import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
+import { makePlaceReviewRepository } from "@/lib/modules/place-review/factories/place-review.factory";
 import { makeObjectStorageService } from "@/lib/modules/storage/factories/storage.factory";
 import { getContainer } from "@/lib/shared/infra/container";
 import { PlaceRepository } from "../repositories/place.repository";
@@ -32,6 +34,8 @@ export function makePlaceDiscoveryService(): PlaceDiscoveryService {
     placeDiscoveryService = new PlaceDiscoveryService(
       makePlaceRepository(),
       makeCourtRepository(),
+      makeAvailabilityService(),
+      makePlaceReviewRepository(),
     );
   }
   return placeDiscoveryService;
