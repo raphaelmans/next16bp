@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
