@@ -23,6 +23,7 @@ type TocEntry = {
   id: string;
   label: string;
   isSubsection: boolean;
+  isOptional?: boolean;
 };
 
 function buildTocEntries(sections: OrgGuideSection[]): TocEntry[] {
@@ -32,6 +33,7 @@ function buildTocEntries(sections: OrgGuideSection[]): TocEntry[] {
       id: s.id,
       label: `${s.stepNumber}. ${s.title}`,
       isSubsection: false,
+      isOptional: s.isOptional,
     });
     if (s.subsections) {
       for (const sub of s.subsections) {
@@ -69,6 +71,11 @@ function TableOfContents({
           )}
         >
           {entry.label}
+          {entry.isOptional ? (
+            <span className="ml-1.5 text-[10px] italic text-muted-foreground/60">
+              optional
+            </span>
+          ) : null}
         </a>
       ))}
     </nav>
@@ -144,15 +151,34 @@ function GuideSection({ section }: { section: OrgGuideSection }) {
     <section id={section.id} className="scroll-mt-24 space-y-5">
       {/* Step header */}
       <div className="flex items-center gap-3">
-        <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-sm font-bold text-primary-foreground">
+        <span
+          className={cn(
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-sm font-bold",
+            section.isOptional
+              ? "border-2 border-dashed border-muted-foreground/40 text-muted-foreground"
+              : "bg-primary text-primary-foreground",
+          )}
+        >
           {section.stepNumber}
         </span>
-        <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
+        <div
+          className={cn(
+            "flex h-8 w-8 shrink-0 items-center justify-center rounded-lg",
+            section.isOptional
+              ? "bg-muted text-muted-foreground"
+              : "bg-primary/10 text-primary",
+          )}
+        >
           <Icon className="h-4 w-4" />
         </div>
         <h2 className="font-heading text-2xl font-semibold tracking-tight">
           {section.title}
         </h2>
+        {section.isOptional ? (
+          <span className="rounded-full border border-dashed border-muted-foreground/40 px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+            Optional
+          </span>
+        ) : null}
       </div>
 
       {/* Paragraphs */}

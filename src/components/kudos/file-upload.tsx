@@ -1,7 +1,6 @@
 "use client";
 
 import { Image as ImageIcon, Upload, X } from "lucide-react";
-import Image from "next/image";
 import { useCallback, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -119,7 +118,8 @@ export function FileUpload({
     return (
       <div className={cn("relative", className)}>
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-          <Image src={preview} alt="Preview" fill className="object-cover" />
+          {/* eslint-disable-next-line @next/next/no-img-element -- blob: URLs are local previews, no optimization needed */}
+          <img src={preview} alt="Preview" className="absolute inset-0 h-full w-full object-cover" />
           {isUploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-background/80">
               <Spinner className="size-8" />

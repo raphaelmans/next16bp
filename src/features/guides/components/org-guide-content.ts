@@ -6,6 +6,7 @@ import {
   type LucideIcon,
   ShieldCheck,
   UserPlus,
+  Wallet,
 } from "lucide-react";
 
 export type OrgGuideTip = {
@@ -35,6 +36,7 @@ export type OrgGuideSection = {
   stepNumber: number;
   icon: LucideIcon;
   title: string;
+  isOptional?: boolean;
   paragraphs: string[];
   tip?: OrgGuideTip;
   callout?: OrgGuideCallout;
@@ -146,8 +148,44 @@ export const ORG_GUIDE_SECTIONS: OrgGuideSection[] = [
     ],
   },
   {
-    id: "verify-venue",
+    id: "payment-methods",
     stepNumber: 3,
+    icon: Wallet,
+    title: "Add payment methods",
+    isOptional: true,
+    paragraphs: [
+      "If you accept online payments, add your mobile wallets and bank accounts so players know where to send money. KudosCourts supports GCash, Maya, BPI, BDO, and more. Players see the active methods when they confirm a booking through the app.",
+      "This step is optional. Many venues handle payment in person — cash at the counter, walk-ins, or phone bookings through guest profiles. If that is your workflow, you can skip payment methods entirely and add them later when you are ready.",
+      "Each payment method has a type, provider, account name, and account number. You can also add optional instructions shown to players (e.g., include reservation ID in the payment note). Toggle methods active or inactive without deleting them, and mark one as the default.",
+      "Payment methods are configured at the organization level, so they apply across all venues and courts. You can edit, deactivate, or remove them at any time from the organization settings.",
+    ],
+    tip: {
+      text: "GCash and Maya are the most common payment methods players expect in the Philippines. Start with one and add more as needed.",
+    },
+    callout: {
+      text: "Skipping this step does not block your listing. You can always add payment methods later from the organization settings page.",
+    },
+    accordionItems: [
+      {
+        trigger: "Can I have multiple payment methods active at once?",
+        content:
+          "Yes. All active payment methods are shown to the player. The default method appears first in the list.",
+      },
+      {
+        trigger: "What happens if I deactivate a payment method?",
+        content:
+          "Deactivated methods are hidden from players but not deleted. You can reactivate them at any time.",
+      },
+      {
+        trigger: "Can I add custom payment instructions?",
+        content:
+          "Yes. Each payment method has an optional instructions field. Use it to tell players to include their booking ID or any other reference in the payment note.",
+      },
+    ],
+  },
+  {
+    id: "verify-venue",
+    stepNumber: 4,
     icon: ShieldCheck,
     title: "Verify your venue and build trust",
     paragraphs: [
@@ -164,7 +202,7 @@ export const ORG_GUIDE_SECTIONS: OrgGuideSection[] = [
   },
   {
     id: "notifications",
-    stepNumber: 4,
+    stepNumber: 5,
     icon: Bell,
     title: "Turn on notifications so you never miss a request",
     paragraphs: [
@@ -190,7 +228,7 @@ export const ORG_GUIDE_SECTIONS: OrgGuideSection[] = [
   },
   {
     id: "invite-team",
-    stepNumber: 5,
+    stepNumber: 6,
     icon: UserPlus,
     title: "Invite your team",
     paragraphs: [
@@ -207,7 +245,7 @@ export const ORG_GUIDE_SECTIONS: OrgGuideSection[] = [
   },
   {
     id: "reservations",
-    stepNumber: 6,
+    stepNumber: 7,
     icon: CalendarCheck,
     title: "Handle reservations and go live",
     paragraphs: [

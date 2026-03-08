@@ -12,8 +12,10 @@ import {
   FileText,
   Lock,
   MapPin,
+  Pencil,
   Plus,
   ShieldCheck,
+  Star,
   Target,
   Trash2,
   UserPlus,
@@ -551,7 +553,106 @@ export function MockCourtAddonEditor() {
 }
 
 // ---------------------------------------------------------------------------
-// 3. MockVerificationPanel — matches place-verification-panel.tsx
+// 3. MockPaymentMethodsManager — matches payment-methods-manager.tsx
+// ---------------------------------------------------------------------------
+export function MockPaymentMethodsManager() {
+  return (
+    <SnippetWrapper>
+      <Card>
+        <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+          <div className="space-y-1">
+            <CardTitle>Payment Methods</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              Add mobile wallets and bank accounts for booking payments.
+            </p>
+          </div>
+          <Button type="button" variant="outline">
+            <Plus className="h-4 w-4 mr-2" />
+            Add Payment Method
+          </Button>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          {/* GCash — default, active */}
+          <div className="rounded-lg border p-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium">GCash</span>
+                  <Badge variant="outline">Mobile Wallet</Badge>
+                  <Badge variant="secondary">Default</Badge>
+                </div>
+                <div className="text-sm">
+                  <p className="text-muted-foreground">Account Name</p>
+                  <p className="font-medium">Juan Dela Cruz</p>
+                </div>
+                <div className="text-sm">
+                  <p className="text-muted-foreground">Account Number</p>
+                  <p className="font-mono font-medium">0917 123 4567</p>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Include reservation ID in the payment note.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" variant="outline" size="sm">
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+                <Button type="button" variant="outline" size="sm">
+                  Deactivate
+                </Button>
+                <Button type="button" variant="destructive" size="sm">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          {/* BPI — active, not default */}
+          <div className="rounded-lg border p-4">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium">BPI</span>
+                  <Badge variant="outline">Bank</Badge>
+                </div>
+                <div className="text-sm">
+                  <p className="text-muted-foreground">Account Name</p>
+                  <p className="font-medium">Cebu Sports Hub Inc.</p>
+                </div>
+                <div className="text-sm">
+                  <p className="text-muted-foreground">Account Number</p>
+                  <p className="font-mono font-medium">1234-5678-90</p>
+                </div>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <Button type="button" variant="outline" size="sm">
+                  <Pencil className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+                <Button type="button" variant="outline" size="sm">
+                  <Star className="h-4 w-4 mr-2" />
+                  Set Default
+                </Button>
+                <Button type="button" variant="outline" size="sm">
+                  Deactivate
+                </Button>
+                <Button type="button" variant="destructive" size="sm">
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </SnippetWrapper>
+  );
+}
+
+// ---------------------------------------------------------------------------
+// 4. MockVerificationPanel — matches place-verification-panel.tsx
 // ---------------------------------------------------------------------------
 export function MockVerificationPanel() {
   return (
@@ -1118,6 +1219,7 @@ const SNIPPET_MAP: Record<string, React.ComponentType> = {
   "courts-create": MockCourtForm,
   "courts-schedule": MockCourtScheduleEditor,
   "courts-addons": MockCourtAddonEditor,
+  "payment-methods": MockPaymentMethodsManager,
   "verify-venue": MockVerificationPanel,
   notifications: MockNotificationBellInbox,
   "invite-team": MockTeamInviteDialog,
