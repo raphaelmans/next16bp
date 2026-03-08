@@ -1,6 +1,12 @@
 import { unstable_cache } from "next/cache";
 import { mapPlaceSummary } from "@/features/discovery/helpers";
-import { publicCaller, trpc } from "@/trpc/server";
+import { publicCaller } from "@/trpc/server";
+
+export interface HomePublicStats {
+  totalPlaces: number;
+  totalCourts: number;
+  totalCities: number;
+}
 
 const getCachedFeaturedPlaces = unstable_cache(
   async () => {
@@ -16,8 +22,12 @@ const getCachedFeaturedPlaces = unstable_cache(
   { tags: ["home:featured"] },
 );
 
+const getCachedHomePlaceStats = unstable_cache(
+  async (): Promise<HomePublicStats> => publicCaller.place.stats(),
+  ["home-place-stats"],
+  { tags: ["home:stats"] },
+);
+
 export const getHomeFeaturedPlaces = async () => getCachedFeaturedPlaces();
 
-export const prefetchHomeData = async () => {
-  await trpc.place.stats.prefetch();
-};
+export const getHomePlaceStats = async () => getCachedHomePlaceStats();

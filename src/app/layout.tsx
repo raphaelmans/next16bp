@@ -2,29 +2,28 @@ import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, Outfit, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
-import { Providers } from "@/common/providers";
-import { PwaInstallPrompt } from "@/features/pwa/components/pwa-install-prompt";
-import { SwRegister } from "@/features/pwa/components/sw-register";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import "./globals.css";
 
 const outfit = Outfit({
   variable: "--font-heading",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["600", "700"],
+  display: "swap",
 });
 
 const sourceSans = Source_Sans_3({
   variable: "--font-sans",
   subsets: ["latin"],
-  weight: ["300", "400", "500", "600"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600"],
+  display: "swap",
 });
 
 const ibmPlexMono = IBM_Plex_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500"],
+  weight: ["400"],
+  display: "swap",
 });
 
 const appUrl = getCanonicalOrigin();
@@ -172,9 +171,7 @@ export default function RootLayout({
       <body
         className={`${outfit.variable} ${sourceSans.variable} ${ibmPlexMono.variable} antialiased`}
       >
-        <Providers>{children}</Providers>
-        <SwRegister />
-        <PwaInstallPrompt />
+        {children}
         <Analytics />
       </body>
     </html>

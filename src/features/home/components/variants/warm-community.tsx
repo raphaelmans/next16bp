@@ -1,11 +1,10 @@
-"use client";
-
 import { Calendar, Play, Search } from "lucide-react";
 import { Container } from "@/components/layout/container";
-import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import type { PlaceSummary } from "@/features/discovery/helpers";
+import { HomePublicShell } from "@/features/home/components/home-public-shell";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { POPULAR_LOCATIONS } from "@/features/home/constants/popular-locations";
+import type { HomePublicStats } from "@/lib/modules/home/server/home-page-data";
 import { BeforeAfter } from "./shared/before-after";
 import { FaqSection } from "./shared/faq-section";
 import { FeaturedVenues } from "./shared/featured-venues";
@@ -42,11 +41,15 @@ const HOW_IT_WORKS = [
 
 interface WarmCommunityPageProps {
   featuredPlaces: PlaceSummary[];
+  placeStats: HomePublicStats;
 }
 
-export function WarmCommunityPage({ featuredPlaces }: WarmCommunityPageProps) {
+export function WarmCommunityPage({
+  featuredPlaces,
+  placeStats,
+}: WarmCommunityPageProps) {
   return (
-    <DiscoveryPublicShell>
+    <HomePublicShell>
       {/* Hero — soft gradient, rounded, warm */}
       <section className="relative overflow-hidden pt-10 pb-28 sm:pt-[140px] sm:pb-28">
         {/* Soft teal-to-white gradient */}
@@ -85,13 +88,13 @@ export function WarmCommunityPage({ featuredPlaces }: WarmCommunityPageProps) {
             </div>
 
             {/* Right — showcase cards */}
-            <ShowcaseCards />
+            <ShowcaseCards stats={placeStats} />
           </div>
         </Container>
       </section>
 
       {/* Proof Bar — floating card */}
-      <ProofBar variant={VARIANT} />
+      <ProofBar variant={VARIANT} stats={placeStats} />
 
       {/* How It Works — single card with rows */}
       <section className="py-24 bg-white">
@@ -146,6 +149,6 @@ export function WarmCommunityPage({ featuredPlaces }: WarmCommunityPageProps) {
 
       {/* Owner Strip */}
       <OwnerStrip variant={VARIANT} />
-    </DiscoveryPublicShell>
+    </HomePublicShell>
   );
 }

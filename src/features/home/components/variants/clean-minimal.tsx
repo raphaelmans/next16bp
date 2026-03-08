@@ -1,10 +1,9 @@
-"use client";
-
 import { Container } from "@/components/layout/container";
-import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import type { PlaceSummary } from "@/features/discovery/helpers";
+import { HomePublicShell } from "@/features/home/components/home-public-shell";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { POPULAR_LOCATIONS } from "@/features/home/constants/popular-locations";
+import type { HomePublicStats } from "@/lib/modules/home/server/home-page-data";
 import { BeforeAfter } from "./shared/before-after";
 import { FaqSection } from "./shared/faq-section";
 import { FeaturedVenues } from "./shared/featured-venues";
@@ -38,11 +37,15 @@ const HOW_IT_WORKS = [
 
 interface CleanMinimalPageProps {
   featuredPlaces: PlaceSummary[];
+  placeStats: HomePublicStats;
 }
 
-export function CleanMinimalPage({ featuredPlaces }: CleanMinimalPageProps) {
+export function CleanMinimalPage({
+  featuredPlaces,
+  placeStats,
+}: CleanMinimalPageProps) {
   return (
-    <DiscoveryPublicShell>
+    <HomePublicShell>
       {/* Hero — generous whitespace, no badge, no gradient */}
       <section className="relative overflow-hidden pt-16 pb-24 sm:pt-[160px] sm:pb-28">
         {/* Subtle radial glow behind showcase only */}
@@ -76,13 +79,13 @@ export function CleanMinimalPage({ featuredPlaces }: CleanMinimalPageProps) {
             </div>
 
             {/* Right — showcase cards */}
-            <ShowcaseCards />
+            <ShowcaseCards stats={placeStats} />
           </div>
         </Container>
       </section>
 
       {/* Proof Bar */}
-      <ProofBar variant={VARIANT} />
+      <ProofBar variant={VARIANT} stats={placeStats} />
 
       {/* How It Works — connected line, no cards */}
       <section className="py-20 md:py-32">
@@ -135,6 +138,6 @@ export function CleanMinimalPage({ featuredPlaces }: CleanMinimalPageProps) {
 
       {/* Owner Strip */}
       <OwnerStrip variant={VARIANT} />
-    </DiscoveryPublicShell>
+    </HomePublicShell>
   );
 }

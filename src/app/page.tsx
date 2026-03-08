@@ -4,10 +4,9 @@ import { HOME_FAQS } from "@/features/home/constants/home-faq";
 import { HomeLandingPage } from "@/features/home/pages/home-landing-page";
 import {
   getHomeFeaturedPlaces,
-  prefetchHomeData,
+  getHomePlaceStats,
 } from "@/lib/modules/home/server/home-page-data";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
-import { HydrateClient } from "@/trpc/server";
 
 const appUrl = getCanonicalOrigin();
 const canonicalUrl = new URL("/", appUrl);
@@ -47,18 +46,20 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const featuredPlaces = await getHomeFeaturedPlaces();
-
-  await prefetchHomeData();
+  const [featuredPlaces, placeStats] = await Promise.all([
+    getHomeFeaturedPlaces(),
+    getHomePlaceStats(),
+  ]);
 
   return (
     <>
       <Script id="home-faq-structured-data" type="application/ld+json">
         {JSON.stringify(homeStructuredData).replace(/</g, "\\u003c")}
       </Script>
-      <HydrateClient>
-        <HomeLandingPage featuredPlaces={featuredPlaces} />
-      </HydrateClient>
+      <HomeLandingPage
+        featuredPlaces={featuredPlaces}
+        placeStats={placeStats}
+      />
     </>
   );
 }

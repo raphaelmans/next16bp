@@ -1,10 +1,4 @@
-"use client";
-
-import { useRouter } from "next/navigation";
-import { useState } from "react";
 import { appRoutes } from "@/common/app-routes";
-import { trackEvent } from "@/common/clients/telemetry-client";
-import { URLQueryBuilder } from "@/common/url-query-builder";
 import { Container } from "@/components/layout/container";
 import { Button } from "@/components/ui/button";
 import type { LandingVariant } from "@/features/home/constants/landing-variant";
@@ -19,31 +13,12 @@ const COURT_LINE_PATTERN = [
 ].join(", ");
 
 function CtaSearchForm() {
-  const router = useRouter();
-  const [query, setQuery] = useState("");
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const q = query.trim();
-    trackEvent({
-      event: "funnel.landing_search_submitted",
-      properties: { query: q || undefined },
-    });
-    if (q) {
-      const search = new URLQueryBuilder().addParams({ q }).build();
-      router.push(`${appRoutes.courts.base}?${search}`);
-    } else {
-      router.push(appRoutes.courts.base);
-    }
-  };
-
   return (
-    <form onSubmit={handleSubmit}>
+    <form action={appRoutes.courts.base} method="GET">
       <div className="flex items-center bg-card rounded-[14px] p-[5px] pl-[18px] shadow-lg min-w-0 sm:min-w-[380px] transition-shadow focus-within:shadow-xl">
         <input
+          name="q"
           type="search"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
           placeholder="Search courts near you..."
           className="flex-1 border-none outline-none text-[15px] text-foreground bg-transparent placeholder:text-muted-foreground/60 min-w-0"
         />

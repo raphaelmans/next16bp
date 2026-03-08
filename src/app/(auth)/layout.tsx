@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { appRoutes, getRouteType } from "@/common/app-routes";
+import { AppClientProviders } from "@/common/providers/app-client-providers";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import {
@@ -28,16 +29,22 @@ export default async function AuthLayout({
 
   if (routeType === "guest") {
     return (
-      <DiscoveryPublicShell>
-        <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center px-4 py-12">
-          {children}
-        </div>
-      </DiscoveryPublicShell>
+      <AppClientProviders>
+        <DiscoveryPublicShell>
+          <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center px-4 py-12">
+            {children}
+          </div>
+        </DiscoveryPublicShell>
+      </AppClientProviders>
     );
   }
 
   if (routeType === "public") {
-    return <DiscoveryPublicShell>{children}</DiscoveryPublicShell>;
+    return (
+      <AppClientProviders>
+        <DiscoveryPublicShell>{children}</DiscoveryPublicShell>
+      </AppClientProviders>
+    );
   }
 
   if (routeType === "admin") {
@@ -46,5 +53,9 @@ export default async function AuthLayout({
     await requireSession(pathname);
   }
 
-  return <DashboardShell>{children}</DashboardShell>;
+  return (
+    <AppClientProviders>
+      <DashboardShell>{children}</DashboardShell>
+    </AppClientProviders>
+  );
 }

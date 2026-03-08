@@ -1,3 +1,4 @@
+import { AppClientProviders } from "@/common/providers/app-client-providers";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 
 export default function PublicLayout({
@@ -5,5 +6,9 @@ export default function PublicLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <DiscoveryPublicShell>{children}</DiscoveryPublicShell>;
+  return (
+    <AppClientProviders>
+      <DiscoveryPublicShell>{children}</DiscoveryPublicShell>
+    </AppClientProviders>
+  );
 }

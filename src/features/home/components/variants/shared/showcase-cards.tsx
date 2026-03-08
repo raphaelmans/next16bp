@@ -1,13 +1,11 @@
-"use client";
-
 import { Check } from "lucide-react";
 import Link from "next/link";
-import CountUp from "react-countup";
 import { appRoutes } from "@/common/app-routes";
-import { PlaceCard, type PlaceCardPlace } from "@/components/kudos";
-import { useQueryHomePlaceStats } from "@/features/home/hooks";
+import type { PlaceSummary } from "@/features/discovery/helpers";
+import { HomePlaceCard } from "@/features/home/components/home-place-card";
+import type { HomePublicStats } from "@/lib/modules/home/server/home-page-data";
 
-const SHOWCASE_MAIN: PlaceCardPlace = {
+const SHOWCASE_MAIN: PlaceSummary = {
   id: "showcase-main",
   slug: null,
   name: "Smash Zone Cebu",
@@ -25,7 +23,7 @@ const SHOWCASE_MAIN: PlaceCardPlace = {
   reviewCount: 12,
 };
 
-const SHOWCASE_SECONDARY: PlaceCardPlace = {
+const SHOWCASE_SECONDARY: PlaceSummary = {
   id: "showcase-secondary",
   slug: null,
   name: "Rally Hub QC",
@@ -42,12 +40,13 @@ const SHOWCASE_SECONDARY: PlaceCardPlace = {
   reviewCount: 8,
 };
 
-function StatsCountBadge() {
-  const { data: stats } = useQueryHomePlaceStats();
+const numberFormatter = new Intl.NumberFormat("en-US");
+
+function StatsCountBadge({ stats }: { stats: HomePublicStats }) {
   return (
     <>
       <span className="text-xl font-extrabold text-primary tracking-[-0.03em] block">
-        <CountUp end={stats?.totalPlaces ?? 0} duration={1.5} separator="," />+
+        {numberFormatter.format(stats.totalPlaces)}+
       </span>
       <small className="text-[10px] text-muted-foreground font-medium uppercase tracking-[0.04em]">
         Venues
@@ -56,7 +55,7 @@ function StatsCountBadge() {
   );
 }
 
-export function ShowcaseCards() {
+export function ShowcaseCards({ stats }: { stats: HomePublicStats }) {
   return (
     <div className="relative h-[520px] hidden lg:block">
       {/* Main card */}
@@ -64,7 +63,7 @@ export function ShowcaseCards() {
         href={appRoutes.courts.base}
         className="absolute w-[290px] top-[10px] left-[10px] z-[3] rotate-[-1.5deg] transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-2 block rounded-xl overflow-hidden"
       >
-        <PlaceCard place={SHOWCASE_MAIN} linkScope="none" showPrice showCTA />
+        <HomePlaceCard place={SHOWCASE_MAIN} />
       </Link>
 
       {/* Secondary card */}
@@ -72,12 +71,7 @@ export function ShowcaseCards() {
         href={appRoutes.courts.base}
         className="absolute w-[290px] top-[80px] right-[-10px] z-[2] rotate-[2.5deg] transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-4 block rounded-xl overflow-hidden"
       >
-        <PlaceCard
-          place={SHOWCASE_SECONDARY}
-          linkScope="none"
-          showPrice
-          showCTA
-        />
+        <HomePlaceCard place={SHOWCASE_SECONDARY} />
       </Link>
 
       {/* Floating badge — player reviews */}
@@ -97,7 +91,7 @@ export function ShowcaseCards() {
 
       {/* Floating badge — venue count */}
       <div className="absolute top-[10px] right-[16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_oklch(0_0_0/0.09)] border border-border text-center font-heading animate-slide-in-right stagger-5">
-        <StatsCountBadge />
+        <StatsCountBadge stats={stats} />
       </div>
     </div>
   );

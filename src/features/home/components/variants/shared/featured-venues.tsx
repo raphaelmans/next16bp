@@ -1,11 +1,9 @@
-"use client";
-
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
-import { PlaceCard } from "@/components/kudos";
 import { Container } from "@/components/layout/container";
 import type { PlaceSummary } from "@/features/discovery/helpers";
-import { HomeTrackedLink } from "@/features/home/components/home-tracked-link";
+import { HomePlaceCard } from "@/features/home/components/home-place-card";
 import type { LandingVariant } from "@/features/home/constants/landing-variant";
 
 interface FeaturedVenuesProps {
@@ -32,19 +30,18 @@ export function FeaturedVenues({
           <h2 className="font-heading text-[30px] font-extrabold tracking-[-0.03em]">
             Featured Venues
           </h2>
-          <HomeTrackedLink
+          <Link
             href={appRoutes.courts.base}
             className="inline-flex items-center gap-1.5 font-heading text-sm font-semibold text-primary transition-[gap] hover:gap-2.5"
-            event="funnel.landing_search_submitted"
           >
             Browse all
             <ArrowRight className="h-4 w-4" />
-          </HomeTrackedLink>
+          </Link>
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {featuredPlaces.map((place) => (
-            <PlaceCard key={place.id} place={place} />
+            <HomePlaceCard key={place.id} place={place} />
           ))}
         </div>
       </Container>

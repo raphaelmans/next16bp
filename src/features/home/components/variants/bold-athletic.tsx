@@ -1,11 +1,10 @@
-"use client";
-
 import { Search } from "lucide-react";
 import { Container } from "@/components/layout/container";
-import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import type { PlaceSummary } from "@/features/discovery/helpers";
+import { HomePublicShell } from "@/features/home/components/home-public-shell";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { POPULAR_LOCATIONS } from "@/features/home/constants/popular-locations";
+import type { HomePublicStats } from "@/lib/modules/home/server/home-page-data";
 import { BeforeAfter } from "./shared/before-after";
 import { FaqSection } from "./shared/faq-section";
 import { FeaturedVenues } from "./shared/featured-venues";
@@ -42,11 +41,15 @@ const HOW_IT_WORKS = [
 
 interface BoldAthleticPageProps {
   featuredPlaces: PlaceSummary[];
+  placeStats: HomePublicStats;
 }
 
-export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
+export function BoldAthleticPage({
+  featuredPlaces,
+  placeStats,
+}: BoldAthleticPageProps) {
   return (
-    <DiscoveryPublicShell>
+    <HomePublicShell>
       {/* Hero */}
       <section className="relative overflow-hidden pt-10 pb-20 sm:pt-[140px] sm:pb-20">
         {/* Teal-dominant gradient mesh */}
@@ -89,13 +92,13 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
             </div>
 
             {/* Right — showcase cards */}
-            <ShowcaseCards />
+            <ShowcaseCards stats={placeStats} />
           </div>
         </Container>
       </section>
 
       {/* Proof Bar */}
-      <ProofBar variant={VARIANT} />
+      <ProofBar variant={VARIANT} stats={placeStats} />
 
       {/* How It Works */}
       <section className="py-24 bg-white border-b border-border">
@@ -149,6 +152,6 @@ export function BoldAthleticPage({ featuredPlaces }: BoldAthleticPageProps) {
 
       {/* Owner Strip */}
       <OwnerStrip variant={VARIANT} />
-    </DiscoveryPublicShell>
+    </HomePublicShell>
   );
 }

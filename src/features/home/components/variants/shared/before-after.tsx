@@ -1,5 +1,3 @@
-"use client";
-
 import { ArrowRight, Check, X } from "lucide-react";
 import { Container } from "@/components/layout/container";
 import type { LandingVariant } from "@/features/home/constants/landing-variant";

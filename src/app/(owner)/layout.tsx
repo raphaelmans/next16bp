@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { appRoutes } from "@/common/app-routes";
+import { AppClientProviders } from "@/common/providers/app-client-providers";
 import { DashboardShell } from "@/components/layout/dashboard-shell";
 import { OwnerChatWidget } from "@/features/chat/components/chat-widget/owner-chat-widget";
 import { OwnerOnboardingIntentClearer } from "@/features/owner/components/owner-onboarding-intent-clearer";
@@ -45,12 +46,12 @@ export default async function OwnerLayout({
   }
 
   return (
-    <>
+    <AppClientProviders>
       <OwnerOnboardingIntentClearer />
       <OwnerChatWidget />
       <DashboardShell hasOrganizations={hasOrganizations}>
         {children}
       </DashboardShell>
-    </>
+    </AppClientProviders>
   );
 }
