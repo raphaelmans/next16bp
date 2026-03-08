@@ -9,6 +9,8 @@ import { cn } from "@/lib/utils";
 interface HomePlaceCardProps {
   place: PlaceSummary;
   className?: string;
+  href?: string | null;
+  imageLoading?: "eager" | "lazy";
 }
 
 const MAX_BADGES = 3;
@@ -22,8 +24,13 @@ const getInitials = (name: string) =>
     .slice(0, 2)
     .toUpperCase();
 
-export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
-  const placeHref = appRoutes.places.detail(place.slug ?? place.id);
+export function HomePlaceCard({
+  place,
+  className,
+  href,
+  imageLoading = "lazy",
+}: HomePlaceCardProps) {
+  const placeHref = href ?? appRoutes.places.detail(place.slug ?? place.id);
   const visibleSports = place.sports.slice(0, MAX_BADGES);
   const hiddenCount = Math.max(0, place.sports.length - MAX_BADGES);
   const lowestPriceCents = place.lowestPriceCents;
@@ -33,14 +40,8 @@ export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
     typeof currency === "string" &&
     currency.length > 0;
 
-  return (
-    <Link
-      href={placeHref}
-      className={cn(
-        "group block overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
-        className,
-      )}
-    >
+  const cardContent = (
+    <>
       <div className="relative aspect-[16/9] overflow-hidden bg-muted">
         {place.coverImageUrl ? (
           <Image
@@ -48,6 +49,7 @@ export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
             alt={place.name}
             fill
             sizes="(min-width: 1024px) 360px, (min-width: 640px) 50vw, 100vw"
+            loading={imageLoading}
             className="object-cover transition-transform duration-300 group-hover:scale-105 motion-reduce:transform-none"
           />
         ) : (
@@ -156,6 +158,21 @@ export function HomePlaceCard({ place, className }: HomePlaceCardProps) {
           </span>
         </div>
       </div>
+    </>
+  );
+
+  const cardClassName = cn(
+    "group block overflow-hidden rounded-xl border border-border bg-card shadow-xs transition-all duration-300 hover:-translate-y-1 hover:shadow-md",
+    className,
+  );
+
+  if (!placeHref) {
+    return <div className={cardClassName}>{cardContent}</div>;
+  }
+
+  return (
+    <Link href={placeHref} className={cardClassName}>
+      {cardContent}
     </Link>
   );
 }

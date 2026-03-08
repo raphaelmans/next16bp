@@ -2,6 +2,7 @@ import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
+import { HomeNavbarAuthActionsLoader } from "./home-navbar-auth-actions-loader";
 
 export function HomeNavbar() {
   return (
@@ -28,21 +29,11 @@ export function HomeNavbar() {
         </form>
 
         <div className="ml-auto hidden md:flex items-center gap-3">
-          <Button variant="ghost" asChild className="font-heading text-primary">
-            <Link href={appRoutes.ownersGetStarted.base}>List Your Venue</Link>
-          </Button>
-          <Button variant="outline" asChild className="font-heading">
-            <Link href={appRoutes.login.base}>Sign In</Link>
-          </Button>
+          <HomeNavbarAuthActionsLoader variant="desktop" />
         </div>
 
         <div className="ml-auto flex md:hidden items-center gap-2">
-          <Button variant="ghost" asChild className="font-heading text-primary">
-            <Link href={appRoutes.courts.base}>Browse</Link>
-          </Button>
-          <Button variant="outline" asChild className="font-heading">
-            <Link href={appRoutes.login.base}>Sign In</Link>
-          </Button>
+          <HomeNavbarAuthActionsLoader variant="mobile" />
         </div>
       </div>
     </nav>

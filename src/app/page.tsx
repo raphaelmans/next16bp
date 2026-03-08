@@ -13,7 +13,7 @@ const canonicalUrl = new URL("/", appUrl);
 const title =
   "Discover Sports Courts in the Philippines — Badminton, Basketball, Tennis & More";
 const description =
-  "Find sports courts across the Philippines by city or sport. Read player reviews, check amenities and availability, and discover your next game — all in one place.";
+  "Find sports courts across the Philippines by city or sport. Read real player reviews, check amenities, and see availability where courts keep it updated.";
 
 const homeStructuredData = {
   "@context": "https://schema.org",
@@ -35,13 +35,19 @@ export const metadata: Metadata = {
     canonical: canonicalUrl,
   },
   openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "KudosCourts",
     title,
     description,
     url: canonicalUrl,
   },
   twitter: {
+    card: "summary_large_image",
     title,
     description,
+    creator: "@kudoscourts",
+    site: "@kudoscourts",
   },
 };
 

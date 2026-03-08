@@ -1,5 +1,4 @@
 import { Check } from "lucide-react";
-import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import type { PlaceSummary } from "@/features/discovery/helpers";
 import { HomePlaceCard } from "@/features/home/components/home-place-card";
@@ -59,20 +58,19 @@ export function ShowcaseCards({ stats }: { stats: HomePublicStats }) {
   return (
     <div className="relative h-[520px] hidden lg:block">
       {/* Main card */}
-      <Link
+      <HomePlaceCard
+        place={SHOWCASE_MAIN}
         href={appRoutes.courts.base}
+        imageLoading="eager"
         className="absolute w-[290px] top-[10px] left-[10px] z-[3] rotate-[-1.5deg] transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-2 block rounded-xl overflow-hidden"
-      >
-        <HomePlaceCard place={SHOWCASE_MAIN} />
-      </Link>
+      />
 
       {/* Secondary card */}
-      <Link
+      <HomePlaceCard
+        place={SHOWCASE_SECONDARY}
         href={appRoutes.courts.base}
         className="absolute w-[290px] top-[80px] right-[-10px] z-[2] rotate-[2.5deg] transition-transform duration-400 hover:-translate-y-1.5 hover:rotate-0 animate-slide-in-right stagger-4 block rounded-xl overflow-hidden"
-      >
-        <HomePlaceCard place={SHOWCASE_SECONDARY} />
-      </Link>
+      />
 
       {/* Floating badge — player reviews */}
       <div className="absolute bottom-[10px] left-[-16px] z-[5] bg-card rounded-[14px] px-4 py-2.5 shadow-[0_6px_20px_oklch(0_0_0/0.09)] border border-border flex items-center gap-2.5 animate-slide-in-right stagger-5">

@@ -59,7 +59,7 @@ export function SidebarNavItem({
           className,
         )}
       >
-        <Link href={href} className={cn("font-heading", linkClassName)}>
+        <Link href={href} className={cn("font-normal", linkClassName)}>
           <Icon className="h-4 w-4" />
           <span>{title}</span>
         </Link>

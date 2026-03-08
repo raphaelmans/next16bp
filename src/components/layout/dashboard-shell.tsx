@@ -9,11 +9,10 @@ import { DashboardNavbar } from "@/components/layout/dashboard-navbar";
 import { DashboardSidebar } from "@/components/layout/dashboard-sidebar";
 import type { Portal } from "@/components/layout/portal-switcher";
 import { getCurrentPortal } from "@/components/layout/portal-tabs-sidebar";
-import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth/hooks";
+import { useQueryAuthSession } from "@/features/auth/hooks";
 import { UnifiedChatInterface } from "@/features/chat/components/unified-chat/unified-chat-interface";
 import { OwnerPortalBootLoader } from "@/features/owner/components/owner-portal-boot-loader";
 import { ReservationAlertsPanel } from "@/features/owner/components/reservation-alerts-panel";
-import { ROLE_DISPLAY_LABELS } from "@/features/owner/helpers";
 import { useQueryOwnerOrganization } from "@/features/owner/hooks";
 import { useModOwnerPermissionContext } from "@/features/owner/hooks/organization";
 
@@ -30,7 +29,6 @@ export function DashboardShell({
   const pathname = usePathname();
   const currentPortal = getCurrentPortal(pathname);
   const { data: sessionUser } = useQueryAuthSession();
-  const logoutMutation = useMutAuthLogout();
   const isAdmin = sessionUser?.role === "admin";
 
   // Keep the last non-admin portal available for portal-neutral routes.
@@ -42,23 +40,12 @@ export function DashboardShell({
     }
   }, [currentPortal, pathname]);
 
-  // ─── Logout handler ──────────────────────────────────
-  const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
-    window.location.href =
-      currentPortal === "player"
-        ? appRoutes.index.base
-        : appRoutes.login.from(pathname || appRoutes.organization.base);
-  };
-
   // ─── Organization boot-loader gate ───────────────────
   if (currentPortal === "organization") {
     return (
       <OrganizationShellGate
         hasOrganizations={hasOrganizations}
-        sessionUser={sessionUser}
         isAdmin={isAdmin}
-        onLogout={handleLogout}
       >
         {children}
       </OrganizationShellGate>
@@ -66,14 +53,6 @@ export function DashboardShell({
   }
 
   // ─── Player or Admin portal ──────────────────────────
-  const user = sessionUser
-    ? {
-        name: sessionUser.email?.split("@")[0] || "User",
-        email: sessionUser.email || "",
-        avatarUrl: null,
-      }
-    : undefined;
-
   const availablePortals: Portal[] = [
     "player",
     ...(hasOrganizations !== false ? (["organization"] as const) : []),
@@ -83,13 +62,7 @@ export function DashboardShell({
   return (
     <AppShell
       sidebar={<DashboardSidebar />}
-      navbar={
-        <DashboardNavbar
-          user={user}
-          availablePortals={availablePortals}
-          onLogout={handleLogout}
-        />
-      }
+      navbar={<DashboardNavbar availablePortals={availablePortals} />}
       bottomNav={<DashboardBottomTabs />}
       floatingPanel={
         currentPortal === "player" ? (
@@ -127,18 +100,14 @@ export function DashboardShell({
 function OrganizationShellGate({
   children,
   hasOrganizations,
-  sessionUser,
   isAdmin,
-  onLogout,
 }: {
   children: React.ReactNode;
   hasOrganizations?: boolean;
-  sessionUser?: { email?: string; role?: string } | null;
   isAdmin: boolean;
-  onLogout: () => void;
 }) {
   const pathname = usePathname();
-  const { permissionContext, isLoading: permissionContextLoading } =
+  const { isLoading: permissionContextLoading } =
     useModOwnerPermissionContext();
   const { organization, isLoading } = useQueryOwnerOrganization();
   const [hasBootstrappedOrgAccess, setHasBootstrappedOrgAccess] =
@@ -165,18 +134,6 @@ function OrganizationShellGate({
     return <OwnerPortalBootLoader />;
   }
 
-  const user = sessionUser
-    ? {
-        name: sessionUser.email?.split("@")[0] || "User",
-        email: sessionUser.email || "",
-        avatarUrl: null,
-      }
-    : undefined;
-
-  const _roleLabel = permissionContext
-    ? ROLE_DISPLAY_LABELS[permissionContext.role]
-    : undefined;
-
   const availablePortals: Portal[] = [
     "player",
     "organization",
@@ -186,13 +143,7 @@ function OrganizationShellGate({
   return (
     <AppShell
       sidebar={<DashboardSidebar />}
-      navbar={
-        <DashboardNavbar
-          user={user}
-          availablePortals={availablePortals}
-          onLogout={onLogout}
-        />
-      }
+      navbar={<DashboardNavbar availablePortals={availablePortals} />}
       bottomNav={
         <DashboardBottomTabs organizationId={organization?.id ?? null} />
       }

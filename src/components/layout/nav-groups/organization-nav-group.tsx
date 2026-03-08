@@ -243,7 +243,7 @@ export function OrganizationNavGroup({
                       appRoutes.organization.places.base,
                     )}
                     tooltip="Venues"
-                    className={`font-heading ${
+                    className={`font-normal ${
                       pathname.startsWith(appRoutes.organization.places.base)
                         ? "bg-primary text-primary-foreground"
                         : ""
@@ -282,7 +282,7 @@ export function OrganizationNavGroup({
                                   <CollapsibleTrigger asChild>
                                     <SidebarMenuSubButton
                                       isActive={isPlaceActive}
-                                      className="font-heading"
+                                      className="font-normal"
                                     >
                                       <span>{place.name}</span>
                                       {place.courts.length > 0 && (

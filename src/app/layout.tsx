@@ -68,7 +68,7 @@ const structuredData = {
 export const metadata: Metadata = {
   manifest: "/manifest.webmanifest",
   title: {
-    default: "Discover Sports Venues in the Philippines | KudosCourts",
+    default: "Discover Sports Courts in the Philippines | KudosCourts",
     template: "%s | KudosCourts",
   },
   description:
@@ -104,13 +104,13 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "/",
     siteName: "KudosCourts",
-    title: "Discover Sports Venues in the Philippines | KudosCourts",
+    title: "Discover Sports Courts in the Philippines | KudosCourts",
     description:
       "Find sports courts across the Philippines by city, sport, reviews, amenities, and availability signals.",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Discover Sports Venues in the Philippines | KudosCourts",
+    title: "Discover Sports Courts in the Philippines | KudosCourts",
     description:
       "Find sports courts across the Philippines by city, sport, reviews, amenities, and availability signals.",
     creator: "@kudoscourts",
@@ -146,11 +146,12 @@ export default function RootLayout({
             <Script
               crossOrigin="anonymous"
               src="//unpkg.com/react-scan/dist/auto.global.js"
+              strategy="lazyOnload"
             />
             <Script
               src="//unpkg.com/react-grab/dist/index.global.js"
               crossOrigin="anonymous"
-              strategy="beforeInteractive"
+              strategy="lazyOnload"
             />
           </>
         )}
