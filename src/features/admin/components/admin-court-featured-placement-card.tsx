@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -11,6 +10,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 
 type AdminCourtFeaturedPlacementCardProps = {
   featuredRankInput: string;

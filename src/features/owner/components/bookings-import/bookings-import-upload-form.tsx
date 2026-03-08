@@ -9,7 +9,6 @@ import {
   UploadCloud,
   X,
 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { useEffect, useState } from "react";
 import { type Accept, type FileRejection, useDropzone } from "react-dropzone";
 import { toast } from "@/common/toast";
@@ -34,6 +33,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import {
   useMutOwnerImportCreateDraft,
   useQueryOwnerCourtsByPlace,

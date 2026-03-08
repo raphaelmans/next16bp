@@ -1,8 +1,8 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { trackEvent } from "@/common/clients/telemetry-client";
+import { Spinner } from "@/components/ui/spinner";
 import { useModOwnerInvalidation } from "@/features/owner/hooks";
 import { useModGetStartedSetup } from "../get-started-hooks";
 import { SetupErrorBanner } from "../sections/setup-error-banner";

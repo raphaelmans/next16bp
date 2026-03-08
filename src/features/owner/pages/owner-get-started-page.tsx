@@ -1,7 +1,7 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { Suspense } from "react";
+import { Spinner } from "@/components/ui/spinner";
 import { SetupWizard } from "@/features/owner/components/get-started/wizard/setup-wizard";
 
 function WizardFallback() {

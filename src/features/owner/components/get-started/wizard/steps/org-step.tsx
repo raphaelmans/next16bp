@@ -1,8 +1,8 @@
 "use client";
 
 import { Building2, CheckCircle2 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { Card, CardContent } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import { OrganizationForm } from "@/features/organization/components/organization-form";
 import type { SetupStatus } from "../../get-started-types";
 

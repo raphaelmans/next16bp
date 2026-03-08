@@ -55,21 +55,24 @@ export const SelectionPanelForm = React.memo(function SelectionPanelForm({
       </ToggleGroup>
 
       {blockType !== "GUEST_BOOKING" ? (
-        <label className="block space-y-2">
-          <span className="text-sm font-medium">Note (optional)</span>
-          <Textarea
-            placeholder={
-              blockType === "MAINTENANCE"
-                ? "e.g. Net replacement"
-                : "e.g. Regular customer"
-            }
-            rows={2}
-            defaultValue=""
-            onChange={(e) => {
-              onNotesChange(e.target.value);
-            }}
-          />
-        </label>
+        <>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: label wraps textarea */}
+          <label className="block space-y-2">
+            <span className="text-sm font-medium">Note (optional)</span>
+            <Textarea
+              placeholder={
+                blockType === "MAINTENANCE"
+                  ? "e.g. Net replacement"
+                  : "e.g. Regular customer"
+              }
+              rows={2}
+              defaultValue=""
+              onChange={(e) => {
+                onNotesChange(e.target.value);
+              }}
+            />
+          </label>
+        </>
       ) : null}
 
       {blockType === "GUEST_BOOKING" ? (

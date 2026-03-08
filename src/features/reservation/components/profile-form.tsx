@@ -11,7 +11,6 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -19,6 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
 import {
   useMutUpdateProfile,
   useMutUploadAvatar,

@@ -1,7 +1,6 @@
 "use client";
 
 import { UserPlus } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -25,6 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutInviteOrganizationMember } from "@/features/owner/hooks";
 import {
   DEFAULT_PERMISSIONS_BY_ROLE,

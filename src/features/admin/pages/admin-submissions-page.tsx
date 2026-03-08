@@ -4,6 +4,7 @@ import { Ban, Check, X } from "lucide-react";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
+import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -23,8 +24,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Select,
   SelectContent,
@@ -32,8 +32,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { AppShell } from "@/components/layout";
-import { PageHeader } from "@/components/ui/page-header";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
@@ -41,8 +41,8 @@ import {
   useMutAdminApproveSubmission,
   useMutAdminBanSubmitter,
   useMutAdminRejectSubmission,
-  useQueryAdminSubmissions,
   useQueryAdminSidebarStats,
+  useQueryAdminSubmissions,
 } from "@/features/admin/hooks";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 

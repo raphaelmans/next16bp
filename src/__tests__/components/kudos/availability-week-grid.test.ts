@@ -153,19 +153,19 @@ describe("slotLookup for cross-midnight booking", () => {
   it("maps hour 23 on Mar 5 to the booked slot", () => {
     const slot = slotLookup.get("2026-03-05")?.get(23);
     expect(slot).toBeDefined();
-    expect(slot!.status).toBe("booked");
+    expect(slot?.status).toBe("booked");
   });
 
   it("maps hour 0 on Mar 6 to the booked midnight slot", () => {
     const slot = slotLookup.get("2026-03-06")?.get(0);
     expect(slot).toBeDefined();
-    expect(slot!.status).toBe("booked");
+    expect(slot?.status).toBe("booked");
   });
 
   it("maps hour 22 on Mar 5 to the available slot", () => {
     const slot = slotLookup.get("2026-03-05")?.get(22);
     expect(slot).toBeDefined();
-    expect(slot!.status).toBe("available");
+    expect(slot?.status).toBe("available");
   });
 
   it("renders cell as disabled when slot is booked", () => {

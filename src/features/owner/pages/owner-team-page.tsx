@@ -1,7 +1,6 @@
 "use client";
 
 import { MoreHorizontal, Search, ShieldAlert, UserPlus, X } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
 import { toast } from "@/common/toast";
@@ -35,6 +34,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   OwnerNavbar,

@@ -9,7 +9,6 @@ import {
   ShieldCheck,
   XCircle,
 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { type ChangeEvent, useRef } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -28,6 +27,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {

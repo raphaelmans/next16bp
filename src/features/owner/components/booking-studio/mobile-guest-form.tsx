@@ -3,9 +3,6 @@
 import { Check, ChevronsUpDown } from "lucide-react";
 import * as React from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Command,
   CommandEmpty,
@@ -14,11 +11,14 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
+import { Input } from "@/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
+import { Textarea } from "@/components/ui/textarea";
 import { useQueryOwnerGuestProfiles } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
@@ -153,6 +153,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
         </div>
       ) : (
         <>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: label wraps input */}
           <label className="block space-y-2">
             <span className="text-sm font-medium">Guest name</span>
             <Input
@@ -160,6 +161,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
               onChange={(e) => onGuestNameChange(e.target.value)}
             />
           </label>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: label wraps input */}
           <label className="block space-y-2">
             <span className="text-sm font-medium">Phone (optional)</span>
             <Input
@@ -167,6 +169,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
               onChange={(e) => onGuestPhoneChange(e.target.value)}
             />
           </label>
+          {/* biome-ignore lint/a11y/noLabelWithoutControl: label wraps input */}
           <label className="block space-y-2">
             <span className="text-sm font-medium">Email (optional)</span>
             <Input
@@ -177,6 +180,7 @@ export const MobileGuestForm = React.memo(function MobileGuestForm({
         </>
       )}
 
+      {/* biome-ignore lint/a11y/noLabelWithoutControl: label wraps input */}
       <label className="block space-y-2">
         <span className="text-sm font-medium">Notes (optional)</span>
         <Textarea

@@ -188,6 +188,7 @@ export class AdminCourtService implements IAdminCourtService {
       );
 
       // 3. Create photos
+      // biome-ignore lint/suspicious/noExplicitAny: repository return type varies
       const photos: any[] = [];
       if (data.photos?.length) {
         for (let i = 0; i < data.photos.length; i++) {
@@ -205,6 +206,7 @@ export class AdminCourtService implements IAdminCourtService {
       }
 
       // 4. Create amenities
+      // biome-ignore lint/suspicious/noExplicitAny: repository return type varies
       const amenities: any[] = [];
       if (data.amenities?.length) {
         for (const name of data.amenities) {

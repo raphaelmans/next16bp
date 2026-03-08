@@ -10,7 +10,6 @@ import {
   StandardFormProvider,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Card,
   CardContent,
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/collapsible";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { PlaceFormData } from "../schemas";
 import { type PlaceFormValues, SAMPLE_GOOGLE_URL } from "./place-form-helpers";

@@ -10,9 +10,9 @@ import {
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
 import { PlaceDetailBookmarkSlot } from "@/features/discovery/place-detail/components/place-detail-bookmark-slot";
+import { cn } from "@/lib/utils";
 
 type PlaceDetailHeroServerSectionProps = {
   place: PlaceDetail;

@@ -1,7 +1,6 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
@@ -20,6 +19,7 @@ import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { AppShell } from "@/components/layout";
 import { PageHeader } from "@/components/ui/page-header";
+import { Spinner } from "@/components/ui/spinner";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { AdminCourtEditForm } from "@/features/admin/components/admin-court-edit-form";
 import { AdminCourtFeaturedPlacementCard } from "@/features/admin/components/admin-court-featured-placement-card";

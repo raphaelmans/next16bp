@@ -20,10 +20,10 @@ import { trackEvent } from "@/common/clients/telemetry-client";
 import { URLQueryBuilder } from "@/common/url-query-builder";
 import { KudosLogo } from "@/components/kudos";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Spinner } from "@/components/ui/spinner";
 import {
   useMutAuthLogout,
   useQueryAuthMyOrganizations,

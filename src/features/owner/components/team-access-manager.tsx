@@ -1,7 +1,6 @@
 "use client";
 
 import { ShieldAlert, UserMinus, UserPlus, X } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -18,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import {
   useMutCancelOrganizationInvitation,
   useMutInviteOrganizationMember,

@@ -17,10 +17,12 @@ export default function CourtsCityLoading() {
           </div>
           <div className="mt-2 flex flex-wrap items-center gap-1.5">
             {Array.from({ length: 3 }, (_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
               <Skeleton key={i} className="h-6 w-24 rounded-full" />
             ))}
             <span aria-hidden="true" className="mx-1 h-3 w-px bg-border" />
             {Array.from({ length: 3 }, (_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
               <Skeleton key={`v-${i}`} className="h-6 w-28 rounded-full" />
             ))}
           </div>
@@ -42,6 +44,7 @@ export default function CourtsCityLoading() {
           </div>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {Array.from({ length: 8 }, (_, i) => (
+              // biome-ignore lint/suspicious/noArrayIndexKey: static skeleton list
               <PlaceCardSkeleton key={i} />
             ))}
           </div>

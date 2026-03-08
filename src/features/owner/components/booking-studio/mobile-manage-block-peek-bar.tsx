@@ -5,7 +5,6 @@ import * as React from "react";
 import { formatTimeRangeInTimeZone } from "@/common/format";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Drawer,
   DrawerContent,
@@ -14,6 +13,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
+import { Spinner } from "@/components/ui/spinner";
 import { BlockInfoDisplay } from "./block-info-display";
 import type { CourtBlockItem } from "./types";
 

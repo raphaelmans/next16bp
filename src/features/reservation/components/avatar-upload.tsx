@@ -2,9 +2,9 @@
 
 import { Camera } from "lucide-react";
 import { useRef } from "react";
-import { Spinner } from "@/components/ui/spinner";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { Spinner } from "@/components/ui/spinner";
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string;

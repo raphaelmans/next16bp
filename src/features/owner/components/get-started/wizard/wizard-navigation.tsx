@@ -99,7 +99,7 @@ export function WizardNavigation({
               className="min-h-[44px] cursor-pointer px-6 text-base font-semibold sm:min-h-9 sm:px-5 sm:text-sm"
             >
               <Link
-                href={`${appRoutes.organization.places.courts.base(status.primaryPlaceId!)}?from=setup`}
+                href={`${appRoutes.organization.places.courts.base(status.primaryPlaceId ?? "")}?from=setup`}
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add more courts

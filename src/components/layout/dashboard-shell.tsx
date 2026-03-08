@@ -145,7 +145,7 @@ function OrganizationShellGate({
     useState(false);
 
   const isOrganizationRoute = pathname.startsWith(appRoutes.organization.base);
-  const noOrgMode =
+  const _noOrgMode =
     hasOrganizations === false || (!isLoading && !organization?.id);
 
   useEffect(() => {
@@ -173,7 +173,7 @@ function OrganizationShellGate({
       }
     : undefined;
 
-  const roleLabel = permissionContext
+  const _roleLabel = permissionContext
     ? ROLE_DISPLAY_LABELS[permissionContext.role]
     : undefined;
 

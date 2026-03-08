@@ -3,7 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CheckCircle, MapPin, Plus, Trash2 } from "lucide-react";
 import * as React from "react";
-import { useFieldArray, useForm } from "react-hook-form";
+import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { z } from "zod";
 import { PLACE_AMENITIES } from "@/common/amenities";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
@@ -16,7 +16,6 @@ import {
 import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
-import { Controller } from "react-hook-form";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -498,6 +497,7 @@ export function SubmitCourtForm() {
         <CardContent>
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {PLACE_AMENITIES.map((amenity) => (
+              // biome-ignore lint/a11y/noLabelWithoutControl: label wraps input
               <label
                 key={amenity}
                 className="flex items-center gap-2 text-sm cursor-pointer"

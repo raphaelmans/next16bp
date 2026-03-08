@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import { useMemo, useState } from "react";
 import { useGoogleLocPreviewMutation } from "@/common/clients/google-loc-client";
 import { Container } from "@/components/layout";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 
 const SAMPLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 

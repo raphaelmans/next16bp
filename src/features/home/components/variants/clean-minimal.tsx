@@ -1,8 +1,8 @@
 "use client";
 
 import { Container } from "@/components/layout/container";
-import type { PlaceSummary } from "@/features/discovery/helpers";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
+import type { PlaceSummary } from "@/features/discovery/helpers";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { POPULAR_LOCATIONS } from "@/features/home/constants/popular-locations";
 import { BeforeAfter } from "./shared/before-after";

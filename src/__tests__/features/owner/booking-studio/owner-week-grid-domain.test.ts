@@ -136,8 +136,8 @@ describe("buildOwnerSelectionConfig", () => {
       const range = config.computeRange(anchor, target);
       // span = target - anchor + 1 = (6*20+2) - (5*20+15) + 1 = 122-115+1 = 8 slots
       expect(range).not.toBeNull();
-      expect(range!.startIdx).toBe(anchor);
-      expect(range!.endIdx).toBe(target);
+      expect(range?.startIdx).toBe(anchor);
+      expect(range?.endIdx).toBe(target);
     });
 
     it("rejects selection spanning more than 1 day gap", () => {

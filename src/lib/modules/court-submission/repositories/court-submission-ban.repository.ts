@@ -1,7 +1,7 @@
 import { eq } from "drizzle-orm";
 import {
-  courtSubmissionBan,
   type CourtSubmissionBanRecord,
+  courtSubmissionBan,
   type InsertCourtSubmissionBan,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";

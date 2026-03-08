@@ -5,7 +5,6 @@ import { formatCurrency, formatTimeRangeInTimeZone } from "@/common/format";
 import { toast } from "@/common/toast";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Dialog,
   DialogContent,
@@ -15,6 +14,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutCancelReservation } from "@/features/owner/hooks/reservations";
 import { useBookingStudio } from "./booking-studio-provider";

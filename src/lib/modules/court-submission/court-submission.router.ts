@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { makeGoogleLocService } from "@/lib/modules/google-loc/factories/google-loc.factory";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
@@ -16,7 +17,6 @@ import {
   UserBannedFromSubmissionsError,
 } from "./errors/court-submission.errors";
 import { makeCourtSubmissionService } from "./factories/court-submission.factory";
-import { makeGoogleLocService } from "@/lib/modules/google-loc/factories/google-loc.factory";
 
 function handleCourtSubmissionError(error: unknown): never {
   if (error instanceof UserBannedFromSubmissionsError) {

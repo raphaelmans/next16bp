@@ -1,12 +1,12 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import Link from "next/link";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import { Spinner } from "@/components/ui/spinner";
 import { Switch } from "@/components/ui/switch";
 import { deriveOwnerReservationNotificationRoutingState } from "@/features/owner/domain";
 import {

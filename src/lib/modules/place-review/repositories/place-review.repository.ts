@@ -4,14 +4,14 @@ import {
   count,
   desc,
   eq,
-  isNull,
   isNotNull,
+  isNull,
   type SQL,
   sql,
 } from "drizzle-orm";
 import {
-  placeReview,
   type PlaceReviewRecord,
+  placeReview,
   profile,
 } from "@/lib/shared/infra/db/schema";
 import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";

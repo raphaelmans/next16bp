@@ -10,7 +10,6 @@ import {
   StandardFormTextarea,
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Command,
   CommandEmpty,
@@ -34,6 +33,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 import { useBookingStudio } from "./booking-studio-provider";
 import type { GuestBookingFormValues } from "./types";

@@ -18,8 +18,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import { Separator } from "@/components/ui/separator";
+import { Spinner } from "@/components/ui/spinner";
 import { type LoginDTO, LoginSchema } from "@/lib/modules/auth/dtos";
 import { useMutAuthLogin, useMutAuthLoginWithGoogle } from "../hooks";
 import { GoogleSignInButton } from "./google-sign-in-button";

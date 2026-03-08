@@ -1,6 +1,5 @@
 "use client";
 
-import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
@@ -23,6 +22,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
+import { Spinner } from "@/components/ui/spinner";
 import { useMutUpdateOrganizationMemberPermissions } from "@/features/owner/hooks";
 import {
   DEFAULT_PERMISSIONS_BY_ROLE,

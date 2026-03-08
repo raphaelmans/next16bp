@@ -16,8 +16,8 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Spinner } from "@/components/ui/spinner";
 import { PlaceForm } from "@/features/owner/components";
 import {
   useModPlaceForm,

@@ -148,7 +148,7 @@ export function PlaceDetailMobileSheet({
       }
     });
     return () => cancelAnimationFrame(id);
-  }, [weekHeaderLabel]);
+  }, []);
   const isReviewStep = mobileFlowStep === "review" && hasCartItems;
 
   const pricedItemCount = cartItems.filter(

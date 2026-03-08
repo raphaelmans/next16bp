@@ -18,13 +18,13 @@ export * from "./claim-request";
 export * from "./contact-message";
 // Court-related tables
 export * from "./court";
-export * from "./court-submission";
 export * from "./court-addon";
 export * from "./court-addon-rate-rule";
 export * from "./court-block";
 export * from "./court-hours-window";
 export * from "./court-price-override";
 export * from "./court-rate-rule";
+export * from "./court-submission";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
 // External open play

@@ -2,7 +2,6 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Pencil, Plus, Star, Trash2 } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import {
@@ -50,6 +49,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import {
   useMutCreateOrganizationPaymentMethod,

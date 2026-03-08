@@ -3,13 +3,12 @@
 import {
   AdvancedMarker,
   APIProvider,
-  Map,
+  Map as GoogleMap,
   type MapMouseEvent,
   Pin,
   useMap,
 } from "@vis.gl/react-google-maps";
 import { MapPin, Pencil, Search } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { useCallback, useId, useState } from "react";
 import {
   type GoogleLocGeocodePlace,
@@ -19,6 +18,7 @@ import {
 import { GoogleMapsEmbed } from "@/components/kudos/google-maps-embed";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { env } from "@/lib/env";
 
 const PHILIPPINES_CENTER = { lat: 12.8797, lng: 121.774 };
@@ -244,7 +244,7 @@ function MapPickerInner({
       )}
 
       <div className="h-72 overflow-hidden rounded-lg border">
-        <Map
+        <GoogleMap
           defaultCenter={center}
           defaultZoom={zoom}
           gestureHandling="greedy"
@@ -258,7 +258,7 @@ function MapPickerInner({
               <Pin />
             </AdvancedMarker>
           )}
-        </Map>
+        </GoogleMap>
       </div>
 
       <p className="text-xs text-muted-foreground">

@@ -5,7 +5,6 @@ import {
   getDayOfWeekForDayKey,
   getWindowsForDayOfWeek,
 } from "./court-hours";
-import type { CourtBlockItem, ReservationItem } from "./types";
 import { COMPACT_TIMELINE_ROW_HEIGHT, TIMELINE_ROW_HEIGHT } from "./types";
 
 // ---------------------------------------------------------------------------

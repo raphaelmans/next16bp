@@ -57,6 +57,7 @@ export function PortalPreferenceCard({
 
   const mutation = useMutSetDefaultPortal({
     onSuccess: (_data, variables) => {
+      // biome-ignore lint/suspicious/noDocumentCookie: setting portal preference cookie for server-side routing
       document.cookie = `kudos.portal-context=${variables.defaultPortal}; path=/; max-age=31536000; samesite=lax`;
       router.refresh();
       toast.success("Default portal updated");

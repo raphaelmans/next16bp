@@ -2,7 +2,6 @@
 
 import { ArrowRight, BadgeCheck, CircleHelp, Flag } from "lucide-react";
 import type { UseFormReturn } from "react-hook-form";
-import { Spinner } from "@/components/ui/spinner";
 import {
   StandardFormInput,
   StandardFormProvider,
@@ -19,6 +18,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Spinner } from "@/components/ui/spinner";
 import type { PlaceClaimStatus } from "@/features/discovery/hooks";
 import type {
   ClaimFormData,

@@ -1,11 +1,11 @@
 import { TRPCError } from "@trpc/server";
-import { AppError } from "@/lib/shared/kernel/errors";
 import {
   protectedProcedure,
   protectedRateLimitedProcedure,
   publicProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
+import { AppError } from "@/lib/shared/kernel/errors";
 import {
   GetPlaceReviewAggregateSchema,
   GetViewerReviewSchema,

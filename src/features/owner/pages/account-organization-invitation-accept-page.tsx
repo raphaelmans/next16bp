@@ -1,7 +1,6 @@
 "use client";
 
 import { CheckCircle2, XCircle } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import { useRouter } from "next/navigation";
 import * as React from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -10,6 +9,7 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import { useQueryAuthSession } from "@/features/auth";
 import {
   useMutAcceptOrganizationInvitation,

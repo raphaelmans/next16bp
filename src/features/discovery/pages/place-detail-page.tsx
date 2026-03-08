@@ -10,7 +10,6 @@ import { buildLocationLabel, humanizeSlug } from "@/common/seo-helpers";
 import { isSeoIndexablePlaceSurface } from "@/common/seo-indexability";
 import { Container } from "@/components/layout";
 import { Skeleton } from "@/components/ui/skeleton";
-import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { PlaceDetailAvailabilityStudioSlot } from "@/features/discovery/place-detail/components/place-detail-availability-studio-slot";
 import {
@@ -28,6 +27,7 @@ import {
   getPlaceCourtsSectionData,
   getPlaceVenueSectionData,
 } from "@/features/discovery/place-detail/server/place-detail-section-data";
+import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { isUuid } from "@/lib/slug";
 import { publicCaller } from "@/trpc/server";
@@ -192,8 +192,9 @@ export async function generatePlaceDetailMetadata(
       address: place.address,
       city: place.city,
       province: place.province,
-      activeCourtCount: placeDetails.courts.filter((court) => court.isActive)
-        .length,
+      activeCourtCount: placeDetails.courts.filter(
+        (court) => court.court.isActive,
+      ).length,
       photoCount: placeDetails.photos.length,
       hasContactDetails,
       verificationStatus: placeDetails.verification?.status ?? null,
@@ -284,7 +285,10 @@ async function PlaceDetailPageServerSection({
 
     // Resolve province/city slugs for breadcrumb navigation
     const provinces = await getPHProvincesCities();
-    const matchedProvince = findProvinceByName(provinces, place.province);
+    const matchedProvince = findProvinceByName(
+      provinces,
+      placeDetails.place.province,
+    );
     const matchedCity = matchedProvince
       ? findCityByName(matchedProvince, place.city)
       : undefined;

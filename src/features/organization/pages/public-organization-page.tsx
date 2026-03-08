@@ -4,6 +4,11 @@ import Link from "next/link";
 import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { PlaceCard } from "@/components/kudos";
+import { BentoGrid, BentoItem } from "@/components/layout/bento-grid";
+import { Container } from "@/components/layout/container";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Empty,
   EmptyContent,
@@ -12,11 +17,6 @@ import {
   EmptyMedia,
   EmptyTitle,
 } from "@/components/ui/empty";
-import { BentoGrid, BentoItem } from "@/components/layout/bento-grid";
-import { Container } from "@/components/layout/container";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { DiscoveryPublicShell } from "@/features/discovery/components/public-shell";
 import type { getOrganizationLandingBySlug } from "@/lib/modules/organization/server/public-organization-page";
 

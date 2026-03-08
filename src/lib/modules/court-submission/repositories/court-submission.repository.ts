@@ -1,8 +1,8 @@
 import { and, count, eq, gte, sql } from "drizzle-orm";
 import {
+  type CourtSubmissionRecord,
   court,
   courtSubmission,
-  type CourtSubmissionRecord,
   type InsertCourtSubmission,
   place,
   sport,
@@ -163,6 +163,7 @@ export class CourtSubmissionRepository {
       if (!courtsByPlace.has(row.placeId)) {
         courtsByPlace.set(row.placeId, []);
       }
+      // biome-ignore lint/style/noNonNullAssertion: entry guaranteed by has-check + set above
       const sports = courtsByPlace.get(row.placeId)!;
       const existing = sports.find((s) => s.sportName === row.sportName);
       if (existing) {

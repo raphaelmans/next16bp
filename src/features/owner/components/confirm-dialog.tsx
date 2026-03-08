@@ -1,7 +1,6 @@
 "use client";
 
 import { Check } from "lucide-react";
-import { Spinner } from "@/components/ui/spinner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,6 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { Spinner } from "@/components/ui/spinner";
 
 interface ConfirmDialogProps {
   open: boolean;
