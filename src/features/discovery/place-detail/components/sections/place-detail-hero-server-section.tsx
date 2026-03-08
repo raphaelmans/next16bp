@@ -21,10 +21,6 @@ type PlaceDetailHeroServerSectionProps = {
   directionsUrl: string;
   hasCallCta: boolean;
   callHref: string;
-  reviewAggregate: {
-    averageRating: number;
-    reviewCount: number;
-  } | null;
 };
 
 export function PlaceDetailHeroServerSection({
@@ -35,7 +31,6 @@ export function PlaceDetailHeroServerSection({
   directionsUrl,
   hasCallCta,
   callHref,
-  reviewAggregate,
 }: PlaceDetailHeroServerSectionProps) {
   const logoUrl = place.logoUrl?.trim();
   const logoFallback = place.name
@@ -87,10 +82,7 @@ export function PlaceDetailHeroServerSection({
               {place.city}
               {place.address ? ` · ${place.address}` : ""}
             </p>
-            <PlaceDetailHeroReviewSummary
-              placeId={place.id}
-              initialReviewAggregate={reviewAggregate}
-            />
+            <PlaceDetailHeroReviewSummary />
           </div>
         </div>
       </div>

@@ -32,6 +32,8 @@ export type GuideEntry = {
 
 export const ORG_GUIDE_SLUG =
   "how-to-set-up-your-sports-venue-organization-on-kudoscourts";
+export const PLAYER_BOOKING_GUIDE_SLUG =
+  "how-to-book-a-sports-court-on-kudoscourts";
 
 const GUIDE_PUBLISHED_AT = "2026-03-08";
 
@@ -308,6 +310,100 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
       },
       {
         label: "More player guides",
+        href: appRoutes.guides.base,
+      },
+    ],
+  },
+  {
+    slug: PLAYER_BOOKING_GUIDE_SLUG,
+    title: "How To Book A Sports Court On KudosCourts",
+    description:
+      "A player guide to booking a sports court on KudosCourts, from choosing a slot as a guest through reservation tracking and owner confirmation.",
+    audience: "players",
+    heroEyebrow: "Player Guide",
+    queryCluster: "how to book a sports court on kudoscourts",
+    publishedAt: GUIDE_PUBLISHED_AT,
+    updatedAt: GUIDE_PUBLISHED_AT,
+    intro:
+      "To book a sports court on KudosCourts, start on a venue page, pick an available time, sign in or create an account, review the booking, then confirm the request. After submission, you can track it in My Reservations while the owner reviews and confirms the booking.",
+    sections: [
+      {
+        title: "Start on the venue page and choose a time",
+        paragraphs: [
+          "The booking flow starts on the venue page where you can compare courts, browse available slots, and choose the time that fits your schedule. Guests can explore availability first without signing in, which makes it easier to decide before committing.",
+          "Once you select a slot, the primary action shifts from browsing to booking. If you are not signed in yet, KudosCourts keeps the booking context and sends you through the sign-in step so you can continue without starting over.",
+        ],
+      },
+      {
+        title: "Sign in or create your account to continue",
+        paragraphs: [
+          "Guests need an account before a reservation can be submitted. The sign-in or registration step is part of the booking handoff, not a separate process, so the platform returns you to the booking flow after authentication.",
+          "That matters because a reservation needs a real player account behind it. The owner needs to know who sent the request, and you need a place to track the booking status afterward.",
+        ],
+      },
+      {
+        title: "Review the booking and complete your profile",
+        paragraphs: [
+          "On the booking review page, check the court, schedule, and pricing details before you confirm. If your player profile is incomplete, KudosCourts prompts you to finish it first so the owner has the details they need to review the request.",
+          "You also need to accept the terms and conditions before the confirmation button becomes available. This step is where the booking changes from a selected slot into a formal reservation request.",
+        ],
+      },
+      {
+        title: "Submit the reservation request",
+        paragraphs: [
+          "Clicking Confirm Booking sends the reservation to the venue owner for review. In the standard owner-reviewed flow, this does not mean the booking is instantly confirmed. It means the request has been created successfully and is waiting for the venue's decision.",
+          "That pending state is useful because it gives the owner control over acceptance while still giving you a clear record that the reservation was sent. You do not need to guess whether the request went through.",
+        ],
+      },
+      {
+        title: "Find the booking in My Reservations",
+        paragraphs: [
+          "Right after you submit the booking, KudosCourts takes you to the reservation detail page so you can see the current status and next steps. From there, you can always return to My Reservations to find the same booking again later.",
+          "While the request is still under review, it appears in the Pending section of My Reservations with its current status. This gives you a single place to check whether the owner is still reviewing, has asked for payment, or has already moved the booking forward.",
+        ],
+      },
+      {
+        title: "Watch for owner confirmation",
+        paragraphs: [
+          "The final step happens after the owner reviews the request. If the venue confirms the reservation, the booking status updates from pending review to confirmed, and the reservation moves into your Upcoming list in My Reservations.",
+          "At that point, the booking is no longer just a request. It becomes an active upcoming reservation that you can open again anytime from the reservations page to review the schedule, venue details, and any next actions.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Do I need an account before I can reserve a court?",
+        answer:
+          "Yes. You can browse venue pages and available slots as a guest, but you need to sign in or create an account before KudosCourts can submit the reservation request.",
+      },
+      {
+        question: "Why is my booking not instantly confirmed?",
+        answer:
+          "Many venues use an owner-reviewed reservation flow. After you confirm the booking, the request is created first and the venue owner decides whether to approve it.",
+      },
+      {
+        question: "Where do I find my reservation after I submit it?",
+        answer:
+          "You are taken to the reservation detail page immediately after submission, and you can also find the booking later on the My Reservations page. Pending requests stay under Pending until the owner takes action.",
+      },
+      {
+        question:
+          "What should I do if KudosCourts asks me to complete my profile?",
+        answer:
+          "Finish the required profile details on the booking flow, then return to the review step. The booking cannot be confirmed until the required profile information is complete.",
+      },
+    ],
+    relatedLinks: [
+      {
+        label: "Browse venue listings",
+        href: appRoutes.courts.base,
+      },
+      {
+        label: "My Reservations",
+        href: appRoutes.reservations.base,
+      },
+      {
+        label: "More guides",
         href: appRoutes.guides.base,
       },
     ],

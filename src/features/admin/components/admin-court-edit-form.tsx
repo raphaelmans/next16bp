@@ -234,11 +234,51 @@ export function AdminCourtEditForm({
         <CardHeader>
           <CardTitle>Map (optional)</CardTitle>
           <CardDescription>
-            Paste a Google Maps link to auto-fill coordinates. Address and city
-            still require confirmation.
+            Enter coordinates manually or paste a Google Maps link to auto-fill
+            them. Leave these blank if you do not want to pin a map location.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <StandardFormField<AdminCourtEditFormData>
+              name="latitude"
+              label="Latitude"
+            >
+              {({ field }) => (
+                <Input
+                  type="number"
+                  step="any"
+                  inputMode="decimal"
+                  value={typeof field.value === "string" ? field.value : ""}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                  placeholder="e.g., 14.5547"
+                />
+              )}
+            </StandardFormField>
+
+            <StandardFormField<AdminCourtEditFormData>
+              name="longitude"
+              label="Longitude"
+            >
+              {({ field }) => (
+                <Input
+                  type="number"
+                  step="any"
+                  inputMode="decimal"
+                  value={typeof field.value === "string" ? field.value : ""}
+                  onChange={(event) => field.onChange(event.target.value)}
+                  onBlur={field.onBlur}
+                  name={field.name}
+                  ref={field.ref}
+                  placeholder="e.g., 121.0244"
+                />
+              )}
+            </StandardFormField>
+          </div>
+
           <div className="space-y-2">
             <Label htmlFor="googleUrl">Google Maps URL</Label>
             <Input
@@ -270,8 +310,6 @@ export function AdminCourtEditForm({
             Locate
           </Button>
 
-          <input type="hidden" {...register("latitude")} />
-          <input type="hidden" {...register("longitude")} />
           <input type="hidden" {...register("extGPlaceId")} />
 
           {previewErrorMessage && (

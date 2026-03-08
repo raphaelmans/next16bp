@@ -44,12 +44,20 @@ export function useQueryPlaceDetailReviewAggregate(
   placeId: string,
   options?: {
     initialData?: PlaceReviewAggregate;
+    refetchOnMount?: boolean | "always";
+    staleTime?: number;
   },
 ) {
   return trpc.placeReview.aggregate.useQuery(
     { placeId },
     {
       enabled: Boolean(placeId),
+      ...(options?.refetchOnMount
+        ? { refetchOnMount: options.refetchOnMount }
+        : {}),
+      ...(typeof options?.staleTime === "number"
+        ? { staleTime: options.staleTime }
+        : {}),
       ...(options?.initialData ? { initialData: options.initialData } : {}),
     },
   );

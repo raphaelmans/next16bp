@@ -3,46 +3,23 @@ import {
   Building2,
   CalendarCheck,
   LayoutGrid,
-  type LucideIcon,
   ShieldCheck,
   UserPlus,
   Wallet,
 } from "lucide-react";
+import type {
+  InteractiveGuideAccordionItem,
+  InteractiveGuideCallout,
+  InteractiveGuideSection,
+  InteractiveGuideSubsection,
+  InteractiveGuideTip,
+} from "@/features/guides/components/interactive-guide-types";
 
-export type OrgGuideTip = {
-  text: string;
-};
-
-export type OrgGuideCallout = {
-  text: string;
-};
-
-export type OrgGuideAccordionItem = {
-  trigger: string;
-  content: string;
-};
-
-export type OrgGuideSubsection = {
-  id: string;
-  title: string;
-  paragraphs: string[];
-  tip?: OrgGuideTip;
-  callout?: OrgGuideCallout;
-  accordionItems?: OrgGuideAccordionItem[];
-};
-
-export type OrgGuideSection = {
-  id: string;
-  stepNumber: number;
-  icon: LucideIcon;
-  title: string;
-  isOptional?: boolean;
-  paragraphs: string[];
-  tip?: OrgGuideTip;
-  callout?: OrgGuideCallout;
-  accordionItems?: OrgGuideAccordionItem[];
-  subsections?: OrgGuideSubsection[];
-};
+export type OrgGuideTip = InteractiveGuideTip;
+export type OrgGuideCallout = InteractiveGuideCallout;
+export type OrgGuideAccordionItem = InteractiveGuideAccordionItem;
+export type OrgGuideSubsection = InteractiveGuideSubsection;
+export type OrgGuideSection = InteractiveGuideSection;
 
 export const ORG_GUIDE_SECTIONS: OrgGuideSection[] = [
   {

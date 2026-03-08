@@ -46,21 +46,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { GuideSnippetWrapper } from "@/features/guides/components/guide-snippet-wrapper";
 import { cn } from "@/lib/utils";
 
-// ---------------------------------------------------------------------------
-// Shared wrapper — faded "preview" container around each snippet
-// ---------------------------------------------------------------------------
-function SnippetWrapper({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="rounded-xl border border-dashed border-border/60 bg-muted/30 p-4">
-      <p className="mb-3 text-[11px] font-medium uppercase tracking-widest text-muted-foreground/60">
-        What you will see
-      </p>
-      <div className="pointer-events-none select-none">{children}</div>
-    </div>
-  );
-}
+const SnippetWrapper = GuideSnippetWrapper;
 
 // ---------------------------------------------------------------------------
 // 1. MockOrganizationForm — matches organization-form.tsx

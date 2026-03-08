@@ -3,6 +3,7 @@ import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout/container";
 import type { PlaceSummary } from "@/features/discovery/helpers";
+import { PLAYER_BOOKING_GUIDE_SLUG } from "@/features/guides/content/guides";
 import { HomePublicShell } from "@/features/home/components/home-public-shell";
 import { HomeSearchForm } from "@/features/home/components/home-search-form";
 import { POPULAR_LOCATIONS } from "@/features/home/constants/popular-locations";
@@ -80,15 +81,25 @@ export function CleanMinimalPage({
                 variant="hero"
               />
 
-              <Link
-                href={appRoutes.guides.detail(
-                  "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
-                )}
-                className="mt-6 inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
-              >
-                <BookOpen className="h-3.5 w-3.5" />
-                Venue guides
-              </Link>
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+                <Link
+                  href={appRoutes.guides.detail(
+                    "how-to-set-up-your-sports-venue-organization-on-kudoscourts",
+                  )}
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  Venue guides
+                </Link>
+
+                <Link
+                  href={appRoutes.guides.detail(PLAYER_BOOKING_GUIDE_SLUG)}
+                  className="inline-flex items-center gap-1.5 text-sm text-muted-foreground transition-colors hover:text-primary"
+                >
+                  <BookOpen className="h-3.5 w-3.5" />
+                  Player booking guide
+                </Link>
+              </div>
             </div>
 
             {/* Right — showcase cards */}

@@ -13,7 +13,10 @@ const optionalTextSchema = (max: { value: number; message: string }) =>
     z.string().trim().max(max.value, { error: max.message }).optional(),
   );
 
-const coordinateSchema = S.common.coordinateString;
+const coordinateSchema = {
+  latitude: allowEmptyString(S.common.coordinateString.latitude),
+  longitude: allowEmptyString(S.common.coordinateString.longitude),
+};
 
 const courtSchemaBase = z.object({
   label: S.court.label,

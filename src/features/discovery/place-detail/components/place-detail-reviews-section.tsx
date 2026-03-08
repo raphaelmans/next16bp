@@ -11,6 +11,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
 import { useQueryAuthSession } from "@/features/auth/hooks";
+import { usePlaceDetailReviewAggregateContext } from "@/features/discovery/place-detail/components/place-detail-review-aggregate-provider";
 import {
   RatingHistogram,
   ReviewCard,
@@ -19,7 +20,6 @@ import {
 import {
   useMutPlaceDetailRemoveReview,
   useMutPlaceDetailUpsertReview,
-  useQueryPlaceDetailReviewAggregate,
   useQueryPlaceDetailReviews,
   useQueryPlaceDetailViewerReview,
 } from "@/features/discovery/place-detail/hooks/use-place-detail-reviews";
@@ -80,7 +80,7 @@ export function PlaceDetailReviewsSection({
   const [body, setBody] = useState("");
   const [isEditing, setIsEditing] = useState(false);
 
-  const aggregateQuery = useQueryPlaceDetailReviewAggregate(placeId);
+  const aggregateQuery = usePlaceDetailReviewAggregateContext();
   const reviewsQuery = useQueryPlaceDetailReviews({
     placeId,
     limit: 5,
@@ -137,7 +137,7 @@ export function PlaceDetailReviewsSection({
     [removeMutation],
   );
 
-  const aggregate = aggregateQuery.data;
+  const aggregate = aggregateQuery.aggregate;
   const reviews = reviewsQuery.data;
   const viewerReview = viewerReviewQuery.data;
   const hasReviews = aggregate && aggregate.reviewCount > 0;

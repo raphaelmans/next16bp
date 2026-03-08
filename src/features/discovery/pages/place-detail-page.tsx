@@ -12,6 +12,7 @@ import { Container } from "@/components/layout";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getPlaceVerificationDisplay } from "@/features/discovery/helpers";
 import { PlaceDetailAvailabilityStudioSlot } from "@/features/discovery/place-detail/components/place-detail-availability-studio-slot";
+import { PlaceDetailReviewAggregateProvider } from "@/features/discovery/place-detail/components/place-detail-review-aggregate-provider";
 import {
   PlaceDetailCourtsServerSection,
   PlaceDetailCourtsServerSectionFallback,
@@ -553,61 +554,65 @@ async function PlaceDetailPageServerSection({
         </section>
 
         <Container className="pt-4 sm:pt-6">
-          <PlaceDetailHeroServerSection
-            place={place}
-            showBooking={showBooking}
-            showVerificationBadge={showVerificationBadge}
-            isCurated={isCurated}
-            directionsUrl={directionsUrl}
-            hasCallCta={hasCallCta}
-            callHref={callHref}
-            reviewAggregate={reviewAggregate}
-          />
+          <PlaceDetailReviewAggregateProvider
+            placeId={place.id}
+            initialReviewAggregate={reviewAggregate}
+          >
+            <PlaceDetailHeroServerSection
+              place={place}
+              showBooking={showBooking}
+              showVerificationBadge={showVerificationBadge}
+              isCurated={isCurated}
+              directionsUrl={directionsUrl}
+              hasCallCta={hasCallCta}
+              callHref={callHref}
+            />
 
-          {showBooking && (
-            <>
-              <div id="availability-studio" className="sr-only">
-                Availability Studio
-              </div>
-              <div className="mt-4 grid gap-6 pb-8 lg:mt-6 lg:grid-cols-3">
-                <PlaceDetailAvailabilityStudioSlot
-                  place={place}
-                  isBookable={isBookable}
-                  analyticsPlaceId={place.id}
-                  placeSlugOrId={canonicalId}
-                  mapQuery={mapQuery}
-                  directionsUrl={directionsUrl}
-                  openInMapsUrl={openInMapsUrl}
+            {showBooking && (
+              <>
+                <div id="availability-studio" className="sr-only">
+                  Availability Studio
+                </div>
+                <div className="mt-4 grid gap-6 pb-8 lg:mt-6 lg:grid-cols-3">
+                  <PlaceDetailAvailabilityStudioSlot
+                    place={place}
+                    isBookable={isBookable}
+                    analyticsPlaceId={place.id}
+                    placeSlugOrId={canonicalId}
+                    mapQuery={mapQuery}
+                    directionsUrl={directionsUrl}
+                    openInMapsUrl={openInMapsUrl}
+                    showBookingVerificationUi={showBookingVerificationUi}
+                    verificationMessage={verificationMessage}
+                    verificationDescription={verificationDescription}
+                    verificationStatusVariant={verificationStatusVariant}
+                  />
+                </div>
+              </>
+            )}
+
+            <div
+              id="courts-info"
+              className="mt-6 grid gap-6 pb-8 lg:grid-cols-2 lg:pb-16"
+            >
+              <Suspense fallback={<PlaceDetailCourtsServerSectionFallback />}>
+                <PlaceDetailCourtsServerSection
+                  dataPromise={courtsSectionPromise}
                   showBookingVerificationUi={showBookingVerificationUi}
                   verificationMessage={verificationMessage}
                   verificationDescription={verificationDescription}
                   verificationStatusVariant={verificationStatusVariant}
                 />
-              </div>
-            </>
-          )}
+              </Suspense>
 
-          <div
-            id="courts-info"
-            className="mt-6 grid gap-6 pb-8 lg:grid-cols-2 lg:pb-16"
-          >
-            <Suspense fallback={<PlaceDetailCourtsServerSectionFallback />}>
-              <PlaceDetailCourtsServerSection
-                dataPromise={courtsSectionPromise}
-                showBookingVerificationUi={showBookingVerificationUi}
-                verificationMessage={verificationMessage}
-                verificationDescription={verificationDescription}
-                verificationStatusVariant={verificationStatusVariant}
-              />
-            </Suspense>
-
-            <Suspense fallback={<PlaceDetailVenueServerSectionFallback />}>
-              <PlaceDetailVenueServerSection
-                dataPromise={venueSectionPromise}
-                showPhotos={isCurated}
-              />
-            </Suspense>
-          </div>
+              <Suspense fallback={<PlaceDetailVenueServerSectionFallback />}>
+                <PlaceDetailVenueServerSection
+                  dataPromise={venueSectionPromise}
+                  showPhotos={isCurated}
+                />
+              </Suspense>
+            </div>
+          </PlaceDetailReviewAggregateProvider>
 
           {!showBooking && (
             <div className="mt-6 pb-8 lg:pb-16">

@@ -6,11 +6,13 @@ import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout/container";
 import { Badge } from "@/components/ui/badge";
 import { OrgGuideArticlePage } from "@/features/guides/components/org-guide-article-page";
+import { PlayerBookingGuideArticlePage } from "@/features/guides/components/player-booking-guide-article-page";
 import type { GuideEntry } from "@/features/guides/content/guides";
 import {
   GUIDE_ENTRIES,
   getGuideBySlug,
   ORG_GUIDE_SLUG,
+  PLAYER_BOOKING_GUIDE_SLUG,
 } from "@/features/guides/content/guides";
 import { GuideArticlePage } from "@/features/guides/pages/guide-article-page";
 import {
@@ -140,7 +142,13 @@ function buildStructuredData(guide: GuideEntry) {
   } as const;
 }
 
-function OrgGuideWrapper({ guide }: { guide: GuideEntry }) {
+function InteractiveGuideWrapper({
+  guide,
+  article,
+}: {
+  guide: GuideEntry;
+  article: React.ReactNode;
+}) {
   const structuredData = buildStructuredData(guide);
 
   return (
@@ -149,86 +157,100 @@ function OrgGuideWrapper({ guide }: { guide: GuideEntry }) {
         {JSON.stringify(structuredData).replace(/</g, "\\u003c")}
       </Script>
       <Container className="py-12 md:py-16">
-        <article className="mx-auto max-w-5xl">
-          <OrgGuideArticlePage
-            header={
-              <header className="space-y-5">
-                <div className="flex flex-wrap items-center gap-3">
-                  <Badge variant="default">{guide.heroEyebrow}</Badge>
-                  <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
-                    Query cluster: {guide.queryCluster}
-                  </span>
-                </div>
-                <div className="space-y-3">
-                  <h1 className="font-heading text-4xl font-bold tracking-tight md:text-5xl">
-                    {guide.title}
-                  </h1>
-                  <p className="text-base leading-7 text-muted-foreground md:text-lg">
-                    {guide.description}
-                  </p>
-                </div>
-                <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                  <span>Published {formatDate(guide.publishedAt)}</span>
-                  <span>Updated {formatDate(guide.updatedAt)}</span>
-                </div>
-                <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
-                  <p className="font-heading text-sm font-semibold text-foreground">
-                    Direct answer
-                  </p>
-                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                    {guide.intro}
-                  </p>
-                </div>
-              </header>
-            }
-            footer={
-              <>
-                {/* FAQs */}
-                <div className="space-y-4">
-                  <h2 className="font-heading text-2xl font-semibold tracking-tight">
-                    Frequently asked questions
-                  </h2>
-                  <div className="space-y-4">
-                    {guide.faqs.map((faq) => (
-                      <div
-                        key={faq.question}
-                        className="rounded-2xl border border-border/60 bg-card p-5"
-                      >
-                        <h3 className="font-heading text-lg font-semibold tracking-tight">
-                          {faq.question}
-                        </h3>
-                        <p className="mt-2 text-sm leading-7 text-muted-foreground">
-                          {faq.answer}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Related links */}
-                <div className="space-y-4 rounded-2xl border border-border/60 bg-card p-6">
-                  <h2 className="font-heading text-2xl font-semibold tracking-tight">
-                    Keep exploring
-                  </h2>
-                  <ul className="space-y-3">
-                    {guide.relatedLinks.map((link) => (
-                      <li key={link.href}>
-                        <Link
-                          href={link.href}
-                          className="text-sm font-medium text-primary hover:text-primary/80"
-                        >
-                          {link.label}
-                        </Link>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </>
-            }
-          />
-        </article>
+        <article className="mx-auto max-w-5xl">{article}</article>
       </Container>
     </>
+  );
+}
+
+function buildInteractiveGuideChrome(
+  guide: GuideEntry,
+  article: React.ComponentType<{
+    header?: React.ReactNode;
+    footer?: React.ReactNode;
+  }>,
+) {
+  const Article = article;
+
+  return (
+    <Article
+      header={
+        <header className="space-y-5">
+          <div className="flex flex-wrap items-center gap-3">
+            <Badge
+              variant={guide.audience === "players" ? "secondary" : "default"}
+            >
+              {guide.heroEyebrow}
+            </Badge>
+            <span className="text-xs uppercase tracking-[0.2em] text-muted-foreground">
+              Query cluster: {guide.queryCluster}
+            </span>
+          </div>
+          <div className="space-y-3">
+            <h1 className="font-heading text-4xl font-bold tracking-tight md:text-5xl">
+              {guide.title}
+            </h1>
+            <p className="text-base leading-7 text-muted-foreground md:text-lg">
+              {guide.description}
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
+            <span>Published {formatDate(guide.publishedAt)}</span>
+            <span>Updated {formatDate(guide.updatedAt)}</span>
+          </div>
+          <div className="rounded-2xl border border-primary/15 bg-primary/5 p-5">
+            <p className="font-heading text-sm font-semibold text-foreground">
+              Direct answer
+            </p>
+            <p className="mt-2 text-sm leading-7 text-muted-foreground">
+              {guide.intro}
+            </p>
+          </div>
+        </header>
+      }
+      footer={
+        <>
+          <div className="space-y-4">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Frequently asked questions
+            </h2>
+            <div className="space-y-4">
+              {guide.faqs.map((faq) => (
+                <div
+                  key={faq.question}
+                  className="rounded-2xl border border-border/60 bg-card p-5"
+                >
+                  <h3 className="font-heading text-lg font-semibold tracking-tight">
+                    {faq.question}
+                  </h3>
+                  <p className="mt-2 text-sm leading-7 text-muted-foreground">
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-4 rounded-2xl border border-border/60 bg-card p-6">
+            <h2 className="font-heading text-2xl font-semibold tracking-tight">
+              Keep exploring
+            </h2>
+            <ul className="space-y-3">
+              {guide.relatedLinks.map((link) => (
+                <li key={link.href}>
+                  <Link
+                    href={link.href}
+                    className="text-sm font-medium text-primary hover:text-primary/80"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
+      }
+    />
   );
 }
 
@@ -241,7 +263,24 @@ export default async function GuidePage({ params }: GuidePageProps) {
   }
 
   if (slug === ORG_GUIDE_SLUG) {
-    return <OrgGuideWrapper guide={guide} />;
+    return (
+      <InteractiveGuideWrapper
+        guide={guide}
+        article={buildInteractiveGuideChrome(guide, OrgGuideArticlePage)}
+      />
+    );
+  }
+
+  if (slug === PLAYER_BOOKING_GUIDE_SLUG) {
+    return (
+      <InteractiveGuideWrapper
+        guide={guide}
+        article={buildInteractiveGuideChrome(
+          guide,
+          PlayerBookingGuideArticlePage,
+        )}
+      />
+    );
   }
 
   return <GuideArticlePage guide={guide} />;

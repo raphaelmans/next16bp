@@ -18,7 +18,12 @@ import { PageHeader } from "@/components/ui/page-header";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import { useQueryAdminSidebarStats } from "@/features/admin/hooks";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
-import { revalidateHomeFeaturedVenuesAction } from "@/lib/modules/admin/server/revalidate-actions";
+import {
+  revalidateHomeFeaturedVenuesAction,
+  revalidatePublicCourtsPagesAction,
+} from "@/lib/modules/admin/server/revalidate-actions";
+
+type PendingRevalidation = "featured-venues" | "public-courts-pages" | null;
 
 export default function AdminRevalidatePage() {
   const { data: user } = useQueryAuthSession();
@@ -27,6 +32,10 @@ export default function AdminRevalidatePage() {
 
   const [confirmFeaturedVenuesRefresh, setConfirmFeaturedVenuesRefresh] =
     React.useState(false);
+  const [confirmPublicCourtsRefresh, setConfirmPublicCourtsRefresh] =
+    React.useState(false);
+  const [pendingRevalidation, setPendingRevalidation] =
+    React.useState<PendingRevalidation>(null);
   const [isPending, startTransition] = React.useTransition();
 
   const goBack = () => {
@@ -40,6 +49,7 @@ export default function AdminRevalidatePage() {
 
   const handleFeaturedVenuesRefresh = () => {
     startTransition(async () => {
+      setPendingRevalidation("featured-venues");
       try {
         const result = await revalidateHomeFeaturedVenuesAction({
           confirm: true,
@@ -57,6 +67,34 @@ export default function AdminRevalidatePage() {
         toast.error("Featured venues refresh failed", {
           description: getClientErrorMessage(error, "Please try again"),
         });
+      } finally {
+        setPendingRevalidation(null);
+      }
+    });
+  };
+
+  const handlePublicCourtsRefresh = () => {
+    startTransition(async () => {
+      setPendingRevalidation("public-courts-pages");
+      try {
+        const result = await revalidatePublicCourtsPagesAction({
+          confirm: true,
+        });
+        if (!result.ok) {
+          toast.error("Public courts refresh failed", {
+            description: result.error,
+          });
+          return;
+        }
+        toast.success("Public courts refresh triggered", {
+          description: result.targets.join(" | "),
+        });
+      } catch (error) {
+        toast.error("Public courts refresh failed", {
+          description: getClientErrorMessage(error, "Please try again"),
+        });
+      } finally {
+        setPendingRevalidation(null);
       }
     });
   };
@@ -129,9 +167,57 @@ export default function AdminRevalidatePage() {
                 onClick={handleFeaturedVenuesRefresh}
                 disabled={isPending || !confirmFeaturedVenuesRefresh}
               >
-                {isPending
+                {isPending && pendingRevalidation === "featured-venues"
                   ? "Refreshing..."
                   : "Refresh Landing Featured Venues"}
+              </Button>
+              <Button type="button" variant="outline" onClick={goBack}>
+                Back
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Public courts pages</CardTitle>
+            <CardDescription>
+              Refreshes <code>/courts</code> plus all
+              <code> /courts/locations/**</code> page patterns for the next
+              visit.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Targets: <code>/courts</code>,{" "}
+              <code>/courts/locations/[province]</code>,{" "}
+              <code>/courts/locations/[province]/[city]</code>,{" "}
+              <code>/courts/locations/[province]/[city]/[sport]</code>
+            </p>
+            <p className="text-xs text-muted-foreground">
+              Use this after updating public discovery data that affects the
+              courts index or location landing pages.
+            </p>
+            <div className="flex items-center gap-3">
+              <Checkbox
+                checked={confirmPublicCourtsRefresh}
+                onCheckedChange={(checked) =>
+                  setConfirmPublicCourtsRefresh(Boolean(checked))
+                }
+              />
+              <div className="text-sm">
+                I understand this will refresh public courts discovery pages
+              </div>
+            </div>
+
+            <div className="flex items-center gap-3">
+              <Button
+                onClick={handlePublicCourtsRefresh}
+                disabled={isPending || !confirmPublicCourtsRefresh}
+              >
+                {isPending && pendingRevalidation === "public-courts-pages"
+                  ? "Refreshing..."
+                  : "Refresh Public Courts Pages"}
               </Button>
               <Button type="button" variant="outline" onClick={goBack}>
                 Back
