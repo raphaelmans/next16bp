@@ -37,6 +37,7 @@ import {
   ComboboxEmpty,
   ComboboxItem,
   ComboboxList,
+  ComboboxTrigger,
   ComboboxValue,
 } from "@/components/ui/combobox";
 import {
@@ -264,7 +265,7 @@ export function PlaceFilters({
   const timeAnchorRef = useRef<HTMLDivElement | null>(null);
 
   const comboTriggerClassName = cn(
-    "justify-between text-sm",
+    "justify-between text-base",
     isSheet ? "w-full" : "w-auto min-w-[140px]",
   );
 
@@ -472,7 +473,7 @@ export function PlaceFilters({
       disabled={sportsLoading}
     >
       <SelectTrigger
-        className={cn("text-sm", isSheet ? "w-full" : "w-auto min-w-[130px]")}
+        className={cn("text-base", isSheet ? "w-full" : "w-auto min-w-[130px]")}
       >
         <div className="flex items-center gap-1.5">
           <Trophy className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
@@ -496,7 +497,7 @@ export function PlaceFilters({
       onChange={handleDateChange}
       placeholder="Date"
       className={cn(
-        "bg-background text-sm",
+        "bg-background text-base",
         isSheet ? "w-full" : "w-auto min-w-[150px]",
       )}
       timeZone="Asia/Manila"
@@ -517,7 +518,7 @@ export function PlaceFilters({
       >
         <ComboboxChips
           className={cn(
-            "min-h-9 text-sm",
+            "min-h-9 text-base",
             !isTimeEnabled && "pointer-events-none opacity-50",
           )}
         >
@@ -537,6 +538,10 @@ export function PlaceFilters({
                   ? "Any hour"
                   : "Hour"
             }
+          />
+          <ComboboxTrigger
+            aria-label="Toggle hour options"
+            className="flex shrink-0 items-center justify-center text-muted-foreground"
           />
         </ComboboxChips>
         <ComboboxContent anchor={timeAnchorRef}>
@@ -608,7 +613,7 @@ export function PlaceFilters({
       >
         <ComboboxChips
           className={cn(
-            "min-h-9 text-sm",
+            "min-h-9 text-base",
             isAmenitiesDisabled && "pointer-events-none opacity-50",
           )}
         >
@@ -623,6 +628,10 @@ export function PlaceFilters({
             placeholder={
               selectedAmenities.length > 0 ? "" : amenitiesPlaceholder
             }
+          />
+          <ComboboxTrigger
+            aria-label="Toggle amenities options"
+            className="flex shrink-0 items-center justify-center text-muted-foreground"
           />
         </ComboboxChips>
         <ComboboxContent anchor={amenitiesAnchorRef}>

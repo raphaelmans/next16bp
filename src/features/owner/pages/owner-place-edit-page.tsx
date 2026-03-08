@@ -147,6 +147,8 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
   }
 
   const place = placeData.place;
+  const verificationStatus = placeData.verification?.status ?? "UNVERIFIED";
+  const showVerificationCard = verificationStatus !== "VERIFIED";
   const defaultValues: Partial<PlaceFormData> = {
     name: place.name,
     address: place.address,
@@ -216,26 +218,28 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
             isEditing
           />
 
-          <Card className="border-dashed">
-            <CardHeader>
-              <CardTitle>Venue verification</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
-              <p>
-                Verify {place.name} to build trust with players while keeping
-                your reservation settings flexible.
-              </p>
-              <Button asChild>
-                <Link
-                  href={appRoutes.organization.verification.place(
-                    resolvedPlaceId,
-                  )}
-                >
-                  Go to verification
-                </Link>
-              </Button>
-            </CardContent>
-          </Card>
+          {showVerificationCard ? (
+            <Card className="border-dashed">
+              <CardHeader>
+                <CardTitle>Venue verification</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-col gap-4 text-sm text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
+                <p>
+                  Verify {place.name} to build trust with players while keeping
+                  your reservation settings flexible.
+                </p>
+                <Button asChild>
+                  <Link
+                    href={appRoutes.organization.verification.place(
+                      resolvedPlaceId,
+                    )}
+                  >
+                    Go to verification
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+          ) : null}
 
           <div id="venue-photos" className="scroll-mt-24">
             <PlacePhotoUpload

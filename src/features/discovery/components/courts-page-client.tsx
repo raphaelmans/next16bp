@@ -158,6 +158,7 @@ function CourtsPageContent({
   }, []);
 
   const applyFilters = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
     filters.setQuery(staged.q ?? "");
     filters.setProvince(staged.province ?? undefined);
     filters.setCity(staged.city ?? undefined);

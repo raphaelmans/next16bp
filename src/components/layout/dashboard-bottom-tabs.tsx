@@ -50,7 +50,7 @@ interface TabConfig {
 // ─── Player tabs ───────────────────────────────────────
 
 const playerTabs: TabConfig[] = [
-  { label: "Venues", href: appRoutes.courts.base, icon: MapPin },
+  { label: "Courts", href: appRoutes.courts.base, icon: MapPin },
   {
     label: "Reservations",
     href: appRoutes.reservations.base,
@@ -94,6 +94,11 @@ function getOrgTabsForRole(role: OrganizationMemberRole): TabConfig[] {
     case "OWNER":
       return [
         {
+          label: "Dashboard",
+          href: appRoutes.organization.base,
+          icon: LayoutDashboard,
+        },
+        {
           label: "Reservations",
           href: appRoutes.organization.reservations,
           icon: CalendarDays,
@@ -103,17 +108,17 @@ function getOrgTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           label: "Studio",
           href: appRoutes.organization.bookings,
           icon: CalendarRange,
-        },
-        {
-          label: "Venues",
-          href: appRoutes.organization.places.base,
-          icon: MapPinned,
         },
         MORE_TAB,
       ];
     case "MANAGER":
       return [
         {
+          label: "Dashboard",
+          href: appRoutes.organization.base,
+          icon: LayoutDashboard,
+        },
+        {
           label: "Reservations",
           href: appRoutes.organization.reservations,
           icon: CalendarDays,
@@ -123,17 +128,17 @@ function getOrgTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           label: "Studio",
           href: appRoutes.organization.bookings,
           icon: CalendarRange,
-        },
-        {
-          label: "Venues",
-          href: appRoutes.organization.places.base,
-          icon: MapPinned,
         },
         MORE_TAB,
       ];
     case "VIEWER":
       return [
         {
+          label: "Dashboard",
+          href: appRoutes.organization.base,
+          icon: LayoutDashboard,
+        },
+        {
           label: "Reservations",
           href: appRoutes.organization.reservations,
           icon: CalendarDays,
@@ -144,11 +149,7 @@ function getOrgTabsForRole(role: OrganizationMemberRole): TabConfig[] {
           href: appRoutes.organization.bookings,
           icon: CalendarRange,
         },
-        {
-          label: "Venues",
-          href: appRoutes.organization.places.base,
-          icon: MapPinned,
-        },
+        MORE_TAB,
       ];
   }
 }
@@ -160,12 +161,12 @@ function getOrgMoreSectionsForRole(
     case "OWNER":
       return [
         {
-          label: "Bookings",
+          label: "Places",
           items: [
             {
-              label: "Dashboard",
-              href: appRoutes.organization.base,
-              icon: LayoutDashboard,
+              label: "Venues",
+              href: appRoutes.organization.places.base,
+              icon: MapPinned,
             },
           ],
         },
@@ -194,12 +195,12 @@ function getOrgMoreSectionsForRole(
     case "MANAGER":
       return [
         {
-          label: "Bookings",
+          label: "Places",
           items: [
             {
-              label: "Dashboard",
-              href: appRoutes.organization.base,
-              icon: LayoutDashboard,
+              label: "Venues",
+              href: appRoutes.organization.places.base,
+              icon: MapPinned,
             },
           ],
         },
@@ -226,7 +227,18 @@ function getOrgMoreSectionsForRole(
         },
       ];
     case "VIEWER":
-      return [];
+      return [
+        {
+          label: "Places",
+          items: [
+            {
+              label: "Venues",
+              href: appRoutes.organization.places.base,
+              icon: MapPinned,
+            },
+          ],
+        },
+      ];
   }
 }
 

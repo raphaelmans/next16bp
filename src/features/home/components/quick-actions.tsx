@@ -58,10 +58,10 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <QuickActionCard
-        title="Find Venues"
+        title="Find Courts"
         icon={Search}
         href={appRoutes.courts.base}
-        description="Browse available venues near you"
+        description="Browse available courts near you"
       />
       <QuickActionCard
         title="My Reservations"

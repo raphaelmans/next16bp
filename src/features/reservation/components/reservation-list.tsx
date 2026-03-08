@@ -102,7 +102,7 @@ export function ReservationList({ tab, isActive }: ReservationListProps) {
             <Button asChild>
               <Link href={appRoutes.courts.base}>
                 <Search className="mr-2 h-4 w-4" />
-                Find Venues
+                Find Courts
               </Link>
             </Button>
           </EmptyContent>
