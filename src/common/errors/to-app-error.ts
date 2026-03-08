@@ -1,5 +1,25 @@
+import { isRecord } from "@/common/type-guards";
 import { toTrpcErrorMeta } from "./adapters/trpc";
 import type { AppError } from "./app-error";
+
+const APP_ERROR_KINDS = new Set<AppError["kind"]>([
+  "network",
+  "unauthorized",
+  "forbidden",
+  "not_found",
+  "rate_limited",
+  "validation",
+  "unknown",
+]);
+
+const isAppError = (err: unknown): err is AppError => {
+  if (!isRecord(err)) return false;
+  return (
+    typeof err.kind === "string" &&
+    APP_ERROR_KINDS.has(err.kind as AppError["kind"]) &&
+    typeof err.message === "string"
+  );
+};
 
 const mapErrorKind = (input: {
   status?: number;
@@ -30,6 +50,10 @@ const mapErrorKind = (input: {
 };
 
 export const toAppError = (err: unknown): AppError => {
+  if (isAppError(err)) {
+    return err;
+  }
+
   if (err instanceof Error) {
     const { status, code, requestId, zodFieldErrors } = toTrpcErrorMeta(err);
     const kind = mapErrorKind({ status, code });

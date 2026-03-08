@@ -1,5 +1,10 @@
 "use client";
 
+import Link from "next/link";
+import { AlertTriangle } from "lucide-react";
+import { appRoutes } from "@/common/app-routes";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/ui/page-header";
 import { SubmitVenueForm } from "../components/submit-venue-form";
 
@@ -10,6 +15,23 @@ export default function SubmitVenuePage() {
         title="Submit a Venue"
         description="Know a venue that's not listed? Help us grow the directory by submitting it. Your submission will be reviewed before it goes live."
       />
+      <Alert className="border-amber-500/30 bg-amber-500/5">
+        <AlertTriangle className="text-amber-700" />
+        <AlertTitle>Sign-in required</AlertTitle>
+        <AlertDescription className="gap-3">
+          <p>
+            Only authenticated users can submit a venue. If your session has
+            expired, sign in again before sending this form.
+          </p>
+          <div>
+            <Button asChild size="sm" variant="outline">
+              <Link href={appRoutes.login.from(appRoutes.submitVenue.base)}>
+                Sign in
+              </Link>
+            </Button>
+          </div>
+        </AlertDescription>
+      </Alert>
       <SubmitVenueForm />
     </div>
   );

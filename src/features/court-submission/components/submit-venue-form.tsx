@@ -16,6 +16,7 @@ import {
 import { S } from "@/common/schemas";
 import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
+import { toAppError } from "@/common/errors/to-app-error";
 import {
   StandardFormCombobox,
   StandardFormInput,
@@ -98,6 +99,23 @@ const submitVenueFormSchema = z
   );
 
 type SubmitVenueFormData = z.infer<typeof submitVenueFormSchema>;
+
+const getSubmitVenueErrorCopy = (error: unknown) => {
+  const appError = toAppError(error);
+
+  if (appError.kind === "unauthorized") {
+    return {
+      title: "Sign in required",
+      description:
+        "Only authenticated users can submit a venue. Sign in and try again.",
+    };
+  }
+
+  return {
+    title: "Unable to submit venue",
+    description: getClientErrorMessage(error, "Please try again."),
+  };
+};
 
 export function SubmitVenueForm() {
   const submitMutation = useMutSubmitCourt();
@@ -222,7 +240,8 @@ export function SubmitVenueForm() {
           setIsSubmitted(true);
         },
         onError: (error) => {
-          toast.error(getClientErrorMessage(error));
+          const { title, description } = getSubmitVenueErrorCopy(error);
+          toast.error(title, { description });
         },
       },
     );

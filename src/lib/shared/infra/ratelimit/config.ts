@@ -3,7 +3,13 @@
  * Uses sliding window algorithm via Upstash Ratelimit.
  */
 
-export const RATE_LIMIT_TIERS = {
+type RateLimitConfig = {
+  requests: number;
+  window: `${number} ${"s" | "m" | "h" | "d"}`;
+  requireIpForAnonymous?: boolean;
+};
+
+export const RATE_LIMIT_TIERS: Record<string, RateLimitConfig> = {
   /** Standard read endpoints - 100 req/min */
   default: { requests: 100, window: "1 m" as const },
   /** Public catalog endpoints that should only be queried by real clients */
