@@ -12,25 +12,23 @@ import {
   parseDayKeyToDate,
 } from "@/features/discovery/helpers";
 import { getWeekGridQueryWindow } from "@/features/discovery/place-detail/helpers/week-grid-query-window";
-import type { RouterInputs } from "@/trpc/types";
+
+type DiscoveryCourtRangePrefetchInput = ReturnType<
+  typeof normalizeAvailabilityCourtRangeInput
+>;
+type DiscoveryPlaceSportRangePrefetchInput = ReturnType<
+  typeof normalizeAvailabilityPlaceSportRangeInput
+>;
 
 type DiscoveryPrefetchUtils = {
   availability: {
     getForPlaceSportRange: {
-      getData: (
-        input: RouterInputs["availability"]["getForPlaceSportRange"],
-      ) => unknown;
-      fetch: (
-        input: RouterInputs["availability"]["getForPlaceSportRange"],
-      ) => Promise<unknown>;
+      getData: (input: DiscoveryPlaceSportRangePrefetchInput) => unknown;
+      fetch: (input: DiscoveryPlaceSportRangePrefetchInput) => Promise<unknown>;
     };
     getForCourtRange: {
-      getData: (
-        input: RouterInputs["availability"]["getForCourtRange"],
-      ) => unknown;
-      fetch: (
-        input: RouterInputs["availability"]["getForCourtRange"],
-      ) => Promise<unknown>;
+      getData: (input: DiscoveryCourtRangePrefetchInput) => unknown;
+      fetch: (input: DiscoveryCourtRangePrefetchInput) => Promise<unknown>;
     };
   };
 };
