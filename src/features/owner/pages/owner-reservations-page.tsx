@@ -1,20 +1,29 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
+import { differenceInSeconds, format } from "date-fns";
 import {
   Calendar as CalendarIcon,
-  CheckCircle,
-  Clock,
+  CheckCircle2,
+  Clock3,
+  History,
   RefreshCw,
   Search,
-  XCircle,
 } from "lucide-react";
+import Link from "next/link";
+import { parseAsString, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { appRoutes } from "@/common/app-routes";
+import {
+  formatCurrency,
+  formatDateShortInTimeZone,
+  formatRelativeFrom,
+  formatTimeRangeInTimeZone,
+} from "@/common/format";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
+import { getZonedDayKey } from "@/common/time-zone";
 import { toast } from "@/common/toast";
 import {
   StandardFormInput,
@@ -25,6 +34,13 @@ import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -41,13 +57,14 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
+import { PageHeader } from "@/components/ui/page-header";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -55,7 +72,6 @@ import {
   OwnerPaymentMethodReminder,
   PlaceCourtFilter,
   RejectModal,
-  ReservationAlertsPanel,
   ReservationsTable,
 } from "@/features/owner/components";
 import {
@@ -66,6 +82,7 @@ import {
   useModOwnerPlaceFilter,
   useModOwnerReservationRealtimeStream,
   useMutAcceptReservation,
+  useMutCancelReservation,
   useMutConfirmReservation,
   useMutOwnerConfirmPaidOffline,
   useMutRejectReservation,
@@ -73,74 +90,174 @@ import {
   useQueryOwnerCourts,
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
-  useQueryOwnerReservationSummaries,
+  useQueryOwnerReservationHistoryList,
+  useQueryOwnerReservationInbox,
+  useQueryOwnerReservationSchedule,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
-type TabValue = "pending" | "upcoming" | "past" | "cancelled";
-
-type PendingFilter =
-  | "all"
+type ReservationsView = "inbox" | "schedule" | "history";
+type HistoryFilter = "completed" | "cancelled" | "expired";
+type InboxSectionKey =
+  | "payment-marked"
   | "needs-acceptance"
-  | "awaiting-payment"
-  | "payment-marked";
+  | "awaiting-payment";
 
-const PENDING_STATUSES = new Set([
-  "CREATED",
-  "AWAITING_PAYMENT",
-  "PAYMENT_MARKED_BY_USER",
-]);
+const VIEW_PARAM = "view";
+const SEARCH_PARAM = "q";
+const DATE_FROM_PARAM = "from";
+const DATE_TO_PARAM = "to";
+const HISTORY_PARAM = "history";
+const HISTORY_PAGE_SIZE = 20;
 
-/**
- * Format price in Philippine Peso
- */
-function formatPrice(amountCents: number, currency: string = "PHP"): string {
-  if (amountCents === 0) return "Free";
-  const amount = amountCents / 100;
-  if (currency === "PHP") {
-    return `₱${amount.toLocaleString()}`;
+const HISTORY_STATUS_MAP: Record<
+  HistoryFilter,
+  {
+    statuses: Reservation["reservationStatus"][];
+    timeBucket?: "past";
+    label: string;
   }
-  return `${currency} ${amount.toLocaleString()}`;
+> = {
+  completed: {
+    statuses: ["CONFIRMED"],
+    timeBucket: "past",
+    label: "Completed",
+  },
+  cancelled: {
+    statuses: ["CANCELLED"],
+    label: "Cancelled",
+  },
+  expired: {
+    statuses: ["EXPIRED"],
+    label: "Expired",
+  },
+};
+
+const INBOX_SECTIONS: {
+  key: InboxSectionKey;
+  label: string;
+  description: string;
+  emptyTitle: string;
+  emptyDescription: string;
+}[] = [
+  {
+    key: "payment-marked",
+    label: "Payment marked",
+    description: "Payments awaiting your confirmation.",
+    emptyTitle: "No payments to confirm",
+    emptyDescription: "New payment proofs will appear here.",
+  },
+  {
+    key: "needs-acceptance",
+    label: "Needs acceptance",
+    description: "New booking requests that need a decision.",
+    emptyTitle: "No new booking requests",
+    emptyDescription: "Fresh requests will land here first.",
+  },
+  {
+    key: "awaiting-payment",
+    label: "Awaiting payment",
+    description: "Accepted bookings waiting on the player.",
+    emptyTitle: "Nothing is waiting on payment",
+    emptyDescription: "Accepted bookings will show here until players pay.",
+  },
+];
+
+const VIEW_OPTIONS: { value: ReservationsView; label: string }[] = [
+  { value: "inbox", label: "Inbox" },
+  { value: "schedule", label: "Schedule" },
+  { value: "history", label: "History" },
+];
+
+const paidOfflineFormSchema = z.object({
+  paymentMethodId: z.string().min(1, "Payment method is required"),
+  paymentReference: z.string().min(1, "Reference is required").max(100),
+});
+
+type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
+
+function parseDayKey(value: string | null): Date | undefined {
+  if (!value) return undefined;
+  const [year, month, day] = value.split("-").map((part) => Number(part));
+  if (!year || !month || !day) return undefined;
+  return new Date(year, month - 1, day);
 }
 
-/**
- * Empty state component
- */
-function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
-  const config = {
-    all: {
-      icon: CalendarIcon,
-      title: "No reservations yet",
-      description:
-        "When players book your venues, reservations will appear here.",
-    },
-    pending: {
-      icon: CheckCircle,
-      title: "Inbox cleared",
-      description:
-        "All caught up! No reservations need your attention right now.",
-    },
-    upcoming: {
-      icon: CalendarIcon,
-      title: "No upcoming reservations",
-      description: "No confirmed bookings scheduled for the future.",
-    },
-    past: {
-      icon: Clock,
-      title: "No past reservations",
-      description: "Completed bookings will appear here.",
-    },
-    cancelled: {
-      icon: XCircle,
-      title: "No cancelled reservations",
-      description: "Cancelled or rejected bookings will appear here.",
-    },
-  };
+function isValidView(value: string | null): value is ReservationsView {
+  return value === "inbox" || value === "schedule" || value === "history";
+}
 
-  const { icon: Icon, title, description } = config[type];
+function isValidHistoryFilter(value: string | null): value is HistoryFilter {
+  return value === "completed" || value === "cancelled" || value === "expired";
+}
 
+function parseDate(value: string | null | undefined) {
+  if (!value) return null;
+  const parsed = new Date(value);
+  return Number.isNaN(parsed.getTime()) ? null : parsed;
+}
+
+function getReservationStartMs(reservation: Reservation) {
   return (
-    <Empty className="border-0 py-12">
+    parseDate(reservation.slotStartTime ?? reservation.createdAt)?.getTime() ??
+    0
+  );
+}
+
+function getReservationEndMs(reservation: Reservation) {
+  return (
+    parseDate(reservation.slotEndTime ?? reservation.createdAt)?.getTime() ?? 0
+  );
+}
+
+function formatReservationDate(reservation: Reservation) {
+  return formatDateShortInTimeZone(
+    reservation.slotStartTime ?? reservation.createdAt,
+    reservation.placeTimeZone,
+  );
+}
+
+function formatReservationTimeRange(reservation: Reservation) {
+  if (!reservation.slotStartTime || !reservation.slotEndTime) {
+    return `${reservation.startTime} - ${reservation.endTime}`;
+  }
+
+  return formatTimeRangeInTimeZone(
+    reservation.slotStartTime,
+    reservation.slotEndTime,
+    reservation.placeTimeZone,
+  );
+}
+
+function getReservationExpiresLabel(
+  reservation: Reservation,
+  nowMs: number,
+): string | null {
+  if (!reservation.expiresAt) return null;
+  const expiresAt = parseDate(reservation.expiresAt);
+  if (!expiresAt) return null;
+
+  if (reservation.reservationStatus === "EXPIRED") {
+    return `Expired ${format(expiresAt, "MMM d, h:mm a")}`;
+  }
+
+  const secondsRemaining = Math.max(0, differenceInSeconds(expiresAt, nowMs));
+  const minutes = Math.floor(secondsRemaining / 60);
+  const seconds = secondsRemaining % 60;
+  return `${minutes}m ${seconds}s left`;
+}
+
+function ReservationsEmptyState({
+  icon: Icon,
+  title,
+  description,
+}: {
+  icon: React.ComponentType<{ className?: string }>;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Empty className="border-0 bg-muted/20 py-10">
       <EmptyHeader>
         <EmptyMedia variant="icon">
           <Icon />
@@ -152,13 +269,204 @@ function ReservationsEmptyState({ type }: { type: TabValue | "all" }) {
   );
 }
 
+function InboxReservationCard({
+  reservation,
+  nowMs,
+  isLoading,
+  onConfirm,
+  onReject,
+  onPaidOffline,
+}: {
+  reservation: Reservation;
+  nowMs: number;
+  isLoading?: boolean;
+  onConfirm: (reservationId: string) => void;
+  onReject: (reservation: Reservation, mode: "reject" | "cancel") => void;
+  onPaidOffline: (reservationId: string) => void;
+}) {
+  const isCreated = reservation.reservationStatus === "CREATED";
+  const isAwaitingPayment =
+    reservation.reservationStatus === "AWAITING_PAYMENT";
+  const stageLabel = isCreated
+    ? "Needs acceptance"
+    : isAwaitingPayment
+      ? "Awaiting payment"
+      : "Payment marked";
+  const stageClassName = isCreated
+    ? "bg-warning-light text-warning border-warning/20"
+    : isAwaitingPayment
+      ? "bg-warning/10 text-warning border-warning/20"
+      : "bg-primary/10 text-primary border-primary/20";
+  const expiryLabel = getReservationExpiresLabel(reservation, nowMs);
+
+  return (
+    <Card className="gap-4 border-border/80 shadow-none">
+      <CardHeader className="gap-4 sm:grid-cols-[1fr_auto]">
+        <div className="space-y-2">
+          <div className="flex flex-wrap items-center gap-2">
+            <CardTitle className="text-base font-heading">
+              {reservation.playerName}
+            </CardTitle>
+            <Badge variant="outline" className={stageClassName}>
+              {stageLabel}
+            </Badge>
+            {reservation.isGroupPrimary && reservation.groupItemCount ? (
+              <Badge variant="secondary">
+                Group booking · {reservation.groupItemCount}
+              </Badge>
+            ) : null}
+          </div>
+          <CardDescription className="text-sm">
+            {reservation.courtName}
+          </CardDescription>
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+            <span>
+              {formatReservationDate(reservation)} ·{" "}
+              {formatReservationTimeRange(reservation)}
+            </span>
+            <span>{reservation.playerPhone || reservation.playerEmail}</span>
+            <span>
+              {formatCurrency(reservation.amountCents, reservation.currency)}
+            </span>
+          </div>
+        </div>
+        <div className="space-y-1 text-left text-sm sm:text-right">
+          <p className="font-medium text-foreground">
+            {formatCurrency(reservation.amountCents, reservation.currency)}
+          </p>
+          {expiryLabel ? (
+            <p className="text-muted-foreground">{expiryLabel}</p>
+          ) : null}
+          <p className="text-muted-foreground">
+            Created {formatRelativeFrom(reservation.createdAt, nowMs)}
+          </p>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4">
+        {reservation.paymentProof ? (
+          <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm text-primary">
+            Payment proof attached
+            {reservation.paymentProof.referenceNumber
+              ? ` · Ref ${reservation.paymentProof.referenceNumber}`
+              : ""}
+          </div>
+        ) : null}
+
+        {reservation.isGroupPrimary && reservation.groupItems?.length ? (
+          <div className="rounded-lg border bg-muted/20 p-3">
+            <p className="text-sm font-medium">Grouped items</p>
+            <div className="mt-2 space-y-2">
+              {reservation.groupItems.map((item) => (
+                <div
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-2 text-sm"
+                >
+                  <span>{item.courtName}</span>
+                  <span className="text-muted-foreground">
+                    {formatReservationDate(item)} ·{" "}
+                    {formatReservationTimeRange(item)}
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        <div className="flex flex-wrap gap-2">
+          {!isAwaitingPayment ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onConfirm(reservation.id)}
+              disabled={isLoading}
+            >
+              {isCreated ? "Accept" : "Confirm"}
+            </Button>
+          ) : null}
+
+          {isCreated && reservation.amountCents > 0 ? (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => onPaidOffline(reservation.id)}
+              disabled={isLoading}
+            >
+              Paid & Confirmed
+            </Button>
+          ) : null}
+
+          {isAwaitingPayment ? (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => onReject(reservation, "cancel")}
+              disabled={isLoading}
+            >
+              Cancel
+            </Button>
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              onClick={() => onReject(reservation, "reject")}
+              disabled={isLoading}
+            >
+              Reject
+            </Button>
+          )}
+
+          <Button variant="ghost" size="sm" asChild>
+            <Link
+              href={appRoutes.organization.reservationDetail(reservation.id)}
+            >
+              View details
+            </Link>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 export default function OwnerReservationsPage() {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
   const { invalidateOwnerReservationsOverview } = useModOwnerInvalidation();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [nowMs, setNowMs] = React.useState(() => Date.now());
 
-  // Get organization and courts from hooks
+  const [viewParam, setViewParam] = useQueryState(
+    VIEW_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
+  const [searchQuery, setSearchQuery] = useQueryState(
+    SEARCH_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
+  const [dateFromQuery, setDateFromQuery] = useQueryState(
+    DATE_FROM_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
+  const [dateToQuery, setDateToQuery] = useQueryState(
+    DATE_TO_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
+  const [historyParam, setHistoryParam] = useQueryState(
+    HISTORY_PARAM,
+    parseAsString.withOptions({ history: "replace" }),
+  );
+
+  const activeView = isValidView(viewParam) ? viewParam : "inbox";
+  const historyFilter = isValidHistoryFilter(historyParam)
+    ? historyParam
+    : "completed";
+
+  const dateFrom = parseDayKey(dateFromQuery);
+  const dateTo = parseDayKey(dateToQuery);
+
   const {
     organization,
     organizations,
@@ -167,48 +475,73 @@ export default function OwnerReservationsPage() {
   const { data: places = [] } = useQueryOwnerPlaces(organization?.id ?? null);
   const { data: courts = [] } = useQueryOwnerCourts(organization?.id ?? null);
 
-  // Filters state
-  const { placeId, setPlaceId } = useModOwnerPlaceFilter();
-  const { courtId, setCourtId } = useModOwnerCourtFilter();
-  const [search, setSearch] = React.useState("");
-  const [dateFrom, setDateFrom] = React.useState<Date>();
-  const [dateTo, setDateTo] = React.useState<Date>();
-  const [activeTab, setActiveTab] = React.useState<TabValue>("pending");
-  const [pendingFilter, setPendingFilter] =
-    React.useState<PendingFilter>("all");
+  const { placeId, setPlaceId } = useModOwnerPlaceFilter({
+    persistToStorage: false,
+  });
+  const { courtId, setCourtId } = useModOwnerCourtFilter({
+    persistToStorage: false,
+  });
 
-  // Dialog state
+  const [historyPage, setHistoryPage] = React.useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
   const [paidOfflineDialogOpen, setPaidOfflineDialogOpen] =
     React.useState(false);
   const [selectedReservation, setSelectedReservation] =
     React.useState<Reservation | null>(null);
-  const confirmTitle =
-    selectedReservation?.reservationStatus === "CREATED"
-      ? "Accept Reservation"
-      : "Confirm Payment";
-  const confirmLabel =
-    selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
+  const [rejectMode, setRejectMode] = React.useState<"reject" | "cancel">(
+    "reject",
+  );
 
-  const { data: reservations = [], isLoading } =
-    useQueryOwnerReservationSummaries(organization?.id ?? null, {
+  const search = searchQuery?.trim() || undefined;
+
+  const inboxQuery = useQueryOwnerReservationInbox(organization?.id ?? null, {
+    placeId: placeId || undefined,
+    courtId: courtId || undefined,
+    search,
+    dateFrom,
+    dateTo,
+    refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
+    enabled: activeView === "inbox",
+  });
+
+  const scheduleQuery = useQueryOwnerReservationSchedule(
+    organization?.id ?? null,
+    {
       placeId: placeId || undefined,
       courtId: courtId || undefined,
-      status: "all",
-      search: search || undefined,
+      search,
       dateFrom,
       dateTo,
-      refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
-    });
+      enabled: activeView === "schedule",
+    },
+  );
+
+  const historyScope = HISTORY_STATUS_MAP[historyFilter];
+  const historyQuery = useQueryOwnerReservationHistoryList(
+    organization?.id ?? null,
+    {
+      placeId: placeId || undefined,
+      courtId: courtId || undefined,
+      search,
+      dateFrom,
+      dateTo,
+      statuses: historyScope.statuses,
+      timeBucket: historyScope.timeBucket,
+      limit: HISTORY_PAGE_SIZE,
+      offset: historyPage * HISTORY_PAGE_SIZE,
+      enabled: activeView === "history",
+    },
+  );
 
   useModOwnerReservationRealtimeStream({
-    enabled: Boolean(organization?.id),
+    enabled: Boolean(organization?.id) && activeView === "inbox",
   });
 
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();
+  const cancelMutation = useMutCancelReservation();
   const confirmPaidOfflineMutation = useMutOwnerConfirmPaidOffline({
     onSuccess: async (_data, variables) => {
       await invalidateOwnerReservationsOverview({
@@ -221,18 +554,127 @@ export default function OwnerReservationsPage() {
     organization?.id,
   );
   const paymentMethods = paymentMethodsData?.methods ?? [];
-  const activePaymentMethods = paymentMethods.filter((m) => m.isActive);
-  const defaultPaymentMethod = activePaymentMethods.find((m) => m.isDefault);
+  const activePaymentMethods = paymentMethods.filter(
+    (method) => method.isActive,
+  );
+  const defaultPaymentMethod = activePaymentMethods.find(
+    (method) => method.isDefault,
+  );
 
-  const paidOfflineFormSchema = z.object({
-    paymentMethodId: z.string().min(1, "Payment method is required"),
-    paymentReference: z.string().min(1, "Reference is required").max(100),
-  });
-  type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
   const paidOfflineForm = useForm<PaidOfflineFormValues>({
     resolver: zodResolver(paidOfflineFormSchema),
     defaultValues: { paymentMethodId: "", paymentReference: "" },
   });
+
+  React.useEffect(() => {
+    if (activeView !== "inbox") return;
+    const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
+    return () => window.clearInterval(timer);
+  }, [activeView]);
+
+  const historyResetKey = [
+    placeId,
+    courtId,
+    searchQuery ?? "",
+    dateFromQuery ?? "",
+    dateToQuery ?? "",
+    historyFilter,
+  ].join("::");
+
+  React.useEffect(() => {
+    if (!historyResetKey) return;
+    setHistoryPage(0);
+  }, [historyResetKey]);
+
+  const inboxReservations = React.useMemo(() => {
+    const reservations = inboxQuery.data ?? [];
+    const priority: Record<InboxSectionKey, Reservation["reservationStatus"]> =
+      {
+        "payment-marked": "PAYMENT_MARKED_BY_USER",
+        "needs-acceptance": "CREATED",
+        "awaiting-payment": "AWAITING_PAYMENT",
+      };
+
+    return INBOX_SECTIONS.map((section) => ({
+      ...section,
+      reservations: reservations
+        .filter(
+          (reservation) =>
+            reservation.reservationStatus === priority[section.key],
+        )
+        .sort((a, b) => getReservationStartMs(a) - getReservationStartMs(b)),
+    }));
+  }, [inboxQuery.data]);
+
+  const inboxCounts = React.useMemo(() => {
+    const reservations = inboxQuery.data ?? [];
+    const needsAcceptance = reservations.filter(
+      (reservation) => reservation.reservationStatus === "CREATED",
+    ).length;
+    const paymentMarked = reservations.filter(
+      (reservation) =>
+        reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
+    ).length;
+    const awaitingPayment = reservations.filter(
+      (reservation) => reservation.reservationStatus === "AWAITING_PAYMENT",
+    ).length;
+
+    return {
+      total: reservations.length,
+      needsAcceptance,
+      paymentMarked,
+      awaitingPayment,
+    };
+  }, [inboxQuery.data]);
+
+  const scheduleReservations = React.useMemo(
+    () =>
+      [...(scheduleQuery.data ?? [])].sort(
+        (a, b) => getReservationStartMs(a) - getReservationStartMs(b),
+      ),
+    [scheduleQuery.data],
+  );
+
+  const todayReservations = React.useMemo(
+    () =>
+      scheduleReservations.filter(
+        (reservation) =>
+          reservation.date ===
+          getZonedDayKey(new Date(), reservation.placeTimeZone),
+      ),
+    [scheduleReservations],
+  );
+
+  const upcomingReservations = React.useMemo(
+    () =>
+      scheduleReservations.filter(
+        (reservation) =>
+          reservation.date !==
+          getZonedDayKey(new Date(), reservation.placeTimeZone),
+      ),
+    [scheduleReservations],
+  );
+
+  const historyReservations = React.useMemo(() => {
+    const reservations = [...(historyQuery.data ?? [])];
+    if (historyFilter === "completed") {
+      return reservations.sort(
+        (a, b) => getReservationEndMs(b) - getReservationEndMs(a),
+      );
+    }
+    return reservations.sort(
+      (a, b) =>
+        (parseDate(b.createdAt)?.getTime() ?? 0) -
+        (parseDate(a.createdAt)?.getTime() ?? 0),
+    );
+  }, [historyFilter, historyQuery.data]);
+
+  const handleLogout = async () => {
+    await logoutMutation.mutateAsync();
+    window.location.href = appRoutes.login.from(
+      appRoutes.organization.reservations,
+    );
+  };
 
   const handleRefresh = async () => {
     if (!organization?.id) return;
@@ -244,205 +686,35 @@ export default function OwnerReservationsPage() {
     }
   };
 
-  const reservationGroups = React.useMemo(() => {
-    const now = new Date();
-
-    const parseDate = (value: string | null | undefined) => {
-      if (!value) return null;
-      const parsed = new Date(value);
-      return Number.isNaN(parsed.getTime()) ? null : parsed;
-    };
-
-    const getStartTime = (reservation: Reservation) =>
-      parseDate(reservation.slotStartTime ?? reservation.createdAt);
-
-    const getEndTime = (reservation: Reservation) =>
-      parseDate(reservation.slotEndTime ?? reservation.createdAt);
-
-    const pending = reservations.filter((reservation) =>
-      PENDING_STATUSES.has(reservation.reservationStatus),
+  const handleOpenConfirm = (reservationId: string) => {
+    const reservation = inboxQuery.data?.find(
+      (item) => item.id === reservationId,
     );
-    const needsAcceptance = pending.filter(
-      (reservation) => reservation.reservationStatus === "CREATED",
-    );
-    const awaitingPayment = pending.filter(
-      (reservation) => reservation.reservationStatus === "AWAITING_PAYMENT",
-    );
-    const paymentMarked = pending.filter(
-      (reservation) =>
-        reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
-    );
+    if (!reservation) return;
+    setSelectedReservation(reservation);
+    setConfirmDialogOpen(true);
+  };
 
-    const pendingFiltered = (() => {
-      switch (pendingFilter) {
-        case "needs-acceptance":
-          return needsAcceptance;
-        case "awaiting-payment":
-          return awaitingPayment;
-        case "payment-marked":
-          return paymentMarked;
-        default:
-          return pending;
-      }
-    })();
+  const handleOpenReject = (
+    reservation: Reservation,
+    mode: "reject" | "cancel",
+  ) => {
+    setSelectedReservation(reservation);
+    setRejectMode(mode);
+    setRejectModalOpen(true);
+  };
 
-    const pendingPriority: Record<string, number> = {
-      PAYMENT_MARKED_BY_USER: 0,
-      CREATED: 1,
-      AWAITING_PAYMENT: 2,
-    };
-
-    const pendingSorted = [...pendingFiltered].sort((a, b) => {
-      const priority =
-        (pendingPriority[a.reservationStatus] ?? 3) -
-        (pendingPriority[b.reservationStatus] ?? 3);
-      if (priority !== 0) return priority;
-      const aStart = getStartTime(a)?.getTime() ?? 0;
-      const bStart = getStartTime(b)?.getTime() ?? 0;
-      return aStart - bStart;
+  const handleOpenPaidOffline = (reservationId: string) => {
+    const reservation = inboxQuery.data?.find(
+      (item) => item.id === reservationId,
+    );
+    if (!reservation) return;
+    setSelectedReservation(reservation);
+    paidOfflineForm.reset({
+      paymentMethodId: defaultPaymentMethod?.id ?? "",
+      paymentReference: "",
     });
-
-    const confirmed = reservations.filter(
-      (reservation) => reservation.reservationStatus === "CONFIRMED",
-    );
-
-    const upcoming = confirmed
-      .filter((reservation) => {
-        const endTime = getEndTime(reservation);
-        return !endTime || endTime >= now;
-      })
-      .sort((a, b) => {
-        const aStart = getStartTime(a)?.getTime() ?? 0;
-        const bStart = getStartTime(b)?.getTime() ?? 0;
-        return aStart - bStart;
-      });
-
-    const past = confirmed
-      .filter((reservation) => {
-        const endTime = getEndTime(reservation);
-        return endTime ? endTime < now : false;
-      })
-      .sort((a, b) => {
-        const aStart = getStartTime(a)?.getTime() ?? 0;
-        const bStart = getStartTime(b)?.getTime() ?? 0;
-        return bStart - aStart;
-      });
-
-    const cancelled = reservations.filter(
-      (reservation) =>
-        reservation.reservationStatus === "CANCELLED" ||
-        reservation.reservationStatus === "EXPIRED",
-    );
-
-    return {
-      groups: {
-        pending: pendingSorted,
-        upcoming,
-        past,
-        cancelled,
-      },
-      tabCounts: {
-        pending: pending.length,
-        upcoming: upcoming.length,
-        past: past.length,
-        cancelled: cancelled.length,
-      },
-      pendingCounts: {
-        all: pending.length,
-        needsAcceptance: needsAcceptance.length,
-        awaitingPayment: awaitingPayment.length,
-        paymentMarked: paymentMarked.length,
-      },
-    };
-  }, [pendingFilter, reservations]);
-
-  const tabCounts = reservationGroups.tabCounts;
-  const pendingCounts = reservationGroups.pendingCounts;
-
-  const tabConfig: { value: TabValue; label: string }[] = [
-    { value: "pending", label: "Inbox" },
-    { value: "upcoming", label: "Upcoming" },
-    { value: "past", label: "Past" },
-    { value: "cancelled", label: "Cancelled" },
-  ];
-
-  const pendingFilterOptions: {
-    value: PendingFilter;
-    label: string;
-    count: number;
-  }[] = [
-    { value: "all", label: "All", count: pendingCounts.all },
-    {
-      value: "needs-acceptance",
-      label: "Needs acceptance",
-      count: pendingCounts.needsAcceptance,
-    },
-    {
-      value: "awaiting-payment",
-      label: "Awaiting payment",
-      count: pendingCounts.awaitingPayment,
-    },
-    {
-      value: "payment-marked",
-      label: "Payment marked",
-      count: pendingCounts.paymentMarked,
-    },
-  ];
-
-  const handleLogout = async () => {
-    await logoutMutation.mutateAsync();
-    window.location.href = appRoutes.login.from(
-      appRoutes.organization.reservations,
-    );
-  };
-
-  const handleConfirmClick = (reservationId: string) => {
-    const reservation = reservations.find((r) => r.id === reservationId);
-    if (reservation) {
-      setSelectedReservation(reservation);
-      setConfirmDialogOpen(true);
-    }
-  };
-
-  const handlePaidOfflineClick = (reservationId: string) => {
-    const reservation = reservations.find((r) => r.id === reservationId);
-    if (reservation) {
-      setSelectedReservation(reservation);
-      paidOfflineForm.reset({
-        paymentMethodId: defaultPaymentMethod?.id ?? "",
-        paymentReference: "",
-      });
-      setPaidOfflineDialogOpen(true);
-    }
-  };
-
-  const handlePaidOfflineSubmit = (values: PaidOfflineFormValues) => {
-    if (!selectedReservation) return;
-    confirmPaidOfflineMutation.mutate(
-      {
-        reservationId: selectedReservation.id,
-        paymentMethodId: values.paymentMethodId,
-        paymentReference: values.paymentReference,
-      },
-      {
-        onSuccess: () => {
-          toast.success("Reservation marked as paid and confirmed");
-          setPaidOfflineDialogOpen(false);
-          setSelectedReservation(null);
-        },
-        onError: () => {
-          toast.error("Failed to mark reservation as paid and confirmed");
-        },
-      },
-    );
-  };
-
-  const handleRejectClick = (reservationId: string) => {
-    const reservation = reservations.find((r) => r.id === reservationId);
-    if (reservation) {
-      setSelectedReservation(reservation);
-      setRejectModalOpen(true);
-    }
+    setPaidOfflineDialogOpen(true);
   };
 
   const handleConfirm = () => {
@@ -475,25 +747,66 @@ export default function OwnerReservationsPage() {
 
   const handleReject = (reason: string) => {
     if (!selectedReservation) return;
-    rejectMutation.mutate(
+    const mutation = rejectMode === "cancel" ? cancelMutation : rejectMutation;
+
+    mutation.mutate(
       {
         reservationId: selectedReservation.id,
         reason,
       },
       {
         onSuccess: () => {
-          toast.success("Booking rejected");
+          toast.success(
+            rejectMode === "cancel"
+              ? "Reservation cancelled"
+              : "Reservation rejected",
+          );
           setRejectModalOpen(false);
           setSelectedReservation(null);
         },
         onError: () => {
-          toast.error("Failed to reject booking");
+          toast.error("Failed to update reservation");
         },
       },
     );
   };
 
-  // Show loading state while organization loads
+  const handlePaidOfflineSubmit = (values: PaidOfflineFormValues) => {
+    if (!selectedReservation) return;
+
+    confirmPaidOfflineMutation.mutate(
+      {
+        reservationId: selectedReservation.id,
+        paymentMethodId: values.paymentMethodId,
+        paymentReference: values.paymentReference,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Reservation marked as paid and confirmed");
+          setPaidOfflineDialogOpen(false);
+          setSelectedReservation(null);
+        },
+        onError: () => {
+          toast.error("Failed to mark reservation as paid and confirmed");
+        },
+      },
+    );
+  };
+
+  const confirmTitle =
+    selectedReservation?.reservationStatus === "CREATED"
+      ? "Accept Reservation"
+      : "Confirm Payment";
+  const confirmLabel =
+    selectedReservation?.reservationStatus === "CREATED" ? "Accept" : "Confirm";
+
+  const mutationIsPending =
+    acceptMutation.isPending ||
+    confirmMutation.isPending ||
+    rejectMutation.isPending ||
+    cancelMutation.isPending ||
+    confirmPaidOfflineMutation.isPending;
+
   if (orgLoading) {
     return (
       <AppShell
@@ -517,11 +830,11 @@ export default function OwnerReservationsPage() {
             onLogout={handleLogout}
           />
         }
-        floatingPanel={<ReservationAlertsPanel organizationId={null} />}
       >
         <div className="space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-12 w-full" />
+          <Skeleton className="h-12 w-72" />
+          <Skeleton className="h-28 w-full" />
+          <Skeleton className="h-20 w-full" />
           <Skeleton className="h-96 w-full" />
         </div>
       </AppShell>
@@ -552,255 +865,400 @@ export default function OwnerReservationsPage() {
           onLogout={handleLogout}
         />
       }
-      floatingPanel={
-        <ReservationAlertsPanel organizationId={organization?.id ?? null} />
-      }
     >
       <div className="space-y-6">
-        {/* Page header */}
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <div>
-            <h1 className="text-2xl font-bold tracking-tight font-heading">
-              Reservations
-            </h1>
-            <p className="text-muted-foreground">
-              Manage bookings for your venues
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={handleRefresh}
-            disabled={isRefreshing || isLoading}
-          >
-            <RefreshCw
-              className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
-            />
-            Refresh
-          </Button>
-        </div>
+        <PageHeader
+          title="Reservations"
+          description="Clear urgent requests fast, then switch to schedule or history when you need to browse."
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+            >
+              <RefreshCw
+                className={cn("mr-2 h-4 w-4", isRefreshing && "animate-spin")}
+              />
+              Refresh
+            </Button>
+          }
+        />
 
         <OwnerPaymentMethodReminder />
 
-        {/* Filters */}
-        <div className="space-y-4">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-            <PlaceCourtFilter
-              places={places}
-              courts={courts}
-              placeId={placeId}
-              courtId={courtId}
-              onPlaceChange={(value) =>
-                setPlaceId(value === "all" ? "" : value)
-              }
-              onCourtChange={(value) =>
-                setCourtId(value === "all" ? "" : value)
-              }
-            />
-
-            <div className="flex flex-wrap gap-2">
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "justify-start text-left font-normal",
-                      !dateFrom && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateFrom ? format(dateFrom, "MMM d") : "From"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dateFrom}
-                    onSelect={setDateFrom}
-                  />
-                </PopoverContent>
-              </Popover>
-
-              <Popover>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    className={cn(
-                      "justify-start text-left font-normal",
-                      !dateTo && "text-muted-foreground",
-                    )}
-                  >
-                    <CalendarIcon className="mr-2 h-4 w-4" />
-                    {dateTo ? format(dateTo, "MMM d") : "To"}
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-auto p-0" align="start">
-                  <Calendar
-                    mode="single"
-                    selected={dateTo}
-                    onSelect={setDateTo}
-                    disabled={(date) => (dateFrom ? date < dateFrom : false)}
-                  />
-                </PopoverContent>
-              </Popover>
-
-              {(dateFrom || dateTo) && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => {
-                    setDateFrom(undefined);
-                    setDateTo(undefined);
-                  }}
-                >
-                  Clear
-                </Button>
-              )}
-            </div>
+        {activeView === "inbox" ? (
+          <div className="grid gap-4 md:grid-cols-3">
+            <Card className="gap-3 shadow-none">
+              <CardHeader className="gap-1">
+                <CardDescription>Ready now</CardDescription>
+                <CardTitle className="font-heading text-2xl">
+                  {inboxCounts.paymentMarked + inboxCounts.needsAcceptance}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Payment confirmations and fresh booking requests.
+              </CardContent>
+            </Card>
+            <Card className="gap-3 shadow-none">
+              <CardHeader className="gap-1">
+                <CardDescription>Awaiting player</CardDescription>
+                <CardTitle className="font-heading text-2xl">
+                  {inboxCounts.awaitingPayment}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Accepted reservations that still need payment.
+              </CardContent>
+            </Card>
+            <Card className="gap-3 shadow-none">
+              <CardHeader className="gap-1">
+                <CardDescription>Queue size</CardDescription>
+                <CardTitle className="font-heading text-2xl">
+                  {inboxCounts.total}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Unresolved reservations currently in your inbox.
+              </CardContent>
+            </Card>
           </div>
+        ) : null}
 
-          <div className="flex w-full">
-            <div className="relative w-full md:max-w-sm lg:ml-auto">
-              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-              <Input
-                placeholder="Search player name or phone..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-9"
+        <div className="sticky top-3 z-10 rounded-xl border bg-background/95 p-4 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80">
+          <div className="flex flex-col gap-4">
+            <Tabs
+              value={activeView}
+              onValueChange={(value) => {
+                void setViewParam(value);
+              }}
+            >
+              <TabsList>
+                {VIEW_OPTIONS.map((option) => (
+                  <TabsTrigger key={option.value} value={option.value}>
+                    {option.label}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            </Tabs>
+
+            <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
+              <PlaceCourtFilter
+                places={places}
+                courts={courts}
+                placeId={placeId}
+                courtId={courtId}
+                onPlaceChange={(value) =>
+                  setPlaceId(value === "all" ? "" : value)
+                }
+                onCourtChange={(value) =>
+                  setCourtId(value === "all" ? "" : value)
+                }
               />
+
+              <div className="flex flex-wrap gap-2">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "justify-start text-left font-normal",
+                        !dateFrom && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {dateFrom ? format(dateFrom, "MMM d") : "From"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={dateFrom}
+                      onSelect={(value) =>
+                        void setDateFromQuery(
+                          value ? format(value, "yyyy-MM-dd") : null,
+                        )
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "justify-start text-left font-normal",
+                        !dateTo && "text-muted-foreground",
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {dateTo ? format(dateTo, "MMM d") : "To"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={dateTo}
+                      onSelect={(value) =>
+                        void setDateToQuery(
+                          value ? format(value, "yyyy-MM-dd") : null,
+                        )
+                      }
+                      disabled={(value) =>
+                        dateFrom ? value < dateFrom : false
+                      }
+                    />
+                  </PopoverContent>
+                </Popover>
+
+                {(dateFromQuery || dateToQuery) && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => {
+                      void setDateFromQuery(null);
+                      void setDateToQuery(null);
+                    }}
+                  >
+                    Clear dates
+                  </Button>
+                )}
+              </div>
+
+              <div className="relative w-full xl:ml-auto xl:max-w-sm">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search player, phone, email, or court"
+                  value={searchQuery ?? ""}
+                  onChange={(event) =>
+                    void setSearchQuery(event.target.value || null)
+                  }
+                  className="pl-9"
+                />
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Tabs */}
-        <Tabs
-          value={activeTab}
-          onValueChange={(v) => setActiveTab(v as TabValue)}
-        >
-          <div className="max-w-full overflow-x-auto">
-            <TabsList>
-              {tabConfig.map((tabItem) => {
-                const count = tabCounts[tabItem.value];
-                const accessibleLabel =
-                  count > 0 ? `${tabItem.label}, ${count}` : tabItem.label;
+        {activeView === "inbox" ? (
+          <div className="space-y-6">
+            {inboxQuery.isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-36 w-full" />
+                <Skeleton className="h-36 w-full" />
+                <Skeleton className="h-36 w-full" />
+              </div>
+            ) : inboxCounts.total === 0 ? (
+              <ReservationsEmptyState
+                icon={CheckCircle2}
+                title="Inbox cleared"
+                description="All unresolved reservations are handled. New requests will appear here."
+              />
+            ) : (
+              inboxReservations.map((section) => (
+                <section key={section.key} className="space-y-3">
+                  <div className="flex flex-wrap items-end justify-between gap-3">
+                    <div>
+                      <h2 className="font-heading text-lg font-semibold">
+                        {section.label}
+                      </h2>
+                      <p className="text-sm text-muted-foreground">
+                        {section.description}
+                      </p>
+                    </div>
+                    <Badge variant="secondary">
+                      {section.reservations.length}
+                    </Badge>
+                  </div>
+
+                  {section.reservations.length === 0 ? (
+                    <ReservationsEmptyState
+                      icon={Clock3}
+                      title={section.emptyTitle}
+                      description={section.emptyDescription}
+                    />
+                  ) : (
+                    <div className="space-y-4">
+                      {section.reservations.map((reservation) => (
+                        <InboxReservationCard
+                          key={reservation.id}
+                          reservation={reservation}
+                          nowMs={nowMs}
+                          isLoading={mutationIsPending}
+                          onConfirm={handleOpenConfirm}
+                          onReject={handleOpenReject}
+                          onPaidOffline={handleOpenPaidOffline}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </section>
+              ))
+            )}
+          </div>
+        ) : null}
+
+        {activeView === "schedule" ? (
+          <div>
+            {scheduleQuery.isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-64 w-full" />
+              </div>
+            ) : scheduleReservations.length === 0 ? (
+              <ReservationsEmptyState
+                icon={CalendarIcon}
+                title="No upcoming reservations"
+                description="Confirmed reservations for today and later will appear here."
+              />
+            ) : (
+              <div className="space-y-6">
+                <section className="space-y-3">
+                  <div>
+                    <h2 className="font-heading text-lg font-semibold">
+                      Today
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Confirmed reservations happening today.
+                    </p>
+                  </div>
+                  {todayReservations.length === 0 ? (
+                    <ReservationsEmptyState
+                      icon={CalendarIcon}
+                      title="Nothing booked today"
+                      description="Today's confirmed reservations will appear here."
+                    />
+                  ) : (
+                    <ReservationsTable reservations={todayReservations} />
+                  )}
+                </section>
+
+                <section className="space-y-3">
+                  <div>
+                    <h2 className="font-heading text-lg font-semibold">
+                      Upcoming
+                    </h2>
+                    <p className="text-sm text-muted-foreground">
+                      Future confirmed reservations across your venues.
+                    </p>
+                  </div>
+                  {upcomingReservations.length === 0 ? (
+                    <ReservationsEmptyState
+                      icon={CalendarIcon}
+                      title="No future bookings"
+                      description="Future confirmed reservations will show here."
+                    />
+                  ) : (
+                    <ReservationsTable reservations={upcomingReservations} />
+                  )}
+                </section>
+              </div>
+            )}
+          </div>
+        ) : null}
+
+        {activeView === "history" ? (
+          <div>
+            <div className="mb-4 flex flex-wrap gap-2">
+              {Object.entries(HISTORY_STATUS_MAP).map(([value, config]) => {
+                const isActive = historyFilter === value;
                 return (
-                  <TabsTrigger
-                    key={tabItem.value}
-                    value={tabItem.value}
-                    className="gap-2"
-                    aria-label={accessibleLabel}
+                  <Button
+                    key={value}
+                    type="button"
+                    size="sm"
+                    variant={isActive ? "secondary" : "ghost"}
+                    onClick={() => void setHistoryParam(value)}
                   >
-                    {tabItem.label}
-                    {count > 0 ? (
-                      <Badge
-                        variant={
-                          activeTab === tabItem.value ? "default" : "secondary"
-                        }
-                        className="ml-1"
-                      >
-                        {count}
-                      </Badge>
-                    ) : null}
-                  </TabsTrigger>
+                    {config.label}
+                  </Button>
                 );
               })}
-            </TabsList>
+            </div>
+
+            {historyQuery.isLoading ? (
+              <div className="space-y-4">
+                <Skeleton className="h-14 w-full" />
+                <Skeleton className="h-64 w-full" />
+              </div>
+            ) : historyReservations.length === 0 ? (
+              <ReservationsEmptyState
+                icon={History}
+                title={`No ${historyScope.label.toLowerCase()} reservations`}
+                description="Adjust your filters or date range to broaden the result set."
+              />
+            ) : (
+              <div className="space-y-4">
+                <ReservationsTable reservations={historyReservations} />
+                <div className="flex items-center justify-between gap-3">
+                  <p className="text-sm text-muted-foreground">
+                    Page {historyPage + 1}
+                  </p>
+                  <div className="flex gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={historyPage === 0}
+                      onClick={() =>
+                        setHistoryPage((page) => Math.max(0, page - 1))
+                      }
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      disabled={historyReservations.length < HISTORY_PAGE_SIZE}
+                      onClick={() => setHistoryPage((page) => page + 1)}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-
-          {tabConfig.map((tabItem) => {
-            const tabReservations = reservationGroups.groups[tabItem.value];
-            const showPendingFilters = tabItem.value === "pending";
-
-            return (
-              <TabsContent
-                key={tabItem.value}
-                value={tabItem.value}
-                className="mt-6"
-                forceMount
-              >
-                {showPendingFilters && (
-                  <div className="flex flex-wrap items-center gap-2 mb-4">
-                    {pendingFilterOptions.map((option) => {
-                      const isActive = pendingFilter === option.value;
-                      return (
-                        <Button
-                          key={option.value}
-                          type="button"
-                          size="sm"
-                          variant={isActive ? "secondary" : "ghost"}
-                          className="gap-2"
-                          aria-pressed={isActive}
-                          onClick={() => setPendingFilter(option.value)}
-                        >
-                          {option.label}
-                          {option.count > 0 ? (
-                            <Badge variant="outline" className="h-5 px-1.5">
-                              {option.count}
-                            </Badge>
-                          ) : null}
-                        </Button>
-                      );
-                    })}
-                  </div>
-                )}
-
-                {isLoading ? (
-                  <div className="space-y-4">
-                    <Skeleton className="h-12 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                    <Skeleton className="h-16 w-full" />
-                  </div>
-                ) : tabReservations.length === 0 ? (
-                  <ReservationsEmptyState type={tabItem.value} />
-                ) : (
-                  <ReservationsTable
-                    reservations={tabReservations}
-                    onConfirm={handleConfirmClick}
-                    onConfirmPaidOffline={handlePaidOfflineClick}
-                    onReject={handleRejectClick}
-                    isLoading={
-                      confirmMutation.isPending ||
-                      acceptMutation.isPending ||
-                      rejectMutation.isPending ||
-                      confirmPaidOfflineMutation.isPending
-                    }
-                  />
-                )}
-              </TabsContent>
-            );
-          })}
-        </Tabs>
+        ) : null}
       </div>
 
-      {/* Confirm Dialog */}
       <ConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}
         onConfirm={handleConfirm}
-        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        isLoading={acceptMutation.isPending || confirmMutation.isPending}
         title={confirmTitle}
         confirmLabel={confirmLabel}
         playerName={selectedReservation?.playerName}
         courtName={selectedReservation?.courtName}
         dateTime={
           selectedReservation
-            ? `${format(new Date(selectedReservation.date), "MMM d, yyyy")} at ${selectedReservation.startTime} - ${selectedReservation.endTime} for ${formatPrice(selectedReservation.amountCents, selectedReservation.currency)}`
+            ? `${formatReservationDate(selectedReservation)} at ${formatReservationTimeRange(selectedReservation)} for ${formatCurrency(
+                selectedReservation.amountCents,
+                selectedReservation.currency,
+              )}`
             : undefined
         }
       />
 
-      {/* Reject Modal */}
       <RejectModal
         open={rejectModalOpen}
         onOpenChange={setRejectModalOpen}
         onReject={handleReject}
-        isLoading={rejectMutation.isPending}
+        isLoading={rejectMutation.isPending || cancelMutation.isPending}
         playerName={selectedReservation?.playerName}
         courtName={selectedReservation?.courtName}
+        title={
+          rejectMode === "cancel" ? "Cancel Reservation" : "Reject Reservation"
+        }
+        reasonLabel={
+          rejectMode === "cancel" ? "Reason for cancellation" : undefined
+        }
+        submitLabel={
+          rejectMode === "cancel" ? "Cancel Reservation" : "Reject Reservation"
+        }
       />
 
-      {/* Paid & Confirmed Dialog */}
       <Dialog
         open={paidOfflineDialogOpen}
         onOpenChange={setPaidOfflineDialogOpen}
@@ -817,7 +1275,7 @@ export default function OwnerReservationsPage() {
           {activePaymentMethods.length === 0 ? (
             <div className="space-y-4">
               <div className="rounded-lg border border-dashed bg-muted/30 p-4 text-center">
-                <p className="text-sm text-muted-foreground mb-3">
+                <p className="mb-3 text-sm text-muted-foreground">
                   You need at least one active payment method to mark
                   reservations as paid and confirmed.
                 </p>
@@ -850,9 +1308,9 @@ export default function OwnerReservationsPage() {
                   label="Payment method"
                   placeholder="Select payment method"
                   required
-                  options={activePaymentMethods.map((m) => ({
-                    value: m.id,
-                    label: `${m.provider} — ${m.accountName}${m.isDefault ? " (Default)" : ""}`,
+                  options={activePaymentMethods.map((method) => ({
+                    value: method.id,
+                    label: `${method.provider} — ${method.accountName}${method.isDefault ? " (Default)" : ""}`,
                   }))}
                 />
                 <StandardFormInput<PaidOfflineFormValues>

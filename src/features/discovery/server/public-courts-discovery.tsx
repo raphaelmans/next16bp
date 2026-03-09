@@ -197,7 +197,7 @@ const getDiscoveryPlaceSummaries = async (
   input: ReturnType<typeof buildDiscoveryPlaceListSummaryQueryInput>,
   location: DiscoveryResolvedLocation,
 ) => {
-  if (input.date) {
+  if (input.date || input.q) {
     return publicCaller.place.listSummary(input);
   }
 

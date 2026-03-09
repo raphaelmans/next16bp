@@ -1,10 +1,12 @@
 "use client";
 
+import { format as formatDateValue } from "date-fns";
 import { useEffect, useMemo, useRef } from "react";
 import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { formatTimeInTimeZone } from "@/common/format";
 import { normalizeOwnerReservationScopeInput } from "@/common/query-keys";
 import { getZonedDayKey } from "@/common/time-zone";
 import { getReservationRealtimeApi } from "@/features/reservation/realtime-api.runtime";
@@ -32,6 +34,9 @@ export interface Reservation {
   isGroupPrimary?: boolean;
   groupItemCount?: number;
   groupItems?: Reservation[];
+  placeId: string;
+  placeName: string;
+  placeTimeZone: string;
   courtId: string;
   courtName: string;
   playerName: string;
@@ -76,6 +81,9 @@ type PaymentProofLike = {
 type OwnerReservationRecord = {
   id: string;
   reservationGroupId?: string | null;
+  placeId: string;
+  placeName: string;
+  placeTimeZone: string;
   courtId: string;
   courtName: string;
   playerNameSnapshot?: string | null;
@@ -103,10 +111,15 @@ interface UseOwnerReservationsOptions {
   placeId?: string;
   courtId?: string;
   status?: ReservationStatus | "all";
+  statuses?: Reservation["reservationStatus"][];
   search?: string;
   dateFrom?: Date;
   dateTo?: Date;
+  timeBucket?: "past" | "upcoming";
+  limit?: number;
+  offset?: number;
   refetchIntervalMs?: number;
+  enabled?: boolean;
 }
 
 interface UseOwnerReservationRealtimeStreamOptions {
@@ -124,6 +137,10 @@ const normalizeReservationIds = (reservationIds?: string[]) =>
         .filter((id) => id.length > 0),
     ),
   );
+
+function formatDate(date: Date): string {
+  return formatDateValue(date, "yyyy-MM-dd");
+}
 
 function mapStatusToBackend(
   status?: ReservationStatus,
@@ -168,24 +185,17 @@ function mapStatusFromBackend(
   return map[status] ?? "pending";
 }
 
-function formatTime(isoString: string): string {
+function formatReservationTime(
+  isoString: string | null | undefined,
+  timeZone: string,
+): string {
+  if (!isoString) return "--:--";
+
   try {
-    const date = new Date(isoString);
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
+    return formatTimeInTimeZone(isoString, timeZone);
   } catch {
     return "--:--";
   }
-}
-
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
 }
 
 function normalizePaymentProof(
@@ -214,23 +224,28 @@ function normalizePaymentProof(
 function mapOwnerReservationRecord(
   record: OwnerReservationRecord,
 ): Reservation {
+  const placeTimeZone = record.placeTimeZone;
+  const reservationDate =
+    record.slotStartTime && placeTimeZone
+      ? getZonedDayKey(record.slotStartTime, placeTimeZone)
+      : record.createdAt
+        ? getZonedDayKey(record.createdAt, placeTimeZone)
+        : "";
+
   return {
     id: record.id,
     reservationGroupId: record.reservationGroupId ?? null,
+    placeId: record.placeId,
+    placeName: record.placeName,
+    placeTimeZone,
     courtId: record.courtId,
     courtName: record.courtName,
     playerName: record.playerNameSnapshot ?? "Unknown",
     playerEmail: record.playerEmailSnapshot ?? "",
     playerPhone: record.playerPhoneSnapshot ?? "",
-    date: record.slotStartTime
-      ? new Date(record.slotStartTime).toISOString().split("T")[0]
-      : record.createdAt
-        ? new Date(record.createdAt).toISOString().split("T")[0]
-        : "",
-    startTime: record.slotStartTime
-      ? formatTime(record.slotStartTime)
-      : "--:--",
-    endTime: record.slotEndTime ? formatTime(record.slotEndTime) : "--:--",
+    date: reservationDate,
+    startTime: formatReservationTime(record.slotStartTime, placeTimeZone),
+    endTime: formatReservationTime(record.slotEndTime, placeTimeZone),
     slotStartTime: record.slotStartTime ?? null,
     slotEndTime: record.slotEndTime ?? null,
     amountCents: record.amountCents ?? 0,
@@ -428,11 +443,11 @@ function deriveDashboardData(
     rawRecords.map(mapOwnerReservationRecord),
   );
 
-  const todayKey = getZonedDayKey(new Date());
-
   // Today's confirmed bookings count
   const todayBookingsCount = reservations.filter(
-    (r) => r.date === todayKey && r.reservationStatus === "CONFIRMED",
+    (r) =>
+      r.date === getZonedDayKey(new Date(), r.placeTimeZone) &&
+      r.reservationStatus === "CONFIRMED",
   ).length;
 
   // Today's schedule: confirmed + pending, sorted by start time
@@ -444,7 +459,7 @@ function deriveDashboardData(
   const todaySchedule = reservations
     .filter(
       (r) =>
-        r.date === todayKey &&
+        r.date === getZonedDayKey(new Date(), r.placeTimeZone) &&
         (r.reservationStatus === "CONFIRMED" ||
           pendingStatuses.has(r.reservationStatus)),
     )
@@ -515,10 +530,15 @@ export function useModOwnerReservations(
     dateFrom,
     dateTo,
     status,
+    statuses,
     search,
     reservationId,
     refetchIntervalMs,
+    timeBucket,
+    limit,
+    offset,
     placeId,
+    enabled = true,
   } = options;
 
   const queryInput = normalizeOwnerReservationScopeInput({
@@ -527,8 +547,10 @@ export function useModOwnerReservations(
     placeId: placeId || undefined,
     courtId: courtId || undefined,
     status: status && status !== "all" ? mapStatusToBackend(status) : undefined,
-    limit: 100,
-    offset: 0,
+    statuses: statuses?.length ? statuses : undefined,
+    timeBucket,
+    limit: limit ?? 100,
+    offset: offset ?? 0,
   });
 
   return useFeatureQuery(
@@ -536,7 +558,7 @@ export function useModOwnerReservations(
     ownerApi.queryReservationOwnerGetForOrganization,
     queryInput,
     {
-      enabled: !!organizationId,
+      enabled: !!organizationId && enabled,
       refetchInterval: refetchIntervalMs,
       select: (data: unknown) => {
         let reservations = ((data as OwnerReservationRecord[]) ?? []).map(
@@ -585,6 +607,43 @@ export function useModOwnerReservations(
       },
     },
   );
+}
+
+export function useQueryOwnerReservationInbox(
+  organizationId: string | null,
+  options: Omit<
+    UseOwnerReservationsOptions,
+    "status" | "statuses" | "timeBucket"
+  > = {},
+) {
+  return useModOwnerReservations(organizationId, {
+    ...options,
+    statuses: ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+  });
+}
+
+export function useQueryOwnerReservationSchedule(
+  organizationId: string | null,
+  options: Omit<
+    UseOwnerReservationsOptions,
+    "status" | "statuses" | "timeBucket"
+  > = {},
+) {
+  return useModOwnerReservations(organizationId, {
+    ...options,
+    statuses: ["CONFIRMED"],
+    timeBucket: "upcoming",
+  });
+}
+
+export function useQueryOwnerReservationHistoryList(
+  organizationId: string | null,
+  options: Omit<UseOwnerReservationsOptions, "status" | "timeBucket"> & {
+    statuses: Reservation["reservationStatus"][];
+    timeBucket?: "past" | "upcoming";
+  },
+) {
+  return useModOwnerReservations(organizationId, options);
 }
 
 export function useQueryOwnerReservationSummaries(

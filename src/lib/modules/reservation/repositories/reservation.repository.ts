@@ -558,6 +558,8 @@ export class ReservationRepository implements IReservationRepository {
       placeId?: string;
       courtId?: string;
       status?: string;
+      statuses?: string[];
+      timeBucket?: "past" | "upcoming";
       limit: number;
       offset: number;
     },
@@ -594,6 +596,30 @@ export class ReservationRepository implements IReservationRepository {
       );
     }
 
+    if (filters.statuses?.length) {
+      conditions.push(
+        inArray(
+          reservation.status,
+          filters.statuses as (
+            | "CREATED"
+            | "AWAITING_PAYMENT"
+            | "PAYMENT_MARKED_BY_USER"
+            | "CONFIRMED"
+            | "EXPIRED"
+            | "CANCELLED"
+          )[],
+        ),
+      );
+    }
+
+    if (filters.timeBucket === "past") {
+      conditions.push(lt(reservation.endTime, new Date()));
+    }
+
+    if (filters.timeBucket === "upcoming") {
+      conditions.push(gte(reservation.endTime, new Date()));
+    }
+
     const results = await client
       .select({
         id: reservation.id,
@@ -605,6 +631,9 @@ export class ReservationRepository implements IReservationRepository {
         cancellationReason: reservation.cancellationReason,
         createdAt: reservation.createdAt,
         expiresAt: reservation.expiresAt,
+        placeId: place.id,
+        placeName: place.name,
+        placeTimeZone: place.timeZone,
         courtId: court.id,
         courtName: sql<string>`concat(${place.name}, ' - ', ${court.label})`,
         slotStartTime: reservation.startTime,

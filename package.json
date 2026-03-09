@@ -54,6 +54,8 @@
     "db:deactivate:nonprod-indexables": "dotenvx run --env-file=.env.local -- tsx scripts/deactivate-non-production-indexables.ts",
     "db:deactivate:nonprod-indexables:execute": "dotenvx run --env-file=.env.local -- tsx scripts/deactivate-non-production-indexables.ts --execute",
     "scrape:curated:crawl": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts --crawl-only --no-ph-normalize --skip-db-coverage",
+    "scrape:curated:discover": "dotenvx run --env-file=.env.local -- tsx scripts/discover-curated-court-leads.ts",
+    "scrape:curated:discover-and-scrape": "dotenvx run --env-file=.env.local -- tsx scripts/discover-curated-court-leads.ts --scrape-after-discovery",
     "scrape:curated:normalize": "dotenvx run --env-file=.env.local -- tsx scripts/normalize-curated-courts-ai.ts",
     "scrape:curated-courts": "dotenvx run --env-file=.env.local -- tsx scripts/firecrawl-curated-courts.ts",
     "db:backfill:place-slugs": "dotenvx run --env-file=.env.local -- tsx scripts/backfill-place-slugs.ts",

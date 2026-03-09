@@ -56,6 +56,8 @@ export const GetOrgReservationsSchema = z.object({
   placeId: S.ids.placeId.optional(),
   courtId: S.ids.courtId.optional(),
   status: ReservationStatusSchema.optional(),
+  statuses: z.array(ReservationStatusSchema).min(1).optional(),
+  timeBucket: z.enum(["past", "upcoming"]).optional(),
   limit: S.pagination.limit.default(20),
   offset: S.pagination.offset.default(0),
 });
@@ -145,6 +147,9 @@ export const ReservationWithDetailsSchema = z.object({
   reservationGroupId: z.string().nullable().optional(),
 
   // Enriched fields from joins
+  placeId: S.ids.placeId,
+  placeName: z.string(),
+  placeTimeZone: z.string(),
   courtId: S.ids.courtId,
   courtName: z.string(),
   slotStartTime: z.string(),

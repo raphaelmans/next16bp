@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  type FetchQueryOptions,
   mutationOptions,
   type QueriesResults,
   type Updater,
@@ -19,9 +20,10 @@ import type { FeatureQueryOptions } from "@/common/feature-query-options";
 import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
 type QueryPath = readonly string[];
-type FeatureFetchOptions<TData> = Pick<
-  FeatureQueryOptions<TData, TData>,
-  "retry" | "staleTime"
+type FeatureQueryKey = ReturnType<typeof buildTrpcQueryKey>;
+type FeatureFetchOptions<TQueryFnData, TData = TQueryFnData> = Omit<
+  FetchQueryOptions<TQueryFnData, AppError, TData, FeatureQueryKey>,
+  "queryKey" | "queryFn"
 >;
 
 type FeatureMutationOptions<TData, TVariables, TOnMutateResult> = Omit<
@@ -151,7 +153,7 @@ export function useFeatureQueryCache() {
   const queryClient = useQueryClient();
 
   return React.useMemo(() => {
-    const getQueryKey = (path: QueryPath, input?: unknown) =>
+    const getQueryKey = (path: QueryPath, input?: unknown): FeatureQueryKey =>
       buildTrpcQueryKey(path, input);
 
     return {
@@ -178,7 +180,7 @@ export function useFeatureQueryCache() {
         queryFn: () => Promise<T>,
         options?: FeatureFetchOptions<T>,
       ) =>
-        queryClient.fetchQuery<T>({
+        queryClient.fetchQuery<T, AppError, T, FeatureQueryKey>({
           queryKey: getQueryKey(path, input),
           queryFn,
           ...(options ?? {}),

@@ -125,9 +125,11 @@ function writeStoredCourtId(storageKey: string, courtId: string) {
 export function useModOwnerCourtFilter(options?: {
   storageKey?: string;
   syncToUrl?: boolean;
+  persistToStorage?: boolean;
 }) {
   const storageKey = options?.storageKey ?? DEFAULT_COURT_STORAGE_KEY;
   const syncToUrl = options?.syncToUrl ?? true;
+  const persistToStorage = options?.persistToStorage ?? true;
 
   const [queryCourtId, setQueryCourtId] = useQueryState(
     COURT_ID_PARAM,
@@ -140,7 +142,14 @@ export function useModOwnerCourtFilter(options?: {
   React.useEffect(() => {
     if (paramCourtId) {
       setCourtIdState(paramCourtId);
-      writeStoredCourtId(storageKey, paramCourtId);
+      if (persistToStorage) {
+        writeStoredCourtId(storageKey, paramCourtId);
+      }
+      return;
+    }
+
+    if (!persistToStorage) {
+      setCourtIdState("");
       return;
     }
 
@@ -150,12 +159,21 @@ export function useModOwnerCourtFilter(options?: {
     if (stored && syncToUrl && !queryCourtId) {
       setQueryCourtId(stored);
     }
-  }, [paramCourtId, queryCourtId, setQueryCourtId, storageKey, syncToUrl]);
+  }, [
+    paramCourtId,
+    persistToStorage,
+    queryCourtId,
+    setQueryCourtId,
+    storageKey,
+    syncToUrl,
+  ]);
 
   const setCourtId = React.useCallback(
     (nextCourtId: string) => {
       setCourtIdState(nextCourtId);
-      writeStoredCourtId(storageKey, nextCourtId);
+      if (persistToStorage) {
+        writeStoredCourtId(storageKey, nextCourtId);
+      }
 
       if (!syncToUrl) {
         return;
@@ -163,7 +181,7 @@ export function useModOwnerCourtFilter(options?: {
 
       setQueryCourtId(nextCourtId || null);
     },
-    [setQueryCourtId, storageKey, syncToUrl],
+    [persistToStorage, setQueryCourtId, storageKey, syncToUrl],
   );
 
   return { courtId, setCourtId };

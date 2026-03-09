@@ -17,6 +17,8 @@ type OwnerReservationScopeInput = {
   placeId?: string;
   courtId?: string;
   status?: ReservationBackendStatus;
+  statuses?: ReservationBackendStatus[];
+  timeBucket?: "past" | "upcoming";
   limit?: number;
   offset?: number;
 };
@@ -35,6 +37,12 @@ export const normalizeOwnerReservationScopeInput = (
   placeId: normalizeString(input.placeId),
   courtId: normalizeString(input.courtId),
   status: normalizeString(input.status) as ReservationBackendStatus | undefined,
+  statuses: input.statuses
+    ?.map((status) => normalizeString(status) as ReservationBackendStatus)
+    .filter(Boolean),
+  timeBucket: normalizeString(
+    input.timeBucket,
+  ) as OwnerReservationScopeInput["timeBucket"],
   limit: input.limit ?? 100,
   offset: input.offset ?? 0,
 });

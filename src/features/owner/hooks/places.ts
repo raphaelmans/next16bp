@@ -43,9 +43,11 @@ function writeStoredPlaceId(storageKey: string, placeId: string) {
 export function useModOwnerPlaceFilter(options?: {
   storageKey?: string;
   syncToUrl?: boolean;
+  persistToStorage?: boolean;
 }) {
   const storageKey = options?.storageKey ?? DEFAULT_PLACE_STORAGE_KEY;
   const syncToUrl = options?.syncToUrl ?? true;
+  const persistToStorage = options?.persistToStorage ?? true;
 
   const [queryPlaceId, setQueryPlaceId] = useQueryState(
     PLACE_ID_PARAM,
@@ -58,7 +60,14 @@ export function useModOwnerPlaceFilter(options?: {
   React.useEffect(() => {
     if (paramPlaceId) {
       setPlaceIdState(paramPlaceId);
-      writeStoredPlaceId(storageKey, paramPlaceId);
+      if (persistToStorage) {
+        writeStoredPlaceId(storageKey, paramPlaceId);
+      }
+      return;
+    }
+
+    if (!persistToStorage) {
+      setPlaceIdState("");
       return;
     }
 
@@ -68,12 +77,21 @@ export function useModOwnerPlaceFilter(options?: {
     if (stored && syncToUrl && !queryPlaceId) {
       setQueryPlaceId(stored);
     }
-  }, [paramPlaceId, queryPlaceId, setQueryPlaceId, storageKey, syncToUrl]);
+  }, [
+    paramPlaceId,
+    persistToStorage,
+    queryPlaceId,
+    setQueryPlaceId,
+    storageKey,
+    syncToUrl,
+  ]);
 
   const setPlaceId = React.useCallback(
     (nextPlaceId: string) => {
       setPlaceIdState(nextPlaceId);
-      writeStoredPlaceId(storageKey, nextPlaceId);
+      if (persistToStorage) {
+        writeStoredPlaceId(storageKey, nextPlaceId);
+      }
 
       if (!syncToUrl) {
         return;
@@ -81,7 +99,7 @@ export function useModOwnerPlaceFilter(options?: {
 
       setQueryPlaceId(nextPlaceId || null);
     },
-    [setQueryPlaceId, storageKey, syncToUrl],
+    [persistToStorage, setQueryPlaceId, storageKey, syncToUrl],
   );
 
   return { placeId, setPlaceId };

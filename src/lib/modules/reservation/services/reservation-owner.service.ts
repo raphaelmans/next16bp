@@ -2213,6 +2213,8 @@ export class ReservationOwnerService implements IReservationOwnerService {
           placeId: filters.placeId,
           courtId: filters.courtId,
           status: filters.status,
+          statuses: filters.statuses,
+          timeBucket: filters.timeBucket,
           limit: filters.limit,
           offset: filters.offset,
         },
