@@ -14,28 +14,28 @@ export const RATE_LIMIT_TIERS: Record<string, RateLimitConfig> = {
   default: { requests: 100, window: "1 m" as const },
   /** Public catalog endpoints that should only be queried by real clients */
   publicDiscoveryRead: {
-    requests: 20,
+    requests: 60,
     window: "1 m" as const,
     requireIpForAnonymous: true,
   },
   /** Availability endpoints are expensive and scrape-prone */
   publicAvailability: {
-    requests: 10,
+    requests: 60,
     window: "1 m" as const,
     requireIpForAnonymous: true,
   },
   /** Authentication endpoints - 10 req/min */
-  auth: { requests: 10, window: "1 m" as const },
+  auth: { requests: 60, window: "1 m" as const },
   /** Auth endpoints that can trigger outbound email - 5 req/5 min */
-  authEmailSend: { requests: 5, window: "5 m" as const },
+  authEmailSend: { requests: 30, window: "5 m" as const },
   /** Create/update operations - 30 req/min */
   mutation: { requests: 30, window: "1 m" as const },
   /** Sensitive operations (reservations, claims) - 5 req/min */
-  sensitive: { requests: 5, window: "1 m" as const },
+  sensitive: { requests: 30, window: "1 m" as const },
   /** User chat sends - 5 messages/min */
-  chatSend: { requests: 5, window: "1 m" as const },
+  chatSend: { requests: 20, window: "1 m" as const },
   /** Chat auth/session provisioning - 12 req/min */
-  chatSession: { requests: 12, window: "1 m" as const },
+  chatSession: { requests: 20, window: "1 m" as const },
   /** AI-powered normalization operations - 3 req/10 min */
   aiNormalize: { requests: 3, window: "10 m" as const },
   /** Map geocode searches (venue setup) - 3 req/1 h */
