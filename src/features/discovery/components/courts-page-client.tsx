@@ -50,6 +50,7 @@ import type {
 import type { PublicCourtsPageData } from "@/features/discovery/public-courts-data";
 import type { DiscoveryResolvedLocationState } from "@/features/discovery/query-options";
 import { cn } from "@/lib/utils";
+import { useSearchNavigationProgress } from "./search-navigation-progress-provider";
 
 type PaginationItemModel =
   | { type: "page"; page: number }
@@ -147,28 +148,62 @@ function CourtsPageContent({
   locationRouteScope = "none",
   initialResolvedLocation,
 }: CourtsPageContentProps) {
+  const { isSearchNavigationPending, finishSearchNavigation } =
+    useSearchNavigationProgress();
   const { data: sports = [] } = useQueryDiscoverySports();
   const filters = useModDiscoveryFilters({
     initialFilters,
     locationRouteScope,
     sports: sports.map((sport) => ({ id: sport.id, slug: sport.slug })),
   });
-  const isFiltering = filters.isPending;
+  const isFiltering = filters.isPending || isSearchNavigationPending;
   const resultsAnchorRef = useRef<HTMLDivElement | null>(null);
+  const [hasMeasuredResultsAnchor, setHasMeasuredResultsAnchor] =
+    useState(false);
+  const [isResultsAnchorVisible, setIsResultsAnchorVisible] = useState(false);
   const [shouldScrollToResults, setShouldScrollToResults] = useState(false);
+
+  useEffect(() => {
+    finishSearchNavigation();
+  }, [finishSearchNavigation]);
 
   const queueResultsScroll = useCallback(() => {
     setShouldScrollToResults(true);
   }, []);
 
   useEffect(() => {
-    if (!shouldScrollToResults || isFiltering) {
+    const anchor = resultsAnchorRef.current;
+
+    if (!anchor) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setHasMeasuredResultsAnchor(true);
+        setIsResultsAnchorVisible(entry?.isIntersecting ?? false);
+      },
+      {
+        rootMargin: "-96px 0px 0px 0px",
+        threshold: 0,
+      },
+    );
+
+    observer.observe(anchor);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!shouldScrollToResults || isFiltering || !hasMeasuredResultsAnchor) {
       return;
     }
 
     setShouldScrollToResults(false);
 
-    if (filters.view !== "list") {
+    if (filters.view !== "list" || isResultsAnchorVisible) {
       return;
     }
 
@@ -176,7 +211,13 @@ function CourtsPageContent({
       behavior: "smooth",
       block: "start",
     });
-  }, [filters.view, isFiltering, shouldScrollToResults]);
+  }, [
+    filters.view,
+    hasMeasuredResultsAnchor,
+    isFiltering,
+    isResultsAnchorVisible,
+    shouldScrollToResults,
+  ]);
 
   // ── Staged filter state (edits before Apply) ──
   const [staged, setStaged] = useState<StagedFilters>({
@@ -533,7 +574,7 @@ function CourtsPageContent({
         <div
           ref={resultsAnchorRef}
           aria-hidden="true"
-          className="scroll-mt-24"
+          className="block h-px scroll-mt-24"
         />
         {filters.view === "map" ? (
           <PlaceMap places={mapPlaces} />

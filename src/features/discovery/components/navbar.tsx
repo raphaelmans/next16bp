@@ -12,7 +12,7 @@ import {
   X,
 } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { parseAsString, useQueryState } from "nuqs";
 import { useEffect, useState } from "react";
 import { appRoutes } from "@/common/app-routes";
@@ -31,6 +31,7 @@ import {
   useQueryAuthUserPreference,
 } from "@/features/auth/hooks";
 import { cn } from "@/lib/utils";
+import { useSearchNavigationProgress } from "./search-navigation-progress-provider";
 import { UserDropdown } from "./user-dropdown";
 
 interface NavbarProps {
@@ -38,7 +39,10 @@ interface NavbarProps {
 }
 
 export function Navbar({ className }: NavbarProps) {
+  const pathname = usePathname();
   const router = useRouter();
+  const currentSearchParams = useSearchParams();
+  const { startSearchNavigation } = useSearchNavigationProgress();
   const [queryParam] = useQueryState("q", parseAsString);
   const [isOpen, setIsOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState(queryParam ?? "");
@@ -91,7 +95,16 @@ export function Navbar({ className }: NavbarProps) {
     const destination = search
       ? `${appRoutes.courts.base}?${search}`
       : appRoutes.courts.base;
+    const currentUrl = currentSearchParams.toString()
+      ? `${pathname}?${currentSearchParams.toString()}`
+      : pathname;
 
+    if (destination === currentUrl) {
+      setIsOpen(false);
+      return;
+    }
+
+    startSearchNavigation();
     router.push(destination);
     setIsOpen(false);
   };

@@ -1,6 +1,6 @@
 # Real-Time Architecture
 
-Last updated: 2026-03-07
+Last updated: 2026-03-09
 
 ## Goal
 Capture the current modular real-time architecture after the reservation-first and availability event work.
@@ -36,6 +36,15 @@ The app intentionally uses two event-driven patterns:
 - Owner availability views use optimistic local patching plus scoped reservation-range invalidation.
 - Place-sport aggregate discovery availability still uses scoped invalidation/refetch.
 - Availability queries use focus/reconnect recovery as drift protection.
+
+## Operational Requirement
+
+Availability realtime on `availability_change_event` depends on two environment-side requirements:
+
+- the table must be present in the `supabase_realtime` publication
+- subscribing roles must have `SELECT` on `public.availability_change_event`
+
+Without the `SELECT` grant, Supabase Realtime can accept `phx_join` and still emit a delayed `system` error like `invalid column for filter court_id`.
 
 ## Current Limitation
 

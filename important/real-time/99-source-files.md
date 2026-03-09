@@ -50,6 +50,7 @@
 ## Supporting Scripts and Migrations
 
 - `drizzle/0039_availability_change_event.sql`
+- `drizzle/0044_availability_change_event_realtime_grants.sql`
 - `scripts/enable-realtime-availability-change-events.ts`
 
 ## OpenSpec Changes
