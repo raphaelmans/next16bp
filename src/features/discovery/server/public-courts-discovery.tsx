@@ -404,7 +404,7 @@ const resolveDiscoveryLocationRedirect = async (input: {
     );
     const redirectedCity =
       resolvedLocation.provinceSlug === input.initialFilters.province
-        ? resolvedLocation.citySlug
+        ? (resolvedLocation.citySlug ?? undefined)
         : undefined;
     const redirectedSportSlug = redirectedCity
       ? await resolveDiscoverySportSlug(querySportId)
