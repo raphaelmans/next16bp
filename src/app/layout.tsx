@@ -107,6 +107,14 @@ export const metadata: Metadata = {
     title: "Discover Sports Courts in the Philippines | KudosCourts",
     description:
       "Find sports courts across the Philippines by city, sport, reviews, amenities, and availability signals.",
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: "One platform for every sports court in the Philippines. Search by city, sport, reviews, and amenities.",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -115,6 +123,14 @@ export const metadata: Metadata = {
       "Find sports courts across the Philippines by city, sport, reviews, amenities, and availability signals.",
     creator: "@kudoscourts",
     site: "@kudoscourts",
+    images: [
+      {
+        url: "/twitter-image",
+        width: 1200,
+        height: 630,
+        alt: "One platform for every sports court in the Philippines.",
+      },
+    ],
   },
   robots: isProduction
     ? {

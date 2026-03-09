@@ -1,7 +1,14 @@
 import "server-only";
 
 import { unstable_cache } from "next/cache";
+import { redirect } from "next/navigation";
 import CourtsPageClient from "@/features/discovery/components/courts-page-client";
+import {
+  buildLegacyDiscoveryLocationRedirectPath,
+  type DiscoveryLocationDefaults,
+  type DiscoveryLocationRouteScope,
+  sanitizeDiscoveryLocationSearchParams,
+} from "@/features/discovery/location-routing";
 import type {
   PublicCourtsPageData,
   PublicDiscoveryPlaceCardMedia,
@@ -23,12 +30,6 @@ import {
 import { publicCaller } from "@/trpc/server";
 
 type RawSearchParams = Record<string, string | string[] | undefined>;
-
-export type DiscoveryLocationDefaults = {
-  province?: string;
-  city?: string;
-  sportId?: string;
-};
 
 type DiscoveryResolvedLocation = {
   provinceSlug?: string;
@@ -115,8 +116,14 @@ export const parseDiscoverySearchParams = (
 export const resolveDiscoveryPrefetchState = async (input: {
   searchParams?: RawSearchParams;
   initialFilters?: DiscoveryLocationDefaults;
+  locationRouteScope?: DiscoveryLocationRouteScope;
 }) => {
-  const parsedFilters = parseDiscoverySearchParams(input.searchParams);
+  const parsedFilters = parseDiscoverySearchParams(
+    sanitizeDiscoveryLocationSearchParams(
+      input.searchParams,
+      input.locationRouteScope ?? "none",
+    ),
+  );
   const effectiveFilters = {
     ...parsedFilters,
     province: parsedFilters.province ?? input.initialFilters?.province,
@@ -316,20 +323,161 @@ const buildPublicCourtsPageData = async (args: {
   } satisfies PublicCourtsPageData;
 };
 
+const toUrlSearchParams = (searchParams?: RawSearchParams) => {
+  const next = new URLSearchParams();
+
+  if (!searchParams) {
+    return next;
+  }
+
+  for (const [key, value] of Object.entries(searchParams)) {
+    if (Array.isArray(value)) {
+      for (const entry of value) {
+        next.append(key, entry);
+      }
+      continue;
+    }
+
+    if (value !== undefined) {
+      next.set(key, value);
+    }
+  }
+
+  return next;
+};
+
+const resolveDiscoverySportSlug = async (sportValue?: string) => {
+  const normalizedSport = normalizeString(sportValue);
+
+  if (!normalizedSport) {
+    return undefined;
+  }
+
+  const sports = await publicCaller.sport.list();
+
+  return sports.find(
+    (sport) => sport.id === normalizedSport || sport.slug === normalizedSport,
+  )?.slug;
+};
+
+const resolveDiscoveryLocationRedirect = async (input: {
+  searchParams?: RawSearchParams;
+  initialFilters?: DiscoveryLocationDefaults;
+  locationRoutePath?: string;
+  locationRouteScope: DiscoveryLocationRouteScope;
+}) => {
+  if (
+    input.locationRouteScope === "none" ||
+    !input.locationRoutePath ||
+    !input.initialFilters?.province
+  ) {
+    return null;
+  }
+
+  const currentSearchParams = toUrlSearchParams(input.searchParams);
+  const sanitizedSearchParams = toUrlSearchParams(
+    sanitizeDiscoveryLocationSearchParams(
+      input.searchParams,
+      input.locationRouteScope,
+    ),
+  );
+  const queryProvince = normalizeString(
+    getFirstValue(input.searchParams?.province),
+  );
+  const queryCity = normalizeString(getFirstValue(input.searchParams?.city));
+  const querySportId = normalizeString(
+    getFirstValue(input.searchParams?.sportId),
+  );
+  const hasIgnoredLocationQuery =
+    queryProvince !== undefined ||
+    queryCity !== undefined ||
+    (input.locationRouteScope !== "province" && querySportId !== undefined);
+
+  let redirectPath: string | null = null;
+
+  if (input.locationRouteScope === "province" && queryCity) {
+    const provinces = await getPHProvincesCities();
+    const resolvedLocation = resolveLocationSlugs(
+      provinces,
+      input.initialFilters.province,
+      queryCity,
+    );
+    const redirectedCity =
+      resolvedLocation.provinceSlug === input.initialFilters.province
+        ? resolvedLocation.citySlug
+        : undefined;
+    const redirectedSportSlug = redirectedCity
+      ? await resolveDiscoverySportSlug(querySportId)
+      : undefined;
+
+    redirectPath =
+      buildLegacyDiscoveryLocationRedirectPath({
+        scope: input.locationRouteScope,
+        currentLocation: input.initialFilters,
+        redirectedCity,
+        redirectedSportSlug,
+      }) ?? null;
+  } else if (input.locationRouteScope === "city" && input.initialFilters.city) {
+    const redirectedSportSlug = await resolveDiscoverySportSlug(querySportId);
+
+    redirectPath =
+      buildLegacyDiscoveryLocationRedirectPath({
+        scope: input.locationRouteScope,
+        currentLocation: input.initialFilters,
+        redirectedSportSlug,
+      }) ?? null;
+  }
+
+  if (!redirectPath) {
+    redirectPath = input.locationRoutePath;
+  }
+
+  if (!hasIgnoredLocationQuery && redirectPath === input.locationRoutePath) {
+    return null;
+  }
+
+  const queryString = sanitizedSearchParams.toString();
+  const redirectUrl = queryString
+    ? `${redirectPath}?${queryString}`
+    : redirectPath;
+  const currentQueryString = currentSearchParams.toString();
+  const currentUrl = currentQueryString
+    ? `${input.locationRoutePath}?${currentQueryString}`
+    : input.locationRoutePath;
+
+  return redirectUrl === currentUrl ? null : redirectUrl;
+};
+
 type DiscoveryHydratedCourtsPageProps = {
   initialFilters?: DiscoveryLocationDefaults;
   initialLocationLabel?: string;
+  locationRoutePath?: string;
+  locationRouteScope?: DiscoveryLocationRouteScope;
   searchParams?: RawSearchParams;
 };
 
 export async function DiscoveryHydratedCourtsPage({
   initialFilters,
   initialLocationLabel,
+  locationRoutePath,
+  locationRouteScope = "none",
   searchParams,
 }: DiscoveryHydratedCourtsPageProps) {
+  const redirectUrl = await resolveDiscoveryLocationRedirect({
+    searchParams,
+    initialFilters,
+    locationRoutePath,
+    locationRouteScope,
+  });
+
+  if (redirectUrl) {
+    redirect(redirectUrl);
+  }
+
   const prefetchState = await resolveDiscoveryPrefetchState({
     searchParams,
     initialFilters,
+    locationRouteScope,
   });
   const initialData = await buildPublicCourtsPageData({
     summaryInput: prefetchState.summaryInput,
@@ -342,6 +490,7 @@ export async function DiscoveryHydratedCourtsPage({
       initialData={initialData}
       initialFilters={initialFilters}
       initialLocationLabel={initialLocationLabel}
+      locationRouteScope={locationRouteScope}
       initialResolvedLocation={prefetchState.resolvedLocation}
     />
   );

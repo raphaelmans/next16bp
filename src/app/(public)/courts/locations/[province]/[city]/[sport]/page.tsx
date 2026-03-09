@@ -408,6 +408,8 @@ export default async function CourtsCitySportPage({
           sportId: context.sport.id,
         }}
         initialLocationLabel={`${context.city.displayName}, ${context.province.displayName}`}
+        locationRoutePath={canonicalPath}
+        locationRouteScope="sport"
         searchParams={searchParams}
       />
     </>

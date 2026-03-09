@@ -1,7 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { Suspense, useCallback, useMemo, useState } from "react";
+import {
+  Suspense,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { appRoutes } from "@/common/app-routes";
 import { usePHProvincesCitiesQuery } from "@/common/clients/ph-provinces-cities-client";
 import {
@@ -36,6 +43,10 @@ import {
   useModPlaceBookmarkBatch,
 } from "@/features/discovery/hooks";
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
+import type {
+  DiscoveryLocationDefaults,
+  DiscoveryLocationRouteScope,
+} from "@/features/discovery/location-routing";
 import type { PublicCourtsPageData } from "@/features/discovery/public-courts-data";
 import type { DiscoveryResolvedLocationState } from "@/features/discovery/query-options";
 import { cn } from "@/lib/utils";
@@ -44,16 +55,11 @@ type PaginationItemModel =
   | { type: "page"; page: number }
   | { type: "ellipsis"; key: string };
 
-type LocationDefaults = {
-  province?: string;
-  city?: string;
-  sportId?: string;
-};
-
 interface CourtsPageClientProps {
   initialData: PublicCourtsPageData;
-  initialFilters?: LocationDefaults;
+  initialFilters?: DiscoveryLocationDefaults;
   initialLocationLabel?: string;
+  locationRouteScope?: DiscoveryLocationRouteScope;
   initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
@@ -95,6 +101,7 @@ export default function CourtsPageClient({
   initialData,
   initialFilters,
   initialLocationLabel,
+  locationRouteScope = "none",
   initialResolvedLocation,
 }: CourtsPageClientProps) {
   return (
@@ -103,6 +110,7 @@ export default function CourtsPageClient({
         initialData={initialData}
         initialFilters={initialFilters}
         initialLocationLabel={initialLocationLabel}
+        locationRouteScope={locationRouteScope}
         initialResolvedLocation={initialResolvedLocation}
       />
     </Suspense>
@@ -111,8 +119,9 @@ export default function CourtsPageClient({
 
 interface CourtsPageContentProps {
   initialData: PublicCourtsPageData;
-  initialFilters?: LocationDefaults;
+  initialFilters?: DiscoveryLocationDefaults;
   initialLocationLabel?: string;
+  locationRouteScope?: DiscoveryLocationRouteScope;
   initialResolvedLocation?: DiscoveryResolvedLocationState;
 }
 
@@ -135,18 +144,46 @@ function CourtsPageContent({
   initialData,
   initialFilters,
   initialLocationLabel,
+  locationRouteScope = "none",
   initialResolvedLocation,
 }: CourtsPageContentProps) {
-  const filters = useModDiscoveryFilters();
-  const isFiltering = filters.isPending;
   const { data: sports = [] } = useQueryDiscoverySports();
+  const filters = useModDiscoveryFilters({
+    initialFilters,
+    locationRouteScope,
+    sports: sports.map((sport) => ({ id: sport.id, slug: sport.slug })),
+  });
+  const isFiltering = filters.isPending;
+  const resultsAnchorRef = useRef<HTMLDivElement | null>(null);
+  const [shouldScrollToResults, setShouldScrollToResults] = useState(false);
+
+  const queueResultsScroll = useCallback(() => {
+    setShouldScrollToResults(true);
+  }, []);
+
+  useEffect(() => {
+    if (!shouldScrollToResults || isFiltering) {
+      return;
+    }
+
+    setShouldScrollToResults(false);
+
+    if (filters.view !== "list") {
+      return;
+    }
+
+    resultsAnchorRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }, [filters.view, isFiltering, shouldScrollToResults]);
 
   // ── Staged filter state (edits before Apply) ──
   const [staged, setStaged] = useState<StagedFilters>({
     q: filters.q,
-    province: filters.province,
-    city: filters.city,
-    sportId: filters.sportId,
+    province: filters.province ?? initialFilters?.province ?? null,
+    city: filters.city ?? initialFilters?.city ?? null,
+    sportId: filters.sportId ?? initialFilters?.sportId ?? null,
     date: filters.date,
     time: filters.time,
     amenities: filters.amenities,
@@ -158,36 +195,43 @@ function CourtsPageContent({
   }, []);
 
   const applyFilters = useCallback(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-    filters.setQuery(staged.q ?? "");
-    filters.setProvince(staged.province ?? undefined);
-    filters.setCity(staged.city ?? undefined);
-    filters.setSportId(staged.sportId ?? undefined);
-    filters.setDate(staged.date ?? undefined);
-    filters.setTime(
-      staged.time && staged.time.length > 0 ? staged.time : undefined,
-    );
-    filters.setAmenities(
-      staged.amenities && staged.amenities.length > 0
-        ? staged.amenities
-        : undefined,
-    );
-    filters.setVerification(staged.verification ?? undefined);
-  }, [filters, staged]);
+    queueResultsScroll();
+    filters.commitFilters({
+      q: staged.q ?? null,
+      province: staged.province ?? null,
+      city: staged.city ?? null,
+      sportId: staged.sportId ?? null,
+      date: staged.date ?? null,
+      time: staged.time ?? null,
+      amenities: staged.amenities ?? null,
+      verification: staged.verification ?? null,
+      page: 1,
+    });
+  }, [filters, queueResultsScroll, staged]);
 
   const clearAllFilters = useCallback(() => {
+    queueResultsScroll();
     filters.clearAll();
     setStaged({
       q: null,
-      province: null,
-      city: null,
-      sportId: null,
+      province:
+        locationRouteScope === "none"
+          ? null
+          : (initialFilters?.province ?? null),
+      city:
+        locationRouteScope === "city" || locationRouteScope === "sport"
+          ? (initialFilters?.city ?? null)
+          : null,
+      sportId:
+        locationRouteScope === "sport"
+          ? (initialFilters?.sportId ?? null)
+          : null,
       date: null,
       time: null,
       amenities: null,
       verification: null,
     });
-  }, [filters]);
+  }, [filters, initialFilters, locationRouteScope, queueResultsScroll]);
 
   // Staged filter handlers for PlaceFilters
   const stagedFilterHandlers = useMemo(
@@ -235,8 +279,6 @@ function CourtsPageContent({
   );
   const hasClearableFilters = Boolean(
     filters.q ||
-      filters.province ||
-      filters.city ||
       filters.sportId ||
       filters.date ||
       filters.time ||
@@ -338,47 +380,73 @@ function CourtsPageContent({
 
   // ── Applied chip removal handlers (write directly to URL) ──
   const removeProvince = useCallback(() => {
+    queueResultsScroll();
     filters.setProvince(undefined);
-    updateStaged({ province: null, city: null });
-  }, [filters, updateStaged]);
+    updateStaged({ province: null, city: null, sportId: null });
+  }, [filters, queueResultsScroll, updateStaged]);
 
   const removeCity = useCallback(() => {
+    queueResultsScroll();
     filters.setCity(undefined);
-    updateStaged({ city: null });
-  }, [filters, updateStaged]);
+    updateStaged({ city: null, sportId: null });
+  }, [filters, queueResultsScroll, updateStaged]);
 
   const removeSport = useCallback(() => {
+    queueResultsScroll();
     filters.setSportId(undefined);
     updateStaged({ sportId: null });
-  }, [filters, updateStaged]);
+  }, [filters, queueResultsScroll, updateStaged]);
 
   const removeDate = useCallback(() => {
+    queueResultsScroll();
     filters.setDate(undefined);
     updateStaged({ date: null, time: null });
-  }, [filters, updateStaged]);
+  }, [filters, queueResultsScroll, updateStaged]);
 
   const removeTime = useCallback(
     (hour: string) => {
+      queueResultsScroll();
       const next = (filters.time ?? []).filter((t) => t !== hour);
       filters.setTime(next.length > 0 ? next : undefined);
       updateStaged({ time: next.length > 0 ? next : null });
     },
-    [filters, updateStaged],
+    [filters, queueResultsScroll, updateStaged],
   );
 
   const removeAmenity = useCallback(
     (amenity: string) => {
+      queueResultsScroll();
       const next = (filters.amenities ?? []).filter((a) => a !== amenity);
       filters.setAmenities(next.length > 0 ? next : undefined);
       updateStaged({ amenities: next.length > 0 ? next : null });
     },
-    [filters, updateStaged],
+    [filters, queueResultsScroll, updateStaged],
   );
 
   const removeVerification = useCallback(() => {
+    queueResultsScroll();
     filters.setVerification(undefined);
     updateStaged({ verification: null });
-  }, [filters, updateStaged]);
+  }, [filters, queueResultsScroll, updateStaged]);
+
+  const handleViewChange = useCallback(
+    (view: "list" | "map") => {
+      if (view === "list" && filters.view !== "list") {
+        queueResultsScroll();
+      }
+
+      filters.setView(view);
+    },
+    [filters, queueResultsScroll],
+  );
+
+  const handlePageChange = useCallback(
+    (nextPage: number) => {
+      queueResultsScroll();
+      filters.setPage(nextPage);
+    },
+    [filters, queueResultsScroll],
+  );
 
   const filterProps = {
     amenities: staged.amenities ?? undefined,
@@ -418,7 +486,7 @@ function CourtsPageContent({
 
           <div className="flex shrink-0 items-center gap-2">
             <PlaceFiltersSheet {...filterProps} onApply={applyFilters} />
-            <ViewToggle value={filters.view} onChange={filters.setView} />
+            <ViewToggle value={filters.view} onChange={handleViewChange} />
           </div>
         </div>
 
@@ -431,9 +499,9 @@ function CourtsPageContent({
 
         {/* Applied filter chips */}
         <AppliedFilterChips
-          province={filters.province}
-          city={filters.city}
-          sportId={filters.sportId}
+          province={effectiveProvince}
+          city={effectiveCity}
+          sportId={effectiveSportId}
           date={filters.date}
           time={filters.time}
           amenities={filters.amenities}
@@ -462,6 +530,11 @@ function CourtsPageContent({
         </div>
 
         {/* Results */}
+        <div
+          ref={resultsAnchorRef}
+          aria-hidden="true"
+          className="scroll-mt-24"
+        />
         {filters.view === "map" ? (
           <PlaceMap places={mapPlaces} />
         ) : places.length > 0 ? (
@@ -489,7 +562,7 @@ function CourtsPageContent({
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
-                        onClick={() => filters.setPage(Math.max(1, page - 1))}
+                        onClick={() => handlePageChange(Math.max(1, page - 1))}
                         className={
                           page === 1
                             ? "pointer-events-none opacity-50"
@@ -501,7 +574,7 @@ function CourtsPageContent({
                       item.type === "page" ? (
                         <PaginationItem key={`page-${item.page}`}>
                           <PaginationLink
-                            onClick={() => filters.setPage(item.page)}
+                            onClick={() => handlePageChange(item.page)}
                             isActive={page === item.page}
                             className="cursor-pointer"
                           >
@@ -517,7 +590,7 @@ function CourtsPageContent({
                     <PaginationItem>
                       <PaginationNext
                         onClick={() =>
-                          filters.setPage(Math.min(totalPages, page + 1))
+                          handlePageChange(Math.min(totalPages, page + 1))
                         }
                         className={
                           page === totalPages

@@ -250,6 +250,8 @@ export default async function CourtsProvincePage({
       <DiscoveryCourtsPage
         initialFilters={{ province: province.slug }}
         initialLocationLabel={province.displayName}
+        locationRoutePath={canonicalPath}
+        locationRouteScope="province"
         searchParams={searchParams}
       />
     </>
