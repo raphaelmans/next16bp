@@ -57,6 +57,7 @@ export function UserDropdown({
     .slice(0, 2);
   const shouldShowOwnerShortcut =
     defaultPortal === "organization" && Boolean(ownerMenuHref);
+  const shouldShowPlayerLinks = !shouldShowOwnerShortcut;
 
   const handleSignOut = () => {
     onSignOut?.();
@@ -104,18 +105,28 @@ export function UserDropdown({
               </Link>
             </DropdownMenuItem>
           ) : null}
-          <DropdownMenuItem asChild>
-            <Link href={appRoutes.savedVenues.base} className="cursor-pointer">
-              <Heart className="mr-2 h-4 w-4" />
-              <span>Saved Venues</span>
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild>
-            <Link href={appRoutes.reservations.base} className="cursor-pointer">
-              <Calendar className="mr-2 h-4 w-4" />
-              <span>My Reservations</span>
-            </Link>
-          </DropdownMenuItem>
+          {shouldShowPlayerLinks ? (
+            <DropdownMenuItem asChild>
+              <Link
+                href={appRoutes.savedVenues.base}
+                className="cursor-pointer"
+              >
+                <Heart className="mr-2 h-4 w-4" />
+                <span>Saved Venues</span>
+              </Link>
+            </DropdownMenuItem>
+          ) : null}
+          {shouldShowPlayerLinks ? (
+            <DropdownMenuItem asChild>
+              <Link
+                href={appRoutes.reservations.base}
+                className="cursor-pointer"
+              >
+                <Calendar className="mr-2 h-4 w-4" />
+                <span>My Reservations</span>
+              </Link>
+            </DropdownMenuItem>
+          ) : null}
           <DropdownMenuItem asChild>
             <Link href={appRoutes.account.profile} className="cursor-pointer">
               <User className="mr-2 h-4 w-4" />

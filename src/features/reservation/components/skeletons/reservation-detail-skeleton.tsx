@@ -3,28 +3,28 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export function ReservationDetailSkeleton() {
   return (
-    <div className="space-y-6">
+    <div className="min-w-0 space-y-6">
       {/* Breadcrumb skeleton */}
       <Skeleton className="h-4 w-48" />
 
       {/* Status banner skeleton */}
       <Skeleton className="h-16 w-full rounded-lg" />
 
-      <div className="grid gap-6 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-6 lg:grid-cols-3">
         {/* Main content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="min-w-0 space-y-6 lg:col-span-2">
           {/* Booking details card */}
           <Card>
             <CardHeader>
               <Skeleton className="h-6 w-32" />
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex gap-4">
+              <div className="flex min-w-0 gap-4">
                 <Skeleton className="h-24 w-24 rounded-lg" />
-                <div className="flex-1 space-y-2">
-                  <Skeleton className="h-5 w-40" />
-                  <Skeleton className="h-4 w-32" />
-                  <Skeleton className="h-4 w-48" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-5 w-3/4 max-w-40" />
+                  <Skeleton className="h-4 w-2/3 max-w-32" />
+                  <Skeleton className="h-4 w-full max-w-48" />
                 </div>
               </div>
               <div className="grid gap-4 sm:grid-cols-2">
@@ -50,11 +50,11 @@ export function ReservationDetailSkeleton() {
               <Skeleton className="h-6 w-40" />
             </CardHeader>
             <CardContent>
-              <div className="flex items-center gap-4">
+              <div className="flex min-w-0 items-center gap-4">
                 <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                  <Skeleton className="h-5 w-32" />
-                  <Skeleton className="h-4 w-40" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-5 w-2/3 max-w-32" />
+                  <Skeleton className="h-4 w-full max-w-40" />
                 </div>
               </div>
             </CardContent>
@@ -67,11 +67,11 @@ export function ReservationDetailSkeleton() {
             </CardHeader>
             <CardContent className="space-y-4">
               {["timeline-1", "timeline-2", "timeline-3"].map((id) => (
-                <div key={id} className="flex gap-4">
+                <div key={id} className="flex min-w-0 gap-4">
                   <Skeleton className="h-3 w-3 rounded-full" />
-                  <div className="flex-1 space-y-1">
-                    <Skeleton className="h-4 w-32" />
-                    <Skeleton className="h-3 w-24" />
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <Skeleton className="h-4 w-2/3 max-w-32" />
+                    <Skeleton className="h-3 w-1/2 max-w-24" />
                   </div>
                 </div>
               ))}
@@ -80,16 +80,16 @@ export function ReservationDetailSkeleton() {
         </div>
 
         {/* Sidebar */}
-        <div className="space-y-4">
+        <div className="min-w-0 space-y-4">
           <Card>
-            <CardContent className="p-4 space-y-4">
+            <CardContent className="space-y-4 p-4">
               <div className="space-y-2">
                 <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-6 w-32" />
+                <Skeleton className="h-6 w-2/3 max-w-32" />
               </div>
               <div className="space-y-2">
                 <Skeleton className="h-4 w-20" />
-                <Skeleton className="h-4 w-40" />
+                <Skeleton className="h-4 w-full max-w-40" />
               </div>
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />

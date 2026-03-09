@@ -60,6 +60,7 @@ describe("useModNextWeekPrefetch", () => {
       endDate: "2026-03-21T15:59:59.999Z",
       durationMinutes: 60,
       includeUnavailable: true,
+      selectedAddons: [],
     });
   });
 
@@ -156,6 +157,7 @@ describe("useModNextWeekPrefetch", () => {
       durationMinutes: 60,
       includeUnavailable: true,
       includeCourtOptions: false,
+      selectedAddons: [],
     });
   });
 });

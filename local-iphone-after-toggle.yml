@@ -1,0 +1,287 @@
+- generic [ref=e1]:
+  - progressbar "Loading"
+  - generic [ref=e2]:
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - navigation [ref=e4]:
+      - link "KudosCourts KudosCourts" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]:
+          - img "KudosCourts" [ref=e7]
+          - generic [ref=e8]: KudosCourts
+      - button "Open menu" [ref=e9] [cursor=pointer]:
+        - img
+    - main [ref=e10]:
+      - navigation [ref=e93]:
+        - link "All Venues" [ref=e94] [cursor=pointer]:
+          - /url: /courts
+        - generic [ref=e95]: /
+        - link "Cebu" [ref=e96] [cursor=pointer]:
+          - /url: /courts/locations/cebu
+        - generic [ref=e97]: /
+        - link "Cebu City" [ref=e98] [cursor=pointer]:
+          - /url: /courts/locations/cebu/cebu-city
+        - generic [ref=e99]: /
+        - generic [ref=e100]: Kudos Courts Complex
+      - generic [ref=e101]:
+        - generic [ref=e102]:
+          - generic [ref=e103]:
+            - generic [ref=e105]: KC
+            - generic [ref=e106]:
+              - generic [ref=e107]:
+                - heading "Kudos Courts Complex" [level=1] [ref=e108]
+                - generic [ref=e109]:
+                  - img
+                  - text: Verified
+              - generic [ref=e110]:
+                - paragraph [ref=e111]: CEBU CITY · SM Seaside
+                - link "5.0 (1)" [ref=e112] [cursor=pointer]:
+                  - /url: "#reviews"
+                  - generic [ref=e113]: "5.0"
+                  - generic [ref=e114]:
+                    - img [ref=e115]
+                    - img [ref=e117]
+                    - img [ref=e119]
+                    - img [ref=e121]
+                    - img [ref=e123]
+                  - generic [ref=e125]: (1)
+          - generic [ref=e126]:
+            - link "Check availability" [ref=e127] [cursor=pointer]:
+              - /url: "#availability-studio"
+              - img
+              - text: Check availability
+            - link "Directions" [ref=e128] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=Kudos%20Courts%20Complex%20SM%20Seaside%20CEBU%20CITY
+              - img
+              - text: Directions
+            - link "Courts & amenities" [ref=e129] [cursor=pointer]:
+              - /url: "#courts-info"
+              - img
+              - text: Courts & amenities
+            - link "Reviews" [ref=e130] [cursor=pointer]:
+              - /url: "#reviews"
+              - img
+              - text: Reviews
+            - button "Save" [ref=e131] [cursor=pointer]:
+              - img
+              - text: Save
+        - generic [ref=e132]: Availability Studio
+        - generic [ref=e133]:
+          - group [ref=e136]:
+            - radio "Book" [checked] [ref=e137] [cursor=pointer]
+            - radio "Open Play" [ref=e138] [cursor=pointer]
+          - generic [ref=e139]:
+            - generic [ref=e140]:
+              - generic [ref=e142]: Booking summary
+              - generic [ref=e143]:
+                - generic [ref=e144]:
+                  - paragraph [ref=e145]: Venue
+                  - paragraph [ref=e146]: Court 1
+                - generic [ref=e147]:
+                  - paragraph [ref=e148]: Optional extras
+                  - paragraph [ref=e149]: Choose extras during booking
+                - generic [ref=e150]: Select a time to see the price and continue.
+                - button "Select a time" [ref=e151] [cursor=pointer]
+            - generic [ref=e152]:
+              - generic [ref=e154]: Location
+              - generic [ref=e155]:
+                - iframe [ref=e157]:
+                  - link "Maps" [ref=f4e7] [cursor=pointer]:
+                    - /url: about:invalid#zClosurez
+                    - text: Maps
+                    - img [ref=f4e9]
+                - generic [ref=e158]:
+                  - link "Get Directions" [ref=e159] [cursor=pointer]:
+                    - /url: https://www.google.com/maps/search/?api=1&query=Kudos%20Courts%20Complex%20SM%20Seaside%20CEBU%20CITY
+                    - img
+                    - text: Get Directions
+                  - link "Open in Google Maps" [ref=e160] [cursor=pointer]:
+                    - /url: https://www.google.com/maps/search/?api=1&query=Kudos%20Courts%20Complex%20SM%20Seaside%20CEBU%20CITY
+                    - text: Open in Google Maps
+                    - img
+            - generic [ref=e161]:
+              - generic [ref=e163]: What happens next?
+              - generic [ref=e164]:
+                - generic [ref=e165]:
+                  - img [ref=e166]
+                  - generic [ref=e168]: We'll hold the requested slots while you review.
+                - generic [ref=e169]:
+                  - img [ref=e170]
+                  - generic [ref=e173]: Owners review and confirm paid reservations.
+          - generic [ref=e174]:
+            - button "Check Availability" [active] [ref=e175]:
+              - generic [ref=e177]:
+                - paragraph [ref=e178]: Check Availability
+                - img [ref=e292]
+            - generic [ref=e181]:
+              - paragraph [ref=e183]: Select a time slot
+              - generic [ref=e184]:
+                - button "Reserve" [disabled]
+        - generic [ref=e185]:
+          - generic [ref=e186]:
+            - generic [ref=e188]: Courts
+            - generic [ref=e189]:
+              - generic [ref=e190]:
+                - generic [ref=e191]:
+                  - generic [ref=e192]: Court 1
+                  - generic [ref=e193]: Pickleball
+                - generic [ref=e195]: Pickleball
+              - generic [ref=e196]:
+                - generic [ref=e197]:
+                  - generic [ref=e198]: Court 2
+                  - generic [ref=e199]: Pickleball
+                - generic [ref=e201]: Pickleball
+          - generic [ref=e202]:
+            - generic [ref=e203]:
+              - generic [ref=e205]: Contact
+              - paragraph [ref=e207]: Contact details are not available yet.
+            - generic [ref=e208]:
+              - generic [ref=e210]: Amenities
+              - generic [ref=e212]:
+                - generic [ref=e213]: Parking
+                - generic [ref=e214]: Restrooms
+            - generic [ref=e215]:
+              - generic [ref=e217]: Reviews
+              - generic [ref=e218]:
+                - generic [ref=e219]:
+                  - generic [ref=e220]:
+                    - generic [ref=e221]: "5.0"
+                    - generic [ref=e222]:
+                      - img [ref=e223]
+                      - img [ref=e225]
+                      - img [ref=e227]
+                      - img [ref=e229]
+                      - img [ref=e231]
+                    - generic [ref=e233]: 1 review
+                  - generic [ref=e234]:
+                    - generic [ref=e235]:
+                      - generic [ref=e236]: "5"
+                      - img [ref=e237]
+                      - generic [ref=e241]: "1"
+                    - generic [ref=e242]:
+                      - generic [ref=e243]: "4"
+                      - img [ref=e244]
+                      - generic [ref=e247]: "0"
+                    - generic [ref=e248]:
+                      - generic [ref=e249]: "3"
+                      - img [ref=e250]
+                      - generic [ref=e253]: "0"
+                    - generic [ref=e254]:
+                      - generic [ref=e255]: "2"
+                      - img [ref=e256]
+                      - generic [ref=e259]: "0"
+                    - generic [ref=e260]:
+                      - generic [ref=e261]: "1"
+                      - img [ref=e262]
+                      - generic [ref=e265]: "0"
+                - button "Write a review" [ref=e267] [cursor=pointer]
+                - generic [ref=e269]:
+                  - generic [ref=e270]:
+                    - img [ref=e273]
+                    - generic [ref=e276]:
+                      - generic [ref=e277]:
+                        - generic [ref=e278]: Raphael
+                        - generic [ref=e279]: Today
+                      - generic [ref=e280]:
+                        - img [ref=e281]
+                        - img [ref=e283]
+                        - img [ref=e285]
+                        - img [ref=e287]
+                        - img [ref=e289]
+                  - paragraph [ref=e291]: Great experience!
+    - contentinfo [ref=e34]:
+      - generic [ref=e36]:
+        - generic [ref=e37]:
+          - generic [ref=e38]:
+            - link "KudosCourts KudosCourts" [ref=e39] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e40]:
+                - img "KudosCourts" [ref=e41]
+                - generic [ref=e42]: KudosCourts
+            - paragraph [ref=e43]: Every sports court in the Philippines, discoverable in seconds.
+            - link "Contact us" [ref=e44] [cursor=pointer]:
+              - /url: /contact-us
+          - generic [ref=e45]:
+            - heading "Discover" [level=3] [ref=e46]
+            - list [ref=e47]:
+              - listitem [ref=e48]:
+                - link "Browse Courts" [ref=e49] [cursor=pointer]:
+                  - /url: /courts
+              - listitem [ref=e50]:
+                - link "Cebu City Courts" [ref=e51] [cursor=pointer]:
+                  - /url: /courts/locations/cebu/cebu-city
+              - listitem [ref=e52]:
+                - link "Manila Courts" [ref=e53] [cursor=pointer]:
+                  - /url: /courts/locations/metro-manila/manila
+              - listitem [ref=e54]:
+                - link "Player Guides" [ref=e55] [cursor=pointer]:
+                  - /url: /guides
+          - generic [ref=e56]:
+            - heading "For Owners" [level=3] [ref=e57]
+            - list [ref=e58]:
+              - listitem [ref=e59]:
+                - link "List Your Venue" [ref=e60] [cursor=pointer]:
+                  - /url: /owners/get-started
+              - listitem [ref=e61]:
+                - link "Venue Dashboard" [ref=e62] [cursor=pointer]:
+                  - /url: /organization
+              - listitem [ref=e63]:
+                - link "Owner Guides" [ref=e64] [cursor=pointer]:
+                  - /url: /guides#owner-guides
+          - generic [ref=e65]:
+            - heading "Company" [level=3] [ref=e66]
+            - list [ref=e67]:
+              - listitem [ref=e68]:
+                - link "About Us" [ref=e69] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e70]:
+                - link "Contact" [ref=e71] [cursor=pointer]:
+                  - /url: /contact-us
+              - listitem [ref=e72]:
+                - link "Guides" [ref=e73] [cursor=pointer]:
+                  - /url: /guides
+              - listitem [ref=e74]:
+                - link "Blog" [ref=e75] [cursor=pointer]:
+                  - /url: /blog
+          - generic [ref=e76]:
+            - heading "Legal" [level=3] [ref=e77]
+            - list [ref=e78]:
+              - listitem [ref=e79]:
+                - link "Terms of Service" [ref=e80] [cursor=pointer]:
+                  - /url: /terms
+              - listitem [ref=e81]:
+                - link "Privacy Policy" [ref=e82] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=e83]:
+                - link "Cookie Policy" [ref=e84] [cursor=pointer]:
+                  - /url: /cookies
+        - generic [ref=e85]:
+          - paragraph [ref=e86]: © 2026 KudosCourts. All rights reserved.
+          - generic [ref=e87]:
+            - link "Facebook" [ref=e88] [cursor=pointer]:
+              - /url: https://facebook.com/kudoscourts
+            - link "Instagram" [ref=e89] [cursor=pointer]:
+              - /url: https://instagram.com/kudoscourts
+  - region "Notifications alt+T"
+  - button "Open Next.js Dev Tools" [ref=e299] [cursor=pointer]:
+    - img [ref=e300]
+  - alert [ref=e90]
+  - generic [ref=e304]:
+    - generic [ref=e306]:
+      - generic [ref=e307]:
+        - button "Select element" [ref=e310] [cursor=pointer]:
+          - img [ref=e311]
+        - generic:
+          - generic:
+            - button "Open history":
+              - generic:
+                - img
+        - generic:
+          - generic:
+            - button "Copy all history items":
+              - img
+        - button "Open more actions menu" [ref=e316] [cursor=pointer]:
+          - img [ref=e317]
+      - button "Disable React Grab" [pressed] [ref=e322] [cursor=pointer]
+    - button "Collapse toolbar" [ref=e325] [cursor=pointer]:
+      - img [ref=e326]
