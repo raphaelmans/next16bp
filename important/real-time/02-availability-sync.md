@@ -20,6 +20,8 @@ Client-side pieces:
 
 The Drizzle migration creates `availability_change_event`, but Supabase Realtime publication still needs to be enabled per environment.
 
+Realtime filter validation also requires the subscribing roles to have `SELECT` access to the table columns used in filters. For this table, both `authenticated` and `anon` need `SELECT` on `public.availability_change_event`.
+
 Run after migrating the target database:
 
 ```bash
@@ -29,6 +31,15 @@ pnpm exec dotenvx run --env-file=.env.production -- tsx scripts/enable-realtime-
 
 Expected result:
 - `public.availability_change_event` is present in `pg_publication_tables` for `supabase_realtime`
+- `authenticated` and `anon` have `SELECT` on `public.availability_change_event`
+
+If this grant is missing, Supabase Realtime can accept the `phx_join` and still emit a delayed `system` error like:
+
+```text
+invalid column for filter court_id
+```
+
+That error means the role cannot `SELECT` the filtered column, not that the column is absent.
 
 ## Payload Shape
 

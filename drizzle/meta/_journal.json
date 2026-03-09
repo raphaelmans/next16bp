@@ -330,6 +330,13 @@
       "when": 1773072000000,
       "tag": "0043_place_embedding",
       "breakpoints": true
+    },
+    {
+      "idx": 47,
+      "version": "7",
+      "when": 1773075600000,
+      "tag": "0044_availability_change_event_realtime_grants",
+      "breakpoints": true
     }
   ]
 }
