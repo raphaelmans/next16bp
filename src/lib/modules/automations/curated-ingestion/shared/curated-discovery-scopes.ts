@@ -20,8 +20,8 @@ export interface ResolvedCuratedDiscoveryScope {
 export const CURATED_DISCOVERY_SCOPES = [
   {
     sportSlug: "pickleball",
-    provinceSlug: "cebu",
-    citySlug: "cebu-city",
+    provinceSlug: "negros-oriental",
+    citySlug: "dumaguete-city",
   },
 ] as const satisfies readonly CuratedDiscoveryScopeConfig[];
 

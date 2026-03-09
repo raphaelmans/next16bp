@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCuratedLeadQueries } from "@/lib/modules/automations/curated-ingestion/shared/query-builder";
+import { buildCuratedLeadQueryPlan } from "@/lib/modules/automations/curated-ingestion/shared/query-builder";
 import { scoreDiscoverySearchResult } from "@/lib/modules/automations/curated-ingestion/shared/relevance-scoring";
 import {
   canonicalizeLeadUrl,
@@ -9,18 +9,26 @@ import {
 describe("curated lead discovery helpers", () => {
   it("builds deterministic city-first pickleball search queries", () => {
     expect(
-      buildCuratedLeadQueries({
+      buildCuratedLeadQueryPlan({
         city: "Cebu City",
         province: "Cebu",
         sportSlug: "pickleball",
       }),
-    ).toEqual([
-      "pickleball courts in Cebu Cebu City",
-      "pickleball court Cebu City Cebu",
-      "pickleball reservations Cebu City Cebu",
-      "pickleball booking Cebu City Cebu",
-      "site:facebook.com pickleball Cebu City Cebu",
-    ]);
+    ).toEqual({
+      primary: [
+        "pickleball courts in Cebu Cebu City",
+        "pickleball court Cebu City Cebu",
+        "courts in Cebu City Cebu pickleball",
+        "sports center Cebu City Cebu pickleball",
+        "pickleball club Cebu City Cebu",
+        "pickleball reservations Cebu City Cebu",
+      ],
+      fallback: [
+        "site:facebook.com pickleball Cebu City Cebu",
+        "site:instagram.com pickleball Cebu City Cebu",
+        "dink Cebu City pickleball",
+      ],
+    });
   });
 
   it("canonicalizes urls for stable state keys", () => {

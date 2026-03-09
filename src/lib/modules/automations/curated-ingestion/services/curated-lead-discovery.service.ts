@@ -19,7 +19,7 @@ import {
   resolveCuratedDiscoveryScopeOrThrow,
   resolveDefaultCuratedDiscoveryScopes,
 } from "../shared/curated-discovery-scopes";
-import { buildCuratedLeadQueries } from "../shared/query-builder";
+import { buildCuratedLeadQueryPlan } from "../shared/query-builder";
 import {
   type DiscoverySearchResult,
   scoreDiscoverySearchResult,
@@ -70,6 +70,7 @@ interface ScrapeStateSnapshot {
 const FIRECRAWL_BASE_URL = "https://api.firecrawl.dev/v2";
 const DEFAULT_LIMIT = 10;
 const DEFAULT_MAX_NEW_URLS = 25;
+const MIN_PRIMARY_QUALIFYING_LEADS = 3;
 
 function parsePositiveInt(value: string, flag: string): number {
   const parsed = Number.parseInt(value, 10);
@@ -411,82 +412,95 @@ async function main() {
       (await tryReadJsonFile<ScrapeStateSnapshot>(scrapeStatePath)) ?? {};
     const runAt = new Date().toISOString();
 
-    const queries = buildCuratedLeadQueries({
+    const queryPlan = buildCuratedLeadQueryPlan({
       city: scope.cityName,
       province: scope.provinceName,
       sportSlug: scope.sportSlug,
     });
+    const queriesRun: string[] = [];
 
     const emittedUrls: string[] = [];
     const skippedAlreadyDiscovered: string[] = [];
     const skippedAlreadyScraped: string[] = [];
     const skippedLowRelevance: Array<{ url: string; score: number }> = [];
+    let primaryQualifyingLeads = 0;
 
-    for (const query of queries) {
-      const results = await runSearch(apiKey, query, options);
-      for (const result of results) {
-        const rawUrl = normalizeString(result.url);
-        if (!isValidHttpUrl(rawUrl)) continue;
-        if (shouldSkipByDomain(rawUrl, options.domains)) continue;
+    const processQueries = async (queries: string[]) => {
+      for (const query of queries) {
+        queriesRun.push(query);
+        const results = await runSearch(apiKey, query, options);
+        for (const result of results) {
+          const rawUrl = normalizeString(result.url);
+          if (!isValidHttpUrl(rawUrl)) continue;
+          if (shouldSkipByDomain(rawUrl, options.domains)) continue;
 
-        const scoring = scoreDiscoverySearchResult(
-          {
-            url: rawUrl,
-            title: result.title,
-            description: result.description,
-          } satisfies DiscoverySearchResult,
-          {
-            city: scope.cityName,
-            province: scope.provinceName,
-            sportSlug: scope.sportSlug,
-          },
-        );
+          const scoring = scoreDiscoverySearchResult(
+            {
+              url: rawUrl,
+              title: result.title,
+              description: result.description,
+            } satisfies DiscoverySearchResult,
+            {
+              city: scope.cityName,
+              province: scope.provinceName,
+              sportSlug: scope.sportSlug,
+            },
+          );
 
-        const canonicalUrl = canonicalizeLeadUrl(rawUrl);
-        const existing = state.urls[canonicalUrl];
-        const scrapeStateEntry = scrapeState.urls?.[canonicalUrl];
+          const canonicalUrl = canonicalizeLeadUrl(rawUrl);
+          const existing = state.urls[canonicalUrl];
+          const scrapeStateEntry = scrapeState.urls?.[canonicalUrl];
 
-        state.urls[canonicalUrl] = {
-          canonicalUrl,
-          latestUrl: rawUrl,
-          firstDiscoveredAt: existing?.firstDiscoveredAt ?? runAt,
-          lastDiscoveredAt: runAt,
-          sourceQuery: query,
-          title: result.title ?? existing?.title ?? null,
-          snippet: result.description ?? existing?.snippet ?? null,
-          domain: (() => {
-            try {
-              return new URL(rawUrl).hostname.replace(/^www\./, "");
-            } catch {
-              return existing?.domain ?? null;
-            }
-          })(),
-          relevanceScore: scoring.score,
-          handedOffToScrapeAt: existing?.handedOffToScrapeAt ?? null,
-        };
+          state.urls[canonicalUrl] = {
+            canonicalUrl,
+            latestUrl: rawUrl,
+            firstDiscoveredAt: existing?.firstDiscoveredAt ?? runAt,
+            lastDiscoveredAt: runAt,
+            sourceQuery: query,
+            title: result.title ?? existing?.title ?? null,
+            snippet: result.description ?? existing?.snippet ?? null,
+            domain: (() => {
+              try {
+                return new URL(rawUrl).hostname.replace(/^www\./, "");
+              } catch {
+                return existing?.domain ?? null;
+              }
+            })(),
+            relevanceScore: scoring.score,
+            handedOffToScrapeAt: existing?.handedOffToScrapeAt ?? null,
+          };
 
-        if (!scoring.isLikelyVenueLead) {
-          skippedLowRelevance.push({ url: rawUrl, score: scoring.score });
-          continue;
+          if (!scoring.isLikelyVenueLead) {
+            skippedLowRelevance.push({ url: rawUrl, score: scoring.score });
+            continue;
+          }
+
+          primaryQualifyingLeads += 1;
+
+          if (existing?.handedOffToScrapeAt) {
+            skippedAlreadyDiscovered.push(rawUrl);
+            continue;
+          }
+
+          if (
+            scrapeStateEntry &&
+            (scrapeStateEntry.lastStatus === "scraped" ||
+              scrapeStateEntry.lastStatus === "no_data" ||
+              shouldSkipByRecentFailure(scrapeStateEntry, options.retryFailed))
+          ) {
+            skippedAlreadyScraped.push(rawUrl);
+            continue;
+          }
+
+          emittedUrls.push(rawUrl);
         }
-
-        if (existing?.handedOffToScrapeAt) {
-          skippedAlreadyDiscovered.push(rawUrl);
-          continue;
-        }
-
-        if (
-          scrapeStateEntry &&
-          (scrapeStateEntry.lastStatus === "scraped" ||
-            scrapeStateEntry.lastStatus === "no_data" ||
-            shouldSkipByRecentFailure(scrapeStateEntry, options.retryFailed))
-        ) {
-          skippedAlreadyScraped.push(rawUrl);
-          continue;
-        }
-
-        emittedUrls.push(rawUrl);
       }
+    };
+
+    await processQueries(queryPlan.primary);
+
+    if (primaryQualifyingLeads < MIN_PRIMARY_QUALIFYING_LEADS) {
+      await processQueries(queryPlan.fallback);
     }
 
     const uniqueEmittedUrls = Array.from(
@@ -505,7 +519,7 @@ async function main() {
       }
     }
 
-    state.queries = queries;
+    state.queries = queriesRun;
 
     const report = {
       scope: {
@@ -516,7 +530,7 @@ async function main() {
         sportSlug: scope.sportSlug,
       },
       generatedAt: runAt,
-      queries,
+      queries: queriesRun,
       emittedUrls: uniqueEmittedUrls,
       skippedAlreadyDiscovered,
       skippedAlreadyScraped,
@@ -527,7 +541,7 @@ async function main() {
     };
 
     console.log(`Scope: ${scope.provinceSlug} / ${scope.citySlug}`);
-    console.log(`Queries run: ${queries.length}`);
+    console.log(`Queries run: ${queriesRun.length}`);
     console.log(`New lead URLs: ${uniqueEmittedUrls.length}`);
     console.log(`Already discovered: ${skippedAlreadyDiscovered.length}`);
     console.log(`Already scraped: ${skippedAlreadyScraped.length}`);

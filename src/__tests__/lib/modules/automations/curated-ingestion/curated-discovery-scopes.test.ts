@@ -10,12 +10,12 @@ describe("curated discovery scopes", () => {
     const scopes = await resolveDefaultCuratedDiscoveryScopes();
 
     expect(scopes).toHaveLength(CURATED_DISCOVERY_SCOPES.length);
-    expect(scopes[0]).toEqual({
+    expect(scopes).toContainEqual({
       sportSlug: "pickleball",
-      provinceSlug: "cebu",
-      citySlug: "cebu-city",
-      provinceName: "Cebu",
-      cityName: "Cebu City",
+      provinceSlug: "negros-oriental",
+      citySlug: "dumaguete-city",
+      provinceName: "Negros Oriental",
+      cityName: "Dumaguete City",
     });
   });
 

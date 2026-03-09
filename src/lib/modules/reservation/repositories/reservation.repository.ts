@@ -128,6 +128,8 @@ export interface IReservationRepository {
       placeId?: string;
       courtId?: string;
       status?: string;
+      statuses?: string[];
+      timeBucket?: "past" | "upcoming";
       limit: number;
       offset: number;
     },
