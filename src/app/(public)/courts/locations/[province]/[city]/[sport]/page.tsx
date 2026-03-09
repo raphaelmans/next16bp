@@ -410,7 +410,7 @@ export default async function CourtsCitySportPage({
         initialLocationLabel={`${context.city.displayName}, ${context.province.displayName}`}
         locationRoutePath={canonicalPath}
         locationRouteScope="sport"
-        searchParams={searchParams}
+        searchParams={await searchParams}
       />
     </>
   );

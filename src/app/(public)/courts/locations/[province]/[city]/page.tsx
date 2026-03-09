@@ -289,7 +289,7 @@ export default async function CourtsCityPage({
         initialLocationLabel={`${city.displayName}, ${province.displayName}`}
         locationRoutePath={canonicalPath}
         locationRouteScope="city"
-        searchParams={searchParams}
+        searchParams={await searchParams}
       />
     </>
   );

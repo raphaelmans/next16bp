@@ -9,10 +9,10 @@ interface DiscoveryCourtsPageProps {
   initialLocationLabel?: string;
   locationRoutePath?: string;
   locationRouteScope?: DiscoveryLocationRouteScope;
-  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+  searchParams?: Record<string, string | string[] | undefined>;
 }
 
-export async function DiscoveryCourtsPage({
+export function DiscoveryCourtsPage({
   initialFilters,
   initialLocationLabel,
   locationRoutePath,
@@ -25,7 +25,7 @@ export async function DiscoveryCourtsPage({
       initialLocationLabel={initialLocationLabel}
       locationRoutePath={locationRoutePath}
       locationRouteScope={locationRouteScope}
-      searchParams={searchParams ? await searchParams : undefined}
+      searchParams={searchParams}
     />
   );
 }

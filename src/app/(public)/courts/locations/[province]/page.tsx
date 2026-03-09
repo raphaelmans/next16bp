@@ -252,7 +252,7 @@ export default async function CourtsProvincePage({
         initialLocationLabel={province.displayName}
         locationRoutePath={canonicalPath}
         locationRouteScope="province"
-        searchParams={searchParams}
+        searchParams={await searchParams}
       />
     </>
   );

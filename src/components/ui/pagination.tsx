@@ -3,6 +3,7 @@ import {
   ChevronRightIcon,
   MoreHorizontalIcon,
 } from "lucide-react";
+import Link from "next/link";
 import type * as React from "react";
 import { type Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -38,26 +39,54 @@ function PaginationItem({ ...props }: React.ComponentProps<"li">) {
 type PaginationLinkProps = {
   isActive?: boolean;
 } & Pick<React.ComponentProps<typeof Button>, "size"> &
-  React.ComponentProps<"a">;
+  Omit<React.ComponentProps<"a">, "href"> &
+  Partial<
+    Pick<
+      React.ComponentProps<typeof Link>,
+      "href" | "prefetch" | "replace" | "scroll"
+    >
+  >;
 
 function PaginationLink({
   className,
+  href,
   isActive,
+  prefetch,
+  replace,
+  scroll,
   size = "icon",
   ...props
 }: PaginationLinkProps) {
+  const linkClassName = cn(
+    buttonVariants({
+      variant: isActive ? "outline" : "ghost",
+      size,
+    }),
+    className,
+  );
+
+  if (href) {
+    return (
+      <Link
+        aria-current={isActive ? "page" : undefined}
+        data-slot="pagination-link"
+        data-active={isActive}
+        className={linkClassName}
+        href={href}
+        prefetch={prefetch}
+        replace={replace}
+        scroll={scroll}
+        {...props}
+      />
+    );
+  }
+
   return (
     <a
       aria-current={isActive ? "page" : undefined}
       data-slot="pagination-link"
       data-active={isActive}
-      className={cn(
-        buttonVariants({
-          variant: isActive ? "outline" : "ghost",
-          size,
-        }),
-        className,
-      )}
+      className={linkClassName}
       {...props}
     />
   );

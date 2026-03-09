@@ -30,6 +30,6 @@ type CourtsPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-export default function CourtsPage({ searchParams }: CourtsPageProps) {
-  return <DiscoveryCourtsPage searchParams={searchParams} />;
+export default async function CourtsPage({ searchParams }: CourtsPageProps) {
+  return <DiscoveryCourtsPage searchParams={await searchParams} />;
 }

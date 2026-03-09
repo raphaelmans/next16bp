@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Suspense,
   useCallback,
@@ -150,6 +151,8 @@ function CourtsPageContent({
 }: CourtsPageContentProps) {
   const { isSearchNavigationPending, finishSearchNavigation } =
     useSearchNavigationProgress();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const { data: sports = [] } = useQueryDiscoverySports();
   const filters = useModDiscoveryFilters({
     initialFilters,
@@ -481,12 +484,21 @@ function CourtsPageContent({
     [filters, queueResultsScroll],
   );
 
-  const handlePageChange = useCallback(
+  const buildPaginationHref = useCallback(
     (nextPage: number) => {
-      queueResultsScroll();
-      filters.setPage(nextPage);
+      const nextSearchParams = new URLSearchParams(searchParams.toString());
+
+      if (nextPage <= 1) {
+        nextSearchParams.delete("page");
+      } else {
+        nextSearchParams.set("page", String(nextPage));
+      }
+
+      const queryString = nextSearchParams.toString();
+
+      return queryString ? `${pathname}?${queryString}` : pathname;
     },
-    [filters, queueResultsScroll],
+    [pathname, searchParams],
   );
 
   const filterProps = {
@@ -603,7 +615,10 @@ function CourtsPageContent({
                   <PaginationContent>
                     <PaginationItem>
                       <PaginationPrevious
-                        onClick={() => handlePageChange(Math.max(1, page - 1))}
+                        href={buildPaginationHref(Math.max(1, page - 1))}
+                        scroll={false}
+                        aria-disabled={page === 1}
+                        onClick={queueResultsScroll}
                         className={
                           page === 1
                             ? "pointer-events-none opacity-50"
@@ -615,7 +630,9 @@ function CourtsPageContent({
                       item.type === "page" ? (
                         <PaginationItem key={`page-${item.page}`}>
                           <PaginationLink
-                            onClick={() => handlePageChange(item.page)}
+                            href={buildPaginationHref(item.page)}
+                            scroll={false}
+                            onClick={queueResultsScroll}
                             isActive={page === item.page}
                             className="cursor-pointer"
                           >
@@ -630,9 +647,12 @@ function CourtsPageContent({
                     )}
                     <PaginationItem>
                       <PaginationNext
-                        onClick={() =>
-                          handlePageChange(Math.min(totalPages, page + 1))
-                        }
+                        href={buildPaginationHref(
+                          Math.min(totalPages, page + 1),
+                        )}
+                        scroll={false}
+                        aria-disabled={page === totalPages}
+                        onClick={queueResultsScroll}
                         className={
                           page === totalPages
                             ? "pointer-events-none opacity-50"
