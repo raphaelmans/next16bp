@@ -8,12 +8,12 @@ import {
 import { getZonedDayRangeForInstant, toUtcISOString } from "@/common/time-zone";
 import { parseDayKeyToDate } from "@/features/discovery/helpers";
 
-type DiscoveryCourtRangePrefetchInput = ReturnType<
+type DiscoveryCourtRangePrefetchInput = Parameters<
   typeof normalizeAvailabilityCourtRangeInput
->;
-type DiscoveryPlaceSportRangePrefetchInput = ReturnType<
+>[0];
+type DiscoveryPlaceSportRangePrefetchInput = Parameters<
   typeof normalizeAvailabilityPlaceSportRangeInput
->;
+>[0];
 
 type DiscoveryPrefetchUtils = {
   availability: {

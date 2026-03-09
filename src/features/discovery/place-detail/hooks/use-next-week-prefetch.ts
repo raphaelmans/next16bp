@@ -13,12 +13,12 @@ import {
 } from "@/features/discovery/helpers";
 import { getWeekGridQueryWindow } from "@/features/discovery/place-detail/helpers/week-grid-query-window";
 
-type DiscoveryCourtRangePrefetchInput = ReturnType<
+type DiscoveryCourtRangePrefetchInput = Parameters<
   typeof normalizeAvailabilityCourtRangeInput
->;
-type DiscoveryPlaceSportRangePrefetchInput = ReturnType<
+>[0];
+type DiscoveryPlaceSportRangePrefetchInput = Parameters<
   typeof normalizeAvailabilityPlaceSportRangeInput
->;
+>[0];
 
 type DiscoveryPrefetchUtils = {
   availability: {
