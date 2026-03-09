@@ -732,8 +732,9 @@ export default function CourtDetailClient({
                   ) : (
                     <div className="flex flex-col gap-2">
                       <p>
-                        Something went wrong while loading availability. Please
-                        try again.
+                        {activeError.isRateLimited
+                          ? "Availability is being refreshed too often right now. Please wait a moment, then retry."
+                          : "Something went wrong while loading availability. Please try again."}
                       </p>
                       <Button
                         type="button"

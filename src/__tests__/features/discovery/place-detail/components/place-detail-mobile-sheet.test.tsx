@@ -40,6 +40,13 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     maxBookingDate: new Date("2026-04-25T00:00:00.000Z"),
     isMobileRefreshing: false,
     isMobileLoading: true,
+    activeAvailabilityError: {
+      isError: false,
+      isBookingWindowError: false,
+      isRateLimited: false,
+      refetch: vi.fn(),
+    },
+    hasAvailabilitySlots: false,
     weekDayKeys: [
       "2026-02-23",
       "2026-02-24",
@@ -80,6 +87,7 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
     isPrevWeekDisabled: false,
     isNextWeekDisabled: false,
     onGoToToday: vi.fn(),
+    onJumpToMaxDate: vi.fn(),
     ...overrides,
   };
 }

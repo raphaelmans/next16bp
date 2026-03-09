@@ -25,6 +25,7 @@ type TimeRangeSelection = {
 type ActiveAvailabilityError = {
   isError: boolean;
   isBookingWindowError: boolean;
+  isRateLimited: boolean;
   refetch: () => void;
 };
 
@@ -60,6 +61,7 @@ type PlaceDetailAvailabilityDesktopProps = {
   placeTimeZone: string;
   onGoToToday: () => void;
   activeAvailabilityError: ActiveAvailabilityError;
+  hasAvailabilitySlots: boolean;
   onJumpToMaxDate: () => void;
   isLoadingAvailability: boolean;
   weekDayKeys: string[];
@@ -99,6 +101,7 @@ export function PlaceDetailAvailabilityDesktop({
   placeTimeZone,
   onGoToToday,
   activeAvailabilityError,
+  hasAvailabilitySlots,
   onJumpToMaxDate,
   isLoadingAvailability,
   weekDayKeys,
@@ -115,6 +118,9 @@ export function PlaceDetailAvailabilityDesktop({
   sameDayAnchorDayKey,
   cartedStartTimes,
 }: PlaceDetailAvailabilityDesktopProps) {
+  const shouldRenderAvailabilityGrid =
+    !activeAvailabilityError.isError || hasAvailabilitySlots;
+
   return (
     <div ref={availabilitySectionRef} className="scroll-mt-24 hidden lg:block">
       <Card>
@@ -247,8 +253,9 @@ export function PlaceDetailAvailabilityDesktop({
                 ) : (
                   <div className="flex flex-col gap-2">
                     <p>
-                      Something went wrong while loading availability. Please
-                      try again.
+                      {activeAvailabilityError.isRateLimited
+                        ? "Availability is being refreshed too often right now. Please wait a moment, then retry."
+                        : "Something went wrong while loading availability. Please try again."}
                     </p>
                     <Button
                       type="button"
@@ -272,7 +279,7 @@ export function PlaceDetailAvailabilityDesktop({
                 dayKeys={weekDayKeys}
                 timeZone={placeTimeZone}
               />
-            ) : (
+            ) : shouldRenderAvailabilityGrid ? (
               <AvailabilityWeekGrid
                 dayKeys={weekDayKeys}
                 slotsByDay={anyWeekSlotsByDay}
@@ -284,7 +291,7 @@ export function PlaceDetailAvailabilityDesktop({
                 maxDayKey={maxDayKey}
                 cartedStartTimes={cartedStartTimes}
               />
-            )
+            ) : null
           ) : !courtsForSport.length ? (
             <p className="py-6 text-center text-sm text-muted-foreground">
               No active courts for this sport.
@@ -298,7 +305,7 @@ export function PlaceDetailAvailabilityDesktop({
               dayKeys={weekDayKeys}
               timeZone={placeTimeZone}
             />
-          ) : (
+          ) : shouldRenderAvailabilityGrid ? (
             <AvailabilityWeekGrid
               dayKeys={weekDayKeys}
               slotsByDay={courtWeekSlotsByDay}
@@ -312,7 +319,7 @@ export function PlaceDetailAvailabilityDesktop({
               sameDayCueMode="highlight-anchor"
               cartedStartTimes={cartedStartTimes}
             />
-          )}
+          ) : null}
 
           <div className="flex justify-end">
             <Button

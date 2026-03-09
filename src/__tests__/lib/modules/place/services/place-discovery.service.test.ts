@@ -24,19 +24,33 @@ const createSummaryItem = (
 const createHarness = () => {
   const placeRepository = {
     listSummary: vi.fn(),
+    listSummarySemanticCandidates: vi.fn(),
+    listCardMetaByPlaceIds: vi.fn().mockResolvedValue([]),
   };
-  const courtRepository = {};
+  const courtRepository = {
+    findByPlaceWithSport: vi.fn().mockResolvedValue([]),
+  };
   const availabilityService = {
     getForPlaceSport: vi.fn(),
+  };
+  const placeSearchEmbeddingService = {
+    embedQuery: vi.fn(),
   };
 
   const service = new PlaceDiscoveryService(
     placeRepository as never,
     courtRepository as never,
     availabilityService as never,
+    undefined,
+    placeSearchEmbeddingService as never,
   );
 
-  return { service, placeRepository, availabilityService };
+  return {
+    service,
+    placeRepository,
+    availabilityService,
+    placeSearchEmbeddingService,
+  };
 };
 
 describe("PlaceDiscoveryService.listPlaceSummaries", () => {
@@ -131,7 +145,6 @@ describe("PlaceDiscoveryService.listPlaceSummaries", () => {
     });
 
     const result = await service.listPlaceSummaries({
-      date: "2026-03-08",
       limit: 12,
       offset: 0,
     });
@@ -141,5 +154,102 @@ describe("PlaceDiscoveryService.listPlaceSummaries", () => {
       total: 1,
     });
     expect(availabilityService.getForPlaceSport).not.toHaveBeenCalled();
+  });
+
+  it("does not use semantic search for single-token queries", async () => {
+    const { service, placeRepository, placeSearchEmbeddingService } =
+      createHarness();
+
+    placeRepository.listSummary.mockResolvedValueOnce({
+      items: [createSummaryItem({ id: "place-1", name: "Cebu Sports Hub" })],
+      total: 1,
+    });
+
+    const result = await service.listPlaceSummaries({
+      q: "Cebu",
+      limit: 12,
+      offset: 0,
+    });
+
+    expect(result.total).toBe(1);
+    expect(placeSearchEmbeddingService.embedQuery).not.toHaveBeenCalled();
+    expect(
+      placeRepository.listSummarySemanticCandidates,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("uses semantic candidates when lexical search underfills the page", async () => {
+    const { service, placeRepository, placeSearchEmbeddingService } =
+      createHarness();
+
+    placeRepository.listSummary.mockResolvedValueOnce({
+      items: [createSummaryItem({ id: "place-1", name: "Cebu Sports Hub" })],
+      total: 1,
+    });
+    placeSearchEmbeddingService.embedQuery.mockResolvedValueOnce([0.1, 0.2]);
+    placeRepository.listSummarySemanticCandidates.mockResolvedValueOnce([
+      createSummaryItem({
+        id: "place-2",
+        name: "Net and Paddle Pickleball Club",
+      }),
+      createSummaryItem({ id: "place-3", name: "HQ Pickleball Cebu" }),
+    ]);
+
+    const result = await service.listPlaceSummaries({
+      q: "cebu pickleball",
+      limit: 3,
+      offset: 0,
+    });
+
+    expect(placeSearchEmbeddingService.embedQuery).toHaveBeenCalledWith(
+      "cebu pickleball",
+    );
+    expect(placeRepository.listSummarySemanticCandidates).toHaveBeenCalledWith(
+      {
+        q: "cebu pickleball",
+        province: undefined,
+        city: undefined,
+        sportId: undefined,
+        amenities: undefined,
+        verificationTier: undefined,
+        featuredOnly: undefined,
+        limit: 6,
+        offset: 0,
+      },
+      [0.1, 0.2],
+    );
+    expect(result.items.map((item) => item.place.id)).toEqual([
+      "place-1",
+      "place-2",
+      "place-3",
+    ]);
+    expect(result.total).toBe(3);
+  });
+
+  it("deduplicates lexical and semantic overlap by place id", async () => {
+    const { service, placeRepository, placeSearchEmbeddingService } =
+      createHarness();
+
+    placeRepository.listSummary.mockResolvedValueOnce({
+      items: [createSummaryItem({ id: "place-1", name: "Net and Paddle" })],
+      total: 1,
+    });
+    placeSearchEmbeddingService.embedQuery.mockResolvedValueOnce([0.1, 0.2]);
+    placeRepository.listSummarySemanticCandidates.mockResolvedValueOnce([
+      createSummaryItem({ id: "place-1", name: "Net and Paddle" }),
+      createSummaryItem({ id: "place-2", name: "HQ Pickleball Cebu" }),
+    ]);
+
+    const result = await service.listPlaceSummaries({
+      q: "net and paddle cebu",
+      limit: 3,
+      offset: 0,
+    });
+
+    expect(result.items.map((item) => item.place.id)).toEqual([
+      "place-1",
+      "place-2",
+    ]);
+    expect(result.total).toBe(2);
   });
 });

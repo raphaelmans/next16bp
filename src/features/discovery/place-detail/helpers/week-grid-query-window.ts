@@ -51,7 +51,7 @@ export function getWeekGridQueryWindow({
     !weekDayKeys.includes(anchorDayKey) &&
     isWithinAdjacentWeek({
       selectedStartTimeIso: anchorStartTimeIso,
-      candidateDayKey: anchorDayKey,
+      candidateDayKey: selectedDayKey,
       timeZone,
     })
   ) {

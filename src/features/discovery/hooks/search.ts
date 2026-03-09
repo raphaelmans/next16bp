@@ -11,6 +11,7 @@ import {
   useFeatureMutation,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { LIVE_QUERY_OPTIONS } from "@/common/live-query-options";
 import {
   findCityBySlug,
   findCityBySlugAcrossProvinces,
@@ -106,10 +107,9 @@ export function useQueryDiscoveryAvailabilityForCourt(
     discoveryApi.queryAvailabilityGetForCourt,
     normalizedInput,
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled,
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
+      placeholderData: keepPreviousData,
     },
   );
 }
@@ -128,10 +128,9 @@ export function useQueryDiscoveryAvailabilityForCourtRange(
     discoveryApi.queryAvailabilityGetForCourtRange,
     normalizedInput,
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled,
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
+      placeholderData: keepPreviousData,
     },
   );
 }
@@ -150,10 +149,9 @@ export function useQueryDiscoveryAvailabilityForPlaceSportRange(
     discoveryApi.queryAvailabilityGetForPlaceSportRange,
     normalizedInput,
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled,
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
+      placeholderData: keepPreviousData,
     },
   );
 }

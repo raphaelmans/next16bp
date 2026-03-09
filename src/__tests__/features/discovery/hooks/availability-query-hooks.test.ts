@@ -1,5 +1,7 @@
+import { keepPreviousData } from "@tanstack/react-query";
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
+import { shouldRetryLiveQuery } from "@/common/live-query-options";
 
 const { featureQuerySpy, discoveryApi } = vi.hoisted(() => ({
   featureQuerySpy: vi.fn(),
@@ -53,10 +55,13 @@ vi.mock("@/common/clients/availability-realtime-client", () => ({
   }),
 }));
 
-import { useQueryDiscoveryAvailabilityForCourtRange } from "@/features/discovery/hooks/search";
+import {
+  useQueryDiscoveryAvailabilityForCourtRange,
+  useQueryDiscoveryAvailabilityForPlaceSportRange,
+} from "@/features/discovery/hooks/search";
 
 describe("discovery availability hooks", () => {
-  it("normalizes input and enables focus/reconnect recovery for court ranges", () => {
+  it("normalizes input and applies the live query policy for court ranges", () => {
     renderHook(() =>
       useQueryDiscoveryAvailabilityForCourtRange(
         {
@@ -88,12 +93,55 @@ describe("discovery availability hooks", () => {
           { addonId: "b-addon", quantity: 2 },
         ],
       },
-      {
+      expect.objectContaining({
         enabled: true,
         staleTime: 30_000,
-        refetchOnWindowFocus: true,
+        refetchOnWindowFocus: false,
         refetchOnReconnect: true,
+        placeholderData: keepPreviousData,
+        retry: shouldRetryLiveQuery,
+      }),
+    );
+  });
+
+  it("keeps previous place-sport-range data as placeholder during week transitions", () => {
+    renderHook(() =>
+      useQueryDiscoveryAvailabilityForPlaceSportRange(
+        {
+          placeId: " place-1 ",
+          sportId: " sport-1 ",
+          startDate: "2026-03-15T00:00:00.000Z",
+          endDate: "2026-03-22T00:00:00.000Z",
+          durationMinutes: 60,
+          includeUnavailable: true,
+          includeCourtOptions: false,
+          selectedAddons: [{ addonId: "addon-1", quantity: 1 }],
+        },
+        true,
+      ),
+    );
+
+    expect(featureQuerySpy).toHaveBeenCalledWith(
+      ["availability", "getForPlaceSportRange"],
+      discoveryApi.queryAvailabilityGetForPlaceSportRange,
+      {
+        placeId: "place-1",
+        sportId: "sport-1",
+        startDate: "2026-03-15T00:00:00.000Z",
+        endDate: "2026-03-22T00:00:00.000Z",
+        durationMinutes: 60,
+        includeUnavailable: true,
+        includeCourtOptions: false,
+        selectedAddons: [{ addonId: "addon-1", quantity: 1 }],
       },
+      expect.objectContaining({
+        enabled: true,
+        staleTime: 30_000,
+        refetchOnWindowFocus: false,
+        refetchOnReconnect: true,
+        placeholderData: keepPreviousData,
+        retry: shouldRetryLiveQuery,
+      }),
     );
   });
 });

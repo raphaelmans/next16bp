@@ -7,6 +7,7 @@ import { useMediaQuery } from "@/common/hooks/use-media-query";
 import { getZonedDayKey } from "@/common/time-zone";
 import {
   buildSlotsByDayKey,
+  getAvailabilityErrorInfo,
   getWeekDayKeys,
   getWeekStartDayKey,
   parseDayKeyToDate,
@@ -311,6 +312,15 @@ export function PlaceDetailBookingMobileSection({
     mobileCourtWeekQuery.data,
     placeTimeZone,
   ]);
+  const activeAvailabilityError = React.useMemo(() => {
+    const query =
+      selectionMode === "any" ? mobileAnyWeekQuery : mobileCourtWeekQuery;
+    return getAvailabilityErrorInfo(query.error, query.refetch);
+  }, [mobileAnyWeekQuery, mobileCourtWeekQuery, selectionMode]);
+  const hasAvailabilitySlots =
+    selectionMode === "any"
+      ? (mobileAnyWeekQuery.data?.options.length ?? 0) > 0
+      : (mobileCourtWeekQuery.data?.options.length ?? 0) > 0;
 
   const isMobileLoading =
     selectionMode === "any"
@@ -509,7 +519,6 @@ export function PlaceDetailBookingMobileSection({
     setSelectedDate,
     today,
   ]);
-
   const handleCourtRangeChange = React.useCallback(
     (range: { startTime: string; durationMinutes: number }) => {
       const resolvedRange = resolveCourtRangeAcrossWeekBoundary({
@@ -582,6 +591,9 @@ export function PlaceDetailBookingMobileSection({
     },
     [clearSelection, placeTimeZone, selectedStartTime, setSelectedDate],
   );
+  const handleJumpToMaxDate = React.useCallback(() => {
+    handleMobileCalendarJump(maxBookingDate);
+  }, [handleMobileCalendarJump, maxBookingDate]);
 
   const handleMobileSportChange = React.useCallback(
     (sportId: string) => {
@@ -634,6 +646,8 @@ export function PlaceDetailBookingMobileSection({
       maxBookingDate={maxBookingDate}
       isMobileRefreshing={isMobileRefreshing}
       isMobileLoading={isMobileLoading}
+      activeAvailabilityError={activeAvailabilityError}
+      hasAvailabilitySlots={hasAvailabilitySlots}
       weekDayKeys={weekDayKeys}
       weekSlotsByDay={mobileWeekSlotsByDay}
       todayDayKey={getZonedDayKey(today, placeTimeZone)}
@@ -660,6 +674,7 @@ export function PlaceDetailBookingMobileSection({
       isPrevWeekDisabled={isPrevWeekDisabled}
       isNextWeekDisabled={isNextWeekDisabled}
       onGoToToday={handleGoToToday}
+      onJumpToMaxDate={handleJumpToMaxDate}
     />
   );
 }

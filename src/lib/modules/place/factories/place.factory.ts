@@ -9,11 +9,13 @@ import { PlaceRepository } from "../repositories/place.repository";
 import { PlacePhotoRepository } from "../repositories/place-photo.repository";
 import { PlaceDiscoveryService } from "../services/place-discovery.service";
 import { PlaceManagementService } from "../services/place-management.service";
+import { PlaceSearchEmbeddingService } from "../services/place-search-embedding.service";
 
 let placeRepository: PlaceRepository | null = null;
 let placePhotoRepository: PlacePhotoRepository | null = null;
 let placeDiscoveryService: PlaceDiscoveryService | null = null;
 let placeManagementService: PlaceManagementService | null = null;
+let placeSearchEmbeddingService: PlaceSearchEmbeddingService | null = null;
 
 export function makePlaceRepository(): PlaceRepository {
   if (!placeRepository) {
@@ -36,9 +38,17 @@ export function makePlaceDiscoveryService(): PlaceDiscoveryService {
       makeCourtRepository(),
       makeAvailabilityService(),
       makePlaceReviewRepository(),
+      makePlaceSearchEmbeddingService(),
     );
   }
   return placeDiscoveryService;
+}
+
+export function makePlaceSearchEmbeddingService(): PlaceSearchEmbeddingService {
+  if (!placeSearchEmbeddingService) {
+    placeSearchEmbeddingService = new PlaceSearchEmbeddingService();
+  }
+  return placeSearchEmbeddingService;
 }
 
 export function makePlaceManagementService(): PlaceManagementService {

@@ -3,6 +3,7 @@ import {
   buildSlotsByDayKey,
   comparePublicVenueSort,
   filterSlotsByDayKey,
+  getAvailabilityErrorInfo,
   getPlaceVerificationDisplay,
   getPublicVenueSortBucket,
   groupSlotsByDayKey,
@@ -239,6 +240,24 @@ describe("buildSlotsByDayKey", () => {
     expect(mar6).toBeDefined();
     const bookedOnMar6 = mar6?.filter((s) => s.status === "booked") ?? [];
     expect(bookedOnMar6).toHaveLength(2);
+  });
+});
+
+describe("getAvailabilityErrorInfo", () => {
+  it("marks rate-limited errors separately from generic failures", () => {
+    const errorInfo = getAvailabilityErrorInfo(
+      {
+        kind: "rate_limited",
+        message: "Too many requests",
+      },
+      () => undefined,
+    );
+
+    expect(errorInfo).toMatchObject({
+      isError: true,
+      isBookingWindowError: false,
+      isRateLimited: true,
+    });
   });
 });
 

@@ -17,6 +17,7 @@ import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import { useFeatureQueryCache } from "@/common/feature-api-hooks";
 import { formatTimeRangeInTimeZone } from "@/common/format";
+import { LIVE_QUERY_OPTIONS } from "@/common/live-query-options";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   getReservationEnablement,
@@ -287,10 +288,8 @@ function OwnerCourtAvailabilityInner({
   );
 
   const blocksQuery = useQueryOwnerCourtBlocksForRange(blocksQueryInput, {
+    ...LIVE_QUERY_OPTIONS,
     enabled: Boolean(courtId),
-    staleTime: 30_000,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
     placeholderData: keepPreviousData,
   });
 
@@ -306,10 +305,8 @@ function OwnerCourtAvailabilityInner({
   const reservationsQuery = useQueryOwnerActiveReservationsForCourtRange(
     reservationsQueryInput,
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled: Boolean(courtId),
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
       placeholderData: keepPreviousData,
     },
   );

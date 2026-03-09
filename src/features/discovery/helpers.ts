@@ -266,6 +266,7 @@ export const getWeekDayKeys = (weekStartDayKey: string, timeZone: string) => {
 
 export type AvailabilityErrorInfo = {
   isBookingWindowError: boolean;
+  isRateLimited: boolean;
   isError: boolean;
   refetch: () => void;
 };
@@ -275,7 +276,12 @@ export const getAvailabilityErrorInfo = (
   refetch: () => void,
 ): AvailabilityErrorInfo => {
   if (!error) {
-    return { isBookingWindowError: false, isError: false, refetch };
+    return {
+      isBookingWindowError: false,
+      isRateLimited: false,
+      isError: false,
+      refetch,
+    };
   }
 
   const appError = toAppError(error);
@@ -288,14 +294,29 @@ export const getAvailabilityErrorInfo = (
       ? appError.code
       : undefined;
   if (code === "BOOKING_WINDOW_EXCEEDED") {
-    return { isBookingWindowError: true, isError: true, refetch };
+    return {
+      isBookingWindowError: true,
+      isRateLimited: false,
+      isError: true,
+      refetch,
+    };
   }
 
   if (appError.message.includes("beyond the maximum booking window")) {
-    return { isBookingWindowError: true, isError: true, refetch };
+    return {
+      isBookingWindowError: true,
+      isRateLimited: false,
+      isError: true,
+      refetch,
+    };
   }
 
-  return { isBookingWindowError: false, isError: true, refetch };
+  return {
+    isBookingWindowError: false,
+    isRateLimited: appError.kind === "rate_limited",
+    isError: true,
+    refetch,
+  };
 };
 
 export type AvailabilitySlotOption = {

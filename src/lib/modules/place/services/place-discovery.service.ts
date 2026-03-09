@@ -19,6 +19,7 @@ import type {
   PlaceSummaryMeta,
   PlaceWithDetails,
 } from "../repositories/place.repository";
+import type { IPlaceSearchEmbeddingService } from "./place-search-embedding.service";
 
 export interface PlaceDetails extends PlaceWithDetails {
   courts: CourtWithSport[];
@@ -55,6 +56,7 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
     private courtRepository: ICourtRepository,
     private availabilityService: IAvailabilityService,
     private placeReviewRepository?: PlaceReviewRepository,
+    private placeSearchEmbeddingService?: IPlaceSearchEmbeddingService,
   ) {}
 
   async getPlaceById(placeId: string): Promise<PlaceDetails> {
@@ -149,6 +151,8 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
         limit: filters.limit,
         offset: filters.offset,
       });
+
+      result = await this.mergeSemanticSearchResults(result, filters);
     }
 
     return this.enrichSummariesWithMeta(result, filters.sportId);
@@ -193,6 +197,78 @@ export class PlaceDiscoveryService implements IPlaceDiscoveryService {
         return { ...item, meta };
       }),
       total: result.total,
+    };
+  }
+
+  private shouldUseSemanticSearch(
+    filters: ListPlacesDTO,
+    result: { items: PlaceSummaryItem[]; total: number },
+  ): boolean {
+    const query = filters.q?.trim();
+    if (!query) return false;
+    if (filters.offset > 0) return false;
+    if (result.items.length >= filters.limit) return false;
+
+    const tokenCount = query
+      .split(/\s+/)
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0).length;
+
+    return tokenCount >= 2;
+  }
+
+  private async mergeSemanticSearchResults(
+    lexicalResult: { items: PlaceSummaryItem[]; total: number },
+    filters: ListPlacesDTO,
+  ): Promise<{ items: PlaceSummaryItem[]; total: number }> {
+    if (
+      !this.placeSearchEmbeddingService ||
+      !this.shouldUseSemanticSearch(filters, lexicalResult)
+    ) {
+      return lexicalResult;
+    }
+
+    const query = filters.q?.trim();
+    if (!query) {
+      return lexicalResult;
+    }
+
+    const embedding = await this.placeSearchEmbeddingService.embedQuery(query);
+    if (!embedding) {
+      return lexicalResult;
+    }
+
+    const semanticItems =
+      await this.placeRepository.listSummarySemanticCandidates(
+        {
+          q: filters.q,
+          province: filters.province,
+          city: filters.city,
+          sportId: filters.sportId,
+          amenities: filters.amenities,
+          verificationTier: filters.verificationTier,
+          featuredOnly: filters.featuredOnly,
+          limit: filters.limit * 2,
+          offset: 0,
+        },
+        embedding,
+      );
+
+    const merged = new Map(
+      lexicalResult.items.map((item) => [item.place.id, item] as const),
+    );
+
+    for (const item of semanticItems) {
+      if (merged.size >= filters.limit) break;
+      if (!merged.has(item.place.id)) {
+        merged.set(item.place.id, item);
+      }
+    }
+
+    const items = Array.from(merged.values()).slice(0, filters.limit);
+    return {
+      items,
+      total: items.length,
     };
   }
 

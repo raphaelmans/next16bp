@@ -49,6 +49,28 @@ describe("week-grid-query-window", () => {
     expect(window.endDateIso).toBe("2026-03-14T15:59:59.999Z");
   });
 
+  it("does not expand to include anchor day when visible week is beyond adjacent range", () => {
+    const window = getWeekGridQueryWindow({
+      weekDayKeys: [
+        "2026-03-22",
+        "2026-03-23",
+        "2026-03-24",
+        "2026-03-25",
+        "2026-03-26",
+        "2026-03-27",
+        "2026-03-28",
+      ],
+      selectedDayKey: "2026-03-22",
+      selectedStartTime: "2026-03-10T01:00:00.000Z",
+      timeZone: "Asia/Manila",
+      todayRangeStart: new Date("2026-03-01T00:00:00+08:00"),
+      maxBookingDate: new Date("2026-04-03T00:00:00+08:00"),
+    });
+
+    expect(window.startDateIso).toBe("2026-03-21T16:00:00.000Z");
+    expect(window.endDateIso).toBe("2026-03-28T15:59:59.999Z");
+  });
+
   it("builds summary window through the day that contains selection end", () => {
     const window = getSelectionSummaryQueryWindow({
       selectedStartTime: "2026-03-06T14:00:00.000Z", // 10:00 PM PHT

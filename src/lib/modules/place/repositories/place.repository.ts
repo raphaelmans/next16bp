@@ -2,6 +2,7 @@ import {
   and,
   asc,
   avg,
+  cosineDistance,
   count,
   desc,
   eq,
@@ -30,6 +31,7 @@ import {
   place,
   placeAmenity,
   placeContactDetail,
+  placeEmbedding,
   placePhoto,
   placeReview,
   placeVerification,
@@ -196,6 +198,24 @@ export interface IPlaceRepository {
     },
     ctx?: RequestContext,
   ): Promise<{ items: PlaceSummaryItem[]; total: number }>;
+  listSummarySemanticCandidates(
+    filters: {
+      q?: string;
+      province?: string;
+      city?: string;
+      sportId?: string;
+      amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
+      featuredOnly?: boolean;
+      limit: number;
+      offset: number;
+    },
+    queryEmbedding: number[],
+    ctx?: RequestContext,
+  ): Promise<PlaceSummaryItem[]>;
   listCardMediaByPlaceIds(
     placeIds: string[],
     ctx?: RequestContext,
@@ -956,6 +976,100 @@ export class PlaceRepository implements IPlaceRepository {
       })),
       total,
     };
+  }
+
+  async listSummarySemanticCandidates(
+    filters: {
+      q?: string;
+      province?: string;
+      city?: string;
+      sportId?: string;
+      amenities?: string[];
+      verificationTier?:
+        | "verified_reservable"
+        | "curated"
+        | "unverified_reservable";
+      featuredOnly?: boolean;
+      limit: number;
+      offset: number;
+    },
+    queryEmbedding: number[],
+    ctx?: RequestContext,
+  ): Promise<PlaceSummaryItem[]> {
+    const client = this.getClient(ctx);
+    const semanticLimit = Math.max(filters.limit, 1);
+    const semanticDistance = cosineDistance(
+      placeEmbedding.embedding,
+      queryEmbedding,
+    );
+
+    const conditions = [
+      eq(place.isActive, true),
+      eq(placeEmbedding.purpose, "dedupe"),
+      eq(placeEmbedding.model, "text-embedding-3-small"),
+    ];
+
+    if (filters.province) {
+      conditions.push(ilike(place.province, filters.province));
+    }
+
+    if (filters.city) {
+      conditions.push(ilike(place.city, filters.city));
+    }
+
+    if (filters.verificationTier === "verified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+    }
+
+    if (filters.verificationTier === "curated") {
+      conditions.push(eq(place.placeType, "CURATED"));
+    }
+
+    if (filters.verificationTier === "unverified_reservable") {
+      conditions.push(eq(place.placeType, "RESERVABLE"));
+    }
+
+    if (filters.featuredOnly) {
+      conditions.push(sql`${place.featuredRank} > 0`);
+    }
+
+    const rows = await client
+      .select({
+        id: place.id,
+        slug: place.slug,
+        name: place.name,
+        address: place.address,
+        city: place.city,
+        province: place.province,
+        timeZone: place.timeZone,
+        latitude: place.latitude,
+        longitude: place.longitude,
+        placeType: place.placeType,
+        featuredRank: place.featuredRank,
+        provinceRank: place.provinceRank,
+      })
+      .from(placeEmbedding)
+      .innerJoin(place, eq(place.id, placeEmbedding.placeId))
+      .where(and(...conditions))
+      .orderBy(semanticDistance, asc(place.name))
+      .limit(semanticLimit);
+
+    return rows.map((row) => ({
+      place: {
+        id: row.id,
+        slug: row.slug,
+        name: row.name,
+        address: row.address,
+        city: row.city,
+        province: row.province,
+        timeZone: row.timeZone,
+        latitude: row.latitude ?? null,
+        longitude: row.longitude ?? null,
+        placeType: row.placeType,
+        featuredRank: row.featuredRank ?? null,
+        provinceRank: row.provinceRank ?? null,
+      },
+    }));
   }
 
   async listCardMediaByPlaceIds(

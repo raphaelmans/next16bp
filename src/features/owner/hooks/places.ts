@@ -98,6 +98,7 @@ export interface OwnerPlace {
   name: string;
   address: string;
   city: string;
+  timeZone: string;
   coverImageUrl?: string;
   courtCount: number;
   sports: OwnerPlaceSport[];
@@ -112,6 +113,7 @@ type OwnerPlaceBase = {
   name: string;
   address: string;
   city: string;
+  timeZone?: string | null;
   isActive: boolean;
 };
 
@@ -202,6 +204,7 @@ const mapOwnerPlace = (
   name: place.name,
   address: place.address,
   city: place.city,
+  timeZone: place.timeZone ?? DEFAULT_TIME_ZONE,
   coverImageUrl: undefined,
   courtCount: courts.length,
   sports: mapSports(courts),
@@ -505,11 +508,14 @@ export function useQueryOwnerPlaceById(
 
   const data = useMemo(() => {
     if (!query.data) return undefined;
+    const placeWithTimeZone = query.data.place as typeof query.data.place & {
+      timeZone?: string | null;
+    };
     return {
       ...query.data,
       place: {
-        ...query.data.place,
-        timeZone: DEFAULT_TIME_ZONE,
+        ...placeWithTimeZone,
+        timeZone: placeWithTimeZone.timeZone ?? DEFAULT_TIME_ZONE,
       },
     };
   }, [query.data]);

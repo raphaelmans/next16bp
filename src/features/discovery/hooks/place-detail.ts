@@ -1,11 +1,13 @@
 "use client";
 
+import { keepPreviousData } from "@tanstack/react-query";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   createFeatureQueryOptions,
   useFeatureQueries,
   useFeatureQuery,
 } from "@/common/feature-api-hooks";
+import { LIVE_QUERY_OPTIONS } from "@/common/live-query-options";
 import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   normalizeAvailabilityCourtDayInput,
@@ -86,7 +88,11 @@ export function useModAvailableSlots({
       date: dateIso ?? "",
       durationMinutes: DEFAULT_DURATION_MINUTES,
     },
-    { enabled: !!courtId && !!dateIso },
+    {
+      ...LIVE_QUERY_OPTIONS,
+      enabled: !!courtId && !!dateIso,
+      placeholderData: keepPreviousData,
+    },
   );
 
   const options = query.data?.options ?? [];
@@ -584,16 +590,14 @@ export function useModPlaceAvailability({
       selectedAddons,
     }),
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled:
         !!courtId &&
         !!date &&
         safeDuration > 0 &&
         mode === "court" &&
         !!place?.id,
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      placeholderData: (prev) => prev,
+      placeholderData: keepPreviousData,
     },
   );
   useModDiscoveryAvailabilityRealtimeSync({
@@ -625,16 +629,14 @@ export function useModPlaceAvailability({
       selectedAddons,
     }),
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled:
         !!place?.id &&
         !!sportId &&
         !!date &&
         safeDuration > 0 &&
         mode === "any",
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
-      placeholderData: (prev) => prev,
+      placeholderData: keepPreviousData,
     },
   );
   useModDiscoveryAvailabilityRealtimeSync({

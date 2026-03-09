@@ -312,6 +312,10 @@ export function PlaceDetailBookingDesktopSection({
         : courtWeekAvailabilityQuery;
     return getAvailabilityErrorInfo(query.error, query.refetch);
   }, [anyWeekAvailabilityQuery, courtWeekAvailabilityQuery, selectionMode]);
+  const hasAvailabilitySlots =
+    selectionMode === "any"
+      ? (anyWeekAvailabilityQuery.data?.options.length ?? 0) > 0
+      : (courtWeekAvailabilityQuery.data?.options.length ?? 0) > 0;
 
   const isLoadingAvailability =
     selectionMode === "any"
@@ -548,6 +552,7 @@ export function PlaceDetailBookingDesktopSection({
       placeTimeZone={placeTimeZone}
       onGoToToday={handleGoToToday}
       activeAvailabilityError={activeAvailabilityError}
+      hasAvailabilitySlots={hasAvailabilitySlots}
       onJumpToMaxDate={handleJumpToMaxDate}
       isLoadingAvailability={isLoadingAvailability}
       weekDayKeys={weekDayKeys}

@@ -1,7 +1,13 @@
 "use client";
 
 import { addMinutes } from "date-fns";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import {
+  AlertTriangle,
+  ChevronDown,
+  ChevronUp,
+  RefreshCw,
+  X,
+} from "lucide-react";
 import * as React from "react";
 import {
   formatCurrency,
@@ -15,6 +21,7 @@ import {
   type TimeSlot,
   WeekNavigator,
 } from "@/components/kudos";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import type { BookingCartItem } from "@/features/discovery/place-detail/stores/booking-cart-store";
@@ -60,6 +67,13 @@ type PlaceDetailMobileSheetProps = {
   maxBookingDate: Date;
   isMobileRefreshing: boolean;
   isMobileLoading: boolean;
+  activeAvailabilityError: {
+    isError: boolean;
+    isBookingWindowError: boolean;
+    isRateLimited: boolean;
+    refetch: () => void;
+  };
+  hasAvailabilitySlots: boolean;
   weekDayKeys: string[];
   weekSlotsByDay: Map<string, TimeSlot[]>;
   todayDayKey: string;
@@ -86,6 +100,7 @@ type PlaceDetailMobileSheetProps = {
   isPrevWeekDisabled: boolean;
   isNextWeekDisabled: boolean;
   onGoToToday: () => void;
+  onJumpToMaxDate: () => void;
 };
 
 export function PlaceDetailMobileSheet({
@@ -106,6 +121,8 @@ export function PlaceDetailMobileSheet({
   maxBookingDate,
   isMobileRefreshing,
   isMobileLoading,
+  activeAvailabilityError,
+  hasAvailabilitySlots,
   weekDayKeys,
   weekSlotsByDay,
   todayDayKey,
@@ -132,6 +149,7 @@ export function PlaceDetailMobileSheet({
   isPrevWeekDisabled,
   isNextWeekDisabled,
   onGoToToday,
+  onJumpToMaxDate,
 }: PlaceDetailMobileSheetProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const cartItemCount = cartItems.length;
@@ -186,6 +204,8 @@ export function PlaceDetailMobileSheet({
     if (!hasCartItems) return;
     setMobileFlowStep("review");
   }, [hasCartItems]);
+  const shouldRenderAvailabilityGrid =
+    !activeAvailabilityError.isError || hasAvailabilitySlots;
 
   if (!showBooking) {
     return null;
@@ -363,6 +383,47 @@ export function PlaceDetailMobileSheet({
                 ref={scrollRef}
                 className="min-h-0 flex-1 overflow-y-auto px-5 pb-2"
               >
+                {activeAvailabilityError.isError && (
+                  <Alert variant="destructive" className="mb-3 border-dashed">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>
+                      {activeAvailabilityError.isBookingWindowError
+                        ? "Date beyond booking window"
+                        : "Unable to load availability"}
+                    </AlertTitle>
+                    <AlertDescription className="space-y-3">
+                      {activeAvailabilityError.isBookingWindowError ? (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="w-fit"
+                          onClick={onJumpToMaxDate}
+                        >
+                          Jump to the latest available date
+                        </Button>
+                      ) : (
+                        <div className="flex flex-col gap-2">
+                          <p>
+                            {activeAvailabilityError.isRateLimited
+                              ? "Availability is being refreshed too often right now. Please wait a moment, then retry."
+                              : "Something went wrong while loading availability. Please try again."}
+                          </p>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="w-fit"
+                            onClick={() => activeAvailabilityError.refetch()}
+                          >
+                            <RefreshCw className="mr-2 h-4 w-4" />
+                            Retry
+                          </Button>
+                        </div>
+                      )}
+                    </AlertDescription>
+                  </Alert>
+                )}
                 {isMobileRefreshing && (
                   <div className="mb-2 flex justify-center">
                     <Spinner className="h-4 w-4" />
@@ -370,7 +431,7 @@ export function PlaceDetailMobileSheet({
                 )}
                 {isMobileLoading ? (
                   <MobileWeekGridSkeleton />
-                ) : (
+                ) : shouldRenderAvailabilityGrid ? (
                   <MobileWeekGrid
                     dayKeys={weekDayKeys}
                     slotsByDay={weekSlotsByDay}
@@ -386,7 +447,7 @@ export function PlaceDetailMobileSheet({
                     maxDayKey={maxDayKey}
                     cartedStartTimes={cartedStartTimes}
                   />
-                )}
+                ) : null}
               </div>
             </>
           )}

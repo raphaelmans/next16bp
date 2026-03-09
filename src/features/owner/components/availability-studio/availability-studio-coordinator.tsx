@@ -18,6 +18,7 @@ import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import { useFeatureQueryCache } from "@/common/feature-api-hooks";
 import { formatTimeRangeInTimeZone } from "@/common/format";
+import { LIVE_QUERY_OPTIONS } from "@/common/live-query-options";
 import { DEFAULT_TIME_ZONE } from "@/common/location-defaults";
 import {
   getZonedDayKey,
@@ -121,6 +122,7 @@ import {
   useQueryOwnerImportJob,
   useQueryOwnerImportRows,
   useQueryOwnerOrganization,
+  useQueryOwnerPlaceById,
   useQueryOwnerPlaces,
 } from "@/features/owner/hooks";
 
@@ -153,10 +155,14 @@ function OwnerAvailabilityStudioInner() {
   const { data: places = [], isLoading: placesLoading } = useQueryOwnerPlaces(
     organization?.id ?? null,
   );
+  const { data: placeData } = useQueryOwnerPlaceById(
+    { placeId },
+    { enabled: !!placeId },
+  );
   const { data: courts = [], isLoading: courtsLoading } =
     useQueryOwnerCourtsByPlace(placeId);
 
-  const placeTimeZone = DEFAULT_TIME_ZONE;
+  const placeTimeZone = placeData?.place.timeZone ?? DEFAULT_TIME_ZONE;
   const selectedCourt = React.useMemo(
     () => courts.find((court) => court.id === courtId),
     [courtId, courts],
@@ -341,10 +347,8 @@ function OwnerAvailabilityStudioInner() {
   );
 
   const blocksQuery = useQueryOwnerCourtBlocksForRange(blocksQueryInput, {
+    ...LIVE_QUERY_OPTIONS,
     enabled: Boolean(courtId),
-    staleTime: 30_000,
-    refetchOnWindowFocus: true,
-    refetchOnReconnect: true,
     placeholderData: keepPreviousData,
   });
 
@@ -360,10 +364,8 @@ function OwnerAvailabilityStudioInner() {
   const reservationsQuery = useQueryOwnerActiveReservationsForCourtRange(
     reservationsQueryInput,
     {
+      ...LIVE_QUERY_OPTIONS,
       enabled: Boolean(courtId),
-      staleTime: 30_000,
-      refetchOnWindowFocus: true,
-      refetchOnReconnect: true,
       placeholderData: keepPreviousData,
     },
   );
