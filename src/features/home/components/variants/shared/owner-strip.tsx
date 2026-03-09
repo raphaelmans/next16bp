@@ -32,7 +32,7 @@ function BoldAthleticOwnerStrip() {
             variant="secondary"
             className="rounded-lg font-heading font-semibold"
           >
-            <Link href={appRoutes.listYourVenue.base}>
+            <Link href={appRoutes.ownersGetStarted.base}>
               List Your Venue
               <ArrowRight className="ml-2 h-4 w-4" />
             </Link>
@@ -69,7 +69,7 @@ function CleanMinimalOwnerStrip() {
               </Link>
             </Button>
             <Button asChild className="rounded-xl font-heading font-semibold">
-              <Link href={appRoutes.listYourVenue.base}>
+              <Link href={appRoutes.ownersGetStarted.base}>
                 List Your Venue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>
@@ -97,7 +97,7 @@ function WarmCommunityOwnerStrip() {
               </p>
             </div>
             <Button asChild className="rounded-xl font-heading font-semibold">
-              <Link href={appRoutes.listYourVenue.base}>
+              <Link href={appRoutes.ownersGetStarted.base}>
                 List Your Venue
                 <ArrowRight className="ml-2 h-4 w-4" />
               </Link>

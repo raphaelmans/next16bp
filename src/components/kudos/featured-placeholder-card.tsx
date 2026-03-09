@@ -17,7 +17,9 @@ export function FeaturedPlaceholderCard() {
         more bookings.
       </p>
       <Button asChild variant="default" size="sm" className="mt-4">
-        <Link href={appRoutes.listYourVenue.base}>List Your Venue — Free</Link>
+        <Link href={appRoutes.ownersGetStarted.base}>
+          List Your Venue — Free
+        </Link>
       </Button>
     </div>
   );

@@ -74,8 +74,33 @@ const nextConfig: NextConfig = {
         permanent: true,
       },
       {
+        source: "/list-your-venue",
+        destination: "/owners/get-started",
+        permanent: true,
+      },
+      {
+        source: "/get-started",
+        destination: "/owners/get-started",
+        permanent: true,
+      },
+      {
         source: "/contact",
         destination: "/contact-us",
+        permanent: true,
+      },
+      {
+        source: "/courts/:id/schedule",
+        destination: "/courts/:id",
+        permanent: true,
+      },
+      {
+        source: "/venues/:placeId/schedule",
+        destination: "/venues/:placeId",
+        permanent: true,
+      },
+      {
+        source: "/places/:placeId/schedule",
+        destination: "/venues/:placeId",
         permanent: true,
       },
     ];
@@ -118,12 +143,7 @@ const nextConfig: NextConfig = {
   },
   async rewrites() {
     return {
-      afterFiles: [
-        {
-          source: "/get-started",
-          destination: "/owners/get-started",
-        },
-      ],
+      afterFiles: [],
       fallback: [
         {
           source: "/:orgSlug([a-z0-9-]{1,100})",

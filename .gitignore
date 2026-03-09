@@ -49,3 +49,5 @@ next-env.d.ts
 # spec-gen analysis artifacts
 .spec-gen/
 .env*.local
+
+.playwright-cli/

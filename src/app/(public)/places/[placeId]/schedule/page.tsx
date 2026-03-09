@@ -9,5 +9,5 @@ export default async function PlaceScheduleRoutePage({
   params,
 }: PlaceScheduleRoutePageProps) {
   const { placeId } = await params;
-  redirect(appRoutes.courts.detail(placeId));
+  redirect(appRoutes.places.detail(placeId));
 }

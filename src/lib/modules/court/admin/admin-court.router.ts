@@ -28,6 +28,19 @@ function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
   return rest;
 }
 
+async function getAdminPlaceRevalidationContext(
+  adminUserId: string,
+  placeId: string,
+) {
+  const service = makeAdminCourtService();
+  const existing = await service.getPlaceById(adminUserId, { placeId });
+
+  return {
+    service,
+    existing,
+  };
+}
+
 export const adminCourtRouter = router({
   /**
    * Create a new curated place
@@ -72,10 +85,15 @@ export const adminCourtRouter = router({
   uploadPhoto: adminRateLimitedProcedure("mutation")
     .input(UploadCourtPhotoSchema)
     .mutation(async ({ input, ctx }) => {
-      const service = makeAdminCourtService();
+      const { service, existing } = await getAdminPlaceRevalidationContext(
+        ctx.userId,
+        input.placeId,
+      );
       const photo = await service.uploadPhoto(ctx.userId, input);
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: existing.place.slug,
+        requestId: ctx.requestId,
       });
       return photo;
     }),
@@ -86,10 +104,15 @@ export const adminCourtRouter = router({
   removePhoto: adminProcedure
     .input(RemoveCourtPhotoSchema)
     .mutation(async ({ input, ctx }) => {
-      const service = makeAdminCourtService();
+      const { service, existing } = await getAdminPlaceRevalidationContext(
+        ctx.userId,
+        input.placeId,
+      );
       await service.removePhoto(ctx.userId, input);
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: existing.place.slug,
+        requestId: ctx.requestId,
       });
       return { success: true };
     }),
@@ -101,18 +124,27 @@ export const adminCourtRouter = router({
   update: adminProcedure
     .input(AdminUpdateCourtSchema)
     .mutation(async ({ input, ctx }) => {
-      const service = makeAdminCourtService();
+      const { service, existing } = await getAdminPlaceRevalidationContext(
+        ctx.userId,
+        input.placeId,
+      );
       const previousFeaturedRank =
         input.featuredRank === undefined
           ? undefined
-          : (
-              await service.getPlaceById(ctx.userId, {
-                placeId: input.placeId,
-              })
-            ).place.featuredRank;
+          : existing.place.featuredRank;
       const updated = await service.updatePlace(ctx.userId, input);
       await revalidatePublicPlaceDetailPaths({
-        placeId: input.placeId,
+        placeId: updated.id,
+        placeSlug: updated.slug ?? existing.place.slug,
+        previousLocation: {
+          province: existing.place.province,
+          city: existing.place.city,
+        },
+        nextLocation: {
+          province: updated.province,
+          city: updated.city,
+        },
+        requestId: ctx.requestId,
       });
       if (
         previousFeaturedRank !== undefined &&
@@ -138,6 +170,7 @@ export const adminCourtRouter = router({
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
         placeSlug: existing.place.slug,
+        requestId: ctx.requestId,
       });
       return { success: true };
     }),
@@ -157,6 +190,8 @@ export const adminCourtRouter = router({
       );
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: result.slug,
+        requestId: ctx.requestId,
       });
       return result;
     }),
@@ -172,6 +207,8 @@ export const adminCourtRouter = router({
       const result = await service.activatePlace(ctx.userId, input.placeId);
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: result.slug,
+        requestId: ctx.requestId,
       });
       return result;
     }),
@@ -190,6 +227,8 @@ export const adminCourtRouter = router({
       );
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: result.slug,
+        requestId: ctx.requestId,
       });
       return result;
     }),
@@ -205,6 +244,8 @@ export const adminCourtRouter = router({
       const result = await service.recuratePlace(ctx.userId, input);
       await revalidatePublicPlaceDetailPaths({
         placeId: input.placeId,
+        placeSlug: result.slug,
+        requestId: ctx.requestId,
       });
       return result;
     }),
