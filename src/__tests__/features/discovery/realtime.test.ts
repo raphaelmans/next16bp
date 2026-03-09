@@ -1,5 +1,5 @@
 import { renderHook } from "@testing-library/react";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const {
   setQueryDataMock,
@@ -39,6 +39,10 @@ import {
 } from "@/features/discovery/realtime";
 
 describe("discovery realtime sync", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it("patchCourtAvailabilityResult updates matching court slots", () => {
     const next = patchCourtAvailabilityResult(
       {
@@ -123,5 +127,70 @@ describe("discovery realtime sync", () => {
     });
 
     expect(invalidateQueriesMock).toHaveBeenCalled();
+  });
+
+  it("does not invalidate on the initial realtime subscribe status", () => {
+    let onStatusChange:
+      | ((
+          status: "SUBSCRIBED" | "TIMED_OUT" | "CLOSED" | "CHANNEL_ERROR",
+        ) => void)
+      | undefined;
+    subscribeMock.mockImplementation(
+      (input: { onStatusChange?: typeof onStatusChange }) => {
+        onStatusChange = input.onStatusChange;
+        return { unsubscribe: unsubscribeMock };
+      },
+    );
+
+    renderHook(() =>
+      useModDiscoveryAvailabilityRealtimeSync({
+        enabled: true,
+        courtRangeInput: {
+          courtId: "court-1",
+          startDate: "2026-03-07T00:00:00.000Z",
+          endDate: "2026-03-08T00:00:00.000Z",
+          durationMinutes: 60,
+          includeUnavailable: true,
+        },
+      }),
+    );
+
+    onStatusChange?.("SUBSCRIBED");
+
+    expect(invalidateQueriesMock).not.toHaveBeenCalled();
+  });
+
+  it("invalidates once when realtime reconnects after a channel error", () => {
+    let onStatusChange:
+      | ((
+          status: "SUBSCRIBED" | "TIMED_OUT" | "CLOSED" | "CHANNEL_ERROR",
+        ) => void)
+      | undefined;
+    subscribeMock.mockImplementation(
+      (input: { onStatusChange?: typeof onStatusChange }) => {
+        onStatusChange = input.onStatusChange;
+        return { unsubscribe: unsubscribeMock };
+      },
+    );
+
+    renderHook(() =>
+      useModDiscoveryAvailabilityRealtimeSync({
+        enabled: true,
+        courtRangeInput: {
+          courtId: "court-1",
+          startDate: "2026-03-07T00:00:00.000Z",
+          endDate: "2026-03-08T00:00:00.000Z",
+          durationMinutes: 60,
+          includeUnavailable: true,
+        },
+      }),
+    );
+
+    onStatusChange?.("SUBSCRIBED");
+    onStatusChange?.("CHANNEL_ERROR");
+    onStatusChange?.("SUBSCRIBED");
+    onStatusChange?.("SUBSCRIBED");
+
+    expect(invalidateQueriesMock).toHaveBeenCalledTimes(1);
   });
 });

@@ -6,6 +6,7 @@ import { produce } from "immer";
 import { useEffect } from "react";
 import {
   type AvailabilityChangeEventRow,
+  type AvailabilityRealtimeConnectionStatus,
   getAvailabilityRealtimeClient,
 } from "@/common/clients/availability-realtime-client";
 import {
@@ -44,6 +45,11 @@ const rangesOverlap = (
   startB: string,
   endB: string,
 ) => new Date(startA) < new Date(endB) && new Date(endA) > new Date(startB);
+
+const isReconnectErrorStatus = (
+  status: AvailabilityRealtimeConnectionStatus,
+): boolean =>
+  status === "TIMED_OUT" || status === "CLOSED" || status === "CHANNEL_ERROR";
 
 export const patchCourtAvailabilityResult = (
   current: AvailabilityResultLike | undefined,
@@ -149,6 +155,47 @@ export function useModDiscoveryAvailabilityRealtimeSync(options: {
       options.placeSportDayInput?.placeId ??
       options.placeSportRangeInput?.placeId;
 
+    const invalidateActiveQueries = () => {
+      if (options.courtDayInput) {
+        const normalized = normalizeAvailabilityCourtDayInput(
+          options.courtDayInput,
+        );
+        void queryClient.invalidateQueries({
+          queryKey: availabilityQueryKeys.courtDay(normalized),
+        });
+      }
+
+      if (options.courtRangeInput) {
+        const normalized = normalizeAvailabilityCourtRangeInput(
+          options.courtRangeInput,
+        );
+        void queryClient.invalidateQueries({
+          queryKey: availabilityQueryKeys.courtRange(normalized),
+        });
+      }
+
+      if (options.placeSportDayInput) {
+        const normalized = normalizeAvailabilityPlaceSportDayInput(
+          options.placeSportDayInput,
+        );
+        void queryClient.invalidateQueries({
+          queryKey: availabilityQueryKeys.placeSportDay(normalized),
+        });
+      }
+
+      if (options.placeSportRangeInput) {
+        const normalized = normalizeAvailabilityPlaceSportRangeInput(
+          options.placeSportRangeInput,
+        );
+        void queryClient.invalidateQueries({
+          queryKey: availabilityQueryKeys.placeSportRange(normalized),
+        });
+      }
+    };
+
+    let hasSeenInitialSubscribe = false;
+    let shouldResyncOnSubscribe = false;
+
     const subscription =
       availabilityRealtimeClient.subscribeToAvailabilityChangeEvents({
         courtId,
@@ -243,6 +290,27 @@ export function useModDiscoveryAvailabilityRealtimeSync(options: {
                 queryKey: availabilityQueryKeys.placeSportRange(normalized),
               });
             }
+          }
+        },
+        onStatusChange: (status) => {
+          if (status === "SUBSCRIBED") {
+            if (!hasSeenInitialSubscribe) {
+              hasSeenInitialSubscribe = true;
+              shouldResyncOnSubscribe = false;
+              return;
+            }
+
+            if (!shouldResyncOnSubscribe) {
+              return;
+            }
+
+            shouldResyncOnSubscribe = false;
+            invalidateActiveQueries();
+            return;
+          }
+
+          if (hasSeenInitialSubscribe && isReconnectErrorStatus(status)) {
+            shouldResyncOnSubscribe = true;
           }
         },
       });

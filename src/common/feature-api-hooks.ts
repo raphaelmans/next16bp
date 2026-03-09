@@ -19,6 +19,10 @@ import type { FeatureQueryOptions } from "@/common/feature-query-options";
 import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
 type QueryPath = readonly string[];
+type FeatureFetchOptions<TData> = Pick<
+  FeatureQueryOptions<TData, TData>,
+  "retry" | "staleTime"
+>;
 
 type FeatureMutationOptions<TData, TVariables, TOnMutateResult> = Omit<
   UseMutationOptions<TData, AppError, TVariables, TOnMutateResult>,
@@ -168,10 +172,16 @@ export function useFeatureQueryCache() {
           queryKey: getQueryKey(path, input),
         }),
 
-      fetch: <T>(path: QueryPath, input: unknown, queryFn: () => Promise<T>) =>
+      fetch: <T>(
+        path: QueryPath,
+        input: unknown,
+        queryFn: () => Promise<T>,
+        options?: FeatureFetchOptions<T>,
+      ) =>
         queryClient.fetchQuery<T>({
           queryKey: getQueryKey(path, input),
           queryFn,
+          ...(options ?? {}),
         }),
     };
   }, [queryClient]);

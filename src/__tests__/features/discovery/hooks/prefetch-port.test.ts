@@ -1,12 +1,18 @@
 import { describe, expect, it, vi } from "vitest";
+import { LIVE_PREFETCH_QUERY_OPTIONS } from "@/common/live-query-options";
 import { createDiscoveryPrefetchPort } from "@/features/discovery/hooks";
 
 describe("createDiscoveryPrefetchPort", () => {
   it("uses normalized court-range inputs for feature-cache reads and fetches", async () => {
     const cache = {
       getData: vi.fn(),
-      fetch: vi.fn(async (_path, _input, queryFn: () => Promise<unknown>) =>
-        queryFn(),
+      fetch: vi.fn(
+        async (
+          _path,
+          _input,
+          queryFn: () => Promise<unknown>,
+          _options?: unknown,
+        ) => queryFn(),
       ),
     };
     const api = {
@@ -51,6 +57,7 @@ describe("createDiscoveryPrefetchPort", () => {
       ["availability", "getForCourtRange"],
       normalizedInput,
       expect.any(Function),
+      LIVE_PREFETCH_QUERY_OPTIONS,
     );
     expect(api.queryAvailabilityGetForCourtRange).toHaveBeenCalledWith(
       normalizedInput,
@@ -60,8 +67,13 @@ describe("createDiscoveryPrefetchPort", () => {
   it("uses normalized place-sport-range inputs for feature-cache reads and fetches", async () => {
     const cache = {
       getData: vi.fn(),
-      fetch: vi.fn(async (_path, _input, queryFn: () => Promise<unknown>) =>
-        queryFn(),
+      fetch: vi.fn(
+        async (
+          _path,
+          _input,
+          queryFn: () => Promise<unknown>,
+          _options?: unknown,
+        ) => queryFn(),
       ),
     };
     const api = {
@@ -110,6 +122,7 @@ describe("createDiscoveryPrefetchPort", () => {
       ["availability", "getForPlaceSportRange"],
       normalizedInput,
       expect.any(Function),
+      LIVE_PREFETCH_QUERY_OPTIONS,
     );
     expect(api.queryAvailabilityGetForPlaceSportRange).toHaveBeenCalledWith(
       normalizedInput,

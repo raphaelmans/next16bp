@@ -24,6 +24,11 @@ export function shouldRetryLiveQuery(
 export const LIVE_QUERY_OPTIONS = {
   staleTime: LIVE_QUERY_STALE_TIME_MS,
   refetchOnWindowFocus: false,
-  refetchOnReconnect: true,
+  refetchOnReconnect: false,
   retry: shouldRetryLiveQuery,
+} as const;
+
+export const LIVE_PREFETCH_QUERY_OPTIONS = {
+  staleTime: LIVE_QUERY_STALE_TIME_MS,
+  retry: false,
 } as const;

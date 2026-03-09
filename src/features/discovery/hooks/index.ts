@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useFeatureQueryCache } from "@/common/feature-api-hooks";
+import { LIVE_PREFETCH_QUERY_OPTIONS } from "@/common/live-query-options";
 import {
   normalizeAvailabilityCourtRangeInput,
   normalizeAvailabilityPlaceSportRangeInput,
@@ -70,6 +71,7 @@ export function createDiscoveryPrefetchPort(
             ["availability", "getForCourtRange"],
             normalizedInput,
             () => api.queryAvailabilityGetForCourtRange(normalizedInput),
+            LIVE_PREFETCH_QUERY_OPTIONS,
           );
         },
       },
@@ -89,6 +91,7 @@ export function createDiscoveryPrefetchPort(
             ["availability", "getForPlaceSportRange"],
             normalizedInput,
             () => api.queryAvailabilityGetForPlaceSportRange(normalizedInput),
+            LIVE_PREFETCH_QUERY_OPTIONS,
           );
         },
       },
