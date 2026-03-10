@@ -138,22 +138,16 @@ export function HomePlaceCard({
         ) : null}
 
         <div className="flex items-center justify-between gap-3">
-          <div>
-            {showPrice ? (
+          {showPrice ? (
+            <div>
               <p className="font-heading text-base font-semibold text-foreground">
                 {formatCurrency(lowestPriceCents, currency)}
               </p>
-            ) : (
-              <p className="font-heading text-sm font-medium text-muted-foreground">
-                View venue
-              </p>
-            )}
-            {showPrice ? (
               <p className="text-xs text-muted-foreground">starting price</p>
-            ) : null}
-          </div>
+            </div>
+          ) : null}
 
-          <span className="inline-flex items-center rounded-lg bg-primary px-3 py-2 text-xs font-heading font-semibold text-primary-foreground">
+          <span className="ml-auto inline-flex items-center rounded-lg bg-primary px-3 py-2 text-xs font-heading font-semibold text-primary-foreground">
             View venue
           </span>
         </div>

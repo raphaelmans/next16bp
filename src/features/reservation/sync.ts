@@ -3,7 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useCallback } from "react";
 import { reservationQueryKeys } from "@/common/query-keys";
-import { trpc } from "@/trpc/client";
+import { buildTrpcQueryKey } from "@/common/trpc-query-key";
 
 type ReservationSyncInput = {
   reservationId?: string;
@@ -50,26 +50,33 @@ export const extractReservationIdFromNotificationHref = (
 
 export function useModReservationSync() {
   const queryClient = useQueryClient();
-  const utils = trpc.useUtils();
+
+  const invalidate = useCallback(
+    (path: readonly string[], input?: unknown) =>
+      queryClient.invalidateQueries({
+        queryKey: buildTrpcQueryKey(path, input),
+      }),
+    [queryClient],
+  );
 
   const syncReservationNotifications = useCallback(
     async () =>
       Promise.all([
-        utils.userNotification.unreadCount.invalidate(),
-        utils.userNotification.listMy.invalidate(),
+        invalidate(["userNotification", "unreadCount"]),
+        invalidate(["userNotification", "listMy"]),
       ]),
-    [utils],
+    [invalidate],
   );
 
   const syncReservationChat = useCallback(
     async (reservationIds: string[]) =>
       Promise.all([
-        utils.reservationChat.getThreadMetas.invalidate(),
+        invalidate(["reservationChat", "getThreadMetas"]),
         ...reservationIds.map((reservationId) =>
-          utils.reservationChat.getSession.invalidate({ reservationId }),
+          invalidate(["reservationChat", "getSession"], { reservationId }),
         ),
       ]),
-    [utils],
+    [invalidate],
   );
 
   const syncReservationChatInbox = useCallback(
@@ -83,38 +90,42 @@ export function useModReservationSync() {
     ) =>
       Promise.all([
         syncReservationChat(reservationIds),
-        utils.chatMessage.listThreadSummaries.invalidate({
+        invalidate(["chatMessage", "listThreadSummaries"], {
           threadIdPrefix: "res-",
           limit: 30,
         }),
-        utils.chatMessage.listThreadSummaries.invalidate({
+        invalidate(["chatMessage", "listThreadSummaries"], {
           threadIdPrefix: "grp-",
           limit: 30,
         }),
-        utils.chatMessage.getUnreadCounts.invalidate(),
-        utils.reservationChat.getThreadMetas.invalidate({
+        invalidate(["chatMessage", "getUnreadCounts"]),
+        invalidate(["reservationChat", "getThreadMetas"], {
           reservationIds: options?.visibleReservationIds,
           reservationGroupIds: options?.visibleReservationGroupIds,
         }),
         options?.includeArchivedThreadIds
-          ? utils.chatInbox.listArchivedThreadIds.invalidate({
+          ? invalidate(["chatInbox", "listArchivedThreadIds"], {
               threadKind: "reservation",
             })
           : Promise.resolve(),
       ]),
-    [syncReservationChat, utils],
+    [syncReservationChat, invalidate],
   );
 
   const syncPlayerReservationOverview = useCallback(
     async (includeNotifications = true) =>
       Promise.all([
-        utils.reservation.getMy.invalidate(),
-        utils.reservation.getMyWithDetails.invalidate(),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["reservation", "getMy"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["reservation", "getMyWithDetails"]),
+        }),
         includeNotifications
           ? syncReservationNotifications()
           : Promise.resolve(),
       ]),
-    [syncReservationNotifications, utils],
+    [queryClient, syncReservationNotifications],
   );
 
   const syncPlayerReservationChange = useCallback(
@@ -150,14 +161,23 @@ export function useModReservationSync() {
   const syncOwnerReservationOverview = useCallback(
     async (includeNotifications = true) =>
       Promise.all([
-        utils.reservationOwner.getForOrganization.invalidate(),
-        utils.reservationOwner.getPendingCount.invalidate(),
-        utils.reservationOwner.getLinkedDetail.invalidate(),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey([
+            "reservationOwner",
+            "getForOrganization",
+          ]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["reservationOwner", "getPendingCount"]),
+        }),
+        queryClient.invalidateQueries({
+          queryKey: buildTrpcQueryKey(["reservationOwner", "getLinkedDetail"]),
+        }),
         includeNotifications
           ? syncReservationNotifications()
           : Promise.resolve(),
       ]),
-    [syncReservationNotifications, utils],
+    [queryClient, syncReservationNotifications],
   );
 
   const syncOwnerReservationChange = useCallback(

@@ -57,6 +57,7 @@ export const DEVELOPER_GUIDE_SECTIONS: DeveloperGuideSection[] = [
       "After the integration is created, issue a server-side API key with only the scopes the partner needs. The dashboard shows the plaintext secret once, then stores only the masked prefix and metadata afterward.",
       "This is the moment to capture the secret in the partner's secret manager. The dashboard is intentionally optimized for a smooth handoff: the same card shows the current scopes, IP allowlist notes, and recent usage metadata after the reveal moment passes.",
       "If the partner only needs live reads at first, start with `availability.read`. Add write scope only when they are actually ready to push availability changes into the platform.",
+      "If you want to validate the full public contract before handoff, create a temporary smoke-test key with both `availability.read` and `availability.write`, run the external write smoke once, then keep or rotate that key according to your launch policy.",
     ],
     tip: {
       text: "Use narrow scopes for onboarding and widen them later. It is easier to add access than to unwind an over-permissive key after handoff.",
@@ -124,11 +125,13 @@ export const DEVELOPER_GUIDE_SECTIONS: DeveloperGuideSection[] = [
     id: "guided-console",
     stepNumber: 5,
     icon: TerminalSquare,
-    title: "Run one safe live availability read in the guided console",
+    title:
+      "Run one safe live availability read in the guided console, then validate one public write outside the dashboard",
     paragraphs: [
       "The guided test console is intentionally narrow: one live, read-only availability request that runs server-side against the currently selected integration, key, mapped external court, date, and duration.",
       "This is enough to prove the end-to-end path works without turning the dashboard into a general-purpose API playground. The operator gets a visible request shape, the response payload, and the request ID needed for support or deeper investigation.",
-      "Because the console is locked to a safe read path, it is ideal for onboarding review calls and internal verification. Write calls stay copy-first in v1 so operators and developers can discuss them without accidentally mutating live availability from a browser session.",
+      "Once that read is green, switch to the public API for one external write smoke: create a temporary unavailability window with `curl`, read the same external court back through the public availability endpoint, then delete the temporary window immediately. That proves read and write alignment without moving write execution into the browser.",
+      "Because the console is locked to a safe read path, it is ideal for onboarding review calls and internal verification. Write calls stay copy-first in v1 so operators and developers can validate them deliberately and clean them up explicitly.",
     ],
     tip: {
       text: "Use the same date and duration you expect the partner to query in their first real integration test. That makes the console output a true preview of launch-day behavior.",
@@ -138,6 +141,11 @@ export const DEVELOPER_GUIDE_SECTIONS: DeveloperGuideSection[] = [
         trigger: "Why not let the dashboard execute write calls too?",
         content:
           "Because read-only validation covers most onboarding confidence while avoiding accidental browser-driven mutations. The product still gives developers copy-ready write examples for server-side implementation.",
+      },
+      {
+        trigger: "What is the safest way to validate a real public write?",
+        content:
+          "Use the just-revealed key against the public unavailability route, pick one temporary external window id, confirm the blocked slot through the public availability read, then send the matching DELETE right away. That gives you a true external smoke without leaving a maintenance block behind.",
       },
       {
         trigger: "What should I do with the request ID shown in the console?",
@@ -150,14 +158,15 @@ export const DEVELOPER_GUIDE_SECTIONS: DeveloperGuideSection[] = [
     id: "handoff-snippets",
     stepNumber: 6,
     icon: BookOpen,
-    title: "Hand off the snippets and OpenAPI contract",
+    title: "Hand off the snippets, OpenAPI contract, and smoke flow",
     paragraphs: [
       "Once the integration is green, move to the snippets and docs panel. The page generates cURL and JavaScript examples from the currently selected mapped external court and test inputs, then links directly to the public OpenAPI document for the full contract.",
       "This is where operator UX and developer DX meet: the operator can confirm the selected values look right, and the external engineering team gets a starting point that already matches the live dashboard state instead of a generic sample lifted from separate documentation.",
+      "For full handoff, package three things together: the generated read snippet, the exact mapped external court id, and the public write smoke sequence you already validated with immediate cleanup. That gives the external team both the first request and the safest write pattern.",
       "Use the generated snippets as the handoff artifact, but keep the OpenAPI spec in the package too. The snippets explain the first request; the contract explains the whole surface.",
     ],
     tip: {
-      text: "Share the snippet and the OpenAPI link together. Snippets accelerate the first request, while the spec answers follow-up integration questions.",
+      text: "Share the snippet, the mapped external court id, the write smoke sequence, and the OpenAPI link together. Snippets accelerate the first request, while the spec answers follow-up integration questions.",
     },
   },
 ];

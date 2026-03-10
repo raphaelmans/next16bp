@@ -651,8 +651,11 @@ export default function OrganizationDevelopersPage() {
                     integrationsQuery.isLoading || integrations.length === 0
                   }
                 >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select integration" />
+                  <SelectTrigger className="w-full min-w-0">
+                    <SelectValue
+                      placeholder="Select integration"
+                      className="truncate"
+                    />
                   </SelectTrigger>
                   <SelectContent>
                     {integrations.map((integration) => (
@@ -1052,17 +1055,20 @@ export default function OrganizationDevelopersPage() {
                 team.
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="min-w-0 space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <Label>Use key</Label>
                   <Select
                     value={selectedKeyId ?? ""}
                     onValueChange={setSelectedKeyId}
                     disabled={(apiKeysQuery.data?.length ?? 0) === 0}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select key" />
+                    <SelectTrigger className="w-full min-w-0">
+                      <SelectValue
+                        placeholder="Select key"
+                        className="truncate"
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {(apiKeysQuery.data ?? []).map((key) => (
@@ -1073,15 +1079,18 @@ export default function OrganizationDevelopersPage() {
                     </SelectContent>
                   </Select>
                 </div>
-                <div className="space-y-2">
+                <div className="min-w-0 space-y-2">
                   <Label>Mapped external court</Label>
                   <Select
                     value={sampleExternalCourtId}
                     onValueChange={setSampleExternalCourtId}
                     disabled={(mappingsQuery.data?.length ?? 0) === 0}
                   >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select mapped court" />
+                    <SelectTrigger className="w-full min-w-0">
+                      <SelectValue
+                        placeholder="Select mapped court"
+                        className="truncate"
+                      />
                     </SelectTrigger>
                     <SelectContent>
                       {(mappingsQuery.data ?? []).map((mapping) => (
@@ -1148,10 +1157,10 @@ export default function OrganizationDevelopersPage() {
               </Button>
 
               <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
-                <div className="mb-3 flex items-center justify-between">
+                <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
                   <p className="text-sm font-medium">Latest response</p>
                   {testConsoleMut.data?.requestId ? (
-                    <span className="font-mono text-xs text-slate-400">
+                    <span className="truncate font-mono text-xs text-slate-400">
                       {testConsoleMut.data.requestId}
                     </span>
                   ) : null}

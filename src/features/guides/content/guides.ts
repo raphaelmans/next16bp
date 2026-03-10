@@ -422,7 +422,7 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
     publishedAt: GUIDE_PUBLISHED_AT,
     updatedAt: GUIDE_PUBLISHED_AT,
     intro:
-      "To connect an existing venue system to the KudosCourts developer API, create one integration, issue a scoped key, map external court IDs to live inventory, run the server-side precheck, then validate a live availability read before handing snippets and the OpenAPI contract to the engineering team.",
+      "To connect an existing venue system to the KudosCourts developer API, create one integration, issue a scoped key, map external court IDs to live inventory, run the server-side precheck, validate a live availability read in the dashboard, then run one external write and cleanup smoke before handing snippets and the OpenAPI contract to the engineering team.",
     sections: [
       {
         title: "Create one named integration first",
@@ -436,6 +436,7 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
         paragraphs: [
           "Generate the smallest key you need for the onboarding phase. If the external team only needs reads first, begin with availability.read and add write access later.",
           "Capture the secret immediately in the external team's secret manager because the dashboard only reveals it once.",
+          "If you want to validate a real public write before handoff, create a temporary smoke key with both availability.read and availability.write enabled.",
         ],
       },
       {
@@ -450,13 +451,14 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
         paragraphs: [
           "The precheck verifies integration status, key health, required scope, mapping existence, and a live availability read through the same server-side flow the product trusts for onboarding.",
           "Once that passes, use the guided console to inspect one real response payload and confirm the request shape before the external team writes code against it.",
+          "If you need full contract confidence, follow the green dashboard read with one external unavailability PUT, confirm the blocked slot through the public availability GET, then delete the temporary window immediately.",
         ],
       },
       {
-        title: "Hand off snippets and the OpenAPI contract",
+        title: "Hand off snippets, the smoke flow, and the OpenAPI contract",
         paragraphs: [
           "Use the generated snippets as the practical starting point for the first request, then include the OpenAPI document for the complete contract surface.",
-          "This combination gives external developers both speed and accuracy: quick copy-ready examples plus the full machine-readable API definition.",
+          "Pair the snippet with the exact mapped external court id and the write-smoke cleanup sequence you validated. This combination gives external developers both speed and accuracy: quick copy-ready examples plus the full machine-readable API definition.",
         ],
       },
     ],
@@ -469,7 +471,7 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
       {
         question: "Does the dashboard execute live write calls?",
         answer:
-          "No. In v1 the dashboard only runs a safe live availability read. Write examples are provided as copy-ready snippets for server-side implementation.",
+          "No. In v1 the dashboard only runs a safe live availability read. To validate writes, use the revealed key against the public unavailability route, confirm the result through the public availability read, then clean the temporary window up immediately.",
       },
       {
         question: "Why is the precheck important before handoff?",
