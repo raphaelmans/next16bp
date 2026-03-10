@@ -1,0 +1,35 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Iloilo City",
+    "citySlug": "iloilo-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:48.179Z",
+  "queries": [
+    "pickleball courts in Iloilo Iloilo City",
+    "pickleball court Iloilo City Iloilo",
+    "Iloilo City pickleball",
+    "courts in Iloilo City Iloilo pickleball",
+    "sports center Iloilo City Iloilo pickleball",
+    "pickleball club Iloilo City Iloilo",
+    "pickleball reservations Iloilo City Iloilo"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.facebook.com/picklepointiloilo/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546/",
+      "score": 5
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/iloilo-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/iloilo-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/iloilo-city/scrape-state.json"
+}

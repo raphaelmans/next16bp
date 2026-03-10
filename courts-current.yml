@@ -1,0 +1,238 @@
+- generic [active] [ref=e1]:
+  - progressbar "Loading"
+  - generic [ref=e2]:
+    - link "Skip to content" [ref=e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - navigation [ref=e4]:
+      - link "KudosCourts KudosCourts" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - generic [ref=e6]:
+          - img "KudosCourts" [ref=e7]
+          - generic [ref=e8]: KudosCourts
+      - generic [ref=e9]:
+        - textbox "Search courts..." [ref=e10]
+        - button "Search" [ref=e11] [cursor=pointer]:
+          - img
+      - generic [ref=e12]:
+        - link "List Your Venue" [ref=e13] [cursor=pointer]:
+          - /url: /owners/get-started
+        - link "Sign In" [ref=e568] [cursor=pointer]:
+          - /url: /login
+          - img
+          - text: Sign In
+    - main [ref=e14]:
+      - navigation [ref=e571]:
+        - link "All Venues" [ref=e572] [cursor=pointer]:
+          - /url: /courts
+        - generic [ref=e573]: /
+        - link "Davao (Davao Del Norte)" [ref=e574] [cursor=pointer]:
+          - /url: /courts/locations/davao-davao-del-norte
+        - generic [ref=e575]: /
+        - link "Panabo City" [ref=e576] [cursor=pointer]:
+          - /url: /courts/locations/davao-davao-del-norte/panabo-city
+        - generic [ref=e577]: /
+        - generic [ref=e578]: Dink Side Panabo
+      - generic [ref=e579]:
+        - generic [ref=e580]:
+          - generic [ref=e581]:
+            - img "Dink Side Panabo logo" [ref=e584]
+            - generic [ref=e585]:
+              - generic [ref=e586]:
+                - heading "Dink Side Panabo" [level=1] [ref=e587]
+                - generic [ref=e588]:
+                  - img
+                  - text: Verified
+              - generic [ref=e589]:
+                - paragraph [ref=e590]: PANABO CITY · Door 1 Brgy. Cagangohan Prk. Macupa
+                - link "No reviews" [ref=e591] [cursor=pointer]:
+                  - /url: "#reviews"
+                  - generic [ref=e592]:
+                    - img [ref=e593]
+                    - img [ref=e595]
+                    - img [ref=e597]
+                    - img [ref=e599]
+                    - img [ref=e601]
+                  - generic [ref=e603]: No reviews
+          - generic [ref=e604]:
+            - link "Directions" [ref=e605] [cursor=pointer]:
+              - /url: https://www.google.com/maps/search/?api=1&query=Dink%20Side%20Panabo%20Door%201%20Brgy.%20Cagangohan%20Prk.%20Macupa%20PANABO%20CITY
+              - img
+              - text: Directions
+            - link "Courts & amenities" [ref=e606] [cursor=pointer]:
+              - /url: "#courts-info"
+              - img
+              - text: Courts & amenities
+            - link "Reviews" [ref=e607] [cursor=pointer]:
+              - /url: "#reviews"
+              - img
+              - text: Reviews
+            - button "Save" [ref=e608] [cursor=pointer]:
+              - img
+              - text: Save
+        - generic [ref=e609]:
+          - generic [ref=e610]:
+            - generic [ref=e612]: Courts
+            - generic [ref=e613]:
+              - generic [ref=e614]:
+                - generic [ref=e615]:
+                  - img [ref=e616]
+                  - text: Reservations not yet enabled
+                - paragraph [ref=e619]: The owner has not yet enabled online reservations for this venue.
+              - generic [ref=e620]:
+                - generic [ref=e621]:
+                  - generic [ref=e622]: Court 1
+                  - generic [ref=e623]: Pickleball
+                - generic [ref=e625]: Pickleball
+              - generic [ref=e626]:
+                - generic [ref=e627]:
+                  - generic [ref=e628]: Court 2
+                  - generic [ref=e629]: Pickleball
+                - generic [ref=e631]: Pickleball
+              - generic [ref=e632]:
+                - generic [ref=e633]:
+                  - generic [ref=e634]: Court 3
+                  - generic [ref=e635]: Pickleball
+                - generic [ref=e637]: Pickleball
+              - generic [ref=e638]:
+                - generic [ref=e639]:
+                  - generic [ref=e640]: Court 4
+                  - generic [ref=e641]: Pickleball
+                - generic [ref=e643]: Pickleball
+              - generic [ref=e644]:
+                - generic [ref=e645]:
+                  - generic [ref=e646]: Court 5
+                  - generic [ref=e647]: Pickleball
+                - generic [ref=e649]: Pickleball
+              - generic [ref=e650]:
+                - generic [ref=e651]:
+                  - generic [ref=e652]: Court 6
+                  - generic [ref=e653]: Pickleball
+                - generic [ref=e655]: Pickleball
+              - generic [ref=e656]:
+                - generic [ref=e657]:
+                  - generic [ref=e658]: Court 7
+                  - generic [ref=e659]: Pickleball
+                - generic [ref=e661]: Pickleball
+              - generic [ref=e662]:
+                - generic [ref=e663]:
+                  - generic [ref=e664]: Court 8
+                  - generic [ref=e665]: Pickleball
+                - generic [ref=e666]:
+                  - generic [ref=e667]: Pickleball
+                  - generic [ref=e668]: Inactive
+          - generic [ref=e669]:
+            - generic [ref=e670]:
+              - generic [ref=e672]: Contact
+              - paragraph [ref=e674]: Contact details are not available yet.
+            - generic [ref=e675]:
+              - generic [ref=e677]: Amenities
+              - generic [ref=e679]:
+                - generic [ref=e680]: Parking
+                - generic [ref=e681]: Restrooms
+                - generic [ref=e682]: Lights
+                - generic [ref=e683]: Food/Drinks
+                - generic [ref=e684]: Covered Courts
+                - generic [ref=e685]: Equipment Rental
+            - generic [ref=e686]:
+              - generic [ref=e688]: Reviews
+              - generic [ref=e689]:
+                - paragraph [ref=e691]: No reviews yet. Be the first to share your experience.
+                - button "Write a review" [ref=e693] [cursor=pointer]
+        - generic [ref=e695]:
+          - generic [ref=e696]:
+            - generic [ref=e697]:
+              - img [ref=e698]
+              - generic [ref=e701]: Listing help
+            - generic [ref=e702]: For owners
+          - generic [ref=e703]:
+            - generic [ref=e704]:
+              - generic [ref=e706]:
+                - img [ref=e707]
+                - generic [ref=e710]:
+                  - paragraph [ref=e711]: Claim this listing
+                  - paragraph [ref=e712]: Manage venues and enable bookings.
+              - paragraph [ref=e713]: This venue has already been claimed.
+            - generic [ref=e715]:
+              - generic [ref=e716]:
+                - img [ref=e717]
+                - generic [ref=e719]:
+                  - paragraph [ref=e720]: Report an issue
+                  - paragraph [ref=e721]: Flag incorrect info or request removal.
+              - button "Send report" [ref=e722] [cursor=pointer]:
+                - text: Send report
+                - img
+    - contentinfo [ref=e193]:
+      - generic [ref=e195]:
+        - generic [ref=e196]:
+          - generic [ref=e197]:
+            - link "KudosCourts KudosCourts" [ref=e198] [cursor=pointer]:
+              - /url: /
+              - generic [ref=e199]:
+                - img "KudosCourts" [ref=e200]
+                - generic [ref=e201]: KudosCourts
+            - paragraph [ref=e202]: Every sports court in the Philippines, discoverable in seconds.
+            - link "Contact us" [ref=e203] [cursor=pointer]:
+              - /url: /contact-us
+          - generic [ref=e204]:
+            - heading "Discover" [level=3] [ref=e205]
+            - list [ref=e206]:
+              - listitem [ref=e207]:
+                - link "Browse Courts" [ref=e208] [cursor=pointer]:
+                  - /url: /courts
+              - listitem [ref=e209]:
+                - link "Cebu City Courts" [ref=e210] [cursor=pointer]:
+                  - /url: /courts/locations/cebu/cebu-city
+              - listitem [ref=e211]:
+                - link "Manila Courts" [ref=e212] [cursor=pointer]:
+                  - /url: /courts/locations/metro-manila/manila
+              - listitem [ref=e213]:
+                - link "Player Guides" [ref=e214] [cursor=pointer]:
+                  - /url: /guides
+          - generic [ref=e215]:
+            - heading "For Owners" [level=3] [ref=e216]
+            - list [ref=e217]:
+              - listitem [ref=e218]:
+                - link "List Your Venue" [ref=e219] [cursor=pointer]:
+                  - /url: /owners/get-started
+              - listitem [ref=e220]:
+                - link "Venue Dashboard" [ref=e221] [cursor=pointer]:
+                  - /url: /organization
+              - listitem [ref=e222]:
+                - link "Owner Guides" [ref=e223] [cursor=pointer]:
+                  - /url: /guides#owner-guides
+          - generic [ref=e224]:
+            - heading "Company" [level=3] [ref=e225]
+            - list [ref=e226]:
+              - listitem [ref=e227]:
+                - link "About Us" [ref=e228] [cursor=pointer]:
+                  - /url: /about
+              - listitem [ref=e229]:
+                - link "Contact" [ref=e230] [cursor=pointer]:
+                  - /url: /contact-us
+              - listitem [ref=e231]:
+                - link "Guides" [ref=e232] [cursor=pointer]:
+                  - /url: /guides
+              - listitem [ref=e233]:
+                - link "Blog" [ref=e234] [cursor=pointer]:
+                  - /url: /blog
+          - generic [ref=e235]:
+            - heading "Legal" [level=3] [ref=e236]
+            - list [ref=e237]:
+              - listitem [ref=e238]:
+                - link "Terms of Service" [ref=e239] [cursor=pointer]:
+                  - /url: /terms
+              - listitem [ref=e240]:
+                - link "Privacy Policy" [ref=e241] [cursor=pointer]:
+                  - /url: /privacy
+              - listitem [ref=e242]:
+                - link "Cookie Policy" [ref=e243] [cursor=pointer]:
+                  - /url: /cookies
+        - generic [ref=e244]:
+          - paragraph [ref=e245]: © 2026 KudosCourts. All rights reserved.
+          - generic [ref=e246]:
+            - link "Facebook" [ref=e247] [cursor=pointer]:
+              - /url: https://facebook.com/kudoscourts
+            - link "Instagram" [ref=e248] [cursor=pointer]:
+              - /url: https://instagram.com/kudoscourts
+  - region "Notifications alt+T"
+  - alert [ref=e249]: Dink Side Panabo – Pickleball Courts in PANABO CITY, DAVAO (DAVAO DEL NORTE) | KudosCourts

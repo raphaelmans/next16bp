@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "iloilo",
+    "citySlug": "pavia",
+    "provinceName": "Iloilo",
+    "cityName": "Pavia"
+  },
+  "generatedAt": "2026-03-10T03:57:47.321Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pavia/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pavia/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pavia/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pavia/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 6,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 6,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 2,
+  "skipCount": 3,
+  "csvRowCount": 1,
+  "failures": []
+}

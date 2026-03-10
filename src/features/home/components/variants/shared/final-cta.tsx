@@ -18,7 +18,7 @@ function CtaSearchForm() {
       <div className="flex items-center bg-card rounded-[14px] p-[5px] pl-[18px] shadow-lg min-w-0 sm:min-w-[380px] transition-shadow focus-within:shadow-xl">
         <input
           name="q"
-          type="search"
+          type="text"
           placeholder="Search courts near you..."
           className="flex-1 border-none outline-none text-[15px] text-foreground bg-transparent placeholder:text-muted-foreground/60 min-w-0"
         />

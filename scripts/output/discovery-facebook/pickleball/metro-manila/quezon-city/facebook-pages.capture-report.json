@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "quezon-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Quezon City"
+  },
+  "generatedAt": "2026-03-09T16:43:57.940Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 3,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 0,
+  "skipCount": 1,
+  "csvRowCount": 2,
+  "failures": []
+}

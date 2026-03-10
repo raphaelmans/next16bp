@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "iloilo",
+    "citySlug": "pavia",
+    "provinceName": "Iloilo",
+    "cityName": "Pavia"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:34:14.831Z",
+      "finishedAt": "2026-03-09T17:34:51.415Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:34:51.416Z",
+      "finishedAt": "2026-03-09T17:35:09.428Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:35:09.429Z",
+      "finishedAt": "2026-03-09T17:35:34.956Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:35:34.960Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:35:34.960Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:35:34.960Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

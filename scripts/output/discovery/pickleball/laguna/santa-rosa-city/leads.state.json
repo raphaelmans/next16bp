@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:santa-rosa-city",
+  "createdAt": "2026-03-10T02:42:08.639Z",
+  "updatedAt": "2026-03-10T02:42:47.623Z",
+  "queries": [
+    "pickleball courts in Laguna Santa Rosa City",
+    "pickleball court Santa Rosa City Laguna",
+    "Santa Rosa City pickleball",
+    "courts in Santa Rosa City Laguna pickleball",
+    "sports center Santa Rosa City Laguna pickleball",
+    "pickleball club Santa Rosa City Laguna",
+    "pickleball reservations Santa Rosa City Laguna",
+    "host-map:cebupickleballcourts.com:Santa Rosa City",
+    "host-map:cebupickleballcourts.com:Santa Rosa",
+    "host-map:dumapickleball.com:Santa Rosa City",
+    "host-map:dumapickleball.com:Santa Rosa",
+    "site:cebupickleballcourts.com Santa Rosa City Laguna pickleball",
+    "site:dumapickleball.com Santa Rosa City Laguna pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@kitchen-club-south": {
+      "canonicalUrl": "https://reclub.co/clubs/@kitchen-club-south",
+      "latestUrl": "https://reclub.co/clubs/@kitchen-club-south",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "pickleball court Santa Rosa City Laguna",
+      "title": "Kitchen Club South",
+      "snippet": "6 activities. Welcome to the Kitchen! A newbie friendly pickleball club based in the south (Santa Rosa, Cabuyao, Biñan, San Pedro)",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@paloo-sm-starosa": {
+      "canonicalUrl": "https://reclub.co/clubs/@paloo-sm-starosa",
+      "latestUrl": "https://reclub.co/clubs/@paloo-sm-starosa",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "pickleball club Santa Rosa City Laguna",
+      "title": "PALOO SM STA.ROSA",
+      "snippet": "Play Pickleball with PALOO SM STA.ROSA! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://srcity.org/1095/Tennis-Pickleball": {
+      "canonicalUrl": "https://srcity.org/1095/Tennis-Pickleball",
+      "latestUrl": "https://www.srcity.org/1095/Tennis-Pickleball",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "pickleball reservations Santa Rosa City Laguna",
+      "title": "Tennis & Pickleball | Santa Rosa, CA",
+      "snippet": "No membership or reservation needed – just join the fun! Courts are located at Finley Community Park (no lights) and Howarth Memorial Park (lighted), and are ...",
+      "domain": "srcity.org",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://santarosa.fl.gov/1057/Pickleball": {
+      "canonicalUrl": "https://santarosa.fl.gov/1057/Pickleball",
+      "latestUrl": "https://www.santarosa.fl.gov/1057/Pickleball",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "Santa Rosa City pickleball",
+      "title": "Pickleball | Santa Rosa County, FL",
+      "snippet": "Pickleball Courts in or Near Santa Rosa County. Pickleball is a paddleball sport (similar to a racket sport) that combines elements of badminton, ...",
+      "domain": "santarosa.fl.gov",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://baysidepickle.com/": {
+      "canonicalUrl": "https://baysidepickle.com/",
+      "latestUrl": "https://baysidepickle.com/",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "Santa Rosa City pickleball",
+      "title": "Bayside Pickleball Club: Pickleball Courts",
+      "snippet": "Welcome to Bayside Pickleball Club! A family-owned indoor pickleball facility in the heart of Santa Rosa Beach near 30A. Join us for fun and fitness!",
+      "domain": "baysidepickle.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/D2F32J": {
+      "canonicalUrl": "https://reclub.co/m/D2F32J",
+      "latestUrl": "https://reclub.co/m/D2F32J",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "pickleball club Santa Rosa City Laguna",
+      "title": "Pickleball Class with Coach Vincent",
+      "snippet": "Santa Rosa Integrated Terminal (SRIT). 836X+HRM, City of Santa Rosa, Laguna, Philippines. see map. 4000 PHP. 4000 PHP. Hosted By. Hoickey.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "sports center Santa Rosa City Laguna pickleball",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Santa Rosa. Laguna. 1. Outdoor Court. Wed/Sat, 6p-9p (weather ... The Zone Sports Center. 7224 Malugay St., cor Buendia. Makati. NCR. 6.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://smtickets.com/": {
+      "canonicalUrl": "https://smtickets.com/",
+      "latestUrl": "https://smtickets.com/",
+      "firstDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "lastDiscoveredAt": "2026-03-10T02:42:08.640Z",
+      "sourceQuery": "pickleball reservations Santa Rosa City Laguna",
+      "title": "SM TICKETS",
+      "snippet": "PICKLEBALL · STARDUST LIVE IN DAVAO - MAY 30 · TKNUR 1ST FAN MEETING IN OUR BLOOM LOVE IN FULL BLOOM IN MANILA · SB19 WAKAS AT SIMULA THE TRILOGY CONCERT FINALE.",
+      "domain": "smtickets.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

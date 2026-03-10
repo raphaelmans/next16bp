@@ -4,7 +4,6 @@ import {
 } from "@/lib/shared/lib/ph-location-data.server";
 
 export interface CuratedDiscoveryScopeConfig {
-  sportSlug: string;
   provinceSlug: string;
   citySlug: string;
 }
@@ -19,11 +18,48 @@ export interface ResolvedCuratedDiscoveryScope {
 
 export const CURATED_DISCOVERY_SCOPES = [
   {
-    sportSlug: "pickleball",
+    provinceSlug: "metro-manila",
+    citySlug: "quezon-city",
+  },
+  {
+    provinceSlug: "metro-manila",
+    citySlug: "city-of-pasig",
+  },
+  {
+    provinceSlug: "metro-manila",
+    citySlug: "city-of-makati",
+  },
+  {
+    provinceSlug: "metro-manila",
+    citySlug: "city-of-paranaque",
+  },
+  {
+    provinceSlug: "metro-manila",
+    citySlug: "taguig",
+  },
+  {
+    provinceSlug: "cebu",
+    citySlug: "mandaue-city",
+  },
+  {
+    provinceSlug: "cebu",
+    citySlug: "talisay-city",
+  },
+  {
+    provinceSlug: "davao-del-sur",
+    citySlug: "davao-city",
+  },
+  {
+    provinceSlug: "iloilo",
+    citySlug: "iloilo-city",
+  },
+  {
     provinceSlug: "negros-oriental",
     citySlug: "dumaguete-city",
   },
 ] as const satisfies readonly CuratedDiscoveryScopeConfig[];
+
+export const CURATED_DISCOVERY_DEFAULT_SPORT_SLUG = "pickleball";
 
 export async function resolveCuratedDiscoveryScopeOrThrow(input: {
   sportSlug: string;
@@ -75,7 +111,7 @@ export async function resolveDefaultCuratedDiscoveryScopes() {
   for (const scope of CURATED_DISCOVERY_SCOPES) {
     scopes.push(
       await resolveCuratedDiscoveryScopeOrThrow({
-        sportSlug: scope.sportSlug,
+        sportSlug: CURATED_DISCOVERY_DEFAULT_SPORT_SLUG,
         provinceValue: scope.provinceSlug,
         cityValue: scope.citySlug,
       }),

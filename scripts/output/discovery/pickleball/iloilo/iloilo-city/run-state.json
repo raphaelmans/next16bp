@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:iloilo-city",
+  "createdAt": "2026-03-09T16:41:49.129Z",
+  "updatedAt": "2026-03-09T16:41:49.383Z",
+  "scope": {
+    "provinceSlug": "iloilo",
+    "citySlug": "iloilo-city",
+    "provinceName": "Iloilo",
+    "cityName": "Iloilo City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "9f54eb87-bf1b-4be0-8ad9-ddc40e0e0d70",
+    "81b8859b-c987-4c88-bf12-e501ba7274bd",
+    "99a4c3c0-015c-4ef6-a355-f40705aebe4a"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.138Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.145Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.146Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.272Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.272Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.382Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

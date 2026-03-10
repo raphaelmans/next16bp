@@ -1,0 +1,112 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Pasay City",
+    "citySlug": "pasay-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:18:59.025Z",
+  "queries": [
+    "pickleball courts in Metro Manila Pasay City",
+    "pickleball court Pasay City Metro Manila",
+    "Pasay City pickleball",
+    "courts in Pasay City Metro Manila pickleball",
+    "sports center Pasay City Metro Manila pickleball",
+    "pickleball club Pasay City Metro Manila",
+    "pickleball reservations Pasay City Metro Manila",
+    "host-map:cebupickleballcourts.com:Pasay City",
+    "host-map:cebupickleballcourts.com:Pasay",
+    "host-map:dumapickleball.com:Pasay City",
+    "host-map:dumapickleball.com:Pasay",
+    "site:cebupickleballcourts.com Pasay City Metro Manila pickleball",
+    "site:dumapickleball.com Pasay City Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://metpark.ph/sports-center/pickleball-court/",
+    "https://www.seascapevillage.com.ph/seascape-picklebay/",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://bounceatparqal.com/",
+    "https://www.smsupermalls.com/active-hub",
+    "https://sec.solaireresort.com/experience/solaire-sports-club",
+    "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://metpark.ph/sports-center/",
+      "score": 3
+    },
+    {
+      "url": "https://www.globalpickleball.network/pickleball-networks/networks/city/15905-pasay-philippines",
+      "score": 5
+    },
+    {
+      "url": "https://metpark.ph/sports-center/",
+      "score": 10
+    },
+    {
+      "url": "https://reclub.co/m/AVRIAP",
+      "score": 12
+    },
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 4
+    },
+    {
+      "url": "https://www.globalpickleball.network/pickleball-networks/networks/city/15905-pasay-philippines",
+      "score": 6
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village",
+      "score": 9
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4332910796997128/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4139620516326158/",
+    "https://www.tiktok.com/discover/pickleball-court-in-pasay-and-manila",
+    "https://www.instagram.com/reel/DJoIkmSOnaE/?hl=en",
+    "https://www.facebook.com/metparksportscenter/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4139620516326158/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4332910796997128/",
+    "https://www.tiktok.com/discover/pickleball-court-in-pasay-city-manila",
+    "https://www.facebook.com/metparksportscenter/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4139620516326158/",
+    "https://www.facebook.com/metparksportscenter/",
+    "https://www.tiktok.com/discover/pickleball-court-in-pasay-city-manila",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1369470357848165/",
+    "https://www.instagram.com/reel/DJoIkmSOnaE/?hl=en",
+    "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4332910796997128/",
+    "https://www.tiktok.com/discover/pickleball-court-in-pasay-and-manila",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1333667311428470/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4367381150216759/",
+    "https://www.facebook.com/metparksportscenter/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4356857614602446/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1333667311428470/",
+    "https://www.tiktok.com/@michaeloyco0/video/7509310098972380423",
+    "https://www.facebook.com/groups/2723933654561525/posts/4139620516326158/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4378016935819847/",
+    "https://www.instagram.com/reel/DRla7PQD4rn/",
+    "https://www.tiktok.com/discover/pickleball-court-in-pasay-and-manila",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1333667311428470/",
+    "https://www.instagram.com/reel/DJoIkmSOnaE/?hl=en",
+    "https://www.facebook.com/groups/2723933654561525/posts/4139620516326158/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4332910796997128/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1333667311428470/",
+    "https://www.instagram.com/reel/DJoIkmSOnaE/?hl=en",
+    "https://www.instagram.com/reel/DRla7PQD4rn/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pasay-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pasay-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pasay-city/scrape-state.json"
+}

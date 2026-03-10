@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:taguig",
+  "createdAt": "2026-03-09T16:41:37.657Z",
+  "updatedAt": "2026-03-09T16:41:37.901Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "taguig",
+    "provinceName": "Metro Manila",
+    "cityName": "Taguig",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "a5408c4b-a011-4276-b8a8-1092feae68f4"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.657Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.659Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.660Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.789Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.789Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.901Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

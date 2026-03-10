@@ -1,0 +1,51 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Davao City",
+    "citySlug": "davao-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:46.434Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Davao City",
+    "pickleball court Davao City Davao Del Sur",
+    "Davao City pickleball",
+    "courts in Davao City Davao Del Sur pickleball",
+    "sports center Davao City Davao Del Sur pickleball",
+    "pickleball club Davao City Davao Del Sur",
+    "pickleball reservations Davao City Davao Del Sur"
+  ],
+  "emittedUrls": [
+    "https://picklehub.ph/clubs",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/pickleball-court-at-mts-is-now-open-and-available-beginning-august-23-2025-satur/1160503379442636/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234/",
+      "score": 1
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4371039543184253/",
+      "score": 2
+    },
+    {
+      "url": "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1321114293032383/",
+      "score": 6
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/davao-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/davao-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/davao-city/scrape-state.json"
+}

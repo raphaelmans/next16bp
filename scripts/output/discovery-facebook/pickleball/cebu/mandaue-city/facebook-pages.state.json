@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "scopeKey": "facebook:pickleball:cebu:mandaue-city",
+  "createdAt": "2026-03-09T16:13:27.335Z",
+  "updatedAt": "2026-03-09T16:13:40.568Z",
+  "queries": [
+    "site:facebook.com pickleball Mandaue City Cebu",
+    "site:facebook.com \"Mandaue City\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Mandaue City\" \"pickleball club\"",
+    "site:facebook.com \"Mandaue City\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "urls": {
+    "https://facebook.com/Sweetspotpickleballcourts": {
+      "canonicalUrl": "https://facebook.com/Sweetspotpickleballcourts",
+      "latestUrl": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball club\"",
+      "title": "Sweet Spot Pickleball Courts | Mandaue City - Facebook",
+      "snippet": "HVG IT Park, Innodata Compound, Mandaue City, Mandaue City, Philippines, 6014 ... PICKLEBALL CLUB ceBu Rallies · May be an image of tennis and text · May be an ...",
+      "domain": "facebook.com",
+      "relevanceScore": 20,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    },
+    "https://facebook.com/ChoiPickleballMandaue": {
+      "canonicalUrl": "https://facebook.com/ChoiPickleballMandaue",
+      "latestUrl": "https://www.facebook.com/ChoiPickleballMandaue/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"Cebu\" \"pickleball\"",
+      "title": "Choi Pickleball - Mandaue (@ChoiPickleballMandaue) - Facebook",
+      "snippet": "Choi Pickleball - Mandaue is in Mandaue City, Philippines. Feb 23, 2026 ... CHOI SPORTS CENTER-PICKLE BALL Mandaue City, Cebu · May be an image of text ...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1432637021040691": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1432637021040691",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1432637021040691/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com pickleball Mandaue City Cebu",
+      "title": "Pickleball open play in Cebu - Facebook",
+      "snippet": "🗓️ March 10, 2026 (TUESDAY) Warehouse Sports Club (9W7M+R4Q, H Abellana, Mandaue, Cebu) ⏱ Duration: 7pm-10pm (3hrs per court) Courts: 2 ...",
+      "domain": "facebook.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/p/All-Aces-Pickleball-Club-61578165434754": {
+      "canonicalUrl": "https://facebook.com/p/All-Aces-Pickleball-Club-61578165434754",
+      "latestUrl": "https://www.facebook.com/p/All-Aces-Pickleball-Club-61578165434754/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball club\"",
+      "title": "All Aces Pickleball Club | Mandaue City - Facebook",
+      "snippet": "All Aces Pickleball Club, Mandaue City. 61 likes · 1 talking about this. We are a laid back group of individuals who come together to enjoy the exciting...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    },
+    "https://facebook.com/61578165434754?locale=fy_NL": {
+      "canonicalUrl": "https://facebook.com/61578165434754?locale=fy_NL",
+      "latestUrl": "https://www.facebook.com/61578165434754/?locale=fy_NL",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball club\"",
+      "title": "All Aces Pickleball Club | Mandaue City - Facebook",
+      "snippet": "All Aces Pickleball Club, Mandaue City. 46 mei-'k-wol-oers. We are a laid back group of individuals who come together to enjoy the exciting sport of...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1414728019498258": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1414728019498258",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1414728019498258/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball court\"",
+      "title": "Pickleball court open in Mandaue City, Cebu - Facebook",
+      "snippet": "Log in · Pickleball court open in Mandaue City, Cebu. Pickleball Cebu. Steph Pekitpekit Carillo󰞋 ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1336925840611810": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1336925840611810",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1336925840611810/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball court\"",
+      "title": "We are open for booking Pickleball Court Monday to Sunday 6am to ...",
+      "snippet": "Canduman, Mandaue City · No photo description available. Faith Garcia ... Anybody know a pickleball court sa North Cebu? Danao ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1364657938329407": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1364657938329407",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1364657938329407/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Mandaue City\" \"pickleball court\"",
+      "title": "Basketball court booking rates in Mandaue City - Facebook",
+      "snippet": "... Pickleball Court Monday to Sunday 6am to 11pm - 350.00 888 Mendco Land Venture D. S. Suico St., Riverside - Pilit, Brgy. Canduman, Mandaue City.",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Cebu Pickleball (@cebupickleball) - Facebook",
+      "snippet": "Cebu Pickleball. 1754 likes · 16 talking about this. Cebu Pickleball hope to promote the sport in Cebu and beyond.",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1346978700097331": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1346978700097331",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1346978700097331/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Open pickleball play in Cebu City? - Facebook",
+      "snippet": "Per chat gpt the nearest is City Sports Club Cebu pickleball court. 󰍸.",
+      "domain": "facebook.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845": {
+      "canonicalUrl": "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845",
+      "latestUrl": "https://www.facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845/",
+      "firstDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:27.335Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Cebu Pickleball DUPR Club | Cebu City - Facebook",
+      "snippet": "Cebu Pickleball DUPR Club, Cebu City. 928 likes · 750 talking about this. Welcome to Cebu Pickleball DUPR Club! The official DUPR partner club here in Cebu.",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": "2026-03-09T16:13:27.335Z"
+    }
+  }
+}

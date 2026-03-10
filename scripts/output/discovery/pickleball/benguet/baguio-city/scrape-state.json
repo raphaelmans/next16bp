@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:45:46.141Z",
+  "updatedAt": "2026-03-10T02:46:29.814Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/cordillera-administrative-region/baguio/philippine-baptist-theological-seminary": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/cordillera-administrative-region/baguio/philippine-baptist-theological-seminary",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/cordillera-administrative-region/baguio/philippine-baptist-theological-seminary",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "philippine baptist theological seminary|baguio city|benguet",
+      "lastRowName": "Philippine Baptist Theological Seminary"
+    },
+    "https://www.youtube.com/watch?v=s1K_Qy4CddY": {
+      "canonicalUrl": "https://www.youtube.com/watch?v=s1K_Qy4CddY",
+      "latestUrl": "https://www.youtube.com/watch?v=s1K_Qy4CddY",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://bookings-test.baguio.gov.ph/": {
+      "canonicalUrl": "https://bookings-test.baguio.gov.ph/",
+      "latestUrl": "https://bookings-test.baguio.gov.ph/",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://baguioheraldexpressonline.com/la-trinidad-has-a-growing-pickleball-community": {
+      "canonicalUrl": "https://baguioheraldexpressonline.com/la-trinidad-has-a-growing-pickleball-community",
+      "latestUrl": "https://baguioheraldexpressonline.com/la-trinidad-has-a-growing-pickleball-community/",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://mtbeacon.rappler.com/203/not-just-for-seniors-pickleball-gains-fans-in-baguio": {
+      "canonicalUrl": "https://mtbeacon.rappler.com/203/not-just-for-seniors-pickleball-gains-fans-in-baguio",
+      "latestUrl": "https://mtbeacon.rappler.com/203/not-just-for-seniors-pickleball-gains-fans-in-baguio/",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.youtube.com/watch?v=UqXxFyTNEww": {
+      "canonicalUrl": "https://www.youtube.com/watch?v=UqXxFyTNEww",
+      "latestUrl": "https://www.youtube.com/watch?v=UqXxFyTNEww",
+      "firstDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "lastDiscoveredAt": "2026-03-10T02:45:46.141Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:45:46.141Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "philippine baptist theological seminary|baguio city|benguet": {
+      "rowKey": "philippine baptist theological seminary|baguio city|benguet",
+      "name": "Philippine Baptist Theological Seminary",
+      "city": "BAGUIO CITY",
+      "province": "BENGUET",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/cordillera-administrative-region/baguio/philippine-baptist-theological-seminary",
+      "firstSeenAt": "2026-03-10T02:45:46.141Z",
+      "lastSeenAt": "2026-03-10T02:45:46.141Z"
+    }
+  }
+}

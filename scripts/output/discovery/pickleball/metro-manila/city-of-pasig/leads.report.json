@@ -1,0 +1,62 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Pasig",
+    "citySlug": "city-of-pasig",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:35.427Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Pasig",
+    "pickleball court City of Pasig Metro Manila",
+    "City of Pasig pickleball",
+    "courts in City of Pasig Metro Manila pickleball",
+    "sports center City of Pasig Metro Manila pickleball",
+    "pickleball club City of Pasig Metro Manila",
+    "pickleball reservations City of Pasig Metro Manila"
+  ],
+  "emittedUrls": [],
+  "skippedAlreadyDiscovered": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig",
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig"
+  ],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119627854992091/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119627854992091/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119627854992091/",
+      "score": 1
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299371344858067/",
+      "score": 1
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119627854992091/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4004785096476368/",
+      "score": 4
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/metro-manila/pasig-city/ccf-center",
+      "score": 9
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-pasig/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-pasig/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-pasig/scrape-state.json"
+}

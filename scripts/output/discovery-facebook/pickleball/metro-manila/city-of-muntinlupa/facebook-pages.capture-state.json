@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-muntinlupa",
+  "createdAt": "2026-03-10T04:02:38.640Z",
+  "updatedAt": "2026-03-10T04:02:58.369Z",
+  "urls": {
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-10T04:02:40.856Z",
+      "lastCapturedAt": "2026-03-10T04:02:40.856Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

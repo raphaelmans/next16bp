@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "taguig",
+    "provinceName": "Metro Manila",
+    "cityName": "Taguig"
+  },
+  "generatedAt": "2026-03-09T16:33:28.076Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 1,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 1,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": []
+}

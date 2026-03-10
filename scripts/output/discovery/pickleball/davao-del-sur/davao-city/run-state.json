@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:davao-city",
+  "createdAt": "2026-03-09T16:41:48.880Z",
+  "updatedAt": "2026-03-09T16:41:49.120Z",
+  "scope": {
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "davao-city",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Davao City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "c1e73673-5bab-48ad-847c-d3d378308f59",
+    "757e53d5-cef7-4f08-9ef8-c925fd851849",
+    "7c0ed25d-8b4a-471d-954d-178f76411754"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:48.891Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:48.894Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:48.895Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.013Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.013Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.120Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

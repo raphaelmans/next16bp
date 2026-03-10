@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T02:39:00.869Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 1,
+  "noDataUrls": 2,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 2,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "lotus central mall|imus city|cavite",
+      "name": "Lotus Central Mall",
+      "city": "IMUS CITY",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+      "firstSeenAt": "2026-03-10T02:39:00.869Z",
+      "lastSeenAt": "2026-03-10T02:39:00.869Z"
+    }
+  ]
+}

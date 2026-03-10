@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:iloilo-city",
+  "createdAt": "2026-03-09T16:40:14.638Z",
+  "updatedAt": "2026-03-09T16:57:48.473Z",
+  "urls": {
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstCapturedAt": "2026-03-09T16:40:21.269Z",
+      "lastCapturedAt": "2026-03-09T16:56:37.421Z",
+      "status": "captured",
+      "title": "PicklePoint Iloilo | Iloilo City | Facebook",
+      "venueName": "PicklePoint Iloilo",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "PicklePoint Iloilo"
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstCapturedAt": "2026-03-09T16:40:42.513Z",
+      "lastCapturedAt": "2026-03-09T16:56:52.987Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697": {
+      "canonicalUrl": "https://facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697",
+      "latestUrl": "https://www.facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697/",
+      "firstCapturedAt": "2026-03-09T16:41:03.789Z",
+      "lastCapturedAt": "2026-03-09T16:57:15.361Z",
+      "status": "captured",
+      "title": "Gran Plains Pickleball Center | Iloilo City | Facebook",
+      "venueName": "Gran Plains Pickleball Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/676631645534957": {
+      "canonicalUrl": "https://facebook.com/676631645534957",
+      "latestUrl": "https://www.facebook.com/676631645534957/",
+      "firstCapturedAt": "2026-03-09T16:41:28.658Z",
+      "lastCapturedAt": "2026-03-09T16:57:35.279Z",
+      "status": "captured",
+      "title": "PicklePoint Iloilo | Iloilo City | Facebook",
+      "venueName": "PicklePoint Iloilo",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "PicklePoint Iloilo"
+    }
+  }
+}

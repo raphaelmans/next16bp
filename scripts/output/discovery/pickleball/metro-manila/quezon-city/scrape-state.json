@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:05:48.787Z",
+  "updatedAt": "2026-03-09T16:06:06.733Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+      "firstDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "lastDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:05:48.786Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "quezon city sports club|quezon city|metro manila",
+      "lastRowName": "Quezon City Sports Club"
+    }
+  },
+  "rows": {
+    "quezon city sports club|quezon city|metro manila": {
+      "rowKey": "quezon city sports club|quezon city|metro manila",
+      "name": "Quezon City Sports Club",
+      "city": "QUEZON CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+      "firstSeenAt": "2026-03-09T16:05:48.786Z",
+      "lastSeenAt": "2026-03-09T16:05:48.786Z"
+    }
+  }
+}

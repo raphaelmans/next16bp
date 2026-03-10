@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-09T17:15:59.303Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 1,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "flair pickleball club|city of mandaluyong|metro manila",
+      "name": "Flair Pickleball Club",
+      "city": "CITY OF MANDALUYONG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/mandaluyong/flair-pickleball-club",
+      "firstSeenAt": "2026-03-09T17:15:59.303Z",
+      "lastSeenAt": "2026-03-09T17:15:59.303Z"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:imus-city:facebook",
+  "createdAt": "2026-03-10T03:46:01.052Z",
+  "updatedAt": "2026-03-10T03:48:42.027Z",
+  "scope": {
+    "provinceSlug": "cavite",
+    "citySlug": "imus-city",
+    "provinceName": "Cavite",
+    "cityName": "Imus City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "beaa401d-2965-432c-9d80-a343c53ff687",
+    "19895239-6914-400a-9014-ddad7037e4a9"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:46:01.056Z",
+      "finishedAt": "2026-03-10T03:46:09.848Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:46:09.848Z",
+      "finishedAt": "2026-03-10T03:47:10.396Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:47:10.398Z",
+      "finishedAt": "2026-03-10T03:47:39.216Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:47:39.703Z",
+      "finishedAt": "2026-03-10T03:48:20.797Z",
+      "lastError": null,
+      "notes": "processed 2 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T03:48:20.929Z",
+      "lastError": null,
+      "notes": "verified 2 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:48:20.931Z",
+      "finishedAt": "2026-03-10T03:48:42.026Z",
+      "lastError": null,
+      "notes": "backfilled 2 facebook place ids"
+    }
+  }
+}

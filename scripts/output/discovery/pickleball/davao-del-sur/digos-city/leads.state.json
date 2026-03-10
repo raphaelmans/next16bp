@@ -1,0 +1,119 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:digos-city",
+  "createdAt": "2026-03-09T17:33:35.668Z",
+  "updatedAt": "2026-03-09T17:33:54.196Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Digos City",
+    "pickleball court Digos City Davao Del Sur",
+    "Digos City pickleball",
+    "courts in Digos City Davao Del Sur pickleball",
+    "sports center Digos City Davao Del Sur pickleball",
+    "pickleball club Digos City Davao Del Sur",
+    "pickleball reservations Digos City Davao Del Sur",
+    "host-map:cebupickleballcourts.com:Digos City",
+    "host-map:cebupickleballcourts.com:Digos",
+    "host-map:dumapickleball.com:Digos City",
+    "host-map:dumapickleball.com:Digos",
+    "site:cebupickleballcourts.com Digos City Davao Del Sur pickleball",
+    "site:dumapickleball.com Digos City Davao Del Sur pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@pickleball-point-digos": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickleball-point-digos",
+      "latestUrl": "https://reclub.co/clubs/@pickleball-point-digos",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "Digos City pickleball",
+      "title": "Pickleball Point Digos",
+      "snippet": "Play Pickleball with Pickleball Point Digos! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://threads.com/@louievuitons/post/DUOUuxwkuJv/from-davao-to-digos-pickleball": {
+      "canonicalUrl": "https://threads.com/@louievuitons/post/DUOUuxwkuJv/from-davao-to-digos-pickleball",
+      "latestUrl": "https://www.threads.com/@louievuitons/post/DUOUuxwkuJv/from-davao-to-digos-pickleball",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "pickleball court Digos City Davao Del Sur",
+      "title": "From Davao City to Digos City Pickleball",
+      "snippet": "From Davao City to Digos City Pickleball. May be an image of tennis, trampoline, lighting, basketball court and text. May be an image of tennis, racket, ...",
+      "domain": "threads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballpoint.net/": {
+      "canonicalUrl": "https://pickleballpoint.net/",
+      "latestUrl": "https://www.pickleballpoint.net/",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "sports center Digos City Davao Del Sur pickleball",
+      "title": "Pickleball Point Sports Center | 12 pickleball courts. Competitive ...",
+      "snippet": "Book a Court. Contact. hello@picklepointsports.com · 09526571844; Brgy. Cogon, Digos city, Davao del Sur. © 2026 Pickleball Point Sports Center. All rights ...",
+      "domain": "pickleballpoint.net",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/davao-region/davao-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/davao-region/davao-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "pickleball courts in Davao Del Sur Digos City",
+      "title": "4 Most Popular Pickleball Courts in Davao City, Davao Region",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Davao City, Davao Region! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/6SVSVJ": {
+      "canonicalUrl": "https://reclub.co/m/6SVSVJ",
+      "latestUrl": "https://reclub.co/m/6SVSVJ",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "pickleball club Digos City Davao Del Sur",
+      "title": "pickleball saturday at digos city",
+      "snippet": "Diversion Road, Cogon, Digos City, Davao Del Sur, 8002. see map. Per Player. $200.00. All skill levels are welcome 3 Courts ⏰ 4:00 PM – 7 ...",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballpoint.net/events": {
+      "canonicalUrl": "https://pickleballpoint.net/events",
+      "latestUrl": "https://www.pickleballpoint.net/events",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "sports center Digos City Davao Del Sur pickleball",
+      "title": "Events - Pickleball Point Sports Center",
+      "snippet": "Book a Court. Contact. hello@picklepointsports.com · 09526571844; Brgy. Cogon, Digos city, Davao del Sur. © 2026 Pickleball Point Sports Center. All rights ...",
+      "domain": "pickleballpoint.net",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballpoint.net/court-schedule": {
+      "canonicalUrl": "https://pickleballpoint.net/court-schedule",
+      "latestUrl": "https://www.pickleballpoint.net/court-schedule",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "pickleball reservations Digos City Davao Del Sur",
+      "title": "Court Schedule - Pickleball Point Sports Center",
+      "snippet": "Book a Court. Contact. hello@picklepointsports.com · 09526571844; Brgy. Cogon, Digos city, Davao del Sur. © 2026 Pickleball Point Sports Center. All rights ...",
+      "domain": "pickleballpoint.net",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletown.skedda.com/": {
+      "canonicalUrl": "https://pickletown.skedda.com/",
+      "latestUrl": "https://pickletown.skedda.com/",
+      "firstDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "lastDiscoveredAt": "2026-03-09T17:33:35.668Z",
+      "sourceQuery": "pickleball reservations Digos City Davao Del Sur",
+      "title": "PickleTown Davao | Skedda: Booking System",
+      "snippet": "PickleTown Davao online booking system. Powered by skedda.com.",
+      "domain": "pickletown.skedda.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

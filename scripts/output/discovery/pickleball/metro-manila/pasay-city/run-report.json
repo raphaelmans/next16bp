@@ -1,0 +1,84 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "pasay-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Pasay City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "failed",
+      "startedAt": "2026-03-09T17:18:59.023Z",
+      "finishedAt": "2026-03-09T17:21:03.551Z",
+      "lastError": "Failed query: select \"id\", \"name\", \"city\", \"province\" from \"place\" where \"place\".\"name\" in ($1, $2)\nparams: Pickle Bay Seascape Village,Pal Sports Center",
+      "notes": null
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:19:15.149Z",
+      "finishedAt": "2026-03-09T17:19:40.833Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:19:40.833Z",
+      "finishedAt": "2026-03-09T17:20:33.538Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  },
+  "failedStage": "discovery",
+  "error": "Failed query: select \"id\", \"name\", \"city\", \"province\" from \"place\" where \"place\".\"name\" in ($1, $2)\nparams: Pickle Bay Seascape Village,Pal Sports Center"
+}

@@ -1,0 +1,63 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Mandaue City",
+    "citySlug": "mandaue-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:43.054Z",
+  "queries": [
+    "pickleball courts in Cebu Mandaue City",
+    "pickleball court Mandaue City Cebu",
+    "Mandaue City pickleball",
+    "courts in Mandaue City Cebu pickleball",
+    "sports center Mandaue City Cebu pickleball",
+    "pickleball club Mandaue City Cebu",
+    "pickleball reservations Mandaue City Cebu"
+  ],
+  "emittedUrls": [
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://reclub.co/clubs/@mandaue-city-pickleball-club"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/p/FA-Sports-Center-61582557202059/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/stephen.nellas/videos/pickleballing-at-fa-sports-center-in-mandaue-location-pagsabungan-mandaue-cityse/1587008095565109/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1135578091237394/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/cebuupcomingevents/posts/we-are-open-for-bookingpickleball-courtmonday-to-sunday6am-to-5pm-350005pm-to-11/1275952827906886/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "score": 11
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/mandaue-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/mandaue-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/mandaue-city/scrape-state.json"
+}

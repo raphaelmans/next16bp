@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:mandaue-city",
+  "createdAt": "2026-03-09T16:01:43.053Z",
+  "updatedAt": "2026-03-09T16:01:44.455Z",
+  "queries": [
+    "pickleball courts in Cebu Mandaue City",
+    "pickleball court Mandaue City Cebu",
+    "Mandaue City pickleball",
+    "courts in Mandaue City Cebu pickleball",
+    "sports center Mandaue City Cebu pickleball",
+    "pickleball club Mandaue City Cebu",
+    "pickleball reservations Mandaue City Cebu"
+  ],
+  "urls": {
+    "https://facebook.com/Sweetspotpickleballcourts": {
+      "canonicalUrl": "https://facebook.com/Sweetspotpickleballcourts",
+      "latestUrl": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "pickleball reservations Mandaue City Cebu",
+      "title": "Sweet Spot Pickleball Courts | Mandaue City",
+      "snippet": "New Booking Policy PLEASE take time to read before booking · May be an ... DASERVERS PICKLEBALL CEBU! (6th OPEN PLAY) ‼️✨ (02.17.26) Kung Hei ...",
+      "domain": "facebook.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu": {
+      "canonicalUrl": "https://reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu",
+      "latestUrl": "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "pickleball courts in Cebu Mandaue City",
+      "title": "Pickleball Court Rates & Locations in Cebu 🏓 : r/PickleballCebu",
+      "snippet": "Hoops & Racket Mandaue A.S. Fortuna St, Mandaue City, 6014 Cebu Rate: ₱350/hour. Match Point - Badminton and Pickleball Court",
+      "domain": "reddit.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": "2026-03-09T16:01:43.054Z"
+    },
+    "https://reclub.co/clubs/@mandaue-city-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@mandaue-city-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@mandaue-city-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "pickleball club Mandaue City Cebu",
+      "title": "Mandaue City Pickleball Club",
+      "snippet": "Play Pickleball with Mandaue City Pickleball Club! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": "2026-03-09T16:01:43.054Z"
+    },
+    "https://facebook.com/p/FA-Sports-Center-61582557202059": {
+      "canonicalUrl": "https://facebook.com/p/FA-Sports-Center-61582557202059",
+      "latestUrl": "https://www.facebook.com/p/FA-Sports-Center-61582557202059/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "sports center Mandaue City Cebu pickleball",
+      "title": "FA Sports Center",
+      "snippet": "A community racquet sports facility located inside Fervent Academy, offering Pickleball, Tennis, Badminton, and other racquet sports for students, families, ...",
+      "domain": "facebook.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/stephen.nellas/videos/pickleballing-at-fa-sports-center-in-mandaue-location-pagsabungan-mandaue-cityse/1587008095565109": {
+      "canonicalUrl": "https://facebook.com/stephen.nellas/videos/pickleballing-at-fa-sports-center-in-mandaue-location-pagsabungan-mandaue-cityse/1587008095565109",
+      "latestUrl": "https://www.facebook.com/stephen.nellas/videos/pickleballing-at-fa-sports-center-in-mandaue-location-pagsabungan-mandaue-cityse/1587008095565109/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "sports center Mandaue City Cebu pickleball",
+      "title": "Pickleballing at FA Sports Center in Mandaue Location: Pagsabungan ...",
+      "snippet": null,
+      "domain": "facebook.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1135578091237394": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1135578091237394",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1135578091237394/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "pickleball club Mandaue City Cebu",
+      "title": "Where can i play pickleball in cebu? in mandaue or lapulapu area.",
+      "snippet": "Where can i play pickleball in cebu? in mandaue or lapulapu area.",
+      "domain": "facebook.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/cebuupcomingevents/posts/we-are-open-for-bookingpickleball-courtmonday-to-sunday6am-to-5pm-350005pm-to-11/1275952827906886": {
+      "canonicalUrl": "https://facebook.com/cebuupcomingevents/posts/we-are-open-for-bookingpickleball-courtmonday-to-sunday6am-to-5pm-350005pm-to-11/1275952827906886",
+      "latestUrl": "https://www.facebook.com/cebuupcomingevents/posts/we-are-open-for-bookingpickleball-courtmonday-to-sunday6am-to-5pm-350005pm-to-11/1275952827906886/",
+      "firstDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:43.054Z",
+      "sourceQuery": "pickleball reservations Mandaue City Cebu",
+      "title": "We are open for booking Pickleball Court Monday to Sunday 6am to 5pm",
+      "snippet": "We are open for booking Pickleball Court Monday to Sunday 6am to 5pm - 350.00 5pm to 11pm - 400.00 We have 5 courts 888 Mendco Land Venture ...",
+      "domain": "facebook.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

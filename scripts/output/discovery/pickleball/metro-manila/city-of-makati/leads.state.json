@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-makati",
+  "createdAt": "2026-03-09T16:00:53.484Z",
+  "updatedAt": "2026-03-09T16:01:38.099Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Makati",
+    "pickleball court City of Makati Metro Manila",
+    "City of Makati pickleball",
+    "courts in City of Makati Metro Manila pickleball",
+    "sports center City of Makati Metro Manila pickleball",
+    "pickleball club City of Makati Metro Manila",
+    "pickleball reservations City of Makati Metro Manila"
+  ],
+  "urls": {
+    "https://facebook.com/p/The-Pickle-Spot-Makati-61577283254550": {
+      "canonicalUrl": "https://facebook.com/p/The-Pickle-Spot-Makati-61577283254550",
+      "latestUrl": "https://www.facebook.com/p/The-Pickle-Spot-Makati-61577283254550/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "City of Makati pickleball",
+      "title": "The Pickle Spot Makati",
+      "snippet": "Because pickleball doesn't have a curfew. INTERMEDIATE TO HIGH ONLY ⏰ Sun, Nov 23 1:00 AM The Pickle Spot Makati RSVP: - at Makati City, Manila, ...",
+      "domain": "facebook.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "courts in City of Makati Metro Manila pickleball",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Every city you can play pickleball in Metro Manila ; Quezon City · 82 courts ; Parañaque · 30 courts ; Pasig · 37 courts ; Makati · 18 courts ; Manila · 16 courts ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": "2026-03-09T16:00:53.486Z"
+    },
+    "https://facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613": {
+      "canonicalUrl": "https://facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613",
+      "latestUrl": "https://www.facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "pickleball reservations City of Makati Metro Manila",
+      "title": "Calling all pickleball players! 🏓 Makati has new pickleball courts in the city ...",
+      "snippet": "PTPA Looking for a place to play Pickleball in Makati? 🏙️ Come visit Mansion Sports Box Manila and reserve your spot today! Let's hit the ...",
+      "domain": "facebook.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1254494966012372": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1254494966012372",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1254494966012372/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "courts in City of Makati Metro Manila pickleball",
+      "title": "Pickleball courts for beginners near Rockwell Mall in Makati City?",
+      "snippet": "The zone open play 10-1 pm everyday except weekends 200 pesos|PEDCI Village East Cainta Rizal . Hitting partner|The zone:)",
+      "domain": "facebook.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/thezonesportscenter": {
+      "canonicalUrl": "https://facebook.com/thezonesportscenter",
+      "latestUrl": "https://www.facebook.com/thezonesportscenter/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "sports center City of Makati Metro Manila pickleball",
+      "title": "Zone Sports Center | Makati",
+      "snippet": "Zone Sports Center. Your go-to Badminton, Pickleball, and Basketball court rentals! Book now via this link: bit ...",
+      "domain": "facebook.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": "2026-03-09T16:00:53.486Z"
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/makati/makati-sports-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/makati/makati-sports-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-sports-club",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "pickleball club City of Makati Metro Manila",
+      "title": "Play Pickleball at Makati Sports Club: Court Information",
+      "snippet": "Makati Sports Club is a place to play pickleball in Makati, NCR. There are 2 outdoor hard courts. The lines are permanent, and portable nets are available.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": "2026-03-09T16:01:36.598Z"
+    },
+    "https://facebook.com/p/Makati-Pickleball-Club-100088660429202": {
+      "canonicalUrl": "https://facebook.com/p/Makati-Pickleball-Club-100088660429202",
+      "latestUrl": "https://www.facebook.com/p/Makati-Pickleball-Club-100088660429202/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "pickleball club City of Makati Metro Manila",
+      "title": "Makati Pickleball Club",
+      "snippet": "Makati Pickleball Club is in Pelican Bay, Florida. Feb ... A video clip from David Lavy's Advanced Players and Coaches Bootcamp held in December in Manila.",
+      "domain": "facebook.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/3928001340821411": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/3928001340821411",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/3928001340821411/",
+      "firstDiscoveredAt": "2026-03-09T16:00:53.486Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:36.598Z",
+      "sourceQuery": "pickleball reservations City of Makati Metro Manila",
+      "title": "Where to book pickleball courts for open play in Makati?",
+      "snippet": "Hello! Looking for pickleball courts to book / open play in Makati. (OFW here from Cayman Islands returning to PH for vacation). Thank you!",
+      "domain": "facebook.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

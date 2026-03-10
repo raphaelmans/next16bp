@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:davao-city:facebook",
+  "createdAt": "2026-03-09T17:14:43.672Z",
+  "updatedAt": "2026-03-09T17:28:34.586Z",
+  "scope": {
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "davao-city",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Davao City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "ca06b089-8dd7-4a47-b3e6-456698e6abde",
+    "4e051b5b-2e8b-41bc-a339-48264a78f77a",
+    "b312a8b3-c9eb-40f5-8214-0c34b3cdc31d"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.672Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.673Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.673Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.803Z",
+      "lastError": null,
+      "notes": "all approved facebook rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.803Z",
+      "lastError": null,
+      "notes": "all approved facebook rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:28:34.586Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

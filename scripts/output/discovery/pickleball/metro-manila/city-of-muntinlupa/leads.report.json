@@ -1,0 +1,130 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Muntinlupa",
+    "citySlug": "city-of-muntinlupa",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:28:42.245Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Muntinlupa",
+    "pickleball court City of Muntinlupa Metro Manila",
+    "City of Muntinlupa pickleball",
+    "courts in City of Muntinlupa Metro Manila pickleball",
+    "sports center City of Muntinlupa Metro Manila pickleball",
+    "pickleball club City of Muntinlupa Metro Manila",
+    "pickleball reservations City of Muntinlupa Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Muntinlupa",
+    "host-map:dumapickleball.com:City of Muntinlupa",
+    "site:cebupickleballcourts.com City of Muntinlupa Metro Manila pickleball",
+    "site:dumapickleball.com City of Muntinlupa Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+    "https://www.philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://acci.com.ph/facilities/pickle-ball/",
+      "score": 2
+    },
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOooXz_ch4ReN5uBNwetyq3YNtG7NFRbc7Zam1Mc9kxsgl2pQVs-Q",
+      "score": 5
+    },
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballhubph.playbypoint.com/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/cuenca-community-park",
+      "score": 9
+    },
+    {
+      "url": "https://pickleballhubph.playbycourt.com/book/pickleballhubph",
+      "score": 13
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.instagram.com/p/C-dCrVwg9NJ/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.instagram.com/p/DTXuBmKEml_/",
+    "https://www.instagram.com/reel/DUNWuvngOYx/",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-pickleball-court-is-now-open-already-serving-hits-catch-the-highlights-and-s/1312124737622967/",
+    "https://www.facebook.com/61569681526112/",
+    "https://www.instagram.com/p/C-dCrVwg9NJ/",
+    "https://www.instagram.com/reel/DUPO1aRjUVn/",
+    "https://www.facebook.com/SMCenterMuntinlupa/videos/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1918964655360171/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.instagram.com/reel/DUNWuvngOYx/",
+    "https://www.instagram.com/p/DTXuBmKEml_/",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/alabangbulletin/posts/may-pickle-ball-court-na-sa-smcenter_muntinlupa-neighborsopen-daily-from-8am-to-/1199431618994272/",
+    "https://www.instagram.com/p/C-dCrVwg9NJ/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.instagram.com/reel/DUNWuvngOYx/",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.instagram.com/p/C-dCrVwg9NJ/",
+    "https://www.facebook.com/SMCenterMuntinlupa/videos/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1918964655360171/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1110016973793506/",
+    "https://www.tiktok.com/@rhijean/video/7521338668192222471",
+    "https://www.facebook.com/p/Pickleball-Hub-PH-61569681526112/",
+    "https://www.facebook.com/61568779744215/posts/we-love-air-conditioned-courts-thats-why-we-are-excited-for-the-new-paloo-courts/122159413382625991/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4372157866405754/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-players-share-why-paloo-sm-center-muntinlupa-pickleball-courts-is-a-great-pl/1339624368206337/",
+    "https://www.facebook.com/smgamepark/posts/our-sm-center-muntinlupa-pickleball-court-is-now-open-already-serving-hits-catch/921343533741939/",
+    "https://www.facebook.com/SMCenterMuntinlupa/posts/our-pickleball-court-is-now-open-already-serving-hits-catch-the-highlights-and-s/1312124737622967/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3869237163364496/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-muntinlupa/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-muntinlupa/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-muntinlupa/scrape-state.json"
+}

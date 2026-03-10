@@ -1,0 +1,182 @@
+{
+  "scope": {
+    "provinceName": "Benguet",
+    "provinceSlug": "benguet",
+    "cityName": "Baguio City",
+    "citySlug": "baguio-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T03:42:29.750Z",
+  "queries": [
+    "site:facebook.com pickleball Baguio City Benguet",
+    "site:facebook.com \"Baguio City\" \"Benguet\" \"pickleball\"",
+    "site:facebook.com \"Baguio City\" \"pickleball club\"",
+    "site:facebook.com \"Baguio City\" \"pickleball court\"",
+    "site:facebook.com \"Benguet\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/johnhaysportspavilion/",
+    "https://www.facebook.com/ymcabaguiopickleballclub/",
+    "https://www.facebook.com/p/Side-Out-Paddlers-61568108369669/",
+    "https://www.facebook.com/p/YMCA-Baguio-Pickleball-61568269274230/",
+    "https://www.facebook.com/people/Baguio-Tennis-and-Pickleball-Court/61578046732832/",
+    "https://www.facebook.com/photo.php?fbid=745187551816866&set=a.119502077718753&id=100089768833030"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/valleypointcampsite/posts/pickleball-or-glampingwhy-choose-if-you-can-have-both-our-pickleball-court-is-st/1327435009425725/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/100089768833030/posts/%F0%9D%90%88%F0%9D%90%81%F0%9D%90%8F-%F0%9D%90%81%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%9E%F0%9D%90%AD-%F0%9D%90%82%F0%9D%90%A1%F0%9D%90%9A%F0%9D%90%A9%F0%9D%90%AD%F0%9D%90%9E%F0%9D%90%AB-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%A6%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%B2-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%B2-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94join-us-on-%F0%9D%90%85%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%AB%F0%9D%90%AE%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%B2-%F0%9D%9F%8F%F0%9D%9F%93-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94-for-a-fun-f/848119201523700/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/ymcabaguiocity/posts/-discover-the-fastest-growing-sport-in-the-world-pickleballfun-exciting-and-perf/1214009827438062/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/246052642909125/posts/1818806608967046/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4259518737669668/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3993972607557617/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/246052642909125/posts/1818806608967046/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100089768833030/posts/%F0%9D%90%88%F0%9D%90%81%F0%9D%90%8F-%F0%9D%90%81%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%9E%F0%9D%90%AD-%F0%9D%90%82%F0%9D%90%A1%F0%9D%90%9A%F0%9D%90%A9%F0%9D%90%AD%F0%9D%90%9E%F0%9D%90%AB-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%A6%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%B2-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%B2-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94join-us-on-%F0%9D%90%85%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%AB%F0%9D%90%AE%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%B2-%F0%9D%9F%8F%F0%9D%9F%93-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94-for-a-fun-f/848119201523700/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ymcabaguiocity/posts/-discover-the-fastest-growing-sport-in-the-world-pickleballfun-exciting-and-perf/1214009827438062/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4259518737669668/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3993972607557617/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/baguioherald/posts/la-trinidad-benguet-pops-and-pings-fill-the-court-of-the-commission-on-audit-coa/1338663618280964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4271958983092310/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1328577497759060/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178425479112328/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/bienzoleta/videos/baguioleaguepickleball-%EF%B8%8Fanother-cool-city-another-fun-pickleball-weekend-filled-/1397424271822356/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4317330045221870/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/bp2asia/posts/we-love-how-pickleball-connects-people-from-all-over-the-world-on-the-court-what/1028276305981016/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4322717001349841/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4251532191801656/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092716860799/posts/baguio-citys-newly-constructed-tennis-courts-and-and-a-pickleball-court-at-the-a/595343363566221/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1328577497759060/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4295818137373061/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178425479112328/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/954150687967884/posts/25891054777184130/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1205466417581894/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1024178609044010/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3993972607557617/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/baguioherald/posts/la-trinidad-benguet-pops-and-pings-fill-the-court-of-the-commission-on-audit-coa/1338663618280964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4259518737669668/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100089768833030/posts/the-%F0%9D%90%88%F0%9D%90%81%F0%9D%90%8F-%F0%9D%90%81%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%A2%F0%9D%90%A8-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%9E%F0%9D%90%AD-%F0%9D%90%82%F0%9D%90%A1%F0%9D%90%9A%F0%9D%90%A9%F0%9D%90%AD%F0%9D%90%9E%F0%9D%90%AB-participated-in-the-celebration-of-the-%F0%9D%9F%93%F0%9D%9F%91%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%85%F0%9D%90%A8%F0%9D%90%AE%F0%9D%90%A7%F0%9D%90%9D/855704557431831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/VictoriasCityInfo/posts/check-out-the-final-schedule-for-the-kadalag-an-festival-pickleball-tournament-2/921062800668766/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/bienzoleta/videos/pickleball-highlights-good-shot-ankle-wrist-sprain%EF%B8%8Fdramatic-roll-1010-performanc/1444916327358564/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/bp2asia/posts/from-abra-to-baguio-pickleball-connects-us-all-what-a-day-the-abra-aces-pickleba/1281409540667690/",
+      "score": 12
+    },
+    {
+      "url": "https://m.facebook.com/100089768833030/photos/660967760238846/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages.state.json"
+}

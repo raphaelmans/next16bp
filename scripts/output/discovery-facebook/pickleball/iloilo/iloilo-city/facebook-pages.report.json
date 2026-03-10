@@ -1,0 +1,48 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Iloilo City",
+    "citySlug": "iloilo-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:56.029Z",
+  "queries": [
+    "site:facebook.com pickleball Iloilo City Iloilo",
+    "site:facebook.com \"Iloilo City\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Iloilo City\" \"pickleball club\"",
+    "site:facebook.com \"Iloilo City\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697/",
+    "https://www.facebook.com/676631645534957/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1184213529240765/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1184213529240765/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/a-new-era-of-pickleball-hits-iloiloiloilo-city-is-set-to-serve-something-extraor/912744584987268/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1184213529240765/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages.state.json"
+}

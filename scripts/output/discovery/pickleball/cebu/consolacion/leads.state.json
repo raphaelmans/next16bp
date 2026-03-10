@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:consolacion",
+  "createdAt": "2026-03-09T17:27:53.995Z",
+  "updatedAt": "2026-03-09T17:28:34.744Z",
+  "queries": [
+    "pickleball courts in Cebu Consolacion",
+    "pickleball court Consolacion Cebu",
+    "Consolacion pickleball",
+    "courts in Consolacion Cebu pickleball",
+    "sports center Consolacion Cebu pickleball",
+    "pickleball club Consolacion Cebu",
+    "pickleball reservations Consolacion Cebu",
+    "host-map:cebupickleballcourts.com:Consolacion",
+    "host-map:dumapickleball.com:Consolacion",
+    "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+    "site:dumapickleball.com Consolacion Cebu pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball reservations Consolacion Cebu",
+      "title": "Play Pickleball at SM City Consolacion: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at SM City Consolacion! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/match-point-consolacion": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-consolacion",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-consolacion/",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+      "title": "Match Point Consolacion | Cebu Pickleball Courts",
+      "snippet": "Match Point Consolacion offers indoor pickleball courts with US-standard acrylic surfaces and multipurpose courts.",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball reservations Consolacion Cebu",
+      "title": "Play Pickleball at The Smash Yard: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at The Smash Yard! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball courts in Cebu Consolacion",
+      "title": "Match Point Pickleball Consolacion",
+      "snippet": "53 activities. Match Point 2.0. Cebu's first indoor dedicated pickleball court now bigger and better! Organized By. Ryan Ong. Jessa Lamoste. Cleofe Gejon.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/th/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/th/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball club Consolacion Cebu",
+      "title": "Match Point Pickleball Consolacion",
+      "snippet": "Match Point 2.0 Cebu's first indoor dedicated pickleball court now bigger and better!.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "sports center Consolacion Cebu pickleball",
+      "title": "Active Hub at SM",
+      "snippet": "But we're more than just a Pickleball venue—we're your Pickleball buddy. ... SM Center Ormoc (4 courts); SM City Consolacion (3 courts); SM City Roxas (1 ...",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball reservations Consolacion Cebu",
+      "title": "Match Point Pickleball Consolacion",
+      "snippet": "Match Point 2.0 Cebu's first indoor dedicated pickleball court now bigger and better!.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/central-visayas/consolacion": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/central-visayas/consolacion",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-visayas/consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "pickleball reservations Consolacion Cebu",
+      "title": "Consolacion PickleBall Stays and Rentals",
+      "snippet": "Plan Your Perfect Pickleball Getaway in Consolacion on PickleTrip™ — Upgrade to Premiere Brand Homes! Great Deals on Places to Rent in Consolacion.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/the-smash-yard": {
+      "canonicalUrl": "https://cebupickleballcourts.com/the-smash-yard",
+      "latestUrl": "https://cebupickleballcourts.com/the-smash-yard/",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+      "title": "The Smash Yard - Cebu Pickleball Courts",
+      "snippet": "The Smash Yard Cebu Pickleball in Consolacion offers outdoor courts with hourly rentals and open play options. View court details, schedules ...",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/match-point-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+      "title": "Match Point Liloan - Cebu Pickleball Courts",
+      "snippet": "Match Point Liloan offers 2 indoor pickleball courts in Catarman, Liloan at ₱300 per hour. Open daily from 8AM to 12AM with paddle rentals ...",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/game-changer-mandaue": {
+      "canonicalUrl": "https://cebupickleballcourts.com/game-changer-mandaue",
+      "latestUrl": "https://cebupickleballcourts.com/game-changer-mandaue/",
+      "firstDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "lastDiscoveredAt": "2026-03-09T17:27:53.996Z",
+      "sourceQuery": "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+      "title": "Game Changer Mandaue | Cebu Pickleball Courts",
+      "snippet": "Game Changer Sports Facility in Mandaue City offers indoor pickleball open play with flexible schedules and multipurpose courts.",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -1,0 +1,187 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Liloan",
+    "citySlug": "liloan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T03:52:47.219Z",
+  "queries": [
+    "site:facebook.com pickleball Liloan Cebu",
+    "site:facebook.com \"Liloan\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Liloan\" \"pickleball club\"",
+    "site:facebook.com \"Liloan\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/story.php?story_fbid=122211018512290101&id=61558703037153",
+    "https://www.facebook.com/cebupickleball/",
+    "https://www.facebook.com/people/Liloan-Pickleball-Community/61580520434181/",
+    "https://www.facebook.com/p/CON-Pickleball-Club-61560469654419/",
+    "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+    "https://www.facebook.com/p/HQ-Pickleball-61585259447279/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/open-play-schedule-at-match-point-cebu-match-point-liloanmonday-wednesday-7pm11p/122226057446290101/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/-open-plays-this-week-at-match-point-spots-are-limited-and-these-sessions-fill-u/122221969070290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61552364300725/videos/looking-for-a-fun-place-to-play-pickleball-in-liloan-come-check-out-their-spacio/668765855500460/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375518719403002/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3792879821000231/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/videos/step-onto-the-court-and-immerse-yourself-in-the-world-of-racket-sports-experienc/1247899079922040/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/open-play-schedule-at-match-point-cebu-match-point-liloanmonday-wednesday-7pm11p/122226057446290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358495256047379/posts/1358499272713644/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2952262758410177/posts/3717454441891001/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61552364300725/videos/looking-for-a-fun-place-to-play-pickleball-in-liloan-come-check-out-their-spacio/668765855500460/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2952262758410177/posts/3277796732523443/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2217949501761150/posts/4436088863280525/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3792879821000231/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/curious-about-pickleball-already-love-the-game-either-way-youre-invitedjoin-our-/122183351348290101/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358495256047379/posts/1358499272713644/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375519212736286/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/122169227636290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3792879821000231/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2952262758410177/posts/3297110057258777/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/-open-plays-this-week-at-match-point-spots-are-limited-and-these-sessions-fill-u/122221969070290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358495256047379/posts/1358499272713644/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/JCobsSportsHub/videos/come-and-play-at-the-newest-court-in-liloan-looking-for-a-fresh-spot-to-play-exp/976864284673701/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/191874727860116/posts/2682283282152569/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/open-play-schedule-at-match-point-cebu-match-point-liloanmonday-wednesday-7pm11p/122226057446290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2217949501761150/posts/4436088863280525/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/-open-plays-this-week-at-match-point-spots-are-limited-and-these-sessions-fill-u/122221969070290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430511534586573/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375518719403002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/quisina-pickleball-cebu/1316219467005579/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/keetapublications/posts/kitchenline-pickleball-is-where-pickleball-gets-real-cebus-first-usapa-standard-/1409760644496898/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132038270417716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/seasidehavencebu/posts/our-pickleball-court-is-now-officially-open-to-rent-for-only-p150hour-open-9am-1/1076455260844722/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4122919991329544/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/liloan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/liloan/facebook-pages.state.json"
+}

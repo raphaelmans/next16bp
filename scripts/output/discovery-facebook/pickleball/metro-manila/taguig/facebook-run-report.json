@@ -1,0 +1,84 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "taguig",
+    "provinceName": "Metro Manila",
+    "cityName": "Taguig"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.665Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.666Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "failed",
+      "startedAt": "2026-03-09T17:15:20.952Z",
+      "finishedAt": "2026-03-09T17:15:20.952Z",
+      "lastError": "CSV has no data rows to process",
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  },
+  "failedStage": "facebookDuplicatePreflight",
+  "error": "CSV has no data rows to process"
+}

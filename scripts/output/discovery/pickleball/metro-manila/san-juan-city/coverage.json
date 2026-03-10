@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-09T17:22:16.524Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 7,
+  "scrapedUrls": 1,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "greenhills west clubhouse|san juan city|metro manila",
+      "name": "Greenhills West Clubhouse",
+      "city": "SAN JUAN CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+      "firstSeenAt": "2026-03-09T17:22:16.524Z",
+      "lastSeenAt": "2026-03-09T17:22:16.524Z"
+    }
+  ]
+}

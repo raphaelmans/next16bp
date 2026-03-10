@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-mandaluyong",
+  "createdAt": "2026-03-09T17:19:17.600Z",
+  "updatedAt": "2026-03-09T17:20:19.942Z",
+  "urls": {
+    "https://facebook.com/24.7Pickle.ph": {
+      "canonicalUrl": "https://facebook.com/24.7Pickle.ph",
+      "latestUrl": "https://www.facebook.com/24.7Pickle.ph/",
+      "firstCapturedAt": "2026-03-09T17:19:19.516Z",
+      "lastCapturedAt": "2026-03-09T17:19:19.516Z",
+      "status": "captured",
+      "title": "24/7 Pickle Mandaluyong | Mandaluyong | Facebook",
+      "venueName": "24/7 Pickle Mandaluyong",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/OHPC2640": {
+      "canonicalUrl": "https://facebook.com/OHPC2640",
+      "latestUrl": "https://www.facebook.com/OHPC2640/",
+      "firstCapturedAt": "2026-03-09T17:19:41.800Z",
+      "lastCapturedAt": "2026-03-09T17:19:41.800Z",
+      "status": "captured",
+      "title": "OH Pickleball Court | Mandaluyong | Facebook",
+      "venueName": "OH Pickleball Court",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-09T17:20:00.228Z",
+      "lastCapturedAt": "2026-03-09T17:20:00.228Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

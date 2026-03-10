@@ -1,0 +1,123 @@
+{
+  "version": 1,
+  "scopeKey": "facebook:pickleball:metro-manila:city-of-pasig",
+  "createdAt": "2026-03-09T16:12:49.412Z",
+  "updatedAt": "2026-03-09T16:13:05.966Z",
+  "queries": [
+    "site:facebook.com pickleball City of Pasig Metro Manila",
+    "site:facebook.com \"City of Pasig\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Pasig\" \"pickleball club\"",
+    "site:facebook.com \"City of Pasig\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "urls": {
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1471397970988736": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1471397970988736",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471397970988736/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com pickleball City of Pasig Metro Manila",
+      "title": "Pickleball open play in Pasig City - Facebook",
+      "snippet": "✨ march 8 (sunday) 5:00 pm – 8:00 pm ₱100 per person all levels are welcome come play and join our rising community free water & snacks ...",
+      "domain": "facebook.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4375301479424726": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4375301479424726",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4375301479424726/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com pickleball City of Pasig Metro Manila",
+      "title": "Pickleball Court in Pasig City - Facebook",
+      "snippet": "PICKEBALL COURT IN PASIG GENE'S PICKLEBALL COURT 1 Standard Court Court Rent : 400 Per Hour Open Everyday & Night LOCATION : Gene,s Car Care .",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4342104469411094": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4342104469411094",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4342104469411094/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com pickleball City of Pasig Metro Manila",
+      "title": "Pickleball community near Pasig for beginners? - Facebook",
+      "snippet": "First time playing pickleball here in the Philippines thanks to Welcome Pickleball Club for the good vibes and warm welcome.",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/953134789481726": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/953134789481726",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/953134789481726/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"City of Pasig\" \"pickleball court\"",
+      "title": "Pickleball Play Schedule at Ortigas Center, Pasig City on Saturdays ...",
+      "snippet": "After an 18 month pause due to covid, the city of Pasig has finally ... FREE Pickleball Court at Brgy. Sto Rosario, Iligan City!!! FREE ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/485081452953731": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/485081452953731",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/485081452953731/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"City of Pasig\" \"pickleball court\"",
+      "title": "Pickleball is back in Pasig's streets on Saturdays - Facebook",
+      "snippet": "If you happen to be near Tandang Sora @corner Sta. Perpetua Village & near Mindanao Av QC we have a private pickleball court...you can play with us for free ...",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/873668384095034": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/873668384095034",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/873668384095034/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"City of Pasig\" \"pickleball court\"",
+      "title": "Pickleball in Ortigas Center, free for everyone - Facebook",
+      "snippet": "... Pickleball Court (right beside SM East Ortigas, Pasig City) Note: We ... After an 18 month pause due to covid, the city of Pasig has ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4330564827231725": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4330564827231725",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"Metro Manila\" \"pickleball\"",
+      "title": "Pickleball courts in Metro Manila with availability on weekends?",
+      "snippet": "Hi , can you pls share pickleball courts around Metro Manila na di pa always full on weekends ? Thank you.",
+      "domain": "facebook.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4373849249569949": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4373849249569949",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"Metro Manila\" \"pickleball\"",
+      "title": "Pickleball play in Pasay, Metro Manila, Philippines? - Facebook",
+      "snippet": "Are there daily or weekly open pickleball games in Metro Manila? Louie Guinto ▻ Philippine Pickleball Federation. 2y · Public · Hello everyone ...",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4214407705514105": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4214407705514105",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "firstDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "lastDiscoveredAt": "2026-03-09T16:12:49.413Z",
+      "sourceQuery": "site:facebook.com \"Metro Manila\" \"pickleball\"",
+      "title": "Beginner friendly pickleball places in Metro Manila? - Facebook",
+      "snippet": "Where to find pickleball clinics or places to play in Metro Manila? Ariane ... Beginner pickleball tournaments in Metro Manila? Jed Tan ...",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

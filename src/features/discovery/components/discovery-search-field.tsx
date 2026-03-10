@@ -39,7 +39,7 @@ export function DiscoverySearchField({
       <Search className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
       <Input
         id={inputId}
-        type="search"
+        type="text"
         value={value}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder={placeholder}

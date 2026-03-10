@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:pasay-city",
+  "createdAt": "2026-03-09T17:22:34.683Z",
+  "updatedAt": "2026-03-09T17:23:45.320Z",
+  "urls": {
+    "https://facebook.com/theservepbclub": {
+      "canonicalUrl": "https://facebook.com/theservepbclub",
+      "latestUrl": "https://www.facebook.com/theservepbclub/",
+      "firstCapturedAt": "2026-03-09T17:22:36.118Z",
+      "lastCapturedAt": "2026-03-09T17:22:36.118Z",
+      "status": "captured",
+      "title": "The Serve Pickleball Club | Pasay City | Facebook",
+      "venueName": "The Serve Pickleball Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Serve Pickleball Club"
+    },
+    "https://facebook.com/metparksportscenter": {
+      "canonicalUrl": "https://facebook.com/metparksportscenter",
+      "latestUrl": "https://www.facebook.com/metparksportscenter/",
+      "firstCapturedAt": "2026-03-09T17:22:52.974Z",
+      "lastCapturedAt": "2026-03-09T17:22:52.974Z",
+      "status": "captured",
+      "title": "Met Park Sports Center | Pasay City | Facebook",
+      "venueName": "Met Park Sports Center",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-09T17:23:22.368Z",
+      "lastCapturedAt": "2026-03-09T17:23:22.368Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

@@ -1,0 +1,188 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Las Piñas",
+    "citySlug": "city-of-las-pinas",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:00:52.522Z",
+  "queries": [
+    "site:facebook.com pickleball City of Las Piñas Metro Manila",
+    "site:facebook.com \"City of Las Piñas\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Las Piñas\" \"pickleball club\"",
+    "site:facebook.com \"City of Las Piñas\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/telaparkpickleball/",
+    "https://www.facebook.com/bfresortpickleballclub/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/7171219316258752/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374078132880394/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4070315429923334/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/7171219316258752/posts/25229294000024674/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/7171219316258752/posts/25062562513364491/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4287633088191566/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1110016973793506/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/7171219316258752/posts/26027960440158022/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/SMCITYSUCAT/posts/master-the-game-one-shot-at-a-time-bien-and-gaby-zoleta-show-us-the-pickleball-b/1186531406850563/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cityoflaspinasofficial/posts/village-bazaar-opens-at-cittadella-clubhouse-with-vice-mayor-aguilar-in-attendan/935912115242425/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/volleyballgamesmetromanila/posts/2893213664356771/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/join-the-club-pickleball-hub-opening-soon-in-vista-mall-las-pi%C3%B1as-lpcupdate/860187019729545/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/good-morning-las-pi%C3%B1as-happy-weekendlpcupdate/977079004707012/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/weekend-game-on-vista-mall-las-pi%C3%B1as-pickleball-hub-is-now-open-come-serve-smash/869986965416217/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/tara-game-looking-for-a-fun-way-to-stay-active-this-week-enjoy-exciting-pickleba/944914247923488/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/VistaMallLasPinas/posts/game-time-just-got-better-discover-exciting-indoor-sports-at-vista-mall-las-pi%C3%B1a/1425052539665697/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SMCITYSUCAT/posts/master-the-game-one-shot-at-a-time-bien-and-gaby-zoleta-show-us-the-pickleball-b/1186531406850563/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/southsnippets/posts/-southies-time-to-dink-and-dive-weve-rounded-up-pickleball-courts-in-the-south-s/1223023819840154/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/get-ready-for-epic-battles-on-the-mini-ramps-the-south-metro-fingas-4-fingerboar/970313622050217/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/BFRVHAI/videos/happening-now-bf-resort-pickleball-club-friendly-dual-meet-at-bfrv-fitness-hub-w/491915327111087/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/weekend-game-on-vista-mall-las-pi%C3%B1as-pickleball-hub-is-now-open-come-serve-smash/869986965416217/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/lpcupdate/posts/tara-game-looking-for-a-fun-way-to-stay-active-this-week-enjoy-exciting-pickleba/944914247923488/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/southsnippets/posts/-southies-time-to-dink-and-dive-weve-rounded-up-pickleball-courts-in-the-south-s/1223023819840154/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SMCITYSUCAT/posts/master-the-game-one-shot-at-a-time-bien-and-gaby-zoleta-show-us-the-pickleball-b/1186531406850563/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/videos/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/1104475964692564/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/BFRVHAI/posts/happening-now-at-bfrv-fitness-hub-heritage-court-come-join-us-today-with-all-you/434884309301300/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CongresswomanAnnMatibag/videos/from-legislation-to-recreation-pickleball-with-cong-annafter-a-full-week-of-legi/1256449059694695/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/strikeas1-bacoor-city-employees-pickleball-club-opens-strike-gymnasium-november-/1296257639204297/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/FUNtastic.Philippines.FUNgroup/posts/25505076312422138/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-las-pinas/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-las-pinas/facebook-pages.state.json"
+}

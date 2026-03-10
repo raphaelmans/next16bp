@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "facebook:pickleball:iloilo:iloilo-city",
+  "createdAt": "2026-03-09T16:13:56.028Z",
+  "updatedAt": "2026-03-09T16:14:02.234Z",
+  "queries": [
+    "site:facebook.com pickleball Iloilo City Iloilo",
+    "site:facebook.com \"Iloilo City\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Iloilo City\" \"pickleball club\"",
+    "site:facebook.com \"Iloilo City\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "urls": {
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo\" \"pickleball\"",
+      "title": "PicklePoint Iloilo | Iloilo City - Facebook",
+      "snippet": "Pickleball Global Academy PGA Level 1 Pickleball Coaching Certification is almost here! Iloilo – PicklePoint March 19 | 9AM – 2PM This is your chance to ...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:56.029Z"
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo\" \"pickleball\"",
+      "title": "Iloilo Pickleball | Iloilo City - Facebook",
+      "snippet": "May 13, 2025- Iloilo Pickleball is honored to provide you professional paddles and gear from Pickleball's top brands: CRBN Vatic Pro Arvo Pickleball Luzz ...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:56.029Z"
+    },
+    "https://facebook.com/groups/1184213529240765": {
+      "canonicalUrl": "https://facebook.com/groups/1184213529240765",
+      "latestUrl": "https://www.facebook.com/groups/1184213529240765/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo\" \"pickleball\"",
+      "title": "Iloilo Pickleball Expats | Facebook",
+      "snippet": "We are a group of expats in Iloilo that regularly play pickleball. ... Only members can see who's in the group and what they post. ... Anyone can find this group.",
+      "domain": "facebook.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697": {
+      "canonicalUrl": "https://facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697",
+      "latestUrl": "https://www.facebook.com/p/Gran-Plains-Pickleball-Center-61576247254697/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo City\" \"pickleball court\"",
+      "title": "Gran Plains Pickleball Center | Iloilo City - Facebook",
+      "snippet": "Gran Plains Pickleball Center, Iloilo City. 295 likes · 4 talking about this · 46 were here. New Pickleball court for pickleball enthusiasts here in the...",
+      "domain": "facebook.com",
+      "relevanceScore": 18,
+      "handedOffToScrapeAt": "2026-03-09T16:13:56.029Z"
+    },
+    "https://facebook.com/676631645534957": {
+      "canonicalUrl": "https://facebook.com/676631645534957",
+      "latestUrl": "https://www.facebook.com/676631645534957/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo City\" \"pickleball club\"",
+      "title": "PicklePoint Iloilo | Iloilo City - Facebook",
+      "snippet": "Ave, Manduriao, Iloilo City, 5000 Iloilo, Iloilo City, Philippines, 5000 ... 🗓️ Date: March 29 ⏰ Time: 8AM Event: She Plays Pickleball Club Tournament ...",
+      "domain": "facebook.com",
+      "relevanceScore": 18,
+      "handedOffToScrapeAt": "2026-03-09T16:13:56.029Z"
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo City\" \"pickleball court\"",
+      "title": "New pickleball court in Iloilo City now open - Facebook",
+      "snippet": "Log in · New pickleball court in Iloilo City now open. Philippine Pickleball Federation. Iloilo Pickleball󰞋 ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/QueenCityoftheSouthIloilo/posts/a-new-era-of-pickleball-hits-iloiloiloilo-city-is-set-to-serve-something-extraor/912744584987268": {
+      "canonicalUrl": "https://facebook.com/QueenCityoftheSouthIloilo/posts/a-new-era-of-pickleball-hits-iloiloiloilo-city-is-set-to-serve-something-extraor/912744584987268",
+      "latestUrl": "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/a-new-era-of-pickleball-hits-iloiloiloilo-city-is-set-to-serve-something-extraor/912744584987268/",
+      "firstDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:56.029Z",
+      "sourceQuery": "site:facebook.com \"Iloilo City\" \"pickleball court\"",
+      "title": "A New Era of Pickleball Hits Iloilo Iloilo City is set to serve something ...",
+      "snippet": "A New Era of Pickleball Hits Iloilo Iloilo City is set to serve something extraordinary. Atria Park District is unveiling a state-of-the-art pickleball court ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

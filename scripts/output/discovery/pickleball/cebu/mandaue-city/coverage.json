@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-09T16:10:02.006Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 3,
+  "scrapedUrls": 3,
+  "noDataUrls": 0,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "game changer sports facility|mandaue city|cebu",
+      "name": "Game Changer Sports Facility",
+      "city": "MANDAUE CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/game-changer-sports-facility",
+      "firstSeenAt": "2026-03-09T16:10:02.006Z",
+      "lastSeenAt": "2026-03-09T16:10:02.006Z"
+    },
+    {
+      "rowKey": "cebu sports hub|mandaue city|cebu",
+      "name": "Cebu Sports Hub",
+      "city": "MANDAUE CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/cebu-sports-hub",
+      "firstSeenAt": "2026-03-09T16:10:02.006Z",
+      "lastSeenAt": "2026-03-09T16:10:02.006Z"
+    },
+    {
+      "rowKey": "sweetspot pickleball courts cebu|mandaue city|cebu",
+      "name": "Sweetspot Pickleball Courts Cebu",
+      "city": "MANDAUE CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/sweetspot-pickleball-courts-cebu",
+      "firstSeenAt": "2026-03-09T16:10:02.006Z",
+      "lastSeenAt": "2026-03-09T16:10:02.006Z"
+    }
+  ]
+}

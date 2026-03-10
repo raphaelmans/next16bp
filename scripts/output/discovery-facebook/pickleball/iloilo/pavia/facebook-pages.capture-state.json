@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:pavia",
+  "createdAt": "2026-03-10T03:55:40.105Z",
+  "updatedAt": "2026-03-10T03:57:47.324Z",
+  "urls": {
+    "https://facebook.com/p/Pavia-Pickle-Club-61581603757298": {
+      "canonicalUrl": "https://facebook.com/p/Pavia-Pickle-Club-61581603757298",
+      "latestUrl": "https://www.facebook.com/p/Pavia-Pickle-Club-61581603757298/",
+      "firstCapturedAt": "2026-03-10T03:55:43.234Z",
+      "lastCapturedAt": "2026-03-10T03:55:43.234Z",
+      "status": "captured",
+      "title": "Pavia Pickle Club | Iloilo City | Facebook",
+      "venueName": "Pavia Pickle Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstCapturedAt": "2026-03-10T03:55:58.666Z",
+      "lastCapturedAt": "2026-03-10T03:55:58.666Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/966380659883582": {
+      "canonicalUrl": "https://facebook.com/966380659883582",
+      "latestUrl": "https://www.facebook.com/966380659883582",
+      "firstCapturedAt": "2026-03-10T03:56:18.412Z",
+      "lastCapturedAt": "2026-03-10T03:56:18.412Z",
+      "status": "captured",
+      "title": "Dink District by Pickle MD | Pavia | Facebook",
+      "venueName": "Dink District by PickleMD",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Tanyas-11th-Street-Complex-100090461455982": {
+      "canonicalUrl": "https://facebook.com/p/Tanyas-11th-Street-Complex-100090461455982",
+      "latestUrl": "https://www.facebook.com/p/Tanyas-11th-Street-Complex-100090461455982/",
+      "firstCapturedAt": "2026-03-10T03:56:47.814Z",
+      "lastCapturedAt": "2026-03-10T03:56:47.814Z",
+      "status": "captured",
+      "title": "Tanya’s 11th Street Complex | Pavia | Facebook",
+      "venueName": "Tanya’s 11th Street Complex",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Tanya’s 11th Street Complex"
+    },
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstCapturedAt": "2026-03-10T03:57:06.489Z",
+      "lastCapturedAt": "2026-03-10T03:57:06.489Z",
+      "status": "captured",
+      "title": "PicklePoint Iloilo | Iloilo City | Facebook",
+      "venueName": "PicklePoint Iloilo",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/107869635741474": {
+      "canonicalUrl": "https://facebook.com/107869635741474",
+      "latestUrl": "https://www.facebook.com/107869635741474/",
+      "firstCapturedAt": "2026-03-10T03:57:26.238Z",
+      "lastCapturedAt": "2026-03-10T03:57:26.238Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

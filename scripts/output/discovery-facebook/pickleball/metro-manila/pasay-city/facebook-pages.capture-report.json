@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "pasay-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Pasay City"
+  },
+  "generatedAt": "2026-03-09T17:23:45.317Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pasay-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pasay-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pasay-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pasay-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 3,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 1,
+  "failures": []
+}

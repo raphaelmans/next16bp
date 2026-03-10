@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:05:48.787Z",
+  "updatedAt": "2026-03-09T16:06:13.231Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "firstDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "lastDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:05:48.786Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dragonsmash|taguig|metro manila",
+      "lastRowName": "Dragonsmash"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "lastDiscoveredAt": "2026-03-09T16:05:48.786Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:05:48.786Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sequoia pickleball club|taguig|metro manila",
+      "lastRowName": "Sequoia Pickleball Club"
+    }
+  },
+  "rows": {
+    "dragonsmash|taguig|metro manila": {
+      "rowKey": "dragonsmash|taguig|metro manila",
+      "name": "Dragonsmash",
+      "city": "TAGUIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "firstSeenAt": "2026-03-09T16:05:48.786Z",
+      "lastSeenAt": "2026-03-09T16:05:48.786Z"
+    },
+    "sequoia pickleball club|taguig|metro manila": {
+      "rowKey": "sequoia pickleball club|taguig|metro manila",
+      "name": "Sequoia Pickleball Club",
+      "city": "TAGUIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "firstSeenAt": "2026-03-09T16:05:48.786Z",
+      "lastSeenAt": "2026-03-09T16:05:48.786Z"
+    }
+  }
+}

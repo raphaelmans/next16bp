@@ -1,0 +1,61 @@
+{
+  "generatedAt": "2026-03-09T16:05:48.786Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 1,
+  "candidateUrlsCount": 1,
+  "candidateUrlsSelectedForRunCount": 1,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Quezon City Sports Club",
+        "address": "Quezon City, Metro Manila, Philippines",
+        "city": "QUEZON CITY",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

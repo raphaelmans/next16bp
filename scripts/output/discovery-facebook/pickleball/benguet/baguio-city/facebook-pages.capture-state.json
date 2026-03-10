@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:benguet:baguio-city",
+  "createdAt": "2026-03-10T03:42:39.080Z",
+  "updatedAt": "2026-03-10T03:44:09.008Z",
+  "urls": {
+    "https://facebook.com/johnhaysportspavilion": {
+      "canonicalUrl": "https://facebook.com/johnhaysportspavilion",
+      "latestUrl": "https://www.facebook.com/johnhaysportspavilion/",
+      "firstCapturedAt": "2026-03-10T03:42:41.192Z",
+      "lastCapturedAt": "2026-03-10T03:42:41.192Z",
+      "status": "captured",
+      "title": "John Hay Sports Pavilion | Facebook",
+      "venueName": "John Hay Sports Pavilion",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/ymcabaguiopickleballclub": {
+      "canonicalUrl": "https://facebook.com/ymcabaguiopickleballclub",
+      "latestUrl": "https://www.facebook.com/ymcabaguiopickleballclub/",
+      "firstCapturedAt": "2026-03-10T03:42:54.466Z",
+      "lastCapturedAt": "2026-03-10T03:42:54.466Z",
+      "status": "captured",
+      "title": "YMCA Baguio Pickleball Club | Facebook",
+      "venueName": "YMCA Baguio Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Side-Out-Paddlers-61568108369669": {
+      "canonicalUrl": "https://facebook.com/p/Side-Out-Paddlers-61568108369669",
+      "latestUrl": "https://www.facebook.com/p/Side-Out-Paddlers-61568108369669/",
+      "firstCapturedAt": "2026-03-10T03:43:08.844Z",
+      "lastCapturedAt": "2026-03-10T03:43:08.844Z",
+      "status": "captured",
+      "title": "Side-Out Paddlers | Facebook",
+      "venueName": "Side-Out Paddlers",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/YMCA-Baguio-Pickleball-61568269274230": {
+      "canonicalUrl": "https://facebook.com/p/YMCA-Baguio-Pickleball-61568269274230",
+      "latestUrl": "https://www.facebook.com/p/YMCA-Baguio-Pickleball-61568269274230/",
+      "firstCapturedAt": "2026-03-10T03:43:28.670Z",
+      "lastCapturedAt": "2026-03-10T03:43:28.670Z",
+      "status": "captured",
+      "title": "YMCA Baguio Pickleball | Baguio City | Facebook",
+      "venueName": "YMCA Baguio Pickleball",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "YMCA Baguio Pickleball"
+    },
+    "https://facebook.com/people/Baguio-Tennis-and-Pickleball-Court/61578046732832": {
+      "canonicalUrl": "https://facebook.com/people/Baguio-Tennis-and-Pickleball-Court/61578046732832",
+      "latestUrl": "https://www.facebook.com/people/Baguio-Tennis-and-Pickleball-Court/61578046732832/",
+      "firstCapturedAt": "2026-03-10T03:43:42.452Z",
+      "lastCapturedAt": "2026-03-10T03:43:42.452Z",
+      "status": "captured",
+      "title": "Baguio Tennis and Pickleball Court | Baguio City | Facebook",
+      "venueName": "Baguio Tennis and Pickleball Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Baguio Tennis and Pickleball Court"
+    },
+    "https://facebook.com/photo.php?fbid=745187551816866&id=100089768833030&set=a.119502077718753": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=745187551816866&id=100089768833030&set=a.119502077718753",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=745187551816866&set=a.119502077718753&id=100089768833030",
+      "firstCapturedAt": "2026-03-10T03:43:58.147Z",
+      "lastCapturedAt": "2026-03-10T03:43:58.147Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "IBP Baguio - Benguet Chapter",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

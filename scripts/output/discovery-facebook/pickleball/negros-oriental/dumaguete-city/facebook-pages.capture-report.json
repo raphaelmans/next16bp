@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "dumaguete-city",
+    "provinceName": "Negros Oriental",
+    "cityName": "Dumaguete City"
+  },
+  "generatedAt": "2026-03-09T16:41:47.918Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 0,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 0,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": []
+}

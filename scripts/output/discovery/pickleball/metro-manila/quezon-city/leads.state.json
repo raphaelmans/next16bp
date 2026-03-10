@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:quezon-city",
+  "createdAt": "2026-03-09T16:00:35.759Z",
+  "updatedAt": "2026-03-09T16:01:35.398Z",
+  "queries": [
+    "pickleball courts in Metro Manila Quezon City",
+    "pickleball court Quezon City Metro Manila",
+    "Quezon City pickleball",
+    "courts in Quezon City Metro Manila pickleball",
+    "sports center Quezon City Metro Manila pickleball",
+    "pickleball club Quezon City Metro Manila",
+    "pickleball reservations Quezon City Metro Manila"
+  ],
+  "urls": {
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1268911974570671": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1268911974570671",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "firstDiscoveredAt": "2026-03-09T16:00:35.760Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:32.610Z",
+      "sourceQuery": "pickleball club Quezon City Metro Manila",
+      "title": "Pickleball courts opening in Quezon City",
+      "snippet": "Metro Manila's first-ever private, air-conditioned pickleball courts are opening soon! Ayala Malls Cloverleaf, Quezon City Opening: First ...",
+      "domain": "facebook.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city": {
+      "canonicalUrl": "https://reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city",
+      "latestUrl": "https://www.reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city/",
+      "firstDiscoveredAt": "2026-03-09T16:00:35.760Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:32.610Z",
+      "sourceQuery": "pickleball club Quezon City Metro Manila",
+      "title": "Pickleball Courts in Quezon City : r/PickleballPhilippines",
+      "snippet": "Hemady Sports Plaza, #9 Doña Hemedy Street, with 8 indoor courts. A one time fee of P150 is required to play. You may call (02) 8726-6351z.",
+      "domain": "reddit.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": "2026-03-09T16:00:35.760Z"
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T16:00:35.760Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:32.610Z",
+      "sourceQuery": "courts in Quezon City Metro Manila pickleball",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Every city you can play pickleball in Metro Manila ; Quezon City · 82 courts ; Parañaque · 30 courts ; Pasig · 37 courts ; Makati · 18 courts ; Manila · 16 courts ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:00:35.760Z"
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club",
+      "firstDiscoveredAt": "2026-03-09T16:00:35.760Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:32.610Z",
+      "sourceQuery": "sports center Quezon City Metro Manila pickleball",
+      "title": "Play Pickleball at Quezon City Sports Club: Court Information",
+      "snippet": "There are 4 outdoor courts. The court lines are permanent. The facility includes amenities like restrooms. A one-time fee is required to play. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": "2026-03-09T16:01:32.610Z"
+    }
+  }
+}

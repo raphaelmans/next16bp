@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-muntinlupa",
+  "createdAt": "2026-03-10T02:28:42.244Z",
+  "updatedAt": "2026-03-10T02:29:12.994Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Muntinlupa",
+    "pickleball court City of Muntinlupa Metro Manila",
+    "City of Muntinlupa pickleball",
+    "courts in City of Muntinlupa Metro Manila pickleball",
+    "sports center City of Muntinlupa Metro Manila pickleball",
+    "pickleball club City of Muntinlupa Metro Manila",
+    "pickleball reservations City of Muntinlupa Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Muntinlupa",
+    "host-map:dumapickleball.com:City of Muntinlupa",
+    "site:cebupickleballcourts.com City of Muntinlupa Metro Manila pickleball",
+    "site:dumapickleball.com City of Muntinlupa Metro Manila pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball club City of Muntinlupa Metro Manila",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "The top 3 cities in Metro Manila with pickleball courts are Quezon City (27 ... 16 courtsMuntinlupa|5 locations|19 courtsTaguig|5 locations|19 courts ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballhubph.playbypoint.com/": {
+      "canonicalUrl": "https://pickleballhubph.playbypoint.com/",
+      "latestUrl": "https://pickleballhubph.playbypoint.com/",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball reservations City of Muntinlupa Metro Manila",
+      "title": "Pickleball Hub | Philippines",
+      "snippet": "Pickleball Hub | Philippines 21 W Service Rd, Muntinlupa City, Metro Manila, Philippines 09682078876 App Store Google Play",
+      "domain": "pickleballhubph.playbypoint.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://acci.com.ph/facilities/pickle-ball": {
+      "canonicalUrl": "https://acci.com.ph/facilities/pickle-ball",
+      "latestUrl": "https://acci.com.ph/facilities/pickle-ball/",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball courts in Metro Manila City of Muntinlupa",
+      "title": "Pickle Ball",
+      "snippet": "Conveniently located in the Badminton Pavilion, ACCI has 2 well-appointed indoor pickle ball courts any player, regardless of skill level, will surely enjoy.",
+      "domain": "acci.com.ph",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball courts in Metro Manila City of Muntinlupa",
+      "title": "Play Pickleball at The Palms Country Club: Court Information",
+      "snippet": "The Palms Country Club is one of the most popular places to play pickleball in Muntinlupa, NCR. There are 3 indoor wood courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOooXz_ch4ReN5uBNwetyq3YNtG7NFRbc7Zam1Mc9kxsgl2pQVs-Q": {
+      "canonicalUrl": "https://huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOooXz_ch4ReN5uBNwetyq3YNtG7NFRbc7Zam1Mc9kxsgl2pQVs-Q",
+      "latestUrl": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOooXz_ch4ReN5uBNwetyq3YNtG7NFRbc7Zam1Mc9kxsgl2pQVs-Q",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball court City of Muntinlupa Metro Manila",
+      "title": "Where to Play Pickleball in the Philippines: Court Directory - Huddl",
+      "snippet": "Pickleball Hub (Muntinlupa): P600/hr; Open Play P300 per person. Other notables: Acacia Pickleball Club (Taguig, 3 courts), Blue Ridge ...",
+      "domain": "huddlsports.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball": {
+      "canonicalUrl": "https://philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball",
+      "latestUrl": "https://www.philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "sports center City of Muntinlupa Metro Manila pickleball",
+      "title": "SM Supermalls expands its nationwide presence for pickleball",
+      "snippet": "Opened in partnership with Paloo, the pickleball court locations of SM Center Shaw and SM Center Muntinlupa boast three outdoor and four indoor ...",
+      "domain": "philstar.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/muntinlupa/cuenca-community-park": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/muntinlupa/cuenca-community-park",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/cuenca-community-park",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball reservations City of Muntinlupa Metro Manila",
+      "title": "Play Pickleball at Cuenca Community Park: Court Information",
+      "snippet": "Court reservations are managed by the AAVA Office. For inquiries or reservations, please contact the village office directly. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballhubph.playbycourt.com/book/pickleballhubph": {
+      "canonicalUrl": "https://pickleballhubph.playbycourt.com/book/pickleballhubph",
+      "latestUrl": "https://pickleballhubph.playbycourt.com/book/pickleballhubph",
+      "firstDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "lastDiscoveredAt": "2026-03-10T02:28:42.245Z",
+      "sourceQuery": "pickleball reservations City of Muntinlupa Metro Manila",
+      "title": "Book for Pickleball Hub | Philippines - Playbypoint",
+      "snippet": "21 W Service Rd, Muntinlupa City, Metro Manila, Philippines. Playbypoint. © 2026 Pickleball Hub | Philippines. All rights reserved. Enter your account.",
+      "domain": "pickleballhubph.playbycourt.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

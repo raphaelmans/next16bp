@@ -1,0 +1,2 @@
+name,address,city,province,country,time_zone,latitude,longitude,facebook_url,instagram_url,viber_contact,website_url,other_contact_info,amenities,courts,photo_urls
+"REPLACE: Venue Name","REPLACE: Full street address or canonical map/address text","REPLACE: Canonical city name","REPLACE: Canonical province name","PH","Asia/Manila","","","https://www.facebook.com/REPLACE","","REPLACE: phone or viber","https://REPLACE","","Parking;Restrooms","Court 1|pickleball|","https://REPLACE/image1.jpg,https://REPLACE/image2.jpg"

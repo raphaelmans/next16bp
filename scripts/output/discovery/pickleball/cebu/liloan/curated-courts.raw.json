@@ -1,0 +1,82 @@
+{
+  "generatedAt": "2026-03-09T17:31:10.738Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 8,
+  "candidateUrlsCount": 8,
+  "candidateUrlsSelectedForRunCount": 8,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+    "https://cebupickleballcourts.com/hillhouse-liloan/",
+    "https://reclub.co/clubs/@match-point",
+    "https://cebupickleballcourts.com/match-point-liloan/",
+    "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match/",
+    "https://reclub.co/m/1DOT8D",
+    "https://reclub.co/m/TWRN4C",
+    "https://cebupickleballcourts.com/ceh-abc-gym/"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+    "https://cebupickleballcourts.com/hillhouse-liloan/",
+    "https://reclub.co/clubs/@match-point",
+    "https://cebupickleballcourts.com/match-point-liloan/",
+    "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match/",
+    "https://reclub.co/m/1DOT8D",
+    "https://reclub.co/m/TWRN4C",
+    "https://cebupickleballcourts.com/ceh-abc-gym/"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+    "https://cebupickleballcourts.com/hillhouse-liloan/",
+    "https://reclub.co/clubs/@match-point",
+    "https://cebupickleballcourts.com/match-point-liloan/",
+    "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match/",
+    "https://reclub.co/m/1DOT8D",
+    "https://reclub.co/m/TWRN4C",
+    "https://cebupickleballcourts.com/ceh-abc-gym/"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Match Point Badminton And Pickleball",
+        "address": "Liloan, Central Visayas, Philippines",
+        "city": "BROOKE'S POINT",
+        "province": "PALAWAN",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

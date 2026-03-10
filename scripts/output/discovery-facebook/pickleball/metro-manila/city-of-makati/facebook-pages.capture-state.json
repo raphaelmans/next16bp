@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-makati",
+  "createdAt": "2026-03-09T16:32:02.200Z",
+  "updatedAt": "2026-03-09T16:32:27.047Z",
+  "urls": {
+    "https://facebook.com/p/The-Pickle-Spot-Makati-61577283254550": {
+      "canonicalUrl": "https://facebook.com/p/The-Pickle-Spot-Makati-61577283254550",
+      "latestUrl": "https://www.facebook.com/p/The-Pickle-Spot-Makati-61577283254550/",
+      "firstCapturedAt": "2026-03-09T16:32:03.481Z",
+      "lastCapturedAt": "2026-03-09T16:32:03.481Z",
+      "status": "captured",
+      "title": "The Pickle Spot Makati | Makati | Facebook",
+      "venueName": "The Pickle Spot Makati",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

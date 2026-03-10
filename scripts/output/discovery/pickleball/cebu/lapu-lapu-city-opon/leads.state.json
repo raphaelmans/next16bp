@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:lapu-lapu-city-opon",
+  "createdAt": "2026-03-09T17:23:22.801Z",
+  "updatedAt": "2026-03-09T17:24:17.341Z",
+  "queries": [
+    "pickleball courts in Cebu Lapu-Lapu City (Opon)",
+    "pickleball court Lapu-Lapu City (Opon) Cebu",
+    "Lapu-Lapu City (Opon) pickleball",
+    "courts in Lapu-Lapu City (Opon) Cebu pickleball",
+    "sports center Lapu-Lapu City (Opon) Cebu pickleball",
+    "pickleball club Lapu-Lapu City (Opon) Cebu",
+    "pickleball reservations Lapu-Lapu City (Opon) Cebu",
+    "host-map:cebupickleballcourts.com:Lapu-Lapu City (Opon)",
+    "host-map:dumapickleball.com:Lapu-Lapu City (Opon)",
+    "site:cebupickleballcourts.com Lapu-Lapu City (Opon) Cebu pickleball",
+    "site:dumapickleball.com Lapu-Lapu City (Opon) Cebu pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/provident-homes-kinalumsan": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/provident-homes-kinalumsan",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/provident-homes-kinalumsan",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "pickleball reservations Lapu-Lapu City (Opon) Cebu",
+      "title": "Play Pickleball at Provident Homes Kinalumsan: Court Information",
+      "snippet": "Reservations are not available. The facility includes amenities like lights and restrooms. A one-time fee is required to play. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://wanderlog.com/place/details/11427004/lapu-lapu-city-cebu-pickleball-club": {
+      "canonicalUrl": "https://wanderlog.com/place/details/11427004/lapu-lapu-city-cebu-pickleball-club",
+      "latestUrl": "https://wanderlog.com/place/details/11427004/lapu-lapu-city-cebu-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "pickleball club Lapu-Lapu City (Opon) Cebu",
+      "title": "Lapu-Lapu City Cebu Pickleball Club",
+      "snippet": "The Lapu-Lapu City Cebu Pickleball Club is a vibrant and welcoming community for pickleball enthusiasts of all levels. The club offers a range of activities ...",
+      "domain": "wanderlog.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/pickleball-the-food-camp": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/pickleball-the-food-camp",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/pickleball-the-food-camp",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "Lapu-Lapu City (Opon) pickleball",
+      "title": "Pickleball @ The Food Camp",
+      "snippet": "Come play pickleball at Pickleball @ The Food Camp in Lapu-Lapu, Central Visayas! There is 1 outdoor concrete court. The lines are permanent, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://ph.trip.com/hotels/lapu-lapu-city-hotels-list-72311": {
+      "canonicalUrl": "https://ph.trip.com/hotels/lapu-lapu-city-hotels-list-72311",
+      "latestUrl": "https://ph.trip.com/hotels/lapu-lapu-city-hotels-list-72311/",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "Lapu-Lapu City (Opon) pickleball",
+      "title": "Best Hotels in Lapu-Lapu City from PHP ...",
+      "snippet": "... pickleball, badminton, Arcade Game Room, Gym, Children's Boot Camp and daily activities, Botanical Tour, Bird-watching guide, golf (nearby), mall/shopping ...",
+      "domain": "ph.trip.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@btc-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@btc-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@btc-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "pickleball club Lapu-Lapu City (Opon) Cebu",
+      "title": "BTC Pickleball Club",
+      "snippet": "Be among our founding members and help us create a fun and active local pickleball scene in Mactan! Court location: Pool St., Bankal, Lapu-lapu City, Cebu.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://dusit.com/dusitthani-mactancebu/specialoffers/the-clubhouse": {
+      "canonicalUrl": "https://dusit.com/dusitthani-mactancebu/specialoffers/the-clubhouse",
+      "latestUrl": "https://www.dusit.com/dusitthani-mactancebu/specialoffers/the-clubhouse/",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "pickleball reservations Lapu-Lapu City (Opon) Cebu",
+      "title": "The Clubhouse - Court Rates - Dusit Thani Mactan Cebu Resort",
+      "snippet": "Enjoy world-class courts for basketball, tennis, volleyball, pickleball, padel, and badminton. After your game, unwind at The Deli with an exquisite selection ...",
+      "domain": "dusit.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/btc-pickleball": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/lapu-lapu/btc-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/btc-pickleball",
+      "firstDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "lastDiscoveredAt": "2026-03-09T17:23:22.803Z",
+      "sourceQuery": "pickleball reservations Lapu-Lapu City (Opon) Cebu",
+      "title": "BTC Pickleball",
+      "snippet": "The courts are private. The courts can be reserved. Court rental is 500 pesos per hour. Paddle rental available. Book through Facebook page. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

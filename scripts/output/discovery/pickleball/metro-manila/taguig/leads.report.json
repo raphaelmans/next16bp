@@ -1,0 +1,55 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Taguig",
+    "citySlug": "taguig",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:40.724Z",
+  "queries": [
+    "pickleball courts in Metro Manila Taguig",
+    "pickleball court Taguig Metro Manila",
+    "Taguig pickleball",
+    "courts in Taguig Metro Manila pickleball",
+    "sports center Taguig Metro Manila pickleball",
+    "pickleball club Taguig Metro Manila",
+    "pickleball reservations Taguig Metro Manila"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+    "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 6
+    },
+    {
+      "url": "https://www.instagram.com/p/CsPBDAHg-kE/?hl=en",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/MarketMarketPickleballClub/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 4
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/taguig/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/taguig/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/taguig/scrape-state.json"
+}

@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-mandaluyong",
+  "createdAt": "2026-03-09T17:15:43.102Z",
+  "updatedAt": "2026-03-09T17:15:59.264Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Mandaluyong",
+    "pickleball court City of Mandaluyong Metro Manila",
+    "City of Mandaluyong pickleball",
+    "courts in City of Mandaluyong Metro Manila pickleball",
+    "sports center City of Mandaluyong Metro Manila pickleball",
+    "pickleball club City of Mandaluyong Metro Manila",
+    "pickleball reservations City of Mandaluyong Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Mandaluyong",
+    "host-map:dumapickleball.com:City of Mandaluyong",
+    "site:cebupickleballcourts.com City of Mandaluyong Metro Manila pickleball",
+    "site:dumapickleball.com City of Mandaluyong Metro Manila pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/metro-manila/mandaluyong/flair-pickleball-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/mandaluyong/flair-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/mandaluyong/flair-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "Flair Pickleball Club",
+      "snippet": "Flair Pickleball Club is one of the most popular places to play pickleball in Mandaluyong, NCR. There are 3 outdoor hard courts. The court lines are permanent.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://ohpc.rezerv.co/home": {
+      "canonicalUrl": "https://ohpc.rezerv.co/home",
+      "latestUrl": "https://ohpc.rezerv.co/home",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "Mandaluyong City, Metro Manila - OH! Pickleball Court",
+      "snippet": "OH! Pickleball Court · 16, San Rafael Extension,Mandaluyong City,1550,Metro Manila · +63 920 135 4961.",
+      "domain": "ohpc.rezerv.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/explore/pickleball/mandaluyong-city": {
+      "canonicalUrl": "https://sparrk.ph/explore/pickleball/mandaluyong-city",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball/mandaluyong-city",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "Mandaluyong City - Book pickleball court near you",
+      "snippet": "SPS Pickleball · Daro Pickleball Hub · The Sweetspot · 2G Pickleball Court · Paradiso Verde Organic Farm & Resort Sport Center · Higher Ground · Prime Mobility Sports ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@24-7-pickle-mandaluyong": {
+      "canonicalUrl": "https://reclub.co/clubs/@24-7-pickle-mandaluyong",
+      "latestUrl": "https://reclub.co/clubs/@24-7-pickle-mandaluyong",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "24/7 Pickle Mandaluyong",
+      "snippet": "Mon, Mar 9 @ 9:00 AM. High Intermediate 4 hours 400 per head. 8 Confirmed · 7 Requested. ·. Mon, Mar 9 @ 1:00 PM. Private Court Rental Ryan.",
+      "domain": "reclub.co",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "courts in City of Mandaluyong Metro Manila pickleball",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "The top 3 cities in Metro Manila with pickleball courts are Quezon City (27 ... Mandaluyong|2 locations|6 courtsPasay|2 locations|3 courtsPasig City|2 ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/explore/multi-purpose/mandaluyong-city": {
+      "canonicalUrl": "https://sparrk.ph/explore/multi-purpose/mandaluyong-city",
+      "latestUrl": "https://www.sparrk.ph/explore/multi-purpose/mandaluyong-city",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "sports center City of Mandaluyong Metro Manila pickleball",
+      "title": "Mandaluyong City - Book multi-purpose court near you",
+      "snippet": "3K Fitness Court · SPS Pickleball · STI Global Gymnasium · VA Sports Gym · Paradiso Verde Organic Farm & Resort Sport Center · Higher Ground · Prime Mobility Sports ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Manila Pickleball Club. Dakota Playground, Quirino, Malate. Manila. NCR. 4. Covered Courts. Thur, 8p-12mn; Sat-Sun, 7a-12nn p150/player Ross / ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@over-horizon-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@over-horizon-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@over-horizon-pickleball",
+      "firstDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "lastDiscoveredAt": "2026-03-09T17:15:43.103Z",
+      "sourceQuery": "pickleball reservations City of Mandaluyong Metro Manila",
+      "title": "Over Horizon (OH!) Pickleball",
+      "snippet": "This is a family-run pickleball court built on a former factory site in the heart of Mandaluyong City. Expect courts with a spacious baseline playing area, well ...",
+      "domain": "reclub.co",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

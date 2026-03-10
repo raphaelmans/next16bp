@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:caloocan-city",
+  "createdAt": "2026-03-10T03:59:22.417Z",
+  "updatedAt": "2026-03-10T04:00:24.193Z",
+  "urls": {
+    "https://facebook.com/p/GPARK-Playgrounds-61579391170144": {
+      "canonicalUrl": "https://facebook.com/p/GPARK-Playgrounds-61579391170144",
+      "latestUrl": "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+      "firstCapturedAt": "2026-03-10T03:59:24.409Z",
+      "lastCapturedAt": "2026-03-10T03:59:24.409Z",
+      "status": "captured",
+      "title": "GPARK Playgrounds | Facebook",
+      "venueName": "GPARK Playgrounds",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "GPARK Playgrounds"
+    },
+    "https://facebook.com/people/%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A8%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B/61579954885621": {
+      "canonicalUrl": "https://facebook.com/people/%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A8%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B/61579954885621",
+      "latestUrl": "https://www.facebook.com/people/%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A8%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B/61579954885621/",
+      "firstCapturedAt": "2026-03-10T03:59:40.130Z",
+      "lastCapturedAt": "2026-03-10T03:59:40.130Z",
+      "status": "captured",
+      "title": "𝐂𝐚𝐥𝐨𝐨𝐜𝐚𝐧 𝐏𝐢𝐜𝐤𝐥𝐞𝐛𝐚𝐥𝐥 𝐂𝐥𝐮𝐛 | Facebook",
+      "venueName": "𝐂𝐚𝐥𝐨𝐨𝐜𝐚𝐧 𝐏𝐢𝐜𝐤𝐥𝐞𝐛𝐚𝐥𝐥 𝐂𝐥𝐮𝐛",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-10T04:00:03.746Z",
+      "lastCapturedAt": "2026-03-10T04:00:03.746Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

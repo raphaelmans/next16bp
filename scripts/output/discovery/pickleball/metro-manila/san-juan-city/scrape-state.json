@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T17:22:16.524Z",
+  "updatedAt": "2026-03-09T17:22:48.752Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "greenhills west clubhouse|san juan city|metro manila",
+      "lastRowName": "Greenhills West Clubhouse"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/Y34H4X": {
+      "canonicalUrl": "https://reclub.co/m/Y34H4X",
+      "latestUrl": "https://reclub.co/m/Y34H4X",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112": {
+      "canonicalUrl": "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+      "latestUrl": "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sanjuancapistrano.org/facilities/facility/details/La-Novia-Park-Pickleball-Courts-35": {
+      "canonicalUrl": "https://sanjuancapistrano.org/facilities/facility/details/La-Novia-Park-Pickleball-Courts-35",
+      "latestUrl": "https://sanjuancapistrano.org/facilities/facility/details/La-Novia-Park-Pickleball-Courts-35",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/pickleball-court": {
+      "canonicalUrl": "https://www.sparrk.ph/pickleball-court",
+      "latestUrl": "https://www.sparrk.ph/pickleball-court/",
+      "firstDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "lastDiscoveredAt": "2026-03-09T17:22:16.524Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:22:16.524Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "greenhills west clubhouse|san juan city|metro manila": {
+      "rowKey": "greenhills west clubhouse|san juan city|metro manila",
+      "name": "Greenhills West Clubhouse",
+      "city": "SAN JUAN CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+      "firstSeenAt": "2026-03-09T17:22:16.524Z",
+      "lastSeenAt": "2026-03-09T17:22:16.524Z"
+    }
+  }
+}

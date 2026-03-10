@@ -1,0 +1,111 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Imus City",
+    "citySlug": "imus-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:38:23.344Z",
+  "queries": [
+    "pickleball courts in Cavite Imus City",
+    "pickleball court Imus City Cavite",
+    "Imus City pickleball",
+    "courts in Imus City Cavite pickleball",
+    "sports center Imus City Cavite pickleball",
+    "pickleball club Imus City Cavite",
+    "pickleball reservations Imus City Cavite",
+    "host-map:cebupickleballcourts.com:Imus City",
+    "host-map:cebupickleballcourts.com:Imus",
+    "host-map:dumapickleball.com:Imus City",
+    "host-map:dumapickleball.com:Imus",
+    "site:cebupickleballcourts.com Imus City Cavite pickleball",
+    "site:dumapickleball.com Imus City Cavite pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+    "https://playtimescheduler.com/region/imus-luzon",
+    "https://reclub.co/ko/clubs/@pickleball-pallas-athena-executive-village",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.01.24.pdf",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.lotusdev.ph/playspacio",
+      "score": 11
+    },
+    {
+      "url": "https://www.lotusdev.ph/playspacio",
+      "score": 11
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Imus%2C+Cavite",
+      "score": 3
+    },
+    {
+      "url": "https://www.playspacio.ph/badminton-pickleball-court",
+      "score": 13
+    },
+    {
+      "url": "https://www.lotusdev.ph/playspacio",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.facebook.com/donrobert0728/videos/another-day-another-coaching-here-at-court-16-the-latest-pickleball-court-in-imu/1143609254211433/",
+    "https://www.tiktok.com/@sunny.sideout/video/7496379666693999879",
+    "https://www.tiktok.com/discover/imus-pickleball-court",
+    "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.instagram.com/p/Czq3W5TAUwW/",
+    "https://www.facebook.com/ImusPickleballClub/",
+    "https://www.tiktok.com/discover/pickleball-court-in-imus-cavite",
+    "https://www.facebook.com/groups/2723933654561525/posts/4218438861777656/",
+    "https://www.tiktok.com/@carlubalde1/video/7551066866446241042",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/ImusPickleballClub/",
+    "https://www.facebook.com/ImusCityTourism/posts/pickleball-sa-imus-sure-ballsmash-your-2026-goals-with-high-energy-fun-at-sunny-/1264088325766167/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1259105662217969/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.facebook.com/donrobert0728/videos/imus-pickleball-club-vs-lucena-city-pickleball-clubfriendly-dual-meet-at-pallas-/1323905729527919/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/61568779744215/videos/imus-pickleball-invitational-tournament/1100787491499034/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.facebook.com/donrobert0728/videos/another-day-another-coaching-here-at-court-16-the-latest-pickleball-court-in-imu/1143609254211433/",
+    "https://www.facebook.com/100091106463365/videos/pickleball-court-now-open-call-09666594899-or-send-us-a-message-for-reservation/461348400345595/",
+    "https://www.tiktok.com/@sunny.sideout/video/7496379666693999879",
+    "https://www.facebook.com/ImusPickleballClub/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1259105662217969/",
+    "https://www.facebook.com/donrobert0728/videos/1-day-to-go-imus-pickleball-club-summer-clinic/1010758164483601/",
+    "https://www.instagram.com/p/Czq3W5TAUwW/",
+    "https://www.tiktok.com/@sunny.sideout/video/7496379666693999879",
+    "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.facebook.com/donrobert0728/videos/imus-pickleball-club-vs-lucena-city-pickleball-clubfriendly-dual-meet-at-pallas-/1323905729527919/",
+    "https://www.instagram.com/reel/DUVSbinkzCo/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4218438861777656/",
+    "https://www.facebook.com/100091106463365/videos/pickleball-court-now-open-call-09666594899-or-send-us-a-message-for-reservation/461348400345595/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+    "https://www.instagram.com/p/DP0Sgp7icGP/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/donrobert0728/videos/another-day-another-coaching-here-at-court-16-the-latest-pickleball-court-in-imu/1143609254211433/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/imus-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/imus-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/imus-city/scrape-state.json"
+}

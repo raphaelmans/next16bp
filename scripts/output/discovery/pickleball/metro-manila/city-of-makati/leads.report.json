@@ -1,0 +1,62 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Makati",
+    "citySlug": "city-of-makati",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:36.598Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Makati",
+    "pickleball court City of Makati Metro Manila",
+    "City of Makati pickleball",
+    "courts in City of Makati Metro Manila pickleball",
+    "sports center City of Makati Metro Manila pickleball",
+    "pickleball club City of Makati Metro Manila",
+    "pickleball reservations City of Makati Metro Manila"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-sports-club"
+  ],
+  "skippedAlreadyDiscovered": [
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.facebook.com/thezonesportscenter/"
+  ],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Spot-Makati-61577283254550/",
+      "score": 1
+    },
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Spot-Makati-61577283254550/",
+      "score": 1
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1254494966012372/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/p/Makati-Pickleball-Club-100088660429202/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3928001340821411/",
+      "score": 3
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613/",
+      "score": 4
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-makati/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-makati/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-makati/scrape-state.json"
+}

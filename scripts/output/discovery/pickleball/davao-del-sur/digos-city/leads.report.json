@@ -1,0 +1,125 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Digos City",
+    "citySlug": "digos-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:33:35.668Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Digos City",
+    "pickleball court Digos City Davao Del Sur",
+    "Digos City pickleball",
+    "courts in Digos City Davao Del Sur pickleball",
+    "sports center Digos City Davao Del Sur pickleball",
+    "pickleball club Digos City Davao Del Sur",
+    "pickleball reservations Digos City Davao Del Sur",
+    "host-map:cebupickleballcourts.com:Digos City",
+    "host-map:cebupickleballcourts.com:Digos",
+    "host-map:dumapickleball.com:Digos City",
+    "host-map:dumapickleball.com:Digos",
+    "site:cebupickleballcourts.com Digos City Davao Del Sur pickleball",
+    "site:dumapickleball.com Digos City Davao Del Sur pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/clubs/@pickleball-point-digos",
+    "https://www.threads.com/@louievuitons/post/DUOUuxwkuJv/from-davao-to-digos-pickleball",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+    "https://reclub.co/m/6SVSVJ",
+    "https://www.pickleballpoint.net/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleballpoint.net/",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleballpoint.net/",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleballpoint.net/",
+      "score": 14
+    },
+    {
+      "url": "https://reclub.co/m/6SVSVJ",
+      "score": 15
+    },
+    {
+      "url": "https://www.pickleballpoint.net/events",
+      "score": 13
+    },
+    {
+      "url": "https://www.pickleballpoint.net/court-schedule",
+      "score": 13
+    },
+    {
+      "url": "https://pickletown.skedda.com/",
+      "score": 2
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.facebook.com/mailynmalinaojickain/posts/newest-pickleball-indoor-court-in-digos-city-pickleball-point-sports-center-pick/24542798082015417/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4187398101548399/",
+    "https://www.facebook.com/ftc.love/videos/pickleball-clinic/663599606343317/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/ftc.love/videos/when-you-get-to-hang-around-a-pickleball-court-pickleballcourt-pickleball-bansal/803942482720935/",
+    "https://www.instagram.com/reel/DVP6TccClLp/",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4187398101548399/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.facebook.com/groups/sportsflutennis/posts/4236255699923872/",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.facebook.com/joseffortichcagas/posts/digos-city-new-craze-and-trend-pickleball-point-sports-center-at-metro-davao-eco/1329222088562217/",
+    "https://www.instagram.com/reel/DVP6TccClLp/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.facebook.com/groups/sportsflutennis/posts/4236255699923872/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.facebook.com/groups/kidapawanupdates/posts/2415497578861256/",
+    "https://www.facebook.com/ftc.love/videos/pickleball-clinic/663599606343317/",
+    "https://www.facebook.com/rogin.econar/posts/new-hobby-newbiepaddle-up-davao-pickeball-courtfyp-pickleball/26005743819017574/",
+    "https://www.instagram.com/reel/DVJGiVIiI_D/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.facebook.com/mailynmalinaojickain/posts/newest-pickleball-indoor-court-in-digos-city-pickleball-point-sports-center-pick/24542798082015417/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4187398101548399/",
+    "https://www.facebook.com/61575625378397/posts/at-the-oceem-indoor-sports-recreation-center-public-market-digos-city-pickleball/122102501354854179/",
+    "https://www.facebook.com/joseffortichcagas/posts/digos-city-new-craze-and-trend-pickleball-point-sports-center-at-metro-davao-eco/1329222088562217/",
+    "https://www.instagram.com/p/DUVQJGsGLml/",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.facebook.com/ftc.love/videos/we-girls-take-it-seriously-with-pickleball-we-mean-business-having-fun-picklebal/1077076507967899/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/mailynmalinaojickain/posts/newest-pickleball-indoor-court-in-digos-city-pickleball-point-sports-center-pick/24542798082015417/",
+    "https://www.facebook.com/ftc.love/videos/pickleball-clinic/663599606343317/",
+    "https://www.facebook.com/joseffortichcagas/posts/digos-city-new-craze-and-trend-pickleball-point-sports-center-at-metro-davao-eco/1329222088562217/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1327534898708378/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.facebook.com/61575625378397/posts/at-the-oceem-indoor-sports-recreation-center-public-market-digos-city-pickleball/122102501354854179/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/rogin.econar/posts/drills-and-op-pickletown-davao/26483029577955660/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.instagram.com/p/DT2erUACRRw/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4187398101548399/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1327534898708378/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/mailynmalinaojickain/posts/newest-pickleball-indoor-court-in-digos-city-pickleball-point-sports-center-pick/24542798082015417/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+    "https://www.facebook.com/61575625378397/videos/pickleball/2650280055312014/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4187398101548399/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.instagram.com/p/DT2erUACRRw/",
+    "https://www.tiktok.com/@wangwaray22/video/7610431192424369415"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/digos-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/digos-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/digos-city/scrape-state.json"
+}

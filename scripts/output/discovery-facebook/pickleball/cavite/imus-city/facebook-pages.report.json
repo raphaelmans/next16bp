@@ -1,0 +1,208 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Imus City",
+    "citySlug": "imus-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T03:46:01.057Z",
+  "queries": [
+    "site:facebook.com pickleball Imus City Cavite",
+    "site:facebook.com \"Imus City\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Imus City\" \"pickleball club\"",
+    "site:facebook.com \"Imus City\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Sunny-Sideout-61575198541803/",
+    "https://www.facebook.com/thepicklershideout/",
+    "https://www.facebook.com/620280391170207/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/ImusCityTourism/posts/pickleball-sa-imus-sure-ballsmash-your-2026-goals-with-high-energy-fun-at-sunny-/1264088325766167/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381703715451169/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4108336542787889/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4318334045121470/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/ImusCityTourism/posts/pickleball-sa-imus-sure-ballsmash-your-2026-goals-with-high-energy-fun-at-sunny-/1264088325766167/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/playspacio/posts/this-is-how-pickleball-grows-in-imus-from-on-ground-energy-by-sunny-sideoutto-ci/122179017848583744/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2482927842070146/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/imus-pickleball-invitational-tournament/1100787491499034/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575198541803/mentions/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/don-robert-is-personally-inviting-everyone-to-join-the-imus-pickleball-invitatio/122146230326625991/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2230746277234923/posts/3848302742145927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ImusCityTourism/posts/pickleball-sa-imus-sure-ballsmash-your-2026-goals-with-high-energy-fun-at-sunny-/1264088325766167/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61575198541803/mentions/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2482927842070146/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1248649146596954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231203373834538/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365367803751427/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/229462880488416/posts/8505741269527161/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/568768486848402/posts/2774075956317633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4317203658567842/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ImusCityTourism/posts/pickleball-sa-imus-sure-ballsmash-your-2026-goals-with-high-energy-fun-at-sunny-/1264088325766167/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2482927842070146/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4108605429427667/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/don-robert-is-personally-inviting-everyone-to-join-the-imus-pickleball-invitatio/122146230326625991/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2230746277234923/posts/3848302742145927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365367803751427/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231203373834538/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2112251792165297/posts/25004487095848442/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4312913825663492/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/imus-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/imus-city/facebook-pages.state.json"
+}

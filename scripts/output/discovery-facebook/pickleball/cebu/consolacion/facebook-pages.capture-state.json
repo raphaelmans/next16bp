@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:consolacion",
+  "createdAt": "2026-03-10T03:49:10.276Z",
+  "updatedAt": "2026-03-10T03:51:07.436Z",
+  "urls": {
+    "https://facebook.com/olivegrovepickleball": {
+      "canonicalUrl": "https://facebook.com/olivegrovepickleball",
+      "latestUrl": "https://www.facebook.com/olivegrovepickleball/",
+      "firstCapturedAt": "2026-03-10T03:49:12.364Z",
+      "lastCapturedAt": "2026-03-10T03:49:12.364Z",
+      "status": "captured",
+      "title": "Olive Grove Pickleball | Consolacion | Facebook",
+      "venueName": "Olive Grove Pickleball",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Olive Grove Pickleball"
+    },
+    "https://facebook.com/matchpoint.cebu": {
+      "canonicalUrl": "https://facebook.com/matchpoint.cebu",
+      "latestUrl": "https://www.facebook.com/matchpoint.cebu/",
+      "firstCapturedAt": "2026-03-10T03:49:29.959Z",
+      "lastCapturedAt": "2026-03-10T03:49:29.959Z",
+      "status": "captured",
+      "title": "Match Point Badminton and Pickleball Court Cebu | Facebook",
+      "venueName": "Match Point Badminton and Pickleball Court Cebu",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/CON-Pickleball-Club-61560469654419": {
+      "canonicalUrl": "https://facebook.com/p/CON-Pickleball-Club-61560469654419",
+      "latestUrl": "https://www.facebook.com/p/CON-Pickleball-Club-61560469654419/",
+      "firstCapturedAt": "2026-03-10T03:49:48.212Z",
+      "lastCapturedAt": "2026-03-10T03:49:48.212Z",
+      "status": "captured",
+      "title": "CON Pickleball Club | Facebook",
+      "venueName": "CON Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/gabsplayground": {
+      "canonicalUrl": "https://facebook.com/gabsplayground",
+      "latestUrl": "https://www.facebook.com/gabsplayground/",
+      "firstCapturedAt": "2026-03-10T03:49:59.739Z",
+      "lastCapturedAt": "2026-03-10T03:49:59.739Z",
+      "status": "captured",
+      "title": "Gab's Playground | Consolacion | Facebook",
+      "venueName": "Gab's Playground",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-10T03:50:17.778Z",
+      "lastCapturedAt": "2026-03-10T03:50:17.778Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389": {
+      "canonicalUrl": "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389",
+      "latestUrl": "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+      "firstCapturedAt": "2026-03-10T03:50:28.290Z",
+      "lastCapturedAt": "2026-03-10T03:50:28.290Z",
+      "status": "captured",
+      "title": "Linkers Pickleball Court | Cebu City | Facebook",
+      "venueName": "Linkers Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/HQ-Pickleball-61585259447279": {
+      "canonicalUrl": "https://facebook.com/p/HQ-Pickleball-61585259447279",
+      "latestUrl": "https://www.facebook.com/p/HQ-Pickleball-61585259447279/",
+      "firstCapturedAt": "2026-03-10T03:50:51.463Z",
+      "lastCapturedAt": "2026-03-10T03:50:51.463Z",
+      "status": "captured",
+      "title": "HQ Pickleball | Cebu City | Facebook",
+      "venueName": "HQ Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-09T17:31:10.738Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 1,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "match point badminton and pickleball|brooke's point|palawan",
+      "name": "Match Point Badminton And Pickleball",
+      "city": "BROOKE'S POINT",
+      "province": "PALAWAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "firstSeenAt": "2026-03-09T17:31:10.738Z",
+      "lastSeenAt": "2026-03-09T17:31:10.738Z"
+    }
+  ]
+}

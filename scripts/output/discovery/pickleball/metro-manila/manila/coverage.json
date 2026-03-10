@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T02:35:40.359Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 13,
+  "scrapedUrls": 2,
+  "noDataUrls": 11,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "manila pickleball club|manila|metro manila",
+      "name": "Manila Pickleball Club",
+      "city": "MANILA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila/manila-pickleball-club",
+      "firstSeenAt": "2026-03-10T02:35:40.359Z",
+      "lastSeenAt": "2026-03-10T02:35:40.359Z"
+    },
+    {
+      "rowKey": "pal sports center|pasay city|metro manila",
+      "name": "Pal Sports Center",
+      "city": "PASAY CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "firstSeenAt": "2026-03-10T02:35:40.359Z",
+      "lastSeenAt": "2026-03-10T02:35:40.359Z"
+    }
+  ]
+}

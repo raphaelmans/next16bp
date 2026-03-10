@@ -1,0 +1,77 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Makati",
+    "citySlug": "city-of-makati",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:06.598Z",
+  "queries": [
+    "site:facebook.com pickleball City of Makati Metro Manila",
+    "site:facebook.com \"City of Makati\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Makati\" \"pickleball club\"",
+    "site:facebook.com \"City of Makati\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/The-Pickle-Spot-Makati-61577283254550/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1254494966012372/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3928001340821411/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/grab-your-paddles-rally-your-pickleball-buddies-and-join-the-garden-pickleball-s/1105165011756658/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/heads-up-makatizens-for-everyones-safety-tomorrows-the-garden-pickleball-series-/1100092578930568/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/your-weekend-play-is-here-its-pickleball-time-in-makati-secure-your-spot-now-for/1172140921725733/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/sportscornerph/posts/mec-networks-corporation-golf-invitational-makati-city-winners-rondaatletaspotli/1529080005894503/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/UMakPH/posts/another-medal-for-the-philippines-as-umak-athletes-continue-to-shine-on-the-inte/888238916875493/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/your-weekend-play-is-here-its-pickleball-time-in-makati-secure-your-spot-now-for/1172140921725733/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/calling-all-pickleball-players-makati-has-new-pickleball-courts-in-the-city-wher/1132238792382613/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/makeitmakati/posts/grab-your-paddles-rally-your-pickleball-buddies-and-join-the-garden-pickleball-s/1105165011756658/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-makati/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-makati/facebook-pages.state.json"
+}

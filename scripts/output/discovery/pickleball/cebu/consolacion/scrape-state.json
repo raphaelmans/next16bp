@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T17:28:34.748Z",
+  "updatedAt": "2026-03-09T17:28:58.623Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sm city consolacion|cebu city|cebu",
+      "lastRowName": "Sm City Consolacion"
+    },
+    "https://cebupickleballcourts.com/match-point-consolacion": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-consolacion",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-consolacion/",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the smash yard|consolacion|cebu",
+      "lastRowName": "The Smash Yard"
+    },
+    "https://reclub.co/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/th/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/th/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion",
+      "latestUrl": "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/the-smash-yard": {
+      "canonicalUrl": "https://cebupickleballcourts.com/the-smash-yard",
+      "latestUrl": "https://cebupickleballcourts.com/the-smash-yard/",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/match-point-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/game-changer-mandaue": {
+      "canonicalUrl": "https://cebupickleballcourts.com/game-changer-mandaue",
+      "latestUrl": "https://cebupickleballcourts.com/game-changer-mandaue/",
+      "firstDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "lastDiscoveredAt": "2026-03-09T17:28:34.748Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:28:34.748Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "sm city consolacion|cebu city|cebu": {
+      "rowKey": "sm city consolacion|cebu city|cebu",
+      "name": "Sm City Consolacion",
+      "city": "CEBU CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "firstSeenAt": "2026-03-09T17:28:34.748Z",
+      "lastSeenAt": "2026-03-09T17:28:34.748Z"
+    },
+    "the smash yard|consolacion|cebu": {
+      "rowKey": "the smash yard|consolacion|cebu",
+      "name": "The Smash Yard",
+      "city": "CONSOLACION",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "firstSeenAt": "2026-03-09T17:28:34.748Z",
+      "lastSeenAt": "2026-03-09T17:28:34.748Z"
+    }
+  }
+}

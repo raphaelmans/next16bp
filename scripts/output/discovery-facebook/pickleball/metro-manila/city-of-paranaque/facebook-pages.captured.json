@@ -1,0 +1,61 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-paranaque",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Parañaque"
+  },
+  "generatedAt": "2026-03-09T16:33:00.781Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=913449330827525&set=a.554412840064511&id=100064873982749",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=913449330827525&id=100064873982749&set=a.554412840064511",
+      "capturedAt": "2026-03-09T16:32:28.452Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/photo.php?fbid=913449330827525&set=a.554412840064511&id=100064873982749",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nVillage Sports Club\nAugust 18, 2024\n \n·\nMonday operations still extended from August 19 to October 28, 2024 (1PM - 10PM). Take note of the facilities that are open:\n• Basketball Court\n• Badminton Court\n• Pickleball Court\n• Volleyball Court\n• Tennis Court\n• Archery (1pm to 5pm)\n• Locker… See more\nAll reactions:\n7\n2\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D913449330827525%26set%3Da.554412840064511%26id%3D100064873982749",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/?__tn__=*F",
+          "https://www.facebook.com/villagesportsclub?__tn__=%3C%3C*F",
+          "https://www.facebook.com/villagesportsclub?__tn__=-UC*F",
+          "https://www.facebook.com/villagesportsclub/posts/pfbid0R4ZXLWpvBBDrgroaQqSyHWU5JhzUAGrHrrP3v9UGgVWwSd6cGPYNsgdgJCzNwyrJl?__tn__=%2CO*F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "review",
+        "confidence": "high",
+        "reason": "Post clearly describes a physical sports club with a pickleball court but the page content does not include a usable address or city within the requested scope (Parañaque, Metro Manila). Require location/address to mark as ready.",
+        "name": "Village Sports Club",
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [
+          "Basketball Court",
+          "Badminton Court",
+          "Pickleball Court",
+          "Volleyball Court",
+          "Tennis Court",
+          "Archery (1pm to 5pm)",
+          "Locker…"
+        ],
+        "courtCount": null,
+        "isVenue": true,
+        "isWithinScope": false,
+        "evidence": [
+          "Village Sports Club",
+          "Monday operations still extended from August 19 to October 28, 2024 (1PM - 10PM). Take note of the facilities that are open: • Basketball Court • Badminton Court • Pickleball Court • Volleyball Court • Tennis Court • Archery (1pm to 5pm) • Locker…"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:taguig",
+  "createdAt": "2026-03-09T16:01:40.722Z",
+  "updatedAt": "2026-03-09T16:01:43.053Z",
+  "queries": [
+    "pickleball courts in Metro Manila Taguig",
+    "pickleball court Taguig Metro Manila",
+    "Taguig pickleball",
+    "courts in Taguig Metro Manila pickleball",
+    "sports center Taguig Metro Manila pickleball",
+    "pickleball club Taguig Metro Manila",
+    "pickleball reservations Taguig Metro Manila"
+  ],
+  "urls": {
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1301419251319943": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1301419251319943",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "courts in Taguig Metro Manila pickleball",
+      "title": "Pickleball courts near Taguig for beginners?",
+      "snippet": "Hi. Any group/courts here near Taguig for pickelball? Beginner and solo comer only. Thank you.",
+      "domain": "facebook.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://instagram.com/p/CsPBDAHg-kE?hl=en": {
+      "canonicalUrl": "https://instagram.com/p/CsPBDAHg-kE?hl=en",
+      "latestUrl": "https://www.instagram.com/p/CsPBDAHg-kE/?hl=en",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "pickleball court Taguig Metro Manila",
+      "title": "Pickleball at 31st Street, Bonifacio Global City, Taguig, Metro Manila. 📷 ...",
+      "snippet": "Pickleball at 31st Street, Bonifacio Global City, Taguig, Metro Manila. 📷 tobyssports #pickleball #TobysSports #letsplaypickleball #bgc #taguig #philippines",
+      "domain": "instagram.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "Taguig pickleball",
+      "title": "Play Pickleball at DragonSmash: Court Information",
+      "snippet": "DragonSmash is a place to play pickleball in Taguig, NCR. There are 6 indoor wood and acrylic courts. The lines are permanent, and portable nets are ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": "2026-03-09T16:01:40.724Z"
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "pickleball club Taguig Metro Manila",
+      "title": "Sequoia Pickleball Club",
+      "snippet": "Sequoia Pickleball Club is one of the most popular places to play pickleball in Taguig, NCR. ... Two Serendra, 11th Avenue, Taguig, Metro Manila, Philippines ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 18,
+      "handedOffToScrapeAt": "2026-03-09T16:01:40.724Z"
+    },
+    "https://facebook.com/MarketMarketPickleballClub": {
+      "canonicalUrl": "https://facebook.com/MarketMarketPickleballClub",
+      "latestUrl": "https://www.facebook.com/MarketMarketPickleballClub/",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "pickleball club Taguig Metro Manila",
+      "title": "Market Market Pickleball Club | Taguig",
+      "snippet": "Market Market Pickleball Club, Taguig. 2103 likes · 12 talking about this. The Official Facebook Page of the Pickleball Club of the Ayala Malls Market!...",
+      "domain": "facebook.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4381590668795807": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4381590668795807",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "sports center Taguig Metro Manila pickleball",
+      "title": "Pickleball open play in Taguig City",
+      "snippet": "Whether you're a beginner or a seasoned player, everyone's welcome to join the experience. Rate: ₱300 per head / 3 hours Location: 2325 Beata St ...",
+      "domain": "facebook.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:40.724Z",
+      "sourceQuery": "sports center Taguig Metro Manila pickleball",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Every location you can find pickleball courts in Metro Manila. Acacia Pickleball Club|Taguig|3 courtsAcacia Smashers Pickleball Club|Taguig|3 courtsAcro ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 17,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

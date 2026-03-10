@@ -1,0 +1,75 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Quezon City",
+    "citySlug": "quezon-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:11:59.969Z",
+  "queries": [
+    "site:facebook.com pickleball Quezon City Metro Manila",
+    "site:facebook.com \"Quezon City\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Quezon City\" \"pickleball club\"",
+    "site:facebook.com \"Quezon City\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Welcome-Pickleball-Club-100087110356633/",
+    "https://www.facebook.com/qcpickleballassociationinc/",
+    "https://www.facebook.com/mariesvillageclubhouse/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4104357103185833/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4090834977871379/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4090834977871379/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4104357103185833/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4103755966579280/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4090834977871379/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/quezon-city/facebook-pages.state.json"
+}

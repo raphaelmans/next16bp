@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-las-pinas",
+  "createdAt": "2026-03-10T04:00:59.630Z",
+  "updatedAt": "2026-03-10T04:02:29.319Z",
+  "urls": {
+    "https://facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830": {
+      "canonicalUrl": "https://facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830",
+      "latestUrl": "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+      "firstCapturedAt": "2026-03-10T04:01:01.771Z",
+      "lastCapturedAt": "2026-03-10T04:01:01.771Z",
+      "status": "captured",
+      "title": "Las Piñas Pickleball Club | Las Piñas | Facebook",
+      "venueName": "Las Piñas Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/telaparkpickleball": {
+      "canonicalUrl": "https://facebook.com/telaparkpickleball",
+      "latestUrl": "https://www.facebook.com/telaparkpickleball/",
+      "firstCapturedAt": "2026-03-10T04:01:25.893Z",
+      "lastCapturedAt": "2026-03-10T04:01:25.893Z",
+      "status": "captured",
+      "title": "Tela Park Pickleball Center | Las Piñas | Facebook",
+      "venueName": "Tela Park Pickleball Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/bfresortpickleballclub": {
+      "canonicalUrl": "https://facebook.com/bfresortpickleballclub",
+      "latestUrl": "https://www.facebook.com/bfresortpickleballclub/",
+      "firstCapturedAt": "2026-03-10T04:01:46.865Z",
+      "lastCapturedAt": "2026-03-10T04:01:46.865Z",
+      "status": "captured",
+      "title": "BF Resort Pickleball Club | Facebook",
+      "venueName": "BF Resort Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-10T04:02:06.648Z",
+      "lastCapturedAt": "2026-03-10T04:02:06.648Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

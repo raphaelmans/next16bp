@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T17:12:42.499Z",
+  "updatedAt": "2026-03-09T17:13:08.023Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "firstDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:12:42.499Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "suburbia east tennis court|city of marikina|metro manila",
+      "lastRowName": "Suburbia East Tennis Court"
+    },
+    "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun": {
+      "canonicalUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "firstDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:12:42.499Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:12:42.499Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:42.499Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:12:42.499Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "suburbia east tennis court|city of marikina|metro manila": {
+      "rowKey": "suburbia east tennis court|city of marikina|metro manila",
+      "name": "Suburbia East Tennis Court",
+      "city": "CITY OF MARIKINA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "firstSeenAt": "2026-03-09T17:12:42.499Z",
+      "lastSeenAt": "2026-03-09T17:12:42.499Z"
+    }
+  }
+}

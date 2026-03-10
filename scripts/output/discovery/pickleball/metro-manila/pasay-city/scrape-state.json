@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T17:19:15.151Z",
+  "updatedAt": "2026-03-09T17:19:40.831Z",
+  "urls": {
+    "https://metpark.ph/sports-center/pickleball-court": {
+      "canonicalUrl": "https://metpark.ph/sports-center/pickleball-court",
+      "latestUrl": "https://metpark.ph/sports-center/pickleball-court/",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.seascapevillage.com.ph/seascape-picklebay": {
+      "canonicalUrl": "https://www.seascapevillage.com.ph/seascape-picklebay",
+      "latestUrl": "https://www.seascapevillage.com.ph/seascape-picklebay/",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pickle bay seascape village|pasay city|metro manila",
+      "lastRowName": "Pickle Bay Seascape Village"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pal sports center|pasay city|metro manila",
+      "lastRowName": "Pal Sports Center"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://bounceatparqal.com/": {
+      "canonicalUrl": "https://bounceatparqal.com/",
+      "latestUrl": "https://bounceatparqal.com/",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sec.solaireresort.com/experience/solaire-sports-club": {
+      "canonicalUrl": "https://sec.solaireresort.com/experience/solaire-sports-club",
+      "latestUrl": "https://sec.solaireresort.com/experience/solaire-sports-club",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun": {
+      "canonicalUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "firstDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "lastDiscoveredAt": "2026-03-09T17:19:15.151Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:19:15.151Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "pickle bay seascape village|pasay city|metro manila": {
+      "rowKey": "pickle bay seascape village|pasay city|metro manila",
+      "name": "Pickle Bay Seascape Village",
+      "city": "PASAY CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pickle-bay-seascape-village",
+      "firstSeenAt": "2026-03-09T17:19:15.151Z",
+      "lastSeenAt": "2026-03-09T17:19:15.151Z"
+    },
+    "pal sports center|pasay city|metro manila": {
+      "rowKey": "pal sports center|pasay city|metro manila",
+      "name": "Pal Sports Center",
+      "city": "PASAY CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "firstSeenAt": "2026-03-09T17:19:15.151Z",
+      "lastSeenAt": "2026-03-09T17:19:15.151Z"
+    }
+  }
+}

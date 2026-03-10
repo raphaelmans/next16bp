@@ -1,0 +1,183 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Consolacion",
+    "citySlug": "consolacion",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T03:49:03.152Z",
+  "queries": [
+    "site:facebook.com pickleball Consolacion Cebu",
+    "site:facebook.com \"Consolacion\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Consolacion\" \"pickleball club\"",
+    "site:facebook.com \"Consolacion\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/olivegrovepickleball/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/p/CON-Pickleball-Club-61560469654419/",
+    "https://www.facebook.com/gabsplayground/",
+    "https://www.facebook.com/cebupickleball/",
+    "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+    "https://www.facebook.com/p/HQ-Pickleball-61585259447279/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1428949208076139/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2952262758410177/posts/3239746949661755/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/open-play-schedule-at-match-point-cebu-match-point-liloanmonday-wednesday-7pm11p/122226057446290101/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3962142370740641/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cebupickleball/posts/were-here-at-sm-city-consolacion-official-with-our-olive-grove-pickleball-friend/455087003695470/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/one-of-our-pro-pickleball-nets-is-up-and-ready-for-play-enjoy-the-game-but-pleas/122206767866290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/%F0%9D%99%80%F0%9D%99%AD%F0%9D%99%98%F0%9D%99%9E%F0%9D%99%A9%F0%9D%99%9E%F0%9D%99%A3%F0%9D%99%9C-%F0%9D%99%89%F0%9D%99%9A%F0%9D%99%AC%F0%9D%99%A8-%F0%9D%99%8E%F0%9D%99%88%F0%9D%99%81%F0%9D%99%96%F0%9D%99%A2-sm-city-consolacion-official-proudly-introduces-pickleball-t/810107161151521/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/open-play-schedule-at-match-point-cebu-match-point-liloanmonday-wednesday-7pm11p/122226057446290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1820831875424975/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/cebupickleball/posts/were-here-at-sm-city-consolacion-official-with-our-olive-grove-pickleball-friend/455087003695470/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2952262758410177/posts/3239746949661755/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1428949208076139/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/%F0%9D%99%80%F0%9D%99%AD%F0%9D%99%98%F0%9D%99%9E%F0%9D%99%A9%F0%9D%99%9E%F0%9D%99%A3%F0%9D%99%9C-%F0%9D%99%89%F0%9D%99%9A%F0%9D%99%AC%F0%9D%99%A8-%F0%9D%99%8E%F0%9D%99%88%F0%9D%99%81%F0%9D%99%96%F0%9D%99%A2-sm-city-consolacion-official-proudly-introduces-pickleball-t/810107161151521/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/-open-plays-this-week-at-match-point-spots-are-limited-and-these-sessions-fill-u/122221969070290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1346978700097331/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/always-grateful-when-players-feel-the-love-we-put-into-these-courts-all-the-hard/122223832460290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1428949208076139/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/always-grateful-when-players-feel-the-love-we-put-into-these-courts-all-the-hard/122223832460290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375518719403002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matchpoint.cebu/posts/one-of-our-pro-pickleball-nets-is-up-and-ready-for-play-enjoy-the-game-but-pleas/122206767866290101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/quisina-pickleball-cebu/1316219467005579/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/keetapublications/posts/kitchenline-pickleball-is-where-pickleball-gets-real-cebus-first-usapa-standard-/1409760644496898/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132038270417716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/seasidehavencebu/posts/our-pickleball-court-is-now-officially-open-to-rent-for-only-p150hour-open-9am-1/1076455260844722/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4122919991329544/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/consolacion/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/consolacion/facebook-pages.state.json"
+}

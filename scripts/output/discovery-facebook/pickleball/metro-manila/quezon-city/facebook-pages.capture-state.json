@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:quezon-city",
+  "createdAt": "2026-03-09T16:30:54.176Z",
+  "updatedAt": "2026-03-09T16:43:57.942Z",
+  "urls": {
+    "https://facebook.com/p/Welcome-Pickleball-Club-100087110356633": {
+      "canonicalUrl": "https://facebook.com/p/Welcome-Pickleball-Club-100087110356633",
+      "latestUrl": "https://www.facebook.com/p/Welcome-Pickleball-Club-100087110356633/",
+      "firstCapturedAt": "2026-03-09T16:30:55.586Z",
+      "lastCapturedAt": "2026-03-09T16:42:58.234Z",
+      "status": "captured",
+      "title": "Welcome Pickleball Club | Quezon City | Facebook",
+      "venueName": "Welcome Pickleball Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Welcome Pickleball Club"
+    },
+    "https://facebook.com/qcpickleballassociationinc": {
+      "canonicalUrl": "https://facebook.com/qcpickleballassociationinc",
+      "latestUrl": "https://www.facebook.com/qcpickleballassociationinc/",
+      "firstCapturedAt": "2026-03-09T16:31:13.990Z",
+      "lastCapturedAt": "2026-03-09T16:43:17.696Z",
+      "status": "captured",
+      "title": "Quezon City Pickleball Association Inc. - QCPAI | Facebook",
+      "venueName": "Quezon City Pickleball Association Inc. - QCPAI",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/mariesvillageclubhouse": {
+      "canonicalUrl": "https://facebook.com/mariesvillageclubhouse",
+      "latestUrl": "https://www.facebook.com/mariesvillageclubhouse/",
+      "firstCapturedAt": "2026-03-09T16:31:41.521Z",
+      "lastCapturedAt": "2026-03-09T16:43:38.138Z",
+      "status": "captured",
+      "title": "Maries Village Pickleball Court & Clubhouse | Quezon City | Facebook",
+      "venueName": "Maries Village Pickleball Court & Clubhouse",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Maries Village Pickleball Court & Clubhouse"
+    }
+  }
+}

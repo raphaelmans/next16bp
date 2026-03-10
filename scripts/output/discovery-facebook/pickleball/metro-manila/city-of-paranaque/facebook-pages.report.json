@@ -1,0 +1,73 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Parañaque",
+    "citySlug": "city-of-paranaque",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:13.033Z",
+  "queries": [
+    "site:facebook.com pickleball City of Parañaque Metro Manila",
+    "site:facebook.com \"City of Parañaque\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Parañaque\" \"pickleball club\"",
+    "site:facebook.com \"City of Parañaque\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/photo.php?fbid=913449330827525&set=a.554412840064511&id=100064873982749"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/881612689765542/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370669473221260/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1470851403684126/posts/2174761053293154/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/villagesportsclub/posts/the-journey-we-built-togethervillagesportsclub-partners-appreciation-night-2026l/1373619974810456/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/villagesportsclub/photos/game-set-match-and-a-day-with-vsc-young-aces-will-never-forget-on-april-11-satur/1376130437892743/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/298915775231/posts/10166096971325232/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/804716167194984/posts/1679665879700004/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/staycationairbnbinmetromanila/posts/2461147704387998/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-paranaque/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-paranaque/facebook-pages.state.json"
+}

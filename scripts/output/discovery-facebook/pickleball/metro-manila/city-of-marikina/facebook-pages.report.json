@@ -1,0 +1,142 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Marikina",
+    "citySlug": "city-of-marikina",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:20:19.949Z",
+  "queries": [
+    "site:facebook.com pickleball City of Marikina Metro Manila",
+    "site:facebook.com \"City of Marikina\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Marikina\" \"pickleball club\"",
+    "site:facebook.com \"City of Marikina\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Dink-Shot-61573388397740/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/481694024421620/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4284104551877753/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4312750625679812/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4248172712137604/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/940305671295905/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3957700124518199/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369903499964524/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4251888428411612/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/871906024271270/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/201907685121856/posts/889481073031177/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1389643071611211/posts/2030229210885924/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/houstonpickleballassociation/posts/1536374374099523/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/officialchc.co/posts/thank-you-so-much-tpc-nga-pala-its-such-a-pleasure-to-be-featured-in-your-review/122236224992165084/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/greaterhoustonpickleball/posts/1429995945196367/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/PhilippineSTAR/posts/the-newest-board-appointees-include-atty-gabriel-villareal-atty-jose-martin-loon/1290586831094995/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/175174691208387/posts/1266648148727697/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/517077809182858/posts/1920011252222833/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/jenny.escabel.carrera.vee1299/photos/d41d8cd9/26013281061673773/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/702843423828471/posts/2066385707474229/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/114364365275046/posts/2990572534320867/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-marikina/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-marikina/facebook-pages.state.json"
+}

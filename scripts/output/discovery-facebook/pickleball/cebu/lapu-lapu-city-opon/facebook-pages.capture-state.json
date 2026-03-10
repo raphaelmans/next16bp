@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:lapu-lapu-city-opon",
+  "createdAt": "2026-03-09T17:24:29.360Z",
+  "updatedAt": "2026-03-09T17:28:22.567Z",
+  "urls": {
+    "https://facebook.com/p/Rions-Basketball-Court-61550493014092": {
+      "canonicalUrl": "https://facebook.com/p/Rions-Basketball-Court-61550493014092",
+      "latestUrl": "https://www.facebook.com/p/Rions-Basketball-Court-61550493014092/",
+      "firstCapturedAt": "2026-03-09T17:24:30.874Z",
+      "lastCapturedAt": "2026-03-09T17:24:30.874Z",
+      "status": "captured",
+      "title": "Rion's Basketball Court / PickleBall | Lapu-Lapu City | Facebook",
+      "venueName": "Rion's Basketball Court / PickleBall",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1396559255813914&id=100063795593473&set=a.693802559422924": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1396559255813914&id=100063795593473&set=a.693802559422924",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1396559255813914&set=a.693802559422924&id=100063795593473",
+      "firstCapturedAt": "2026-03-09T17:24:52.199Z",
+      "lastCapturedAt": "2026-03-09T17:24:52.199Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61585304037022?locale=ru_RU": {
+      "canonicalUrl": "https://facebook.com/61585304037022?locale=ru_RU",
+      "latestUrl": "https://www.facebook.com/61585304037022/?locale=ru_RU",
+      "firstCapturedAt": "2026-03-09T17:25:35.817Z",
+      "lastCapturedAt": "2026-03-09T17:25:35.817Z",
+      "status": "captured",
+      "title": "Dink & Drink Opon | Lapu-Lapu City | Facebook",
+      "venueName": "Dink & Drink Opon",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1396559425813897&id=100063795593473&set=a.693802559422924": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1396559425813897&id=100063795593473&set=a.693802559422924",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1396559425813897&set=a.693802559422924&id=100063795593473",
+      "firstCapturedAt": "2026-03-09T17:25:54.410Z",
+      "lastCapturedAt": "2026-03-09T17:25:54.410Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "City Auditorium",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-09T17:26:44.307Z",
+      "lastCapturedAt": "2026-03-09T17:26:44.307Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/matchpoint.cebu": {
+      "canonicalUrl": "https://facebook.com/matchpoint.cebu",
+      "latestUrl": "https://www.facebook.com/matchpoint.cebu/",
+      "firstCapturedAt": "2026-03-09T17:26:59.505Z",
+      "lastCapturedAt": "2026-03-09T17:26:59.505Z",
+      "status": "captured",
+      "title": "Match Point Badminton and Pickleball Court Cebu | Facebook",
+      "venueName": "Match Point Badminton and Pickleball Court Cebu",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389": {
+      "canonicalUrl": "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389",
+      "latestUrl": "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+      "firstCapturedAt": "2026-03-09T17:27:25.444Z",
+      "lastCapturedAt": "2026-03-09T17:27:25.444Z",
+      "status": "captured",
+      "title": "Linkers Pickleball Court | Cebu City | Facebook",
+      "venueName": "Linkers Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/HQ-Pickleball-61585259447279": {
+      "canonicalUrl": "https://facebook.com/p/HQ-Pickleball-61585259447279",
+      "latestUrl": "https://www.facebook.com/p/HQ-Pickleball-61585259447279/",
+      "firstCapturedAt": "2026-03-09T17:27:50.334Z",
+      "lastCapturedAt": "2026-03-09T17:27:50.334Z",
+      "status": "captured",
+      "title": "HQ Pickleball | Cebu City | Facebook",
+      "venueName": "HQ Pickleball",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

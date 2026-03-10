@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:iloilo-city:facebook",
+  "createdAt": "2026-03-09T17:12:33.870Z",
+  "updatedAt": "2026-03-09T17:28:34.839Z",
+  "scope": {
+    "provinceSlug": "iloilo",
+    "citySlug": "iloilo-city",
+    "provinceName": "Iloilo",
+    "cityName": "Iloilo City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "1097699d-61bc-4f87-bb20-df11734c21de"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:12:33.871Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:12:33.872Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:12:33.872Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:12:34.310Z",
+      "lastError": null,
+      "notes": "all approved facebook rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:12:34.310Z",
+      "lastError": null,
+      "notes": "all approved facebook rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:28:34.839Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

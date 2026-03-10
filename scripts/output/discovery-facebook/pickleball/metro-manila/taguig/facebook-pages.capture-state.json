@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:taguig",
+  "createdAt": "2026-03-09T16:33:00.783Z",
+  "updatedAt": "2026-03-09T16:33:28.077Z",
+  "urls": {
+    "https://facebook.com/MarketMarketPickleballClub": {
+      "canonicalUrl": "https://facebook.com/MarketMarketPickleballClub",
+      "latestUrl": "https://www.facebook.com/MarketMarketPickleballClub/",
+      "firstCapturedAt": "2026-03-09T16:33:02.002Z",
+      "lastCapturedAt": "2026-03-09T16:33:02.002Z",
+      "status": "captured",
+      "title": "Market Market Pickleball Club | Taguig | Facebook",
+      "venueName": "Market Market Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

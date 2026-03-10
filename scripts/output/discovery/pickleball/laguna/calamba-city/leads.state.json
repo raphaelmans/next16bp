@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:calamba-city",
+  "createdAt": "2026-03-10T02:44:02.626Z",
+  "updatedAt": "2026-03-10T02:44:39.983Z",
+  "queries": [
+    "pickleball courts in Laguna Calamba City",
+    "pickleball court Calamba City Laguna",
+    "Calamba City pickleball",
+    "courts in Calamba City Laguna pickleball",
+    "sports center Calamba City Laguna pickleball",
+    "pickleball club Calamba City Laguna",
+    "pickleball reservations Calamba City Laguna",
+    "host-map:cebupickleballcourts.com:Calamba City",
+    "host-map:cebupickleballcourts.com:Calamba",
+    "host-map:dumapickleball.com:Calamba City",
+    "host-map:dumapickleball.com:Calamba",
+    "site:cebupickleballcourts.com Calamba City Laguna pickleball",
+    "site:dumapickleball.com Calamba City Laguna pickleball"
+  ],
+  "urls": {
+    "https://pickletrip.com/all/philippines/calabarzon/calamba/pansol/cabins": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/calabarzon/calamba/pansol/cabins",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/calamba/pansol/cabins",
+      "firstDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "lastDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "sourceQuery": "pickleball reservations Calamba City Laguna",
+      "title": "Pansol, PH PickleBall Stays",
+      "snippet": "Find Your Perfect Pickleball Vacation in Pansol. Discover Properties with Private Pickball Courts, Nearby Facilities and Great Amenities.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/0MPRRG": {
+      "canonicalUrl": "https://reclub.co/m/0MPRRG",
+      "latestUrl": "https://reclub.co/m/0MPRRG",
+      "firstDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "lastDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "sourceQuery": "pickleball club Calamba City Laguna",
+      "title": "Calamba Pickleball Club Thursday Open Play",
+      "snippet": "Calamba Pickleball Club Thursday Open Play. Thursday, Mar 12 @ 6:00 PM4 hours. Thursday, Mar 12 @ 6:00 PM. 4 hours. The Pickle & 1016. Lawa, Calamba City, ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=kDTu95Zxdps": {
+      "canonicalUrl": "https://youtube.com/watch?v=kDTu95Zxdps",
+      "latestUrl": "https://www.youtube.com/watch?v=kDTu95Zxdps",
+      "firstDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "lastDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "sourceQuery": "sports center Calamba City Laguna pickleball",
+      "title": "The Pickle & Co. 1016 - Batino, Calamba City: Virtual Tour",
+      "snippet": "The Pickle & Co. 1016 Batino, Calamba City December 6, 2025 #kalanbangaden #explorecalamba.",
+      "domain": "youtube.com",
+      "relevanceScore": -1,
+      "handedOffToScrapeAt": null
+    },
+    "https://yelp.com/search?cflt=sports_clubs&find_loc=Calamba%2C+Laguna": {
+      "canonicalUrl": "https://yelp.com/search?cflt=sports_clubs&find_loc=Calamba%2C+Laguna",
+      "latestUrl": "https://www.yelp.com/search?cflt=sports_clubs&find_loc=Calamba%2C+Laguna",
+      "firstDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "lastDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "sourceQuery": "sports center Calamba City Laguna pickleball",
+      "title": "THE BEST 10 SPORTS CLUBS in CALAMBA, LAGUNA, PHILIPPINES",
+      "snippet": "Top 10 Best Sports Clubs Near Calamba, Laguna - With Real Reviews · 1. The Village Sports Club · 2. Nomads Sports Club · 3. Evia Youth Soccer Clinic · 4. Merville ...",
+      "domain": "yelp.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "lastDiscoveredAt": "2026-03-10T02:44:02.628Z",
+      "sourceQuery": "pickleball club Calamba City Laguna",
+      "title": "Member Clubs",
+      "snippet": "Calamba City, Laguna​. Camalig Pickleball Club. February 10, 2025. Picture ... Davao City Pickleball Club, Inc. July 16, 2024. Picture. https://www.facebook ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

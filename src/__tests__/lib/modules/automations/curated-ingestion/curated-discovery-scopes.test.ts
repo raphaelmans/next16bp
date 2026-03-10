@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  CURATED_DISCOVERY_DEFAULT_SPORT_SLUG,
   CURATED_DISCOVERY_SCOPES,
   resolveCuratedDiscoveryScopeOrThrow,
   resolveDefaultCuratedDiscoveryScopes,
@@ -10,8 +11,9 @@ describe("curated discovery scopes", () => {
     const scopes = await resolveDefaultCuratedDiscoveryScopes();
 
     expect(scopes).toHaveLength(CURATED_DISCOVERY_SCOPES.length);
+    expect(CURATED_DISCOVERY_SCOPES[0]).not.toHaveProperty("sportSlug");
     expect(scopes).toContainEqual({
-      sportSlug: "pickleball",
+      sportSlug: CURATED_DISCOVERY_DEFAULT_SPORT_SLUG,
       provinceSlug: "negros-oriental",
       citySlug: "dumaguete-city",
       provinceName: "Negros Oriental",

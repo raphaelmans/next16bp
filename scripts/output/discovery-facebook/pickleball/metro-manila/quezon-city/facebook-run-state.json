@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:quezon-city:facebook",
+  "createdAt": "2026-03-09T17:14:43.061Z",
+  "updatedAt": "2026-03-09T17:28:35.108Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "quezon-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Quezon City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "dc5874f8-2e0c-4b5c-bca4-79d60d4700f6",
+    "b50e5995-6d78-4020-84fb-4b8b601f2c8a"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.062Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.062Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.063Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.525Z",
+      "lastError": null,
+      "notes": "all approved facebook rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.525Z",
+      "lastError": null,
+      "notes": "all approved facebook rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:28:35.108Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

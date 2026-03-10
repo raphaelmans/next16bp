@@ -1,0 +1,99 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Mandaluyong",
+    "citySlug": "city-of-mandaluyong",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:15:43.103Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Mandaluyong",
+    "pickleball court City of Mandaluyong Metro Manila",
+    "City of Mandaluyong pickleball",
+    "courts in City of Mandaluyong Metro Manila pickleball",
+    "sports center City of Mandaluyong Metro Manila pickleball",
+    "pickleball club City of Mandaluyong Metro Manila",
+    "pickleball reservations City of Mandaluyong Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Mandaluyong",
+    "host-map:dumapickleball.com:City of Mandaluyong",
+    "site:cebupickleballcourts.com City of Mandaluyong Metro Manila pickleball",
+    "site:dumapickleball.com City of Mandaluyong Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/mandaluyong/flair-pickleball-club",
+    "https://www.sparrk.ph/explore/pickleball/mandaluyong-city",
+    "https://reclub.co/clubs/@24-7-pickle-mandaluyong",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.sparrk.ph/explore/multi-purpose/mandaluyong-city",
+    "https://ohpc.rezerv.co/home",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://reclub.co/clubs/@over-horizon-pickleball"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://ohpc.rezerv.co/home",
+      "score": 5
+    },
+    {
+      "url": "https://ohpc.rezerv.co/home",
+      "score": 5
+    },
+    {
+      "url": "https://ohpc.rezerv.co/home",
+      "score": 5
+    },
+    {
+      "url": "https://ohpc.rezerv.co/home",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/clubs/@24-7-pickle-mandaluyong",
+      "score": 2
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4114255745529302/",
+    "https://www.facebook.com/24.7Pickle.ph/videos/new-dedicated-pickleball-court-in-mandaluyong-/1365919917966244/",
+    "https://www.facebook.com/24.7Pickle.ph/posts/soft-opening-of-247-pickle-mandaluyong-a-new-fun-place-that-is-intimate-1-court-/122173801712292762/",
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4114255745529302/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/24.7Pickle.ph/videos/new-dedicated-pickleball-court-in-mandaluyong-/1365919917966244/",
+    "https://www.facebook.com/OHPC2640/",
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/24.7Pickle.ph/videos/new-dedicated-pickleball-court-in-mandaluyong-/1365919917966244/",
+    "https://www.facebook.com/OHPC2640/",
+    "https://www.tiktok.com/@phamswing/video/7564024253645982983",
+    "https://www.instagram.com/overhorizonpickleball/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1029711858490685/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/OHPC2640/",
+    "https://www.tiktok.com/@phamswing/video/7564024253645982983",
+    "https://www.facebook.com/24.7Pickle.ph/videos/new-dedicated-pickleball-court-in-mandaluyong-/1365919917966244/",
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1029711858490685/",
+    "https://www.facebook.com/24.7Pickle.ph/videos/new-dedicated-pickleball-court-in-mandaluyong-/1365919917966244/",
+    "https://www.facebook.com/OHPC2640/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4378792375742303/",
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.reddit.com/r/Mandaluyong/comments/1ig1uz1/pickle_ball_in_manda/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4114255745529302/",
+    "https://www.facebook.com/24.7Pickle.ph/posts/soft-opening-of-247-pickle-mandaluyong-a-new-fun-place-that-is-intimate-1-court-/122173801712292762/",
+    "https://www.facebook.com/OHPC2640/",
+    "https://www.facebook.com/24.7Pickle.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4025858944368983/",
+    "https://www.facebook.com/24.7Pickle.ph/posts/soft-opening-of-247-pickle-mandaluyong-a-new-fun-place-that-is-intimate-1-court-/122173801712292762/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rocm2h/help_us_map_every_pickleball_court_in_the/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-mandaluyong/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-mandaluyong/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-mandaluyong/scrape-state.json"
+}

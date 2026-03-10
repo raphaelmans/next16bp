@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:10:01.924Z",
+  "updatedAt": "2026-03-09T16:10:24.114Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig/tiendesitas": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/tiendesitas",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/tiendesitas",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.915Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.915Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.915Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "tiendesitas|city of pasig|metro manila",
+      "lastRowName": "Tiendesitas"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasig/the-upper-deck-sports": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/the-upper-deck-sports",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/the-upper-deck-sports",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.915Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.915Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.915Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the upper deck sports|city of pasig|metro manila",
+      "lastRowName": "The Upper Deck Sports"
+    }
+  },
+  "rows": {
+    "tiendesitas|city of pasig|metro manila": {
+      "rowKey": "tiendesitas|city of pasig|metro manila",
+      "name": "Tiendesitas",
+      "city": "CITY OF PASIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/tiendesitas",
+      "firstSeenAt": "2026-03-09T16:10:01.915Z",
+      "lastSeenAt": "2026-03-09T16:10:01.915Z"
+    },
+    "the upper deck sports|city of pasig|metro manila": {
+      "rowKey": "the upper deck sports|city of pasig|metro manila",
+      "name": "The Upper Deck Sports",
+      "city": "CITY OF PASIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/the-upper-deck-sports",
+      "firstSeenAt": "2026-03-09T16:10:01.915Z",
+      "lastSeenAt": "2026-03-09T16:10:01.915Z"
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-09T17:24:17.344Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 6,
+  "scrapedUrls": 3,
+  "noDataUrls": 3,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "provident homes kinalumsan|lapu-lapu city (opon)|cebu",
+      "name": "Provident Homes Kinalumsan",
+      "city": "LAPU-LAPU CITY (OPON)",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/provident-homes-kinalumsan",
+      "firstSeenAt": "2026-03-09T17:24:17.344Z",
+      "lastSeenAt": "2026-03-09T17:24:17.344Z"
+    },
+    {
+      "rowKey": "pickleball the food camp|lapu-lapu city (opon)|cebu",
+      "name": "Pickleball The Food Camp",
+      "city": "LAPU-LAPU CITY (OPON)",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/pickleball-the-food-camp",
+      "firstSeenAt": "2026-03-09T17:24:17.344Z",
+      "lastSeenAt": "2026-03-09T17:24:17.344Z"
+    },
+    {
+      "rowKey": "btc pickleball|lapu-lapu city (opon)|cebu",
+      "name": "Btc Pickleball",
+      "city": "LAPU-LAPU CITY (OPON)",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/lapu-lapu/btc-pickleball",
+      "firstSeenAt": "2026-03-09T17:24:17.344Z",
+      "lastSeenAt": "2026-03-09T17:24:17.344Z"
+    }
+  ]
+}

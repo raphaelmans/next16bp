@@ -1,0 +1,101 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Consolacion",
+    "citySlug": "consolacion",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:27:53.996Z",
+  "queries": [
+    "pickleball courts in Cebu Consolacion",
+    "pickleball court Consolacion Cebu",
+    "Consolacion pickleball",
+    "courts in Consolacion Cebu pickleball",
+    "sports center Consolacion Cebu pickleball",
+    "pickleball club Consolacion Cebu",
+    "pickleball reservations Consolacion Cebu",
+    "host-map:cebupickleballcourts.com:Consolacion",
+    "host-map:dumapickleball.com:Consolacion",
+    "site:cebupickleballcourts.com Consolacion Cebu pickleball",
+    "site:dumapickleball.com Consolacion Cebu pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+    "https://cebupickleballcourts.com/match-point-consolacion/",
+    "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+    "https://reclub.co/clubs/@match-point-pickleball-consolacion",
+    "https://reclub.co/th/clubs/@match-point-pickleball-consolacion",
+    "https://www.smsupermalls.com/active-hub",
+    "https://reclub.co/ko/clubs/@match-point-pickleball-consolacion",
+    "https://cebupickleballcourts.com/the-smash-yard/",
+    "https://cebupickleballcourts.com/match-point-liloan/",
+    "https://cebupickleballcourts.com/game-changer-mandaue/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "score": 12
+    },
+    {
+      "url": "https://www.pickletrip.com/all/philippines/central-visayas/consolacion",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+    "https://www.facebook.com/smconsolacion/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1820831875424975/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.instagram.com/p/DVN4ss3gbNQ/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+    "https://www.instagram.com/p/DVN4ss3gbNQ/",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+    "https://www.facebook.com/officialsmsupermalls/videos/summerhangoutatsm-come-play-pickleball-at-sm-city-consolacion/409913891647364/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.instagram.com/p/DScR4engRhD/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/cebupickleball/posts/were-here-at-sm-city-consolacion-official-with-our-olive-grove-pickleball-friend/455087003695470/",
+    "https://www.instagram.com/p/DScR4engRhD/",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/61582557202059/videos/fa-sports/4077722765872119/",
+    "https://www.instagram.com/p/DVN4ss3gbNQ/",
+    "https://www.facebook.com/photo.php?fbid=122226989576290101&set=a.122123184422290101&id=61558703037153",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.facebook.com/smconsolacion/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1051649960330572/",
+    "https://www.facebook.com/matchpoint.cebu/posts/our-jugan-consolacion-dedicated-pickleball-courts-are-officially-soft-launching-/122219397992290101/",
+    "https://www.instagram.com/p/DVN4ss3gbNQ/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/smconsolacion/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1820831875424975/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/matchpoint.cebu/posts/we-heard-you-match-point-cebu-consolacion-is-finally-opening-early-every-single-/122226989588290101/",
+    "https://www.instagram.com/matchpoint.cebu/?hl=en",
+    "https://www.facebook.com/matchpoint.cebu/posts/thank-you-to-all-our-badminton-players-for-choosing-match-point-you-may-now-play/122223881120290101/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/consolacion/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/consolacion/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/consolacion/scrape-state.json"
+}

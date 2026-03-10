@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:26:57.863Z",
+  "updatedAt": "2026-03-10T02:27:23.503Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+      "firstDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:26:57.863Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "village sports club|city of las piñas|metro manila",
+      "lastRowName": "Village Sports Club"
+    },
+    "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas": {
+      "canonicalUrl": "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas",
+      "latestUrl": "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas",
+      "firstDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:26:57.863Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:26:57.863Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:26:57.863Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@fronterra-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@fronterra-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@fronterra-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:57.863Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:26:57.863Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "village sports club|city of las piñas|metro manila": {
+      "rowKey": "village sports club|city of las piñas|metro manila",
+      "name": "Village Sports Club",
+      "city": "CITY OF LAS PIÑAS",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+      "firstSeenAt": "2026-03-10T02:26:57.863Z",
+      "lastSeenAt": "2026-03-10T02:26:57.863Z"
+    }
+  }
+}

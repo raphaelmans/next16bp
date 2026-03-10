@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "benguet",
+    "citySlug": "baguio-city",
+    "provinceName": "Benguet",
+    "cityName": "Baguio City"
+  },
+  "generatedAt": "2026-03-10T03:44:09.006Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/benguet/baguio-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 6,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 6,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 2,
+  "skipCount": 2,
+  "csvRowCount": 2,
+  "failures": []
+}

@@ -9,6 +9,8 @@
 
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import pLimit from "p-limit";
+import pRetry from "p-retry";
 import { CuratedLeadDiscoveryStateRepository } from "../repositories/curated-lead-discovery-state.repository";
 import {
   isDirectExecution,
@@ -19,6 +21,11 @@ import {
   resolveCuratedDiscoveryScopeOrThrow,
   resolveDefaultCuratedDiscoveryScopes,
 } from "../shared/curated-discovery-scopes";
+import {
+  buildKnownDomainQueries,
+  classifyDiscoveryUrl,
+  getDiscoveryDomainConfigsByStrategy,
+} from "../shared/lead-source-strategy";
 import { buildCuratedLeadQueryPlan } from "../shared/query-builder";
 import {
   type DiscoverySearchResult,
@@ -57,6 +64,20 @@ interface FirecrawlSearchResponse {
   };
 }
 
+interface FirecrawlMapResponse {
+  success?: boolean;
+  data?: {
+    links?: Array<
+      | string
+      | {
+          url?: string;
+          title?: string;
+          description?: string;
+        }
+    >;
+  };
+}
+
 interface ScrapeStateUrlEntry {
   canonicalUrl?: string;
   lastStatus?: "discovered" | "scraped" | "no_data" | "failed";
@@ -71,6 +92,28 @@ const FIRECRAWL_BASE_URL = "https://api.firecrawl.dev/v2";
 const DEFAULT_LIMIT = 10;
 const DEFAULT_MAX_NEW_URLS = 25;
 const MIN_PRIMARY_QUALIFYING_LEADS = 3;
+const SEARCH_CONCURRENCY = 2;
+const SEARCH_RETRIES = 5;
+
+class FirecrawlHttpError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "FirecrawlHttpError";
+    this.status = status;
+  }
+}
+
+class FirecrawlRateLimitError extends FirecrawlHttpError {
+  retryAfterMs: number;
+
+  constructor(message: string, retryAfterMs: number) {
+    super(429, message);
+    this.name = "FirecrawlRateLimitError";
+    this.retryAfterMs = retryAfterMs;
+  }
+}
 
 function parsePositiveInt(value: string, flag: string): number {
   const parsed = Number.parseInt(value, 10);
@@ -150,25 +193,62 @@ async function firecrawlRequest<T>(
   endpoint: string,
   init: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`${FIRECRAWL_BASE_URL}${endpoint}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      ...(init.headers ?? {}),
+  return pRetry(
+    async () => {
+      const response = await fetch(`${FIRECRAWL_BASE_URL}${endpoint}`, {
+        ...init,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          ...(init.headers ?? {}),
+        },
+      });
+
+      const text = await response.text();
+      const parsed = text.trim().length > 0 ? JSON.parse(text) : null;
+
+      if (!response.ok) {
+        const errorMessage = `Firecrawl request failed (${response.status}) ${endpoint}: ${JSON.stringify(parsed, null, 2)}`;
+        if (response.status === 429) {
+          const retryAfterMessage =
+            typeof parsed?.error === "string" ? parsed.error : "";
+          const retryAfterMatch =
+            retryAfterMessage.match(/retry after (\d+)s/i);
+          const retryAfterSeconds = retryAfterMatch
+            ? Number.parseInt(retryAfterMatch[1] ?? "0", 10)
+            : 10;
+          throw new FirecrawlRateLimitError(
+            errorMessage,
+            Math.max(retryAfterSeconds, 1) * 1000,
+          );
+        }
+
+        throw new FirecrawlHttpError(response.status, errorMessage);
+      }
+
+      return parsed as T;
     },
-  });
+    {
+      retries: SEARCH_RETRIES,
+      minTimeout: 1000,
+      maxTimeout: 15000,
+      shouldRetry: ({ error }) => {
+        if (error instanceof FirecrawlRateLimitError) return true;
+        if (error instanceof FirecrawlHttpError) {
+          return error.status === 408 || error.status >= 500;
+        }
 
-  const text = await response.text();
-  const parsed = text.trim().length > 0 ? JSON.parse(text) : null;
-
-  if (!response.ok) {
-    throw new Error(
-      `Firecrawl request failed (${response.status}) ${endpoint}: ${JSON.stringify(parsed, null, 2)}`,
-    );
-  }
-
-  return parsed as T;
+        return true;
+      },
+      onFailedAttempt: async ({ error }) => {
+        if (error instanceof FirecrawlRateLimitError) {
+          await new Promise((resolve) =>
+            setTimeout(resolve, error.retryAfterMs),
+          );
+        }
+      },
+    },
+  );
 }
 
 function parseArgs(): ScriptOptions {
@@ -363,6 +443,49 @@ async function runSearch(
   return Array.isArray(response.data?.web) ? response.data.web : [];
 }
 
+async function runMap(
+  apiKey: string,
+  url: string,
+  search: string,
+): Promise<SearchWebResult[]> {
+  const response = await firecrawlRequest<FirecrawlMapResponse>(
+    apiKey,
+    "/map",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        url,
+        search,
+        limit: 50,
+      }),
+    },
+  );
+
+  const links = Array.isArray(response.data?.links) ? response.data.links : [];
+
+  return links
+    .map((item) => {
+      if (typeof item === "string") {
+        return {
+          url: item,
+        } satisfies SearchWebResult;
+      }
+
+      return {
+        url: normalizeString(item.url),
+        title: normalizeString(item.title) || undefined,
+        description: normalizeString(item.description) || undefined,
+      } satisfies SearchWebResult;
+    })
+    .filter((item) => isValidHttpUrl(item.url));
+}
+
+function buildMapSearchTerms(cityName: string): string[] {
+  const trimmed = cityName.trim();
+  const stripped = trimmed.replace(/\s+city$/i, "").trim();
+  return Array.from(new Set([trimmed, stripped].filter(Boolean)));
+}
+
 async function main() {
   const options = parseArgs();
   const apiKey = process.env.FIRECRAWL_API_KEY;
@@ -416,6 +539,11 @@ async function main() {
       city: scope.cityName,
       province: scope.provinceName,
       sportSlug: scope.sportSlug,
+      knownDomainQueries: buildKnownDomainQueries({
+        city: scope.cityName,
+        province: scope.provinceName,
+        sportSlug: scope.sportSlug,
+      }),
     });
     const queriesRun: string[] = [];
 
@@ -423,81 +551,204 @@ async function main() {
     const skippedAlreadyDiscovered: string[] = [];
     const skippedAlreadyScraped: string[] = [];
     const skippedLowRelevance: Array<{ url: string; score: number }> = [];
+    const skippedLeadOnly: string[] = [];
+    const failedQueries: Array<{ query: string; error: string }> = [];
     let primaryQualifyingLeads = 0;
+    const mappedLeadCache = new Map<string, SearchWebResult[]>();
 
-    const processQueries = async (queries: string[]) => {
-      for (const query of queries) {
+    const queryLimiter = pLimit(SEARCH_CONCURRENCY);
+    const processCandidate = (
+      candidateUrl: string,
+      query: string,
+      source: SearchWebResult,
+      emitOptions?: {
+        forceEmit?: boolean;
+      },
+    ) => {
+      if (!isValidHttpUrl(candidateUrl)) return;
+      if (shouldSkipByDomain(candidateUrl, options.domains)) return;
+
+      const scoring = scoreDiscoverySearchResult(
+        {
+          url: candidateUrl,
+          title: source.title,
+          description: source.description,
+        } satisfies DiscoverySearchResult,
+        {
+          city: scope.cityName,
+          province: scope.provinceName,
+          sportSlug: scope.sportSlug,
+        },
+      );
+
+      const canonicalUrl = canonicalizeLeadUrl(candidateUrl);
+      const existing = state.urls[canonicalUrl];
+      const scrapeStateEntry = scrapeState.urls?.[canonicalUrl];
+
+      state.urls[canonicalUrl] = {
+        canonicalUrl,
+        latestUrl: candidateUrl,
+        firstDiscoveredAt: existing?.firstDiscoveredAt ?? runAt,
+        lastDiscoveredAt: runAt,
+        sourceQuery: query,
+        title: source.title ?? existing?.title ?? null,
+        snippet: source.description ?? existing?.snippet ?? null,
+        domain: (() => {
+          try {
+            return new URL(candidateUrl).hostname.replace(/^www\./, "");
+          } catch {
+            return existing?.domain ?? null;
+          }
+        })(),
+        relevanceScore: scoring.score,
+        handedOffToScrapeAt: existing?.handedOffToScrapeAt ?? null,
+      };
+
+      if (!scoring.isLikelyVenueLead && !emitOptions?.forceEmit) {
+        skippedLowRelevance.push({
+          url: candidateUrl,
+          score: scoring.score,
+        });
+        return;
+      }
+
+      primaryQualifyingLeads += 1;
+
+      if (
+        scrapeStateEntry &&
+        (scrapeStateEntry.lastStatus === "scraped" ||
+          scrapeStateEntry.lastStatus === "no_data" ||
+          shouldSkipByRecentFailure(scrapeStateEntry, options.retryFailed))
+      ) {
+        skippedAlreadyScraped.push(candidateUrl);
+        return;
+      }
+
+      emittedUrls.push(candidateUrl);
+    };
+
+    const processSingleQuery = async (query: string) => {
+      try {
         queriesRun.push(query);
         const results = await runSearch(apiKey, query, options);
         for (const result of results) {
           const rawUrl = normalizeString(result.url);
           if (!isValidHttpUrl(rawUrl)) continue;
-          if (shouldSkipByDomain(rawUrl, options.domains)) continue;
+          const classified = classifyDiscoveryUrl(rawUrl);
 
-          const scoring = scoreDiscoverySearchResult(
-            {
-              url: rawUrl,
-              title: result.title,
-              description: result.description,
-            } satisfies DiscoverySearchResult,
-            {
-              city: scope.cityName,
-              province: scope.provinceName,
-              sportSlug: scope.sportSlug,
-            },
-          );
+          let candidates: SearchWebResult[] = [];
 
-          const canonicalUrl = canonicalizeLeadUrl(rawUrl);
-          const existing = state.urls[canonicalUrl];
-          const scrapeStateEntry = scrapeState.urls?.[canonicalUrl];
-
-          state.urls[canonicalUrl] = {
-            canonicalUrl,
-            latestUrl: rawUrl,
-            firstDiscoveredAt: existing?.firstDiscoveredAt ?? runAt,
-            lastDiscoveredAt: runAt,
-            sourceQuery: query,
-            title: result.title ?? existing?.title ?? null,
-            snippet: result.description ?? existing?.snippet ?? null,
-            domain: (() => {
-              try {
-                return new URL(rawUrl).hostname.replace(/^www\./, "");
-              } catch {
-                return existing?.domain ?? null;
-              }
-            })(),
-            relevanceScore: scoring.score,
-            handedOffToScrapeAt: existing?.handedOffToScrapeAt ?? null,
-          };
-
-          if (!scoring.isLikelyVenueLead) {
-            skippedLowRelevance.push({ url: rawUrl, score: scoring.score });
+          if (classified.shouldMap) {
+            const cacheKey = `${classified.host}:${scope.citySlug}`;
+            const mappedResults =
+              mappedLeadCache.get(cacheKey) ??
+              (await runMap(
+                apiKey,
+                `https://${classified.host}`,
+                `${scope.cityName} ${scope.sportSlug}`,
+              ));
+            mappedLeadCache.set(cacheKey, mappedResults);
+            candidates =
+              classified.strategy === "map_spa_directory" ? [] : mappedResults;
+            if (classified.strategy === "map_spa_directory") {
+              skippedLeadOnly.push(rawUrl);
+              continue;
+            }
+          } else if (classified.shouldEmitDirectly) {
+            candidates = [result];
+          } else {
+            skippedLeadOnly.push(rawUrl);
             continue;
           }
 
-          primaryQualifyingLeads += 1;
-
-          if (existing?.handedOffToScrapeAt) {
-            skippedAlreadyDiscovered.push(rawUrl);
-            continue;
+          for (const candidate of candidates) {
+            const candidateUrl = normalizeString(candidate.url);
+            const candidateStrategy = classifyDiscoveryUrl(candidateUrl);
+            processCandidate(
+              candidateUrl,
+              query,
+              {
+                url: candidateUrl,
+                title: candidate.title ?? result.title,
+                description: candidate.description ?? result.description,
+              },
+              {
+                forceEmit:
+                  classified.strategy === "map_static_directory" &&
+                  candidateStrategy.strategy === "map_static_directory" &&
+                  candidateStrategy.shouldEmitDirectly,
+              },
+            );
           }
-
-          if (
-            scrapeStateEntry &&
-            (scrapeStateEntry.lastStatus === "scraped" ||
-              scrapeStateEntry.lastStatus === "no_data" ||
-              shouldSkipByRecentFailure(scrapeStateEntry, options.retryFailed))
-          ) {
-            skippedAlreadyScraped.push(rawUrl);
-            continue;
-          }
-
-          emittedUrls.push(rawUrl);
         }
+      } catch (error) {
+        failedQueries.push({
+          query,
+          error: error instanceof Error ? error.message : String(error),
+        });
       }
     };
 
+    const processQueries = async (queries: string[]) => {
+      await Promise.all(
+        queries.map((query) => queryLimiter(() => processSingleQuery(query))),
+      );
+    };
+
     await processQueries(queryPlan.primary);
+
+    for (const config of getDiscoveryDomainConfigsByStrategy(
+      "map_static_directory",
+    )) {
+      for (const searchTerm of buildMapSearchTerms(scope.cityName)) {
+        const hostQuery = `host-map:${config.host}:${searchTerm}`;
+        queriesRun.push(hostQuery);
+        try {
+          const mappedResults = await runMap(
+            apiKey,
+            `https://${config.host}`,
+            searchTerm,
+          );
+
+          for (const result of mappedResults) {
+            processCandidate(normalizeString(result.url), hostQuery, result);
+          }
+        } catch (error) {
+          failedQueries.push({
+            query: hostQuery,
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+    }
+
+    for (const config of getDiscoveryDomainConfigsByStrategy(
+      "map_spa_directory",
+    )) {
+      for (const searchTerm of buildMapSearchTerms(scope.cityName)) {
+        const hostQuery = `host-map:${config.host}:${searchTerm}`;
+        queriesRun.push(hostQuery);
+        try {
+          const mappedResults = await runMap(
+            apiKey,
+            `https://${config.host}`,
+            searchTerm,
+          );
+          skippedLeadOnly.push(
+            ...mappedResults.map((result) => normalizeString(result.url)),
+          );
+        } catch (error) {
+          failedQueries.push({
+            query: hostQuery,
+            error: error instanceof Error ? error.message : String(error),
+          });
+        }
+      }
+    }
+
+    if (queryPlan.knownDomain.length > 0) {
+      await processQueries(queryPlan.knownDomain);
+    }
 
     if (primaryQualifyingLeads < MIN_PRIMARY_QUALIFYING_LEADS) {
       await processQueries(queryPlan.fallback);
@@ -510,14 +761,6 @@ async function main() {
         (canonicalUrl) => state.urls[canonicalUrl]?.latestUrl ?? canonicalUrl,
       )
       .slice(0, options.maxNewUrls);
-
-    for (const url of uniqueEmittedUrls) {
-      const canonicalUrl = canonicalizeLeadUrl(url);
-      const entry = state.urls[canonicalUrl];
-      if (entry) {
-        entry.handedOffToScrapeAt = runAt;
-      }
-    }
 
     state.queries = queriesRun;
 
@@ -535,6 +778,8 @@ async function main() {
       skippedAlreadyDiscovered,
       skippedAlreadyScraped,
       skippedLowRelevance,
+      skippedLeadOnly,
+      failedQueries,
       outputPath,
       statePath,
       scrapeStatePath,
@@ -546,6 +791,8 @@ async function main() {
     console.log(`Already discovered: ${skippedAlreadyDiscovered.length}`);
     console.log(`Already scraped: ${skippedAlreadyScraped.length}`);
     console.log(`Low relevance: ${skippedLowRelevance.length}`);
+    console.log(`Lead-only skipped: ${skippedLeadOnly.length}`);
+    console.log(`Failed queries: ${failedQueries.length}`);
 
     if (!options.dryRun) {
       await mkdir(path.dirname(outputPath), { recursive: true });

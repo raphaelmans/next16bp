@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:dumaguete-city",
+  "createdAt": "2026-03-09T16:41:49.385Z",
+  "updatedAt": "2026-03-09T16:41:49.632Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "dumaguete-city",
+    "provinceName": "Negros Oriental",
+    "cityName": "Dumaguete City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "3ff2d84e-87e9-45f9-a8f2-622c7e02f109"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.391Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "failed",
+      "startedAt": "2026-03-09T16:41:49.632Z",
+      "finishedAt": "2026-03-09T16:41:49.632Z",
+      "lastError": "No valid URLs found in /Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/dumaguete-city/leads.urls.txt",
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.400Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.523Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.523Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:49.631Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

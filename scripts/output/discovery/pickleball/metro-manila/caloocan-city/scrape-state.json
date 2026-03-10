@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:22:20.658Z",
+  "updatedAt": "2026-03-10T02:22:42.646Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "conquest sports|caloocan city|metro manila",
+      "lastRowName": "Conquest Sports"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "mariana multi purpose covered court|caloocan city|metro manila",
+      "lastRowName": "Mariana Multi Purpose Covered Court"
+    },
+    "https://reclub.co/clubs/@conquest-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@conquest-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@conquest-pickleball",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines": {
+      "canonicalUrl": "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines",
+      "latestUrl": "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines/",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/859AMA": {
+      "canonicalUrl": "https://reclub.co/m/859AMA",
+      "latestUrl": "https://reclub.co/m/859AMA",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@caloocan-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@caloocan-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@caloocan-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/36XZXY": {
+      "canonicalUrl": "https://reclub.co/m/36XZXY",
+      "latestUrl": "https://reclub.co/m/36XZXY",
+      "firstDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "lastDiscoveredAt": "2026-03-10T02:22:20.658Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:22:20.658Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "conquest sports|caloocan city|metro manila": {
+      "rowKey": "conquest sports|caloocan city|metro manila",
+      "name": "Conquest Sports",
+      "city": "CALOOCAN CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+      "firstSeenAt": "2026-03-10T02:22:20.658Z",
+      "lastSeenAt": "2026-03-10T02:22:20.658Z"
+    },
+    "mariana multi purpose covered court|caloocan city|metro manila": {
+      "rowKey": "mariana multi purpose covered court|caloocan city|metro manila",
+      "name": "Mariana Multi Purpose Covered Court",
+      "city": "CALOOCAN CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+      "firstSeenAt": "2026-03-10T02:22:20.658Z",
+      "lastSeenAt": "2026-03-10T02:22:20.658Z"
+    }
+  }
+}

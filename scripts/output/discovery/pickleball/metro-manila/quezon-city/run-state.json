@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:quezon-city",
+  "createdAt": "2026-03-09T16:37:09.380Z",
+  "updatedAt": "2026-03-09T16:41:36.940Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "quezon-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Quezon City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "9564ff58-a98d-4680-863c-ac8e2400d77a"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:37:09.441Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:37:09.469Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:37:09.475Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:37:38.114Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:37:38.122Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:36.940Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

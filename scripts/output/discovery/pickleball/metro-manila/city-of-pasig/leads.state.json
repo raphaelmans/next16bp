@@ -1,0 +1,77 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-pasig",
+  "createdAt": "2026-03-09T16:00:52.235Z",
+  "updatedAt": "2026-03-09T16:01:36.596Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Pasig",
+    "pickleball court City of Pasig Metro Manila",
+    "City of Pasig pickleball",
+    "courts in City of Pasig Metro Manila pickleball",
+    "sports center City of Pasig Metro Manila pickleball",
+    "pickleball club City of Pasig Metro Manila",
+    "pickleball reservations City of Pasig Metro Manila"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/metro-manila/pasig": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/pasig",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig",
+      "firstDiscoveredAt": "2026-03-09T16:00:52.240Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:35.427Z",
+      "sourceQuery": "pickleball club City of Pasig Metro Manila",
+      "title": "11 Most Popular Pickleball Courts in Pasig, NCR",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Pasig, NCR! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": "2026-03-09T16:00:52.240Z"
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4119627854992091": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4119627854992091",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4119627854992091/",
+      "firstDiscoveredAt": "2026-03-09T16:00:52.240Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:35.427Z",
+      "sourceQuery": "pickleball club City of Pasig Metro Manila",
+      "title": "🏓 NOW OPEN! PICKLEBALL OPEN PLAY IN PASIG",
+      "snippet": "Located at Emerald Ave. Ortigas Center, San Antonio, Pasig City. LANDMARK: #JOLLIBEE_TOWER_ORTIGAS See you all in court ‼️ For more ...",
+      "domain": "facebook.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1299371344858067": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1299371344858067",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299371344858067/",
+      "firstDiscoveredAt": "2026-03-09T16:00:52.240Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:35.427Z",
+      "sourceQuery": "sports center City of Pasig Metro Manila pickleball",
+      "title": "Pickleball in Ortigas Center, Pasig",
+      "snippet": "It will be held at the 6th Floor of Greenhills Christian Fellowship, located in the heart of Ortigas Center. If you want to learn the sport or ...",
+      "domain": "facebook.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4004785096476368": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4004785096476368",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4004785096476368/",
+      "firstDiscoveredAt": "2026-03-09T16:00:52.240Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:35.427Z",
+      "sourceQuery": "pickleball reservations City of Pasig Metro Manila",
+      "title": "Pickleball court booking in Pasig or Mandaluyong?",
+      "snippet": "Hi! Looking for a pickleball court in Pasig, Mandaluyong, Cubao, or San Juan for tomorrow afternoon. Hoping to book 2 courts for 2-3 hours for my family. ...",
+      "domain": "facebook.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/pasig-city/ccf-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/pasig-city/ccf-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig-city/ccf-center",
+      "firstDiscoveredAt": "2026-03-09T16:00:52.240Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:35.427Z",
+      "sourceQuery": "pickleball reservations City of Pasig Metro Manila",
+      "title": "Play Pickleball at CCF Center: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at CCF Center! View information on courts, open play sessions, reservations, lessons, weather and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

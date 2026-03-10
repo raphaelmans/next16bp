@@ -2,7 +2,7 @@
 
 import { SlidersHorizontal } from "lucide-react";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
@@ -72,6 +72,7 @@ export function PlaceFiltersSheet({
   className,
 }: PlaceFiltersSheetProps) {
   const [open, setOpen] = useState(false);
+  const sheetContentRef = useRef<HTMLDivElement | null>(null);
 
   const activeCount = useMemo(() => {
     return (
@@ -119,7 +120,7 @@ export function PlaceFiltersSheet({
         side="bottom"
         className="h-[85vh] p-0 sm:h-[75vh] sm:rounded-t-xl"
       >
-        <div className="flex h-full flex-col">
+        <div ref={sheetContentRef} className="flex h-full flex-col">
           <SheetHeader className="border-b px-4 py-3">
             <SheetTitle className="font-heading text-base">Filters</SheetTitle>
           </SheetHeader>
@@ -139,6 +140,7 @@ export function PlaceFiltersSheet({
                 layout="sheet"
                 showClearButton={false}
                 amenities={amenities}
+                comboboxPortalContainer={sheetContentRef}
                 province={province}
                 city={city}
                 sportId={sportId}

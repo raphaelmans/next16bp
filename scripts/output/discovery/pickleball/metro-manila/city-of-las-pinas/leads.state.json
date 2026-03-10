@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-las-pinas",
+  "createdAt": "2026-03-10T02:26:34.344Z",
+  "updatedAt": "2026-03-10T02:26:57.859Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Las Piñas",
+    "pickleball court City of Las Piñas Metro Manila",
+    "City of Las Piñas pickleball",
+    "courts in City of Las Piñas Metro Manila pickleball",
+    "sports center City of Las Piñas Metro Manila pickleball",
+    "pickleball club City of Las Piñas Metro Manila",
+    "pickleball reservations City of Las Piñas Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Las Piñas",
+    "host-map:dumapickleball.com:City of Las Piñas",
+    "site:cebupickleballcourts.com City of Las Piñas Metro Manila pickleball",
+    "site:dumapickleball.com City of Las Piñas Metro Manila pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball reservations City of Las Piñas Metro Manila",
+      "title": "Play Pickleball at Village Sports Club: Court Information",
+      "snippet": "Come play pickleball at Village Sports Club in Las Piñas, NCR! There are 4 indoor wood courts. The lines are permanent, and portable nets are available.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas": {
+      "canonicalUrl": "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas",
+      "latestUrl": "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball reservations City of Las Piñas Metro Manila",
+      "title": "Dink and Drive Pickleball Club | Alabang - Las Pinas",
+      "snippet": "Game balls and official nets sponsored by Tecniq Sports. For inquires and per court reservation please call/text: 09456535470. Organized By. Josh Renan Montano.",
+      "domain": "reclub.co",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball reservations City of Las Piñas Metro Manila",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Discover all pickleball courts in Metro Manila and find the ones closest to you! We have the most comprehensive list of indoor and outdoor pickleball ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://philstar.com/campus/sports/2026/02/20/2509432/sypik-pickleball-camp-slated-las-pinas": {
+      "canonicalUrl": "https://philstar.com/campus/sports/2026/02/20/2509432/sypik-pickleball-camp-slated-las-pinas",
+      "latestUrl": "https://www.philstar.com/campus/sports/2026/02/20/2509432/sypik-pickleball-camp-slated-las-pinas",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "City of Las Piñas pickleball",
+      "title": "Sypik pickleball camp slated in Las Pinas",
+      "snippet": "Top pro pickleball players Leander Lazaro and Sarah Jane Lim-Narvasa will spearhead the Sypik Batang Pickleball Elite Camp at the Tela Park ...",
+      "domain": "philstar.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/": {
+      "canonicalUrl": "https://pickleball.ph/",
+      "latestUrl": "https://www.pickleball.ph/",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "City of Las Piñas pickleball",
+      "title": "PHILIPPINE PICKLEBALL FEDERATION - Philippine ...",
+      "snippet": "Registration is: ​ ✓ First Come, First Served ✓ Limited Slots Per Division ✓ Closed once divisions are full. Registration Deadline: March 20, 2026",
+      "domain": "pickleball.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball reservations City of Las Piñas Metro Manila",
+      "title": "Active Hub at SM",
+      "snippet": "Sports Active Hub at SM. Ready, set, play. The biggest sports playground in the Philippines has finally arrived—and it's right here close to you.",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/c/las-pi%C3%B1as-metro-manila-ph/sports_clubs": {
+      "canonicalUrl": "https://m.yelp.com/c/las-pi%C3%B1as-metro-manila-ph/sports_clubs",
+      "latestUrl": "https://m.yelp.com/c/las-pi%C3%B1as-metro-manila-ph/sports_clubs",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "sports center City of Las Piñas Metro Manila pickleball",
+      "title": "Top 10 Best Sports Clubs Near Las Piñas, Metro Manila",
+      "snippet": "Top 10 Best Sports Clubs Near Las Piñas, Metro Manila · 1. The Village Sports Club · 2. Philippine Institute of Sports Complex · 3. Nomads Sports Club · 4. Evia ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@fronterra-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@fronterra-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@fronterra-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball club City of Las Piñas Metro Manila",
+      "title": "Fronterra Pickleball Club",
+      "snippet": "Fronterra Pickleball Club ... Our venue is nestled inside an Exclusive Community in Fronterra Subdivision located in BF Resort Village here in Las Piñas City!",
+      "domain": "reclub.co",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/LPZRP1": {
+      "canonicalUrl": "https://reclub.co/m/LPZRP1",
+      "latestUrl": "https://reclub.co/m/LPZRP1",
+      "firstDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "lastDiscoveredAt": "2026-03-10T02:26:34.346Z",
+      "sourceQuery": "pickleball reservations City of Las Piñas Metro Manila",
+      "title": "6 Hours open Play @ VistaMall Las Pinas",
+      "snippet": "Looking for Pickleball meets in Metro Manila, Philippines? Check out this Reclub meet at Vista Mall Las Piñas hosted by DJ Cres Esposo and ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

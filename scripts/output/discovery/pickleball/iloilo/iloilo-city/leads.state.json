@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:iloilo-city",
+  "createdAt": "2026-03-09T16:01:48.179Z",
+  "updatedAt": "2026-03-09T16:01:49.578Z",
+  "queries": [
+    "pickleball courts in Iloilo Iloilo City",
+    "pickleball court Iloilo City Iloilo",
+    "Iloilo City pickleball",
+    "courts in Iloilo City Iloilo pickleball",
+    "sports center Iloilo City Iloilo pickleball",
+    "pickleball club Iloilo City Iloilo",
+    "pickleball reservations Iloilo City Iloilo"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "sourceQuery": "pickleball club Iloilo City Iloilo",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:01:48.179Z"
+    },
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "sourceQuery": "sports center Iloilo City Iloilo pickleball",
+      "title": "PicklePoint Iloilo | Iloilo City",
+      "snippet": "LIVE NOW at PicklePoint Iloilo! Novice Night is ongoing at Court 5 & Court 6! Come watch the games, support the players, or jump in and play! Open play is ...",
+      "domain": "facebook.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": "2026-03-09T16:01:48.179Z"
+    },
+    "https://facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546": {
+      "canonicalUrl": "https://facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546",
+      "latestUrl": "https://www.facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546/",
+      "firstDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "sourceQuery": "courts in Iloilo City Iloilo pickleball",
+      "title": "🔥 New sport unlocked: Pickleball! Head to SM City Iloilo's Active Hub ...",
+      "snippet": "March 20, 2025- Sharing our Pickleball smiles today from the 3rd level courts at Festive Walk Iloilo. Thanks for playing! #iloilopickleball # ...",
+      "domain": "facebook.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:48.179Z",
+      "sourceQuery": "sports center Iloilo City Iloilo pickleball",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "The courts are free. You can reserve the courts. Players have access to restrooms, water, lights, trainers or lessons, and wheelchair accessibility. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

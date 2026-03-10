@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-09T16:10:01.915Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 2,
+  "scrapedUrls": 2,
+  "noDataUrls": 0,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "tiendesitas|city of pasig|metro manila",
+      "name": "Tiendesitas",
+      "city": "CITY OF PASIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/tiendesitas",
+      "firstSeenAt": "2026-03-09T16:10:01.915Z",
+      "lastSeenAt": "2026-03-09T16:10:01.915Z"
+    },
+    {
+      "rowKey": "the upper deck sports|city of pasig|metro manila",
+      "name": "The Upper Deck Sports",
+      "city": "CITY OF PASIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasig/the-upper-deck-sports",
+      "firstSeenAt": "2026-03-09T16:10:01.915Z",
+      "lastSeenAt": "2026-03-09T16:10:01.915Z"
+    }
+  ]
+}

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-paranaque",
+  "createdAt": "2026-03-09T16:41:37.407Z",
+  "updatedAt": "2026-03-09T16:41:37.656Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-paranaque",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Parañaque",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "f0c5229b-cceb-4897-bcb4-225e155b0c84"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.409Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.414Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.416Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.542Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.542Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.656Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

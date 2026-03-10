@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-las-pinas",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Las Piñas"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:26:34.343Z",
+      "finishedAt": "2026-03-10T02:26:57.860Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:26:57.861Z",
+      "finishedAt": "2026-03-10T02:27:24.264Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:27:24.265Z",
+      "finishedAt": "2026-03-10T02:28:38.642Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:28:38.680Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:28:38.680Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:28:38.680Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

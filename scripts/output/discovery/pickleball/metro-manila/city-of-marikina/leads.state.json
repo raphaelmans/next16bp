@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-marikina",
+  "createdAt": "2026-03-09T17:12:30.893Z",
+  "updatedAt": "2026-03-09T17:12:42.496Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Marikina",
+    "pickleball court City of Marikina Metro Manila",
+    "City of Marikina pickleball",
+    "courts in City of Marikina Metro Manila pickleball",
+    "sports center City of Marikina Metro Manila pickleball",
+    "pickleball club City of Marikina Metro Manila",
+    "pickleball reservations City of Marikina Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Marikina",
+    "host-map:dumapickleball.com:City of Marikina",
+    "site:cebupickleballcourts.com City of Marikina Metro Manila pickleball",
+    "site:dumapickleball.com City of Marikina Metro Manila pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "pickleball reservations City of Marikina Metro Manila",
+      "title": "Play Pickleball at Suburbia East Tennis Court",
+      "snippet": "Come play pickleball at Suburbia East Tennis Court in Marikina, NCR! There are 3 indoor hard courts. The lines are permanent, and portable nets are available.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun": {
+      "canonicalUrl": "https://smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "pickleball reservations City of Marikina Metro Manila",
+      "title": "Pickleball is here! SM Supermalls introduces permanent courts for ...",
+      "snippet": "To make the courts accessible to everyone, SM Supermalls has set affordable rates: ₱450 per hour for Court Rental, and ₱250 per head for Open ...",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "sports center City of Marikina Metro Manila pickleball",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Discover all pickleball courts in Metro Manila and find the ones closest to you! We have the most comprehensive list of indoor and outdoor pickleball ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "sports center City of Marikina Metro Manila pickleball",
+      "title": "Active Hub at SM",
+      "snippet": "SM City Marikina Pickleball Courts | 3rd Level, April 13 | 2PM. SM Marikina Pickleball, SM City Marikina Pickleball Courts | 3rd Level, April 13 | Mall Hours ...",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://dinkandshot.com/": {
+      "canonicalUrl": "https://dinkandshot.com/",
+      "latestUrl": "https://dinkandshot.com/",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "pickleball reservations City of Marikina Metro Manila",
+      "title": "Dink & Shot | Scheduling and Booking Website",
+      "snippet": "Join us in Marikina for an unforgettable sports adventure! Contact us. +639260669235 · Marketing@dinkandshot.com.",
+      "domain": "dinkandshot.com",
+      "relevanceScore": -1,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ko/communities/metro-manila-philippines-300": {
+      "canonicalUrl": "https://reclub.co/ko/communities/metro-manila-philippines-300",
+      "latestUrl": "https://reclub.co/ko/communities/metro-manila-philippines-300",
+      "firstDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "lastDiscoveredAt": "2026-03-09T17:12:30.895Z",
+      "sourceQuery": "sports center City of Marikina Metro Manila pickleball",
+      "title": "Metro Manila, Philippines",
+      "snippet": "Pickleball Hub at Tiendesitas · Parañaque Pickle Yard · Neopolitan Brittany Pickleball Club · Activate One Ayala - Pickleball · PALOO SM MARIKINA.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

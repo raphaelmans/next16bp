@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:caloocan-city",
+  "createdAt": "2026-03-10T02:21:41.149Z",
+  "updatedAt": "2026-03-10T02:26:07.537Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "caloocan-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Caloocan City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "9305e7f7-900b-4a31-b9a5-a238c3396657",
+    "3791e05f-a74b-4eee-b882-6da5366c7ed3"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:21:41.150Z",
+      "finishedAt": "2026-03-10T02:22:20.656Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:22:20.656Z",
+      "finishedAt": "2026-03-10T02:22:42.648Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:22:42.649Z",
+      "finishedAt": "2026-03-10T02:23:18.604Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:23:19.127Z",
+      "finishedAt": "2026-03-10T02:25:46.562Z",
+      "lastError": null,
+      "notes": "processed 2 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:25:46.563Z",
+      "lastError": null,
+      "notes": "verified 2 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:25:46.586Z",
+      "finishedAt": "2026-03-10T02:26:07.537Z",
+      "lastError": null,
+      "notes": "backfilled 2 place ids"
+    }
+  }
+}

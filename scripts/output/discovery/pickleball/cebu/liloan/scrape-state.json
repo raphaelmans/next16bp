@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T17:31:10.738Z",
+  "updatedAt": "2026-03-09T17:31:42.981Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "match point badminton and pickleball|brooke's point|palawan",
+      "lastRowName": "Match Point Badminton And Pickleball"
+    },
+    "https://cebupickleballcourts.com/hillhouse-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/hillhouse-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/hillhouse-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@match-point": {
+      "canonicalUrl": "https://reclub.co/clubs/@match-point",
+      "latestUrl": "https://reclub.co/clubs/@match-point",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/match-point-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match": {
+      "canonicalUrl": "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match",
+      "latestUrl": "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match/",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/1DOT8D": {
+      "canonicalUrl": "https://reclub.co/m/1DOT8D",
+      "latestUrl": "https://reclub.co/m/1DOT8D",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/TWRN4C": {
+      "canonicalUrl": "https://reclub.co/m/TWRN4C",
+      "latestUrl": "https://reclub.co/m/TWRN4C",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/ceh-abc-gym": {
+      "canonicalUrl": "https://cebupickleballcourts.com/ceh-abc-gym",
+      "latestUrl": "https://cebupickleballcourts.com/ceh-abc-gym/",
+      "firstDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "lastDiscoveredAt": "2026-03-09T17:31:10.738Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-09T17:31:10.738Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "match point badminton and pickleball|brooke's point|palawan": {
+      "rowKey": "match point badminton and pickleball|brooke's point|palawan",
+      "name": "Match Point Badminton And Pickleball",
+      "city": "BROOKE'S POINT",
+      "province": "PALAWAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "firstSeenAt": "2026-03-09T17:31:10.738Z",
+      "lastSeenAt": "2026-03-09T17:31:10.738Z"
+    }
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-09T17:28:34.748Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 10,
+  "scrapedUrls": 2,
+  "noDataUrls": 8,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "sm city consolacion|cebu city|cebu",
+      "name": "Sm City Consolacion",
+      "city": "CEBU CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city/sm-city-consolacion",
+      "firstSeenAt": "2026-03-09T17:28:34.748Z",
+      "lastSeenAt": "2026-03-09T17:28:34.748Z"
+    },
+    {
+      "rowKey": "the smash yard|consolacion|cebu",
+      "name": "The Smash Yard",
+      "city": "CONSOLACION",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/consolacion/the-smash-yard",
+      "firstSeenAt": "2026-03-09T17:28:34.748Z",
+      "lastSeenAt": "2026-03-09T17:28:34.748Z"
+    }
+  ]
+}

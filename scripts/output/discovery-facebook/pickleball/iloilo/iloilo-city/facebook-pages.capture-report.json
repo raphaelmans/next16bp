@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "iloilo",
+    "citySlug": "iloilo-city",
+    "provinceName": "Iloilo",
+    "cityName": "Iloilo City"
+  },
+  "generatedAt": "2026-03-09T16:57:48.471Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/iloilo-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 2,
+  "skipCount": 0,
+  "csvRowCount": 1,
+  "failures": []
+}

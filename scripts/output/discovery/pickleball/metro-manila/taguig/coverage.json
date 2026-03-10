@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-09T16:05:48.786Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 2,
+  "scrapedUrls": 2,
+  "noDataUrls": 0,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "dragonsmash|taguig|metro manila",
+      "name": "Dragonsmash",
+      "city": "TAGUIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/dragonsmash",
+      "firstSeenAt": "2026-03-09T16:05:48.786Z",
+      "lastSeenAt": "2026-03-09T16:05:48.786Z"
+    },
+    {
+      "rowKey": "sequoia pickleball club|taguig|metro manila",
+      "name": "Sequoia Pickleball Club",
+      "city": "TAGUIG",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/taguig/sequoia-pickleball-club",
+      "firstSeenAt": "2026-03-09T16:05:48.786Z",
+      "lastSeenAt": "2026-03-09T16:05:48.786Z"
+    }
+  ]
+}

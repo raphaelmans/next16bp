@@ -1,0 +1,66 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Dumaguete City",
+    "citySlug": "dumaguete-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:14:02.797Z",
+  "queries": [
+    "site:facebook.com pickleball Dumaguete City Negros Oriental",
+    "site:facebook.com \"Dumaguete City\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Dumaguete City\" \"pickleball club\"",
+    "site:facebook.com \"Dumaguete City\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [],
+  "skippedAlreadyDiscovered": [
+    "https://www.facebook.com/p/Dads-Pickleball-Club-61578245391738/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/p/Dads-Pickleball-Club-61578245391738/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/p/Dads-Pickleball-Club-61578245391738/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1392116432508953/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452715323115730/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1447740553613207/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/randy.vilan/posts/loops-new-pickleball-court-in-dumaguetepickleballcommunity-pickleballislifecoach/10227564825661011/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1392116432508953/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/876774091810727/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dumaguete-city/facebook-pages.state.json"
+}

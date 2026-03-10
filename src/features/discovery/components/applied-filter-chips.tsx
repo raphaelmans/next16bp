@@ -27,6 +27,7 @@ const VERIFICATION_LABELS: Record<string, string> = {
 };
 
 interface AppliedFilterChipsProps {
+  query?: string | null;
   province?: string | null;
   city?: string | null;
   sportId?: string | null;
@@ -39,6 +40,7 @@ interface AppliedFilterChipsProps {
     | "unverified_reservable"
     | null;
   sports?: { id: string; name: string }[];
+  onRemoveQuery: () => void;
   onRemoveProvince: () => void;
   onRemoveCity: () => void;
   onRemoveSport: () => void;
@@ -49,6 +51,7 @@ interface AppliedFilterChipsProps {
 }
 
 export function AppliedFilterChips({
+  query,
   province,
   city,
   sportId,
@@ -57,6 +60,7 @@ export function AppliedFilterChips({
   amenities,
   verification,
   sports,
+  onRemoveQuery,
   onRemoveProvince,
   onRemoveCity,
   onRemoveSport,
@@ -97,6 +101,7 @@ export function AppliedFilterChips({
   }, [date]);
 
   const hasChips =
+    query ||
     province ||
     city ||
     sportId ||
@@ -110,6 +115,7 @@ export function AppliedFilterChips({
   return (
     <ScrollArea className="w-full" type="scroll">
       <div className="flex items-center gap-1.5 pb-1">
+        {query && <FilterChip label={`"${query}"`} onRemove={onRemoveQuery} />}
         {province && (
           <FilterChip
             label={provinceLabel ?? province}

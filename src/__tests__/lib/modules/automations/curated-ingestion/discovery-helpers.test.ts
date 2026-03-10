@@ -1,4 +1,8 @@
 import { describe, expect, it } from "vitest";
+import {
+  buildKnownDomainQueries,
+  classifyDiscoveryUrl,
+} from "@/lib/modules/automations/curated-ingestion/shared/lead-source-strategy";
 import { buildCuratedLeadQueryPlan } from "@/lib/modules/automations/curated-ingestion/shared/query-builder";
 import { scoreDiscoverySearchResult } from "@/lib/modules/automations/curated-ingestion/shared/relevance-scoring";
 import {
@@ -18,16 +22,62 @@ describe("curated lead discovery helpers", () => {
       primary: [
         "pickleball courts in Cebu Cebu City",
         "pickleball court Cebu City Cebu",
+        "Cebu City pickleball",
         "courts in Cebu City Cebu pickleball",
         "sports center Cebu City Cebu pickleball",
         "pickleball club Cebu City Cebu",
         "pickleball reservations Cebu City Cebu",
       ],
+      knownDomain: [],
       fallback: [
-        "site:facebook.com pickleball Cebu City Cebu",
-        "site:instagram.com pickleball Cebu City Cebu",
+        "site:pickleheads.com pickleball Cebu City Cebu",
+        "site:playtimescheduler.com pickleball Cebu City Cebu",
+        "site:app.court-access.com pickleball Cebu City Cebu",
         "dink Cebu City pickleball",
       ],
+    });
+  });
+
+  it("builds scoped known-domain queries for configured local directories", () => {
+    expect(
+      buildKnownDomainQueries({
+        city: "Talisay City",
+        province: "Cebu",
+        sportSlug: "pickleball",
+      }),
+    ).toEqual([
+      "site:cebupickleballcourts.com Talisay City Cebu pickleball",
+      "site:dumapickleball.com Talisay City Cebu pickleball",
+    ]);
+  });
+
+  it("classifies static directory pages as map-first and detail pages as direct", () => {
+    expect(
+      classifyDiscoveryUrl("https://cebupickleballcourts.com/courts", {}),
+    ).toMatchObject({
+      strategy: "map_static_directory",
+      shouldMap: true,
+      shouldEmitDirectly: false,
+    });
+
+    expect(
+      classifyDiscoveryUrl(
+        "https://cebupickleballcourts.com/yb-pickleball-court",
+      ),
+    ).toMatchObject({
+      strategy: "map_static_directory",
+      shouldMap: false,
+      shouldEmitDirectly: true,
+    });
+  });
+
+  it("classifies dumapickleball as a mapped SPA lead-only source", () => {
+    expect(
+      classifyDiscoveryUrl("https://www.dumapickleball.com/courts"),
+    ).toMatchObject({
+      strategy: "map_spa_directory",
+      shouldMap: true,
+      shouldEmitDirectly: false,
     });
   });
 
@@ -76,5 +126,23 @@ describe("curated lead discovery helpers", () => {
     );
 
     expect(result.isLikelyVenueLead).toBe(false);
+  });
+
+  it("treats playtimescheduler as a useful structured lead instead of generic noise", () => {
+    const result = scoreDiscoverySearchResult(
+      {
+        url: "https://playtimescheduler.com/region/dumaguete-visayas",
+        title: "Find Pickleball Games in Dumaguete, Visayas",
+        description:
+          "Pickleball Courts in Dumaguete including Incredoball Sports and Development Center and Pickle8",
+      },
+      {
+        city: "Dumaguete City",
+        province: "Negros Oriental",
+        sportSlug: "pickleball",
+      },
+    );
+
+    expect(result.score).toBeGreaterThan(0);
   });
 });

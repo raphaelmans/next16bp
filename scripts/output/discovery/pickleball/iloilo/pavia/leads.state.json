@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:pavia",
+  "createdAt": "2026-03-09T17:34:14.833Z",
+  "updatedAt": "2026-03-09T17:34:51.414Z",
+  "queries": [
+    "pickleball courts in Iloilo Pavia",
+    "pickleball court Pavia Iloilo",
+    "Pavia pickleball",
+    "courts in Pavia Iloilo pickleball",
+    "sports center Pavia Iloilo pickleball",
+    "pickleball club Pavia Iloilo",
+    "pickleball reservations Pavia Iloilo",
+    "host-map:cebupickleballcourts.com:Pavia",
+    "host-map:dumapickleball.com:Pavia",
+    "site:cebupickleballcourts.com Pavia Iloilo pickleball",
+    "site:dumapickleball.com Pavia Iloilo pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "lastDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "sourceQuery": "courts in Pavia Iloilo pickleball",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dink-district-by-picklemd": {
+      "canonicalUrl": "https://reclub.co/clubs/@dink-district-by-picklemd",
+      "latestUrl": "https://reclub.co/clubs/@dink-district-by-picklemd",
+      "firstDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "lastDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "sourceQuery": "sports center Pavia Iloilo pickleball",
+      "title": "Dink District by PickleMD",
+      "snippet": "A welcoming pickleball community with safe, quality courts in Ungka I, Pavia, Iloilo — open to players of all levels who value fairness, inclusivity, and fun.",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://threads.com/@iloilotennisandcountryclub/post/DP_wqmeE-ag/iloilo-tennis-and-country-club-is-inviting-you-to-visit-our-itcc-pickleball-cour": {
+      "canonicalUrl": "https://threads.com/@iloilotennisandcountryclub/post/DP_wqmeE-ag/iloilo-tennis-and-country-club-is-inviting-you-to-visit-our-itcc-pickleball-cour",
+      "latestUrl": "https://www.threads.com/@iloilotennisandcountryclub/post/DP_wqmeE-ag/iloilo-tennis-and-country-club-is-inviting-you-to-visit-our-itcc-pickleball-cour",
+      "firstDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "lastDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "sourceQuery": "pickleball reservations Pavia Iloilo",
+      "title": "Iloilo Tennis and Country Club is inviting you to ...",
+      "snippet": "Iloilo Tennis and Country Club is inviting you to visit our “ITCC Pickleball Courts” Our new project just across of Gateway Hotel, ...",
+      "domain": "threads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.com/players/deanna-pavia": {
+      "canonicalUrl": "https://pickleball.com/players/deanna-pavia",
+      "latestUrl": "https://pickleball.com/players/deanna-pavia",
+      "firstDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "lastDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "sourceQuery": "Pavia pickleball",
+      "title": "Deanna Pavia - Amateur Pickleball Player from United States",
+      "snippet": "Upcoming Pickleball Tournaments for Deanna Pavia. Deanna Pavia is not registered for any upcoming tournaments. Join the fastest growing pickleball community.",
+      "domain": "pickleball.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "lastDiscoveredAt": "2026-03-09T17:34:14.833Z",
+      "sourceQuery": "sports center Pavia Iloilo pickleball",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "The courts are free. You can reserve the courts. Players have access to restrooms, water, lights, trainers or lessons, and wheelchair accessibility. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

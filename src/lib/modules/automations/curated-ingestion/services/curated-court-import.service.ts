@@ -25,7 +25,7 @@
 
 import { readFile } from "node:fs/promises";
 import path from "node:path";
-import { and, eq, ilike } from "drizzle-orm";
+import { and, eq, ilike, inArray } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "@/lib/shared/infra/db/schema";
@@ -470,6 +470,12 @@ async function importCuratedCourts() {
     let failed = 0;
     let validated = 0;
     const seenKeys = new Set<string>();
+    const createdPlaceRecords: Array<{
+      id: string;
+      name: string;
+      city: string;
+      province: string;
+    }> = [];
 
     for (let i = 1; i < rows.length; i += 1) {
       const row = rows[i];
@@ -521,7 +527,7 @@ async function importCuratedCourts() {
           continue;
         }
 
-        await db.transaction(async (tx) => {
+        const createdPlace = await db.transaction(async (tx) => {
           const slug = resolveSlug(normalizedName, existingSlugs, rowNumber);
           const placeValues: typeof schema.place.$inferInsert = {
             name: normalizedName,
@@ -588,11 +594,19 @@ async function importCuratedCourts() {
               })),
             );
           }
+
+          return placeRecord;
         });
 
         console.log(
           `  Created: ${parsed.name} (${parsed.city}, ${parsed.province})`,
         );
+        createdPlaceRecords.push({
+          id: createdPlace.id,
+          name: parsed.name,
+          city: parsed.city,
+          province: parsed.province,
+        });
         created += 1;
       } catch (error) {
         failed += 1;
@@ -610,6 +624,37 @@ async function importCuratedCourts() {
     if (options.dryRun) {
       console.log(`Rows validated: ${validated}`);
     } else {
+      if (createdPlaceRecords.length > 0) {
+        const createdIds = createdPlaceRecords.map((record) => record.id);
+        const verifiedPlaces = await db
+          .select({
+            id: schema.place.id,
+            name: schema.place.name,
+            city: schema.place.city,
+            province: schema.place.province,
+          })
+          .from(schema.place)
+          .where(inArray(schema.place.id, createdIds));
+
+        const verifiedIds = new Set(verifiedPlaces.map((place) => place.id));
+        const missingPlaces = createdPlaceRecords.filter(
+          (record) => !verifiedIds.has(record.id),
+        );
+
+        if (missingPlaces.length > 0) {
+          throw new Error(
+            `Post-import verification failed. Missing persisted place IDs: ${missingPlaces
+              .map(
+                (record) =>
+                  `${record.name} (${record.city}, ${record.province}) [${record.id}]`,
+              )
+              .join("; ")}`,
+          );
+        }
+
+        console.log(`Places verified in DB: ${verifiedPlaces.length}`);
+      }
+
       console.log(`Places created: ${created}`);
     }
     console.log(`Places skipped: ${skipped}`);

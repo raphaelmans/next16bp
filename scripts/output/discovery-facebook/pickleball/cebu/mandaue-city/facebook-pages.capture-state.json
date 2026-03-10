@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:mandaue-city",
+  "createdAt": "2026-03-09T16:27:52.511Z",
+  "updatedAt": "2026-03-09T16:54:01.228Z",
+  "urls": {
+    "https://facebook.com/Sweetspotpickleballcourts": {
+      "canonicalUrl": "https://facebook.com/Sweetspotpickleballcourts",
+      "latestUrl": "https://www.facebook.com/Sweetspotpickleballcourts/",
+      "firstCapturedAt": "2026-03-09T16:27:53.836Z",
+      "lastCapturedAt": "2026-03-09T16:50:45.604Z",
+      "status": "captured",
+      "title": "Sweet Spot Pickleball Courts | Mandaue City | Facebook",
+      "venueName": "Sweet Spot Pickleball Courts",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Sweet Spot Pickleball Courts"
+    },
+    "https://facebook.com/ChoiPickleballMandaue": {
+      "canonicalUrl": "https://facebook.com/ChoiPickleballMandaue",
+      "latestUrl": "https://www.facebook.com/ChoiPickleballMandaue/",
+      "firstCapturedAt": "2026-03-09T16:28:15.701Z",
+      "lastCapturedAt": "2026-03-09T16:51:08.611Z",
+      "status": "captured",
+      "title": "Choi Pickleball - Mandaue | Facebook",
+      "venueName": "Choi Pickleball - Mandaue",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/All-Aces-Pickleball-Club-61578165434754": {
+      "canonicalUrl": "https://facebook.com/p/All-Aces-Pickleball-Club-61578165434754",
+      "latestUrl": "https://www.facebook.com/p/All-Aces-Pickleball-Club-61578165434754/",
+      "firstCapturedAt": "2026-03-09T16:28:35.547Z",
+      "lastCapturedAt": "2026-03-09T16:51:40.664Z",
+      "status": "captured",
+      "title": "All Aces Pickleball Club | Mandaue City | Facebook",
+      "venueName": "All Aces Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61578165434754?locale=fy_NL": {
+      "canonicalUrl": "https://facebook.com/61578165434754?locale=fy_NL",
+      "latestUrl": "https://www.facebook.com/61578165434754/?locale=fy_NL",
+      "firstCapturedAt": "2026-03-09T16:33:30.517Z",
+      "lastCapturedAt": "2026-03-09T16:52:00.096Z",
+      "status": "captured",
+      "title": "All Aces Pickleball Club | Mandaue City | Facebook",
+      "venueName": "All Aces Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-09T16:34:18.692Z",
+      "lastCapturedAt": "2026-03-09T16:52:19.948Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845": {
+      "canonicalUrl": "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845",
+      "latestUrl": "https://www.facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845/",
+      "firstCapturedAt": "2026-03-09T16:34:50.217Z",
+      "lastCapturedAt": "2026-03-09T16:53:00.673Z",
+      "status": "captured",
+      "title": "Cebu Pickleball DUPR Club | Cebu City | Facebook",
+      "venueName": "Cebu Pickleball DUPR Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

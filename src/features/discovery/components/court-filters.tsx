@@ -83,6 +83,10 @@ const HOUR_LABEL_MAP = new Map(HOUR_OPTIONS.map((o) => [o.value, o.label]));
 
 export interface PlaceFiltersProps {
   amenities?: string[];
+  comboboxPortalContainer?:
+    | HTMLElement
+    | null
+    | React.RefObject<HTMLElement | null>;
   province?: string;
   city?: string;
   sportId?: string;
@@ -113,6 +117,7 @@ export interface PlaceFiltersProps {
 
 export function PlaceFilters({
   amenities,
+  comboboxPortalContainer,
   province,
   city,
   sportId,
@@ -544,7 +549,10 @@ export function PlaceFilters({
             className="flex shrink-0 items-center justify-center text-muted-foreground"
           />
         </ComboboxChips>
-        <ComboboxContent anchor={timeAnchorRef}>
+        <ComboboxContent
+          anchor={timeAnchorRef}
+          container={comboboxPortalContainer}
+        >
           <ComboboxEmpty>No hours found.</ComboboxEmpty>
           <ComboboxList>
             {(item) => (
@@ -634,7 +642,10 @@ export function PlaceFilters({
             className="flex shrink-0 items-center justify-center text-muted-foreground"
           />
         </ComboboxChips>
-        <ComboboxContent anchor={amenitiesAnchorRef}>
+        <ComboboxContent
+          anchor={amenitiesAnchorRef}
+          container={comboboxPortalContainer}
+        >
           <ComboboxEmpty>No amenities found.</ComboboxEmpty>
           <ComboboxList>
             {(amenity) => (

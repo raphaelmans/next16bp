@@ -1,0 +1,103 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Valenzuela",
+    "citySlug": "city-of-valenzuela",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:03:00.526Z",
+  "queries": [
+    "site:facebook.com pickleball City of Valenzuela Metro Manila",
+    "site:facebook.com \"City of Valenzuela\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Valenzuela\" \"pickleball club\"",
+    "site:facebook.com \"City of Valenzuela\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/TheSmashCityPH/",
+    "https://www.facebook.com/valpickleball/",
+    "https://www.facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879/",
+    "https://www.facebook.com/109283081226076",
+    "https://www.facebook.com/tecniqsports/",
+    "https://www.facebook.com/photo.php?fbid=122124457274130515&id=61553915459800&set=a.122106075644130515",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/amaroresort2023/posts/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%9F%F0%9D%90%A2%F0%9D%90%AB%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%88%F0%9D%90%82%F0%9D%90%8A%F0%9D%90%8B%F0%9D%90%84%F0%9D%90%81%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-%F0%9D%90%9C%F0%9D%90%A8%F0%9D%90%AE%F0%9D%90%AB%F0%9D%90%AD%F0%9D%90%AC-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%8F%F0%9D%90%AE%F0%9D%90%A7%F0%9D%90%AD%F0%9D%90%AE%F0%9D%90%AB%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%95%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%B3%F0%9D%90%AE%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%9A-%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9E-%F0%9D%90%A7%F0%9D%90%A8%F0%9D%90%B0-%F0%9D%90%A8%F0%9D%90%A9%F0%9D%90%9E%F0%9D%90%A7-%F0%9D%90%9A%F0%9D%90%AD-amaro-resort/1343612154471384/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-58-the-smash-city-valenzuela-pickleball-pickleballlife-pickl/10213877739613633/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1266428534819015/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/ValenzuelaCityGov/posts/the-5000-sq-m-sports-park-in-barangay-wawang-pulo-is-complete-with-an-obstacle-c/10161237043918378/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ValenzuelaCityGov/posts/the-polofiesta2023-festivities-commenced-with-a-battle-of-the-bands-contest-last/733792272116594/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nblpilipinas/posts/just-in-nbl-pilipinas-executives-led-by-evp-and-season-2024-commissioner-rhose-m/860543666105810/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/383040200182602/posts/1365015195318426/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages.state.json"
+}

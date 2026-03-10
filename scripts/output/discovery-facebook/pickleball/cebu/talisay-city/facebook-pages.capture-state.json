@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:talisay-city",
+  "createdAt": "2026-03-09T16:35:19.258Z",
+  "updatedAt": "2026-03-09T16:54:54.263Z",
+  "urls": {
+    "https://facebook.com/p/The-Courtside-Cebu-61580521050375": {
+      "canonicalUrl": "https://facebook.com/p/The-Courtside-Cebu-61580521050375",
+      "latestUrl": "https://www.facebook.com/p/The-Courtside-Cebu-61580521050375/",
+      "firstCapturedAt": "2026-03-09T16:35:29.039Z",
+      "lastCapturedAt": "2026-03-09T16:54:03.220Z",
+      "status": "captured",
+      "title": "The Courtside Cebu | Talisay | Facebook",
+      "venueName": "The Courtside Cebu",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Courtside Cebu"
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-09T16:36:05.852Z",
+      "lastCapturedAt": "2026-03-09T16:54:23.071Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845": {
+      "canonicalUrl": "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845",
+      "latestUrl": "https://www.facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845/",
+      "firstCapturedAt": "2026-03-09T16:36:45.028Z",
+      "lastCapturedAt": "2026-03-09T16:54:37.799Z",
+      "status": "captured",
+      "title": "Cebu Pickleball DUPR Club | Cebu City | Facebook",
+      "venueName": "Cebu Pickleball DUPR Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

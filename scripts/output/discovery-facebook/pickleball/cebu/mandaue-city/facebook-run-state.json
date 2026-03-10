@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:mandaue-city:facebook",
+  "createdAt": "2026-03-09T17:14:43.667Z",
+  "updatedAt": "2026-03-09T17:28:22.575Z",
+  "scope": {
+    "provinceSlug": "cebu",
+    "citySlug": "mandaue-city",
+    "provinceName": "Cebu",
+    "cityName": "Mandaue City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.667Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.668Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.668Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "facebookImportApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.668Z",
+      "lastError": null,
+      "notes": "no approved facebook rows after duplicate preflight"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.668Z",
+      "lastError": null,
+      "notes": "no approved facebook rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:14:43.668Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

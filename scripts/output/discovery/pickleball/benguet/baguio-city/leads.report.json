@@ -1,0 +1,170 @@
+{
+  "scope": {
+    "provinceName": "Benguet",
+    "provinceSlug": "benguet",
+    "cityName": "Baguio City",
+    "citySlug": "baguio-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:45:08.479Z",
+  "queries": [
+    "pickleball courts in Benguet Baguio City",
+    "pickleball court Baguio City Benguet",
+    "Baguio City pickleball",
+    "courts in Baguio City Benguet pickleball",
+    "sports center Baguio City Benguet pickleball",
+    "pickleball club Baguio City Benguet",
+    "pickleball reservations Baguio City Benguet",
+    "host-map:cebupickleballcourts.com:Baguio City",
+    "host-map:cebupickleballcourts.com:Baguio",
+    "host-map:dumapickleball.com:Baguio City",
+    "host-map:dumapickleball.com:Baguio",
+    "site:cebupickleballcourts.com Baguio City Benguet pickleball",
+    "site:dumapickleball.com Baguio City Benguet pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/cordillera-administrative-region/baguio/philippine-baptist-theological-seminary",
+    "https://www.youtube.com/watch?v=s1K_Qy4CddY",
+    "https://bookings-test.baguio.gov.ph/",
+    "https://baguioheraldexpressonline.com/la-trinidad-has-a-growing-pickleball-community/",
+    "https://mtbeacon.rappler.com/203/not-just-for-seniors-pickleball-gains-fans-in-baguio/",
+    "https://www.youtube.com/watch?v=UqXxFyTNEww"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/shorts/4DD70Cd686E",
+      "score": 4
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VPuuWciibUg",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/communities/benguet-ph-565",
+      "score": 14
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VPuuWciibUg",
+      "score": 5
+    },
+    {
+      "url": "http://reclub.co/communities/benguet-philippines-565",
+      "score": 14
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/shorts/4DD70Cd686E",
+      "score": 4
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=UqXxFyTNEww",
+      "score": 5
+    },
+    {
+      "url": "https://pickleballnewsasia.com/philippines-camp-john-hay-in-baguio-opens-pickleball-and-hoops-facility/",
+      "score": 0
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VPuuWciibUg",
+      "score": 5
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VPuuWciibUg",
+      "score": 4
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=s1K_Qy4CddY",
+      "score": 3
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/communities/benguet-ph-565",
+      "score": 14
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/shorts/4DD70Cd686E",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/communities/benguet-ph-565",
+      "score": 14
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=UqXxFyTNEww",
+      "score": 5
+    },
+    {
+      "url": "https://ywambaguio.org/pickle-ball/",
+      "score": 3
+    },
+    {
+      "url": "https://www.youtube.com/shorts/4DD70Cd686E",
+      "score": 4
+    },
+    {
+      "url": "https://pickleballnewsasia.com/philippines-camp-john-hay-in-baguio-opens-pickleball-and-hoops-facility/",
+      "score": 1
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+    "https://www.facebook.com/bp2asia/posts/we-tried-out-a-new-facility-today-in-the-heart-of-baguio-city-bbccc-gym-they-wil/1006287711513209/",
+    "https://www.facebook.com/johnhaysportspavilion/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+    "https://www.facebook.com/100089768833030/posts/%F0%9D%90%88%F0%9D%90%81%F0%9D%90%8F-%F0%9D%90%81%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%AE%F0%9D%90%9E%F0%9D%90%AD-%F0%9D%90%82%F0%9D%90%A1%F0%9D%90%9A%F0%9D%90%A9%F0%9D%90%AD%F0%9D%90%9E%F0%9D%90%AB-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%A6%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%B2-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%B2-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94join-us-on-%F0%9D%90%85%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%AB%F0%9D%90%AE%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%B2-%F0%9D%9F%8F%F0%9D%9F%93-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94-for-a-fun-f/848119201523700/",
+    "https://www.facebook.com/bp2asia/posts/we-tried-out-a-new-facility-today-in-the-heart-of-baguio-city-bbccc-gym-they-wil/1006287711513209/",
+    "https://www.instagram.com/p/DPzuNHDEl9u/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+    "https://www.facebook.com/groups/1328577497759060/",
+    "https://www.facebook.com/bp2asia/posts/trying-out-pickleball-at-bbccc-gym-a-new-venue-option-in-the-heart-of-baguio-cit/1012290157579631/",
+    "https://www.instagram.com/reel/DM0Bt3Ly0Rt/",
+    "https://www.facebook.com/bienzoleta/videos/baguioleaguepickleball-%EF%B8%8Fanother-cool-city-another-fun-pickleball-weekend-filled-/1397424271822356/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+    "https://www.facebook.com/bp2asia/posts/we-tried-out-a-new-facility-today-in-the-heart-of-baguio-city-bbccc-gym-they-wil/1006287711513209/",
+    "https://www.facebook.com/johnhaysportspavilion/",
+    "https://www.tiktok.com/@ruthmaclang/video/7533596225820544274",
+    "https://www.facebook.com/johnhaysportspavilion/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4317330045221870/",
+    "https://www.instagram.com/reel/DM0Bt3Ly0Rt/",
+    "https://www.facebook.com/bp2asia/posts/trying-out-pickleball-at-bbccc-gym-a-new-venue-option-in-the-heart-of-baguio-cit/1012290157579631/",
+    "https://www.facebook.com/bp2asia/posts/pickleball-at-sm-city-baguiobp2-sports-with-sm-city-baguio-launched-a-free-play-/963403039135010/",
+    "https://www.tiktok.com/@pickletechie/video/7518556373219659022",
+    "https://www.facebook.com/groups/2723933654561525/posts/3940055736282638/",
+    "https://www.facebook.com/bp2asia/posts/trying-out-pickleball-at-bbccc-gym-a-new-venue-option-in-the-heart-of-baguio-cit/1012290157579631/",
+    "https://www.facebook.com/ymcabaguiopickleballclub/",
+    "https://www.instagram.com/p/DQOcGIHAfqr/",
+    "https://www.facebook.com/photo.php?fbid=1268891041267536&set=a.404645651025417&id=100044399560402",
+    "https://www.facebook.com/pio.baguio/posts/%F0%9D%97%A7%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A6-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%99%F0%9D%97%94%F0%9D%97%96%F0%9D%97%9C%F0%9D%97%9F%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%AC-%F0%9D%97%A5%F0%9D%97%98-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A6-%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A0%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%A5%F0%9D%97%A2%F0%9D%97%AA-%F0%9D%97%9D%F0%9D%97%A8%F0%9D%97%A1%F0%9D%97%98-%F0%9D%9F%AD%F0%9D%9F%ADthe-tennis-court-facility-at-the-/1268891057934201/",
+    "https://www.tiktok.com/@ruthmaclang/video/7533596225820544274",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1039823847479486/",
+    "https://www.instagram.com/reel/DM0Bt3Ly0Rt/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/benguet/baguio-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/benguet/baguio-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/benguet/baguio-city/scrape-state.json"
+}

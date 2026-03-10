@@ -1,0 +1,83 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Pasig",
+    "citySlug": "city-of-pasig",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:12:49.413Z",
+  "queries": [
+    "site:facebook.com pickleball City of Pasig Metro Manila",
+    "site:facebook.com \"City of Pasig\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"City of Pasig\" \"pickleball club\"",
+    "site:facebook.com \"City of Pasig\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471397970988736/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375301479424726/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342104469411094/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/953134789481726/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/485081452953731/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/873668384095034/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/953134789481726/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/485081452953731/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/873668384095034/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/953134789481726/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/873668384095034/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/485081452953731/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-pasig/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-pasig/facebook-pages.state.json"
+}

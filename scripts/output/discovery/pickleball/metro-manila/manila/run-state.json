@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:manila",
+  "createdAt": "2026-03-10T02:35:16.125Z",
+  "updatedAt": "2026-03-10T02:37:11.396Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "manila",
+    "provinceName": "Metro Manila",
+    "cityName": "Manila",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:35:16.127Z",
+      "finishedAt": "2026-03-10T02:35:40.352Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:35:40.352Z",
+      "finishedAt": "2026-03-10T02:36:41.355Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T02:36:41.362Z",
+      "finishedAt": "2026-03-10T02:37:10.692Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T02:37:11.349Z",
+      "finishedAt": "2026-03-10T02:37:11.395Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for manila, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:37:11.395Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for manila"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T02:37:11.396Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

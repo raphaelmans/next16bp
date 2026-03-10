@@ -1,0 +1,81 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Taguig",
+    "citySlug": "taguig",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:20.175Z",
+  "queries": [
+    "site:facebook.com pickleball Taguig Metro Manila",
+    "site:facebook.com \"Taguig\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Taguig\" \"pickleball club\"",
+    "site:facebook.com \"Taguig\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/MarketMarketPickleballClub/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1279551006840101/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1279551006840101/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/bgcpickleballclub/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1301419251319943/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/696676825027862/posts/1679657133396488/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/taguig/facebook-pages.state.json"
+}

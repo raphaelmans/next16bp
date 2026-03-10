@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "valencia-luzurriaga",
+    "provinceName": "Negros Oriental",
+    "cityName": "Valencia (Luzurriaga)"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:35:38.693Z",
+      "finishedAt": "2026-03-09T17:35:53.217Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:35:53.218Z",
+      "finishedAt": "2026-03-09T17:36:09.759Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:36:09.760Z",
+      "finishedAt": "2026-03-09T17:36:34.794Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:36:34.796Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:36:34.796Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T17:36:34.796Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

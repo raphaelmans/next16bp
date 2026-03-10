@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-03-09T16:10:02.007Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 2,
+  "candidateUrlsCount": 2,
+  "candidateUrlsSelectedForRunCount": 2,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque",
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque",
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque",
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "The Pickle Yard Paranaque",
+        "address": "Paranaque, Metro Manila, Philippines",
+        "city": "CITY OF PARAÑAQUE",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque"
+    },
+    {
+      "row": {
+        "name": "Metro South Pickleball Club",
+        "address": "Paranaque, Metro Manila, Philippines",
+        "city": "CITY OF PARAÑAQUE",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 2,
+    "pendingMigrationRows": 2,
+    "dbCoverageEnabled": false
+  }
+}

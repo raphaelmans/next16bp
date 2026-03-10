@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:imus-city",
+  "createdAt": "2026-03-10T03:46:09.851Z",
+  "updatedAt": "2026-03-10T03:47:10.395Z",
+  "urls": {
+    "https://facebook.com/p/Sunny-Sideout-61575198541803": {
+      "canonicalUrl": "https://facebook.com/p/Sunny-Sideout-61575198541803",
+      "latestUrl": "https://www.facebook.com/p/Sunny-Sideout-61575198541803/",
+      "firstCapturedAt": "2026-03-10T03:46:12.564Z",
+      "lastCapturedAt": "2026-03-10T03:46:12.564Z",
+      "status": "captured",
+      "title": "Sunny Sideout | Imus | Facebook",
+      "venueName": "Sunny Sideout",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Sunny Sideout"
+    },
+    "https://facebook.com/thepicklershideout": {
+      "canonicalUrl": "https://facebook.com/thepicklershideout",
+      "latestUrl": "https://www.facebook.com/thepicklershideout/",
+      "firstCapturedAt": "2026-03-10T03:46:26.114Z",
+      "lastCapturedAt": "2026-03-10T03:46:26.114Z",
+      "status": "captured",
+      "title": "The Pickler’s Hideout | Imus | Facebook",
+      "venueName": "The Pickler’s Hideout",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickler’s Hideout"
+    },
+    "https://facebook.com/620280391170207": {
+      "canonicalUrl": "https://facebook.com/620280391170207",
+      "latestUrl": "https://www.facebook.com/620280391170207/",
+      "firstCapturedAt": "2026-03-10T03:46:37.478Z",
+      "lastCapturedAt": "2026-03-10T03:46:37.478Z",
+      "status": "captured",
+      "title": "Sunny Sideout | Imus | Facebook",
+      "venueName": "Sunny Sideout",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Sunny Sideout"
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T03:46:51.354Z",
+      "lastCapturedAt": "2026-03-10T03:46:51.354Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

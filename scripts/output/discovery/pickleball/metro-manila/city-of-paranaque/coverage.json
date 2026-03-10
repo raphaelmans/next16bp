@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-09T16:10:02.007Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 2,
+  "scrapedUrls": 2,
+  "noDataUrls": 0,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "the pickle yard paranaque|city of parañaque|metro manila",
+      "name": "The Pickle Yard Paranaque",
+      "city": "CITY OF PARAÑAQUE",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/the-pickle-yard-paranaque",
+      "firstSeenAt": "2026-03-09T16:10:02.007Z",
+      "lastSeenAt": "2026-03-09T16:10:02.007Z"
+    },
+    {
+      "rowKey": "metro south pickleball club|city of parañaque|metro manila",
+      "name": "Metro South Pickleball Club",
+      "city": "CITY OF PARAÑAQUE",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque/metro-south-pickleball-club",
+      "firstSeenAt": "2026-03-09T16:10:02.007Z",
+      "lastSeenAt": "2026-03-09T16:10:02.007Z"
+    }
+  ]
+}

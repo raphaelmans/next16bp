@@ -1,0 +1,47 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Quezon City",
+    "citySlug": "quezon-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:32.610Z",
+  "queries": [
+    "pickleball courts in Metro Manila Quezon City",
+    "pickleball court Quezon City Metro Manila",
+    "Quezon City pickleball",
+    "courts in Quezon City Metro Manila pickleball",
+    "sports center Quezon City Metro Manila pickleball",
+    "pickleball club Quezon City Metro Manila",
+    "pickleball reservations Quezon City Metro Manila"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/quezon-city/quezon-city-sports-club"
+  ],
+  "skippedAlreadyDiscovered": [
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city/",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1hfemxl/pickleball_courts_in_quezon_city/"
+  ],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1268911974570671/",
+      "score": 8
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/quezon-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/quezon-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/quezon-city/scrape-state.json"
+}

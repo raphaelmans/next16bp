@@ -1,0 +1,111 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Caloocan City",
+    "citySlug": "caloocan-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:21:41.152Z",
+  "queries": [
+    "pickleball courts in Metro Manila Caloocan City",
+    "pickleball court Caloocan City Metro Manila",
+    "Caloocan City pickleball",
+    "courts in Caloocan City Metro Manila pickleball",
+    "sports center Caloocan City Metro Manila pickleball",
+    "pickleball club Caloocan City Metro Manila",
+    "pickleball reservations Caloocan City Metro Manila",
+    "host-map:cebupickleballcourts.com:Caloocan City",
+    "host-map:cebupickleballcourts.com:Caloocan",
+    "host-map:dumapickleball.com:Caloocan City",
+    "host-map:dumapickleball.com:Caloocan",
+    "site:cebupickleballcourts.com Caloocan City Metro Manila pickleball",
+    "site:dumapickleball.com Caloocan City Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+    "https://reclub.co/clubs/@conquest-pickleball",
+    "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines/",
+    "https://reclub.co/m/859AMA",
+    "https://reclub.co/clubs/@caloocan-pickleball-club",
+    "https://reclub.co/m/36XZXY"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOooZflhd2qknYR_7qtLkBsRmzvLJF17fcMeaWHh8zViUZVtet4_A",
+      "score": 5
+    },
+    {
+      "url": "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+      "score": 16
+    },
+    {
+      "url": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOoqRSKhQQlGWIlaMNCO5uKJtNrheN1RxGHzw6X2D9EVwC_nQAJ1n",
+      "score": 9
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 7
+    },
+    {
+      "url": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOorKBKv-kNSU96WzoLgmtz9SfuuhBOIX9mtWyr8Xq2QUax7eoYAx",
+      "score": 9
+    },
+    {
+      "url": "https://www.huddlsports.com/blogs/pickleball-guide/where-to-play-pickleball?srsltid=AfmBOoqW3LxZ53v6ScVC-ECFi9WB5KwJpvEyhjhAHCMSCatrv60OKQxa",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1087020572759813/",
+    "https://www.facebook.com/summerdryyy/posts/training-day-private-open-play-court-hopping-kind-of-day-g-park-playgrounds-east/1510009314026967/",
+    "https://www.tiktok.com/discover/pickleball-courts-south-caloocan",
+    "https://www.facebook.com/CaloocanSKFederation/posts/mga-batang-kankaloo-mayroon-na-po-tayong-sariling-pickleball-court-sa-mas-inayos/1218136530464034/",
+    "https://www.tiktok.com/@iamejteope/video/7559091866654756103",
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+    "https://www.tiktok.com/discover/where-to-play-pickleball-in-north-caloocan-city",
+    "https://www.facebook.com/smgrandcentral/posts/-pickleball-fever-is-here-ready-to-serve-smash-and-score-like-never-before-the-p/956053749970709/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4210852165869659/",
+    "https://www.tiktok.com/@iamejteope/video/7559091866654756103",
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/politics.com.ph/posts/caloocan-dale-along-malapitan-announced-that-the-city-now-has-its-own-pickleball/1340572201442507/",
+    "https://www.facebook.com/malapitan.along/posts/green-space-sa-caloocan-narito-na-po-ang-newly-renovated-na-caloocan-peoples-par/1433529948136554/",
+    "https://www.facebook.com/darsaquino29/videos/g-park-playgrounds-caloocan/4815811881978565/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+    "https://www.tiktok.com/discover/where-to-play-pickleball-in-north-caloocan-city",
+    "https://www.facebook.com/malapitan.along/videos/green-space-sa-caloocan-narito-na-po-ang-newly-renovated-na-caloocan-peoples-par/905497011839895/",
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1087020572759813/",
+    "https://www.facebook.com/summerdryyy/posts/training-day-private-open-play-court-hopping-kind-of-day-g-park-playgrounds-east/1510009314026967/",
+    "https://www.tiktok.com/discover/pickleball-courts-south-caloocan",
+    "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4312030392418502/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1356530899142111/",
+    "https://www.facebook.com/summerdryyy/posts/training-day-private-open-play-court-hopping-kind-of-day-g-park-playgrounds-east/1510009314026967/",
+    "https://www.reddit.com/r/Caloocan/comments/1l4s1l8/pickleball_courtclub_in_south_caloocan/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1390323815762819/",
+    "https://www.tiktok.com/@_wvlsc/video/7570172805640244498",
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1390323815762819/",
+    "https://www.facebook.com/summerdryyy/posts/training-day-private-open-play-court-hopping-kind-of-day-g-park-playgrounds-east/1510009314026967/",
+    "https://www.instagram.com/p/DSgpF3tlI7J/",
+    "https://www.tiktok.com/discover/pickleball-courts-south-caloocan",
+    "https://www.reddit.com/r/Caloocan/comments/1l4s1l8/pickleball_courtclub_in_south_caloocan/",
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+    "https://www.facebook.com/summerdryyy/posts/training-day-private-open-play-court-hopping-kind-of-day-g-park-playgrounds-east/1510009314026967/",
+    "https://www.tiktok.com/discover/where-to-play-pickleball-in-north-caloocan-city",
+    "https://www.instagram.com/reel/DPlRwjlD3wC/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/caloocan-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/caloocan-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/caloocan-city/scrape-state.json"
+}

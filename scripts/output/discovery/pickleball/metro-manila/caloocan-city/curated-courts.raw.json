@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-03-10T02:22:20.658Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 9,
+  "candidateUrlsCount": 8,
+  "candidateUrlsSelectedForRunCount": 8,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+    "https://reclub.co/clubs/@conquest-pickleball",
+    "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines/",
+    "https://reclub.co/m/859AMA",
+    "https://reclub.co/clubs/@caloocan-pickleball-club",
+    "https://reclub.co/m/36XZXY"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+    "https://reclub.co/clubs/@conquest-pickleball",
+    "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines/",
+    "https://reclub.co/m/859AMA",
+    "https://reclub.co/clubs/@caloocan-pickleball-club",
+    "https://reclub.co/m/36XZXY"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+    "https://reclub.co/clubs/@conquest-pickleball",
+    "https://metromanila.politiko.com.ph/2026/01/20/caloocan-now-has-its-own-pickleball-court-malapitan/headlines/",
+    "https://reclub.co/m/859AMA",
+    "https://reclub.co/clubs/@caloocan-pickleball-club",
+    "https://reclub.co/m/36XZXY"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Conquest Sports",
+        "address": "Caloocan, Metro Manila, Philippines",
+        "city": "CALOOCAN CITY",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/conquest-sports"
+    },
+    {
+      "row": {
+        "name": "Mariana Multi Purpose Covered Court",
+        "address": "Caloocan, Metro Manila, Philippines",
+        "city": "CALOOCAN CITY",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/caloocan/mariana-multi-purpose-covered-court"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 2,
+    "pendingMigrationRows": 2,
+    "dbCoverageEnabled": false
+  }
+}

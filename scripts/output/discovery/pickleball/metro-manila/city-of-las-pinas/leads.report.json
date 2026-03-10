@@ -1,0 +1,104 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Las Piñas",
+    "citySlug": "city-of-las-pinas",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:26:34.346Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Las Piñas",
+    "pickleball court City of Las Piñas Metro Manila",
+    "City of Las Piñas pickleball",
+    "courts in City of Las Piñas Metro Manila pickleball",
+    "sports center City of Las Piñas Metro Manila pickleball",
+    "pickleball club City of Las Piñas Metro Manila",
+    "pickleball reservations City of Las Piñas Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Las Piñas",
+    "host-map:dumapickleball.com:City of Las Piñas",
+    "site:cebupickleballcourts.com City of Las Piñas Metro Manila pickleball",
+    "site:dumapickleball.com City of Las Piñas Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/las-pinas/village-sports-club",
+    "https://reclub.co/clubs/@dink-and-drive-pickleball-club-alabang-las-pinas",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.smsupermalls.com/active-hub",
+    "https://reclub.co/clubs/@fronterra-pickleball-club"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.philstar.com/campus/sports/2026/02/20/2509432/sypik-pickleball-camp-slated-las-pinas",
+      "score": 5
+    },
+    {
+      "url": "https://www.pickleball.ph/",
+      "score": 5
+    },
+    {
+      "url": "https://m.yelp.com/c/las-pi%C3%B1as-metro-manila-ph/sports_clubs",
+      "score": 3
+    },
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/m/LPZRP1",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/michaelshutblog/posts/las-pi%C3%B1as-peeps-juego-inside-sm-southmall-is-now-open-level-up-your-badminton-an/1584439960355527/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3710751645879716/",
+    "https://www.instagram.com/reel/DUu6CkNgIm1/",
+    "https://www.tiktok.com/discover/pickleball-courts-in-las-pinas",
+    "https://www.facebook.com/telaparkpickleball/",
+    "https://www.tiktok.com/@lovelyregine/video/7608131677302443284",
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/michaelshutblog/posts/las-pi%C3%B1as-peeps-juego-inside-sm-southmall-is-now-open-level-up-your-badminton-an/1584439960355527/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4287633088191566/",
+    "https://www.tiktok.com/@leanderlazaro/video/7613283208863485192",
+    "https://www.tiktok.com/discover/pickleball-courts-in-las-pinas",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.instagram.com/p/DVU46OVmsAj/",
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/michaelshutblog/posts/las-pi%C3%B1as-peeps-juego-inside-sm-southmall-is-now-open-level-up-your-badminton-an/1584439960355527/",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1py8ey3/op_review_vista_mall_las_pinas/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4287633088191566/",
+    "https://www.instagram.com/reel/DUu6CkNgIm1/",
+    "https://www.tiktok.com/discover/pickleball-vista-mall-las-pinas",
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.instagram.com/p/C35BDOxAP9E/?hl=en",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1py8ey3/op_review_vista_mall_las_pinas/",
+    "https://www.facebook.com/lpcupdate/posts/weekend-game-on-vista-mall-las-pi%C3%B1as-pickleball-hub-is-now-open-come-serve-smash/869986965416217/",
+    "https://www.facebook.com/61555781417830/videos/898027942461675/",
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/michaelshutblog/posts/las-pi%C3%B1as-peeps-juego-inside-sm-southmall-is-now-open-level-up-your-badminton-an/1584439960355527/",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.facebook.com/VistaMallLasPinas/posts/game-time-just-got-better-discover-exciting-indoor-sports-at-vista-mall-las-pi%C3%B1a/1425052539665697/",
+    "https://www.facebook.com/61568779744215/videos/the-new-paloo-court-at-sm-southmall/1184840630340640/",
+    "https://www.facebook.com/p/Las-Pi%C3%B1as-Pickleball-Club-61555781417830/",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.instagram.com/pickleballphilippines/p/C35BDOxAP9E/?hl=en",
+    "https://www.facebook.com/groups/2723933654561525/posts/3710751645879716/",
+    "https://www.tiktok.com/discover/pickleball-courts-in-las-pinas",
+    "https://www.instagram.com/reel/DUu6CkNgIm1/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rommcw/juego_sports_at_sm_city_la_union/",
+    "https://www.facebook.com/groups/7171219316258752/posts/25752350551052347/",
+    "https://www.facebook.com/michaelshutblog/posts/las-pi%C3%B1as-peeps-juego-inside-sm-southmall-is-now-open-level-up-your-badminton-an/1584439960355527/",
+    "https://www.facebook.com/groups/7171219316258752/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4177960545825488/",
+    "https://www.tiktok.com/discover/pickleball-vista-mall-las-pinas"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-las-pinas/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-las-pinas/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-las-pinas/scrape-state.json"
+}

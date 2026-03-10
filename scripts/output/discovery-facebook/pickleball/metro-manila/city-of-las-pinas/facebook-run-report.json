@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-las-pinas",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Las Piñas"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T04:00:52.521Z",
+      "finishedAt": "2026-03-10T04:00:59.626Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T04:00:59.627Z",
+      "finishedAt": "2026-03-10T04:02:29.320Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:29.321Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "facebookImportApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:29.321Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:29.321Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:29.321Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    }
+  }
+}

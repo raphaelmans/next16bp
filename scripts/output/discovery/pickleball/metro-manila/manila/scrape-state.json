@@ -1,0 +1,184 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:35:40.359Z",
+  "updatedAt": "2026-03-10T02:36:41.344Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.tripzilla.ph/where-to-play-pickleball-in-manila/24954": {
+      "canonicalUrl": "https://www.tripzilla.ph/where-to-play-pickleball-in-manila/24954",
+      "latestUrl": "https://www.tripzilla.ph/where-to-play-pickleball-in-manila/24954",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/manila/manila-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila/manila-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila/manila-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "manila pickleball club|manila|metro manila",
+      "lastRowName": "Manila Pickleball Club"
+    },
+    "https://manilapolo.com.ph/facilities/pickleball": {
+      "canonicalUrl": "https://manilapolo.com.ph/facilities/pickleball",
+      "latestUrl": "https://manilapolo.com.ph/facilities/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.abs-cbn.com/lifestyle/health-beauty-fashion/2025/12/6/why-pickleball-is-becoming-the-new-go-to-sport-in-manila-1400": {
+      "canonicalUrl": "https://www.abs-cbn.com/lifestyle/health-beauty-fashion/2025/12/6/why-pickleball-is-becoming-the-new-go-to-sport-in-manila-1400",
+      "latestUrl": "https://www.abs-cbn.com/lifestyle/health-beauty-fashion/2025/12/6/why-pickleball-is-becoming-the-new-go-to-sport-in-manila-1400",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820": {
+      "canonicalUrl": "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820",
+      "latestUrl": "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112": {
+      "canonicalUrl": "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+      "latestUrl": "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sec.solaireresort.com/experience/solaire-sports-club": {
+      "canonicalUrl": "https://sec.solaireresort.com/experience/solaire-sports-club",
+      "latestUrl": "https://sec.solaireresort.com/experience/solaire-sports-club",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pal sports center|pasay city|metro manila",
+      "lastRowName": "Pal Sports Center"
+    },
+    "https://www.seascapevillage.com.ph/seascape-picklebay": {
+      "canonicalUrl": "https://www.seascapevillage.com.ph/seascape-picklebay",
+      "latestUrl": "https://www.seascapevillage.com.ph/seascape-picklebay/",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://ohpc.rezerv.co/home": {
+      "canonicalUrl": "https://ohpc.rezerv.co/home",
+      "latestUrl": "https://ohpc.rezerv.co/home",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/pickleball-court": {
+      "canonicalUrl": "https://www.sparrk.ph/pickleball-court",
+      "latestUrl": "https://www.sparrk.ph/pickleball-court/",
+      "firstDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "lastDiscoveredAt": "2026-03-10T02:35:40.359Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:35:40.359Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "manila pickleball club|manila|metro manila": {
+      "rowKey": "manila pickleball club|manila|metro manila",
+      "name": "Manila Pickleball Club",
+      "city": "MANILA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/manila/manila-pickleball-club",
+      "firstSeenAt": "2026-03-10T02:35:40.359Z",
+      "lastSeenAt": "2026-03-10T02:35:40.359Z"
+    },
+    "pal sports center|pasay city|metro manila": {
+      "rowKey": "pal sports center|pasay city|metro manila",
+      "name": "Pal Sports Center",
+      "city": "PASAY CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/pasay/pal-sports-center",
+      "firstSeenAt": "2026-03-10T02:35:40.359Z",
+      "lastSeenAt": "2026-03-10T02:35:40.359Z"
+    }
+  }
+}

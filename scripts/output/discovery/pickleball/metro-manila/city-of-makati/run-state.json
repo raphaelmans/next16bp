@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-makati",
+  "createdAt": "2026-03-09T16:41:37.173Z",
+  "updatedAt": "2026-03-09T16:41:37.402Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-makati",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Makati",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "7d5e8306-e0dd-49b3-b8db-565ef8ceb2db"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.176Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.177Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.177Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.291Z",
+      "lastError": null,
+      "notes": "all approved rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.291Z",
+      "lastError": null,
+      "notes": "all approved rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.402Z",
+      "lastError": null,
+      "notes": "all imported rows already have embeddings"
+    }
+  }
+}

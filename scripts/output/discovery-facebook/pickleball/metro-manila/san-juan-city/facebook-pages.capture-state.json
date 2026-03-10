@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:san-juan-city",
+  "createdAt": "2026-03-09T17:28:43.473Z",
+  "updatedAt": "2026-03-09T17:29:12.537Z",
+  "urls": {
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-09T17:28:46.649Z",
+      "lastCapturedAt": "2026-03-09T17:28:46.649Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

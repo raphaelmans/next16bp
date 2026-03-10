@@ -1,0 +1,211 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Caloocan City",
+    "citySlug": "caloocan-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T03:59:15.666Z",
+  "queries": [
+    "site:facebook.com pickleball Caloocan City Metro Manila",
+    "site:facebook.com \"Caloocan City\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Caloocan City\" \"pickleball club\"",
+    "site:facebook.com \"Caloocan City\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/GPARK-Playgrounds-61579391170144/",
+    "https://www.facebook.com/people/%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A8%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B/61579954885621/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4129140480707495/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365325227089018/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4210852165869659/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/politics.com.ph/posts/caloocan-dale-along-malapitan-announced-that-the-city-now-has-its-own-pickleball/1340572201442507/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302389870049221/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4245814589040083/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1390323815762819/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4298906490397559/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1375871853874682/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4210852165869659/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4250331828588359/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302389870049221/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367956743492533/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302590083362533/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4272039399750935/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1390323815762819/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61579954885621/photos/d41d8cd9/122126045282998496/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365325227089018/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302590083362533/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302957289992479/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1356530899142111/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4247141205574088/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1375118437283357/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381953092092898/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4210852165869659/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4129140480707495/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1390323815762819/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4247141205574088/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365325227089018/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3964638200491058/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/caloocan-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/caloocan-city/facebook-pages.state.json"
+}

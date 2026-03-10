@@ -1,0 +1,135 @@
+{
+  "version": 1,
+  "scopeKey": "facebook:pickleball:cebu:talisay-city",
+  "createdAt": "2026-03-09T16:13:41.112Z",
+  "updatedAt": "2026-03-09T16:13:46.691Z",
+  "queries": [
+    "site:facebook.com pickleball Talisay City Cebu",
+    "site:facebook.com \"Talisay City\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Talisay City\" \"pickleball club\"",
+    "site:facebook.com \"Talisay City\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "urls": {
+    "https://facebook.com/p/The-Courtside-Cebu-61580521050375": {
+      "canonicalUrl": "https://facebook.com/p/The-Courtside-Cebu-61580521050375",
+      "latestUrl": "https://www.facebook.com/p/The-Courtside-Cebu-61580521050375/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Talisay City\" \"Cebu\" \"pickleball\"",
+      "title": "The Courtside Cebu | Talisay - Facebook",
+      "snippet": "The Courtside Cebu, Talisay. 1160 likes · 155 talking about this · 114 were here. Pickleball Court at Starmall Talisay City Cebu.",
+      "domain": "facebook.com",
+      "relevanceScore": 18,
+      "handedOffToScrapeAt": "2026-03-09T16:13:41.113Z"
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1428811501423243": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1428811501423243",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1428811501423243/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com pickleball Talisay City Cebu",
+      "title": "Private pickleball court in Talisay City - Facebook",
+      "snippet": "Yard Behind Pickleball Court | Talisay City Hidden behind the leaves. Private outdoor court - play from 4 PM to 2 AM.",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/congsamsamgullas/posts/%F0%9D%9F%90-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97%F0%9D%97%98%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A8%F0%9D%97%9A-%F0%9D%9F%91-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%A6%F0%9D%97%98-%F0%9D%90%92%F0%9D%90%80-%F0%9D%90%93%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%88%F0%9D%90%92%F0%9D%90%80%F0%9D%90%98-%F0%9D%90%82%F0%9D%90%88%F0%9D%90%93%F0%9D%90%98-%F0%9D%90%87%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-we-r/1276707610477429": {
+      "canonicalUrl": "https://facebook.com/congsamsamgullas/posts/%F0%9D%9F%90-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97%F0%9D%97%98%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A8%F0%9D%97%9A-%F0%9D%9F%91-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%A6%F0%9D%97%98-%F0%9D%90%92%F0%9D%90%80-%F0%9D%90%93%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%88%F0%9D%90%92%F0%9D%90%80%F0%9D%90%98-%F0%9D%90%82%F0%9D%90%88%F0%9D%90%93%F0%9D%90%98-%F0%9D%90%87%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-we-r/1276707610477429",
+      "latestUrl": "https://www.facebook.com/congsamsamgullas/posts/%F0%9D%9F%90-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97%F0%9D%97%98%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A8%F0%9D%97%9A-%F0%9D%9F%91-%F0%9D%90%8A%F0%9D%90%80-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%A6%F0%9D%97%98-%F0%9D%90%92%F0%9D%90%80-%F0%9D%90%93%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%88%F0%9D%90%92%F0%9D%90%80%F0%9D%90%98-%F0%9D%90%82%F0%9D%90%88%F0%9D%90%93%F0%9D%90%98-%F0%9D%90%87%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-we-r/1276707610477429/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com pickleball Talisay City Cebu",
+      "title": "2 KA PADEL COURT UG 3 KA PICKLEBALL COURT ...",
+      "snippet": "2 KA PADEL COURT UG 3 KA PICKLEBALL COURT SOON TO RISE SA TALISAY CITY HALL. We recently conducted an on-site inspection of the ongoing ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1428174871486906": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1428174871486906",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1428174871486906/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Talisay City\" \"pickleball court\"",
+      "title": "Private pickleball court in Talisay City - Facebook",
+      "snippet": "Private outdoor court - play from 4 PM to 2 AM. Book your slot below! Yard Behind Pickleball Court in Talisay City shows vacant slots today, ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/1247467082891020/posts/1406776193626774": {
+      "canonicalUrl": "https://facebook.com/groups/1247467082891020/posts/1406776193626774",
+      "latestUrl": "https://www.facebook.com/groups/1247467082891020/posts/1406776193626774/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Talisay City\" \"pickleball club\"",
+      "title": "Good morning. We have a new pickleball club in Talisay City. Most ...",
+      "snippet": "We have a new pickleball club in Talisay City. Most of the members are begginers. Most of the time, we play sa free pickleball court sa City ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/TalisayCitySportsCom/posts/attention-players-talisay-pickle-and-padel-court-is-temporarily-closed-due-to-ra/1547617560703114": {
+      "canonicalUrl": "https://facebook.com/TalisayCitySportsCom/posts/attention-players-talisay-pickle-and-padel-court-is-temporarily-closed-due-to-ra/1547617560703114",
+      "latestUrl": "https://www.facebook.com/TalisayCitySportsCom/posts/attention-players-talisay-pickle-and-padel-court-is-temporarily-closed-due-to-ra/1547617560703114/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Talisay City\" \"pickleball court\"",
+      "title": "Attention players Talisay Pickle and Padel Court is temporarily ...",
+      "snippet": "Talisay City Sports Commission. 7h󰞋󱟠. 󳄫. Attention players Talisay ... Can you please spread the word about the pickleball court closure?",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/TalisayCitySportsCom/posts/serving-good-vibes-this-sunday-at-the-pickleball-court-/1547578900706980": {
+      "canonicalUrl": "https://facebook.com/TalisayCitySportsCom/posts/serving-good-vibes-this-sunday-at-the-pickleball-court-/1547578900706980",
+      "latestUrl": "https://www.facebook.com/TalisayCitySportsCom/posts/serving-good-vibes-this-sunday-at-the-pickleball-court-/1547578900706980/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Talisay City\" \"pickleball court\"",
+      "title": "Serving good vibes this Sunday at the pickleball court! - Facebook",
+      "snippet": "Serving good vibes this Sunday at the pickleball court ... Talisay City Sports Commission. 11h󰞋󱟠. 󳄫. Serving good vibes this ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Cebu Pickleball (@cebupickleball) - Facebook",
+      "snippet": "Cebu Pickleball. 1754 likes · 16 talking about this. Cebu Pickleball hope to promote the sport in Cebu and beyond.",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": "2026-03-09T16:13:41.113Z"
+    },
+    "https://facebook.com/groups/philippinepickleballfederation/posts/1346978700097331": {
+      "canonicalUrl": "https://facebook.com/groups/philippinepickleballfederation/posts/1346978700097331",
+      "latestUrl": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1346978700097331/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Open pickleball play in Cebu City? - Facebook",
+      "snippet": "Per chat gpt the nearest is City Sports Club Cebu pickleball court. 󰍸.",
+      "domain": "facebook.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845": {
+      "canonicalUrl": "https://facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845",
+      "latestUrl": "https://www.facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845/",
+      "firstDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:41.113Z",
+      "sourceQuery": "site:facebook.com \"Cebu\" \"pickleball\"",
+      "title": "Cebu Pickleball DUPR Club | Cebu City - Facebook",
+      "snippet": "Cebu Pickleball DUPR Club, Cebu City. 928 likes · 750 talking about this. Welcome to Cebu Pickleball DUPR Club! The official DUPR partner club here in Cebu.",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": "2026-03-09T16:13:41.113Z"
+    }
+  }
+}

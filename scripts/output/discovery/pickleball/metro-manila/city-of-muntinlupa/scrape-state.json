@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:29:13.002Z",
+  "updatedAt": "2026-03-10T02:29:34.707Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "lastDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:29:13.002Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+      "firstDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "lastDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:29:13.002Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the palms country club|city of muntinlupa|metro manila",
+      "lastRowName": "The Palms Country Club"
+    },
+    "https://www.philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball": {
+      "canonicalUrl": "https://www.philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball",
+      "latestUrl": "https://www.philstar.com/sports/2026/01/08/2499583/sm-supermalls-expands-its-nationwide-presence-pickleball",
+      "firstDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "lastDiscoveredAt": "2026-03-10T02:29:13.002Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:29:13.002Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "the palms country club|city of muntinlupa|metro manila": {
+      "rowKey": "the palms country club|city of muntinlupa|metro manila",
+      "name": "The Palms Country Club",
+      "city": "CITY OF MUNTINLUPA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/muntinlupa/the-palms-country-club",
+      "firstSeenAt": "2026-03-10T02:29:13.002Z",
+      "lastSeenAt": "2026-03-10T02:29:13.002Z"
+    }
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-muntinlupa:facebook",
+  "createdAt": "2026-03-10T04:02:31.632Z",
+  "updatedAt": "2026-03-10T04:02:58.370Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-muntinlupa",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Muntinlupa",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T04:02:31.633Z",
+      "finishedAt": "2026-03-10T04:02:38.638Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T04:02:38.639Z",
+      "finishedAt": "2026-03-10T04:02:58.369Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "facebookImportApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "lastError": null,
+      "notes": "facebook capture CSV has no data rows"
+    }
+  }
+}

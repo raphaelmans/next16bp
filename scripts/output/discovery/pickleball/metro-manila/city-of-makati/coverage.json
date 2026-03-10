@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-09T16:21:58.534Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 2,
+  "scrapedUrls": 2,
+  "noDataUrls": 0,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "makati pickleball club|city of makati|metro manila",
+      "name": "Makati Pickleball Club",
+      "city": "CITY OF MAKATI",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-pickleball-club",
+      "firstSeenAt": "2026-03-09T16:21:58.534Z",
+      "lastSeenAt": "2026-03-09T16:21:58.534Z"
+    },
+    {
+      "rowKey": "zone sports center|city of makati|metro manila",
+      "name": "Zone Sports Center",
+      "city": "CITY OF MAKATI",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/zone-sports-center",
+      "firstSeenAt": "2026-03-09T16:21:58.534Z",
+      "lastSeenAt": "2026-03-09T16:21:58.534Z"
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Dumaguete City",
+    "citySlug": "dumaguete-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:54:44.716Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Dumaguete City",
+    "pickleball court Dumaguete City Negros Oriental",
+    "Dumaguete City pickleball",
+    "courts in Dumaguete City Negros Oriental pickleball",
+    "sports center Dumaguete City Negros Oriental pickleball",
+    "pickleball club Dumaguete City Negros Oriental",
+    "pickleball reservations Dumaguete City Negros Oriental",
+    "host-map:cebupickleballcourts.com",
+    "host-map:dumapickleball.com",
+    "site:cebupickleballcourts.com Dumaguete City Negros Oriental pickleball",
+    "site:dumapickleball.com Dumaguete City Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court",
+    "https://playtimescheduler.com/region/dumaguete-visayas",
+    "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+    "https://sunsetparkdgte.setmore.com/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/1205096034544328/posts/1392116432508953/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1319384929782104/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1319384929782104/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/61575752114633/posts/dumaguete-pickleball-players-get-ready-the-pickle-house-in-dumaguete-is-official/122152706330858403/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1282554776539724/",
+    "https://www.facebook.com/dumaguetepickleballclub/",
+    "https://www.facebook.com/QueKaloyOfficial/posts/the-newest-3-court-pickleball-hub-in-dumaguete-is-finally-opening-tomorrow-pickl/1516366263826150/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/p/Court-Access-61575752114633/",
+    "https://www.facebook.com/QueKaloyOfficial/posts/the-newest-3-court-pickleball-hub-in-dumaguete-is-finally-opening-tomorrow-pickl/1516366263826150/",
+    "https://www.facebook.com/zitromotovlog/posts/looking-for-your-next-pickleball-session-in-dumaguete-head-over-to-pickle-house-/1329371432565465/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/dumaguete-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/dumaguete-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/dumaguete-city/scrape-state.json"
+}

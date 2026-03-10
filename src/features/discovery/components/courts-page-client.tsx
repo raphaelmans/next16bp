@@ -453,6 +453,12 @@ function CourtsPageContent({
     updateStaged({ province: null, city: null, sportId: null });
   }, [filters, queueResultsScroll, updateStaged]);
 
+  const removeQuery = useCallback(() => {
+    queueResultsScroll();
+    setQueryDraft("");
+    filters.setQuery("");
+  }, [filters, queueResultsScroll]);
+
   const removeCity = useCallback(() => {
     queueResultsScroll();
     filters.setCity(undefined);
@@ -631,6 +637,7 @@ function CourtsPageContent({
 
         {/* Applied filter chips */}
         <AppliedFilterChips
+          query={filters.q}
           province={effectiveProvince}
           city={effectiveCity}
           sportId={effectiveSportId}
@@ -639,6 +646,7 @@ function CourtsPageContent({
           amenities={filters.amenities}
           verification={filters.verification}
           sports={sports}
+          onRemoveQuery={removeQuery}
           onRemoveProvince={removeProvince}
           onRemoveCity={removeCity}
           onRemoveSport={removeSport}

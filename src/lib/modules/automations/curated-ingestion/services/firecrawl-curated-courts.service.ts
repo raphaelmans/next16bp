@@ -21,6 +21,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
+import pRetry from "p-retry";
 import postgres from "postgres";
 import { z } from "zod";
 import {
@@ -141,6 +142,27 @@ interface PHLocationProvince extends PHLocationCity {
 type JsonObject = Record<string, unknown>;
 
 const FIRECRAWL_BASE_URL = "https://api.firecrawl.dev/v2";
+const FIRECRAWL_REQUEST_RETRIES = 5;
+
+class FirecrawlHttpError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = "FirecrawlHttpError";
+    this.status = status;
+  }
+}
+
+class FirecrawlRateLimitError extends FirecrawlHttpError {
+  retryAfterMs: number;
+
+  constructor(message: string, retryAfterMs: number) {
+    super(429, message);
+    this.name = "FirecrawlRateLimitError";
+    this.retryAfterMs = retryAfterMs;
+  }
+}
 
 const DEFAULT_OPTIONS: ScriptOptions = {
   startUrl: "https://app.sports360.ph/",
@@ -723,34 +745,68 @@ async function firecrawlRequest<T = JsonObject>(
   endpoint: string,
   init: RequestInit,
 ): Promise<T> {
-  const response = await fetch(`${FIRECRAWL_BASE_URL}${endpoint}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
-      ...(init.headers ?? {}),
+  return pRetry(
+    async () => {
+      const response = await fetch(`${FIRECRAWL_BASE_URL}${endpoint}`, {
+        ...init,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${apiKey}`,
+          ...(init.headers ?? {}),
+        },
+      });
+
+      const text = await response.text();
+      let parsed: unknown = null;
+      if (text.trim().length > 0) {
+        try {
+          parsed = JSON.parse(text);
+        } catch {
+          parsed = text;
+        }
+      }
+
+      if (!response.ok) {
+        const message =
+          typeof parsed === "string" ? parsed : JSON.stringify(parsed, null, 2);
+        const errorMessage = `Firecrawl request failed (${response.status}) ${endpoint}: ${message}`;
+
+        if (response.status === 429) {
+          const retryAfterMatch = errorMessage.match(/retry after (\d+)s/i);
+          const retryAfterSeconds = retryAfterMatch
+            ? Number.parseInt(retryAfterMatch[1] ?? "0", 10)
+            : 10;
+
+          throw new FirecrawlRateLimitError(
+            errorMessage,
+            Math.max(retryAfterSeconds, 1) * 1000,
+          );
+        }
+
+        throw new FirecrawlHttpError(response.status, errorMessage);
+      }
+
+      return parsed as T;
     },
-  });
+    {
+      retries: FIRECRAWL_REQUEST_RETRIES,
+      minTimeout: 1000,
+      maxTimeout: 15000,
+      shouldRetry: ({ error }) => {
+        if (error instanceof FirecrawlRateLimitError) return true;
+        if (error instanceof FirecrawlHttpError) {
+          return error.status === 408 || error.status >= 500;
+        }
 
-  const text = await response.text();
-  let parsed: unknown = null;
-  if (text.trim().length > 0) {
-    try {
-      parsed = JSON.parse(text);
-    } catch {
-      parsed = text;
-    }
-  }
-
-  if (!response.ok) {
-    const message =
-      typeof parsed === "string" ? parsed : JSON.stringify(parsed, null, 2);
-    throw new Error(
-      `Firecrawl request failed (${response.status}) ${endpoint}: ${message}`,
-    );
-  }
-
-  return parsed as T;
+        return true;
+      },
+      onFailedAttempt: async ({ error }) => {
+        if (error instanceof FirecrawlRateLimitError) {
+          await sleep(error.retryAfterMs);
+        }
+      },
+    },
+  );
 }
 
 async function mapUrls(
@@ -1480,6 +1536,136 @@ function buildPickleheadsFallbackRows(
       } satisfies RowWithSource;
     })
     .filter((item): item is RowWithSource => Boolean(item));
+
+  return dedupeRowsWithSource(rows);
+}
+
+function decodeHtmlEntities(value: string): string {
+  return value
+    .replace(/&#8217;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#039;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">");
+}
+
+function stripHtmlTags(value: string): string {
+  return decodeHtmlEntities(value)
+    .replace(/<[^>]+>/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function parseOverviewField(html: string, label: string): string {
+  const regex = new RegExp(
+    `<li><strong>${label}:<\\/strong>\\s*([\\s\\S]*?)<\\/li>`,
+    "i",
+  );
+  const match = html.match(regex);
+  return match?.[1] ? stripHtmlTags(match[1]) : "";
+}
+
+function buildCourtEntries(count: number, sportSlug: string): string {
+  if (count <= 1) {
+    return `${sportSlug}|`;
+  }
+
+  return Array.from(
+    { length: count },
+    (_, index) => `Court ${index + 1}|${sportSlug}`,
+  ).join(";");
+}
+
+async function fetchCebuPickleballCourtsFallbackRows(
+  urls: string[],
+  sportSlug: string,
+): Promise<RowWithSource[]> {
+  const rows: RowWithSource[] = [];
+
+  for (const url of urls) {
+    if (!isValidHttpUrl(url)) continue;
+
+    const parsed = new URL(url);
+    if (
+      !parsed.hostname
+        .replace(/^www\./, "")
+        .endsWith("cebupickleballcourts.com")
+    ) {
+      continue;
+    }
+
+    try {
+      const response = await fetch(url);
+      if (!response.ok) continue;
+      const html = await response.text();
+
+      const name =
+        stripHtmlTags(
+          html.match(
+            /<h1[^>]*class="entry-title"[^>]*>([\s\S]*?)<\/h1>/i,
+          )?.[1] ?? "",
+        ) ||
+        stripHtmlTags(
+          html.match(/<title>([\s\S]*?)<\/title>/i)?.[1] ?? "",
+        ).replace(/\s*\|\s*Cebu Pickleball Courts$/i, "");
+      const city = parseOverviewField(html, "City / Municipality");
+      const address = parseOverviewField(html, "Address");
+      const courtCount = Number.parseInt(
+        parseOverviewField(html, "Number of Courts"),
+        10,
+      );
+      const courtType = parseOverviewField(html, "Court Type");
+      const parking = parseOverviewField(html, "Parking");
+      const facebookPage = parseOverviewField(html, "Facebook Page");
+      const facebookUrl =
+        facebookPage.match(/https?:\/\/[^\s)]+/i)?.[0] ??
+        parseOverviewField(html, "Facebook").match(
+          /https?:\/\/[^\s)]+/i,
+        )?.[0] ??
+        "";
+      const photoUrls = ensureUnique(
+        Array.from(
+          html.matchAll(
+            /https:\/\/cebupickleballcourts\.com\/wp-content\/uploads\/[^"' )]+\.(?:jpg|jpeg|png|webp)/gi,
+          ),
+          (match) => match[0],
+        ),
+      );
+
+      if (!name || !city || !address) {
+        continue;
+      }
+
+      rows.push({
+        row: {
+          name,
+          address,
+          city,
+          province: "Cebu",
+          country: "PH",
+          time_zone: "Asia/Manila",
+          latitude: "",
+          longitude: "",
+          facebook_url: facebookUrl,
+          instagram_url: "",
+          viber_contact: "",
+          website_url: url,
+          other_contact_info: "",
+          amenities: ensureUnique(
+            [parking, courtType, "Open Play"].filter(Boolean),
+          ).join(";"),
+          courts: buildCourtEntries(
+            Number.isFinite(courtCount) && courtCount > 0 ? courtCount : 1,
+            sportSlug,
+          ),
+          photo_urls: photoUrls.join(","),
+        },
+        sourceUrl: url,
+      });
+    } catch {}
+  }
 
   return dedupeRowsWithSource(rows);
 }
@@ -2368,6 +2554,7 @@ async function main() {
   let extractItems: JsonObject[] = [];
   let usedSports360ApiFallback = false;
   let usedPickleheadsUrlFallback = false;
+  let usedCebuPickleballCourtsFallback = false;
   let usedDiscoverOnlyMode = false;
   const shouldUsePickleheadsUrlFallback = new URL(
     options.startUrl,
@@ -2473,6 +2660,22 @@ async function main() {
   }
 
   if (!options.discoverOnly && rowsWithSource.length === 0) {
+    const cebuFallbackRows = await fetchCebuPickleballCourtsFallbackRows(
+      candidateUrls,
+      options.sportSlug,
+    );
+    if (cebuFallbackRows.length > 0) {
+      rowsWithSource = cebuFallbackRows;
+      usedCebuPickleballCourtsFallback = true;
+      const fallbackUrls = rowsWithSource
+        .map((item) => item.sourceUrl)
+        .filter((url) => isValidHttpUrl(url));
+      touchDiscoveredUrls(state, fallbackUrls, runAt);
+      markAttemptedUrls(state, fallbackUrls, runAt);
+    }
+  }
+
+  if (!options.discoverOnly && rowsWithSource.length === 0) {
     const fallbackRows = await fetchSports360FallbackRows(
       options.startUrl,
       options.sportSlug,
@@ -2530,6 +2733,9 @@ async function main() {
   }
   if (usedPickleheadsUrlFallback) {
     console.log(`Using Pickleheads URL fallback (${rows.length} rows).`);
+  }
+  if (usedCebuPickleballCourtsFallback) {
+    console.log(`Using Cebu Pickleball Courts fallback (${rows.length} rows).`);
   }
 
   const discoveredRows = Object.values(state.rows);

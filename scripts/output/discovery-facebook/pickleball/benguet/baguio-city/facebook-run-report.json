@@ -1,0 +1,85 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "benguet",
+    "citySlug": "baguio-city",
+    "provinceName": "Benguet",
+    "cityName": "Baguio City"
+  },
+  "importedPlaceIds": [
+    "86ea2702-4e70-4dd1-b81a-e728eccef1c7",
+    "0e20574b-ed44-45ca-aaa1-e57854d7aaea"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:42:29.749Z",
+      "finishedAt": "2026-03-10T03:42:39.078Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:42:39.078Z",
+      "finishedAt": "2026-03-10T03:44:09.008Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:44:09.012Z",
+      "finishedAt": "2026-03-10T03:44:37.386Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:44:37.903Z",
+      "finishedAt": "2026-03-10T03:45:18.982Z",
+      "lastError": null,
+      "notes": "processed 2 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T03:45:19.109Z",
+      "lastError": null,
+      "notes": "verified 2 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T03:45:19.110Z",
+      "finishedAt": "2026-03-10T03:45:39.995Z",
+      "lastError": null,
+      "notes": "backfilled 2 facebook place ids"
+    }
+  }
+}

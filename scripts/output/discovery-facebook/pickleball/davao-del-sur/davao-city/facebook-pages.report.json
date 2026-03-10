@@ -1,0 +1,72 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Davao City",
+    "citySlug": "davao-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:47.424Z",
+  "queries": [
+    "site:facebook.com pickleball Davao City Davao Del Sur",
+    "site:facebook.com \"Davao City\" \"Davao Del Sur\" \"pickleball\"",
+    "site:facebook.com \"Davao City\" \"pickleball club\"",
+    "site:facebook.com \"Davao City\" \"pickleball court\"",
+    "site:facebook.com \"Davao Del Sur\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Pickle-Hive-61582854800777/",
+    "https://www.facebook.com/dcpci/",
+    "https://www.facebook.com/paddleupdavao/",
+    "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1346500643827081/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1371997687944043/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1346500643827081/",
+      "score": 15
+    },
+    {
+      "url": "https://m.facebook.com/61559247602225/about/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball-sunday/2326101744523389/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/eydventuretime/posts/newest-pickleball-court-in-obrero-davao-citypickleville-davao600-am-500-pm-300ho/1335976278555912/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234/",
+      "score": 8
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/davao-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/davao-city/facebook-pages.state.json"
+}

@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-muntinlupa",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Muntinlupa"
+  },
+  "generatedAt": "2026-03-10T04:02:58.366Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-muntinlupa/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-muntinlupa/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-muntinlupa/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-muntinlupa/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 1,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 1,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 1,
+  "csvRowCount": 0,
+  "failures": []
+}

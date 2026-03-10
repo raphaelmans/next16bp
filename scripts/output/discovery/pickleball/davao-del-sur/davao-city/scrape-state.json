@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:10:01.930Z",
+  "updatedAt": "2026-03-09T16:10:45.348Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.926Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pickletown|davao city|davao del sur",
+      "lastRowName": "Pickletown"
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/matina-town-square": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/matina-town-square",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/matina-town-square",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.926Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "matina town square|davao city|davao del sur",
+      "lastRowName": "Matina Town Square"
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.926Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.926Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "flores village pickleball|davao city|davao del sur",
+      "lastRowName": "Flores Village Pickleball"
+    }
+  },
+  "rows": {
+    "pickletown|davao city|davao del sur": {
+      "rowKey": "pickletown|davao city|davao del sur",
+      "name": "Pickletown",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstSeenAt": "2026-03-09T16:10:01.926Z",
+      "lastSeenAt": "2026-03-09T16:10:01.926Z"
+    },
+    "matina town square|davao city|davao del sur": {
+      "rowKey": "matina town square|davao city|davao del sur",
+      "name": "Matina Town Square",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/matina-town-square",
+      "firstSeenAt": "2026-03-09T16:10:01.926Z",
+      "lastSeenAt": "2026-03-09T16:10:01.926Z"
+    },
+    "flores village pickleball|davao city|davao del sur": {
+      "rowKey": "flores village pickleball|davao city|davao del sur",
+      "name": "Flores Village Pickleball",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "firstSeenAt": "2026-03-09T16:10:01.926Z",
+      "lastSeenAt": "2026-03-09T16:10:01.926Z"
+    }
+  }
+}

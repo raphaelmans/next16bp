@@ -1,0 +1,84 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "digos-city",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Digos City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:33:35.666Z",
+      "finishedAt": "2026-03-09T17:33:54.197Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "failed",
+      "startedAt": "2026-03-09T17:33:54.198Z",
+      "finishedAt": "2026-03-09T17:34:10.979Z",
+      "lastError": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs.",
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  },
+  "failedStage": "scrape",
+  "error": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs."
+}

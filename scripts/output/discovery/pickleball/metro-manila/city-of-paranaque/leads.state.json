@@ -1,0 +1,65 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-paranaque",
+  "createdAt": "2026-03-09T16:01:38.099Z",
+  "updatedAt": "2026-03-09T16:01:40.721Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Parañaque",
+    "pickleball court City of Parañaque Metro Manila",
+    "City of Parañaque pickleball",
+    "courts in City of Parañaque Metro Manila pickleball",
+    "sports center City of Parañaque Metro Manila pickleball",
+    "pickleball club City of Parañaque Metro Manila",
+    "pickleball reservations City of Parañaque Metro Manila"
+  ],
+  "urls": {
+    "https://facebook.com/p/The-Pickle-Yard-61567306075454": {
+      "canonicalUrl": "https://facebook.com/p/The-Pickle-Yard-61567306075454",
+      "latestUrl": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "firstDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "sourceQuery": "pickleball club City of Parañaque Metro Manila",
+      "title": "The Pickle Yard | Parañaque",
+      "snippet": "Welcome to The Pickle Yard PH! Whether you're booking a court, joining an open play session, or signing up for coaching, here's everything you need to know: ✔️ ...",
+      "domain": "facebook.com",
+      "relevanceScore": -2,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila/paranaque": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila/paranaque",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/paranaque",
+      "firstDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "sourceQuery": "pickleball club City of Parañaque Metro Manila",
+      "title": "11 Most Popular Pickleball Courts in Parañaque, NCR",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Parañaque, NCR! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": "2026-03-09T16:01:38.101Z"
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4338084116479796": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4338084116479796",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4338084116479796/",
+      "firstDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "sourceQuery": "pickleball reservations City of Parañaque Metro Manila",
+      "title": "Pickleball courts for rent near Paranaque?",
+      "snippet": "OUR RATES: OPEN PLAY - ₱150/person, 5 hours, minimum of 8 members HOURLY - ₱200/hour with a one time fee of ₱50/person RENTAL MECHANICS: https ...",
+      "domain": "facebook.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://bounceatparqal.com/": {
+      "canonicalUrl": "https://bounceatparqal.com/",
+      "latestUrl": "https://bounceatparqal.com/",
+      "firstDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "lastDiscoveredAt": "2026-03-09T16:01:38.101Z",
+      "sourceQuery": "pickleball reservations City of Parañaque Metro Manila",
+      "title": "Bounce at PARQAL: Home",
+      "snippet": "BOOK A COURT NOW! ✓ Convenient online booking. ✓ Flexible court reservation options.",
+      "domain": "bounceatparqal.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

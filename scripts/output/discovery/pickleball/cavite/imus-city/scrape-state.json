@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:39:00.869Z",
+  "updatedAt": "2026-03-10T02:39:14.124Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+      "firstDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "lastDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:39:00.869Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "lotus central mall|imus city|cavite",
+      "lastRowName": "Lotus Central Mall"
+    },
+    "https://playtimescheduler.com/region/imus-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/imus-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/imus-luzon",
+      "firstDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "lastDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:39:00.869Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@pickleball-pallas-athena-executive-village": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@pickleball-pallas-athena-executive-village",
+      "latestUrl": "https://reclub.co/ko/clubs/@pickleball-pallas-athena-executive-village",
+      "firstDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "lastDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:39:00.869Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.01.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.01.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.01.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "lastDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "lastDiscoveredAt": "2026-03-10T02:39:00.869Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "lotus central mall|imus city|cavite": {
+      "rowKey": "lotus central mall|imus city|cavite",
+      "name": "Lotus Central Mall",
+      "city": "IMUS CITY",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+      "firstSeenAt": "2026-03-10T02:39:00.869Z",
+      "lastSeenAt": "2026-03-10T02:39:00.869Z"
+    }
+  }
+}

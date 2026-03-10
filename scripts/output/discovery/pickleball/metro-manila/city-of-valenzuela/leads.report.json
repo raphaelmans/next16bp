@@ -1,0 +1,94 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Valenzuela",
+    "citySlug": "city-of-valenzuela",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T02:32:32.088Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Valenzuela",
+    "pickleball court City of Valenzuela Metro Manila",
+    "City of Valenzuela pickleball",
+    "courts in City of Valenzuela Metro Manila pickleball",
+    "sports center City of Valenzuela Metro Manila pickleball",
+    "pickleball club City of Valenzuela Metro Manila",
+    "pickleball reservations City of Valenzuela Metro Manila",
+    "host-map:cebupickleballcourts.com:City of Valenzuela",
+    "host-map:dumapickleball.com:City of Valenzuela",
+    "site:cebupickleballcourts.com City of Valenzuela Metro Manila pickleball",
+    "site:dumapickleball.com City of Valenzuela Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela",
+    "https://reclub.co/clubs/@smash-plus-pickleball-valenzuela",
+    "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela/actifit-sports-complex",
+    "https://www.smsupermalls.com/active-hub",
+    "https://reclub.co/m/QGTWWO",
+    "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820",
+    "https://reclub.co/clubs/@the-smash-city-valenzuela",
+    "https://reclub.co/m/47EGED"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://valenzuela.gov.ph/sports-and-wellness/",
+      "score": 2
+    },
+    {
+      "url": "https://smashplus.ph/",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.facebook.com/61580003362879/videos/10-badminton-courts-7-pickleball-courts-the-biggest-racket-sports-hub-in-the-nor/2005382663590395/",
+    "https://www.facebook.com/TheSmashCityPH/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+    "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-58-the-smash-city-valenzuela-pickleball-pickleballlife-pickl/10213877739613633/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.facebook.com/61580003362879/posts/%F0%9D%97%99%F0%9D%97%A8%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%9B%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A6%F0%9D%97%98-%F0%9D%97%A6%F0%9D%97%94%F0%9D%97%A7%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%97%F0%9D%97%94%F0%9D%97%AC-%F0%9D%97%AA%F0%9D%97%A2%F0%9D%97%A0%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A6-%F0%9D%97%A0%F0%9D%97%A2%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%9B-%F0%9D%97%98%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-entering-womens-month-2026-the-best-way/122128870335000112/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-58-the-smash-city-valenzuela-pickleball-pickleballlife-pickl/10213877739613633/",
+    "https://www.facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.facebook.com/valpickleball/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/TheSmashCityPH/",
+    "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-58-the-smash-city-valenzuela-pickleball-pickleballlife-pickl/10213877739613633/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.reddit.com/r/valenzuela/comments/1nk55af/pickleball/",
+    "https://www.instagram.com/reel/DIvdd4PSMj6/?hl=en",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/valpickleball/",
+    "https://www.facebook.com/TheSmashCityPH/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.facebook.com/61580003362879/videos/book-your-court-today-at-smashplusphbook-badminton-pickleball-smashplus-valenzue/921722110357248/",
+    "https://www.instagram.com/reel/DSY3s0kie3G/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+    "https://www.facebook.com/valpickleball/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/TheSmashCityPH/",
+    "https://www.tiktok.com/@valenzuelacitygov/video/7496042439422053640",
+    "https://www.facebook.com/valpickleball/videos/valenzuela-pickleball-association-promotional-video-game-schedules-and-venue-let/897577931366462/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4171223296499213/",
+    "https://www.facebook.com/ValenzuelaCityGov/posts/whos-ready-to-play-pickleball-sm-city-valenzuela-active-hub-in-partnership-with-/1098641538964997/",
+    "https://www.facebook.com/jethrosportscenter/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4147329145555295/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-valenzuela/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-valenzuela/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-valenzuela/scrape-state.json"
+}

@@ -1,0 +1,54 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "City of Parañaque",
+    "citySlug": "city-of-paranaque",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:01:38.101Z",
+  "queries": [
+    "pickleball courts in Metro Manila City of Parañaque",
+    "pickleball court City of Parañaque Metro Manila",
+    "City of Parañaque pickleball",
+    "courts in City of Parañaque Metro Manila pickleball",
+    "sports center City of Parañaque Metro Manila pickleball",
+    "pickleball club City of Parañaque Metro Manila",
+    "pickleball reservations City of Parañaque Metro Manila"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/paranaque"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "score": -2
+    },
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "score": -2
+    },
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "score": -2
+    },
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-61567306075454/",
+      "score": -2
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338084116479796/",
+      "score": 3
+    },
+    {
+      "url": "https://bounceatparqal.com/",
+      "score": 4
+    }
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-paranaque/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-paranaque/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/city-of-paranaque/scrape-state.json"
+}

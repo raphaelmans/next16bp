@@ -1,0 +1,112 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "San Juan City",
+    "citySlug": "san-juan-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T17:21:07.641Z",
+  "queries": [
+    "pickleball courts in Metro Manila San Juan City",
+    "pickleball court San Juan City Metro Manila",
+    "San Juan City pickleball",
+    "courts in San Juan City Metro Manila pickleball",
+    "sports center San Juan City Metro Manila pickleball",
+    "pickleball club San Juan City Metro Manila",
+    "pickleball reservations San Juan City Metro Manila",
+    "host-map:cebupickleballcourts.com:San Juan City",
+    "host-map:cebupickleballcourts.com:San Juan",
+    "host-map:dumapickleball.com:San Juan City",
+    "host-map:dumapickleball.com:San Juan",
+    "site:cebupickleballcourts.com San Juan City Metro Manila pickleball",
+    "site:dumapickleball.com San Juan City Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://reclub.co/m/Y34H4X",
+    "https://www.spot.ph/things-to-do/weekend-guides/107056/pickleball-courts-in-metro-manila-a3412-20231112",
+    "https://sanjuancapistrano.org/facilities/facility/details/La-Novia-Park-Pickleball-Courts-35",
+    "https://www.sparrk.ph/pickleball-court/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/CQUG5B",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/WBS14I",
+      "score": 14
+    },
+    {
+      "url": "https://reclub.co/m/9A9TPS",
+      "score": 14
+    },
+    {
+      "url": "https://reclub.co/m/GIO7AI",
+      "score": 14
+    },
+    {
+      "url": "https://www.tobys.com/?srsltid=AfmBOorUZRIY2RAjJ5TAZIWmga_j1hqSX6fT1HXY4e16zVtytIN_cNcV",
+      "score": 5
+    },
+    {
+      "url": "https://metromanila.politiko.com.ph/2025/04/14/zamora-leads-groundbreaking-of-san-juan-sports-center/headlines/",
+      "score": 4
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/metro-manila/san-juan/greenhills-west-clubhouse",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1023312195797318/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.tiktok.com/discover/pickleball-court-san-juan-city",
+    "https://www.tiktok.com/@nextdayeditph/video/7540284285308374280",
+    "https://www.facebook.com/groups/2723933654561525/posts/4360441417577399/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1023312195797318/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rkd1mf/lf_courts_with_good_rates_preferrably_in_san_juan/",
+    "https://www.tiktok.com/discover/pickleball-court-san-juan-city",
+    "https://www.tiktok.com/@nextdayeditph/video/7540284285308374280",
+    "https://www.facebook.com/groups/2723933654561525/posts/4008619726092905/",
+    "https://www.tiktok.com/discover/pickleball-court-in-san-juan-manila",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1023312195797318/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rkd1mf/lf_courts_with_good_rates_preferrably_in_san_juan/",
+    "https://www.tiktok.com/discover/pickleball-court-san-juan-city",
+    "https://www.tiktok.com/@nextdayeditph/video/7540284285308374280",
+    "https://www.tiktok.com/discover/pickleball-court-in-san-juan-manila",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1023312195797318/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rkd1mf/lf_courts_with_good_rates_preferrably_in_san_juan/",
+    "https://www.tiktok.com/discover/pickleball-court-san-juan-city",
+    "https://www.tiktok.com/@nextdayeditph/video/7540284285308374280",
+    "https://www.facebook.com/groups/2723933654561525/posts/4336298986658309/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rkd1mf/lf_courts_with_good_rates_preferrably_in_san_juan/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4251249311829944/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4343019652652909/",
+    "https://www.tiktok.com/discover/pickleball-court-in-san-juan-manila",
+    "https://www.facebook.com/groups/2723933654561525/posts/4336298986658309/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.instagram.com/reel/DUpcn5JFAdy/",
+    "https://www.tiktok.com/discover/pickleball-court-in-san-juan-manila",
+    "https://www.facebook.com/groups/2723933654561525/posts/4008619726092905/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4315820625372812/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1rkd1mf/lf_courts_with_good_rates_preferrably_in_san_juan/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4344700115818196/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4334845360137005/",
+    "https://www.tiktok.com/discover/pickleball-court-near-greenhills-san-juan",
+    "https://www.facebook.com/groups/2723933654561525/posts/4008619726092905/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/san-juan-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/san-juan-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/san-juan-city/scrape-state.json"
+}

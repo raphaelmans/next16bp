@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:san-juan-city",
+  "createdAt": "2026-03-09T17:21:07.636Z",
+  "updatedAt": "2026-03-09T17:23:18.786Z",
+  "scope": {
+    "provinceSlug": "metro-manila",
+    "citySlug": "san-juan-city",
+    "provinceName": "Metro Manila",
+    "cityName": "San Juan City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:21:07.639Z",
+      "finishedAt": "2026-03-09T17:22:16.522Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-09T17:22:16.523Z",
+      "finishedAt": "2026-03-09T17:22:48.754Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "failed",
+      "startedAt": "2026-03-09T17:22:48.755Z",
+      "finishedAt": "2026-03-09T17:23:18.786Z",
+      "lastError": "Failed query: select \"place\".\"id\", \"place\".\"name\", \"place\".\"address\", \"place\".\"city\", \"place\".\"province\", \"place\".\"country\", \"place_contact_detail\".\"facebook_url\", \"place_contact_detail\".\"instagram_url\", \"place_contact_detail\".\"phone_number\", \"place_contact_detail\".\"viber_info\", \"place_contact_detail\".\"website_url\", \"place_embedding\".\"embedding\" from \"place\" left join \"place_contact_detail\" on \"place_contact_detail\".\"place_id\" = \"place\".\"id\" left join \"place_embedding\" on (\"place_embedding\".\"place_id\" = \"place\".\"id\" and \"place_embedding\".\"purpose\" = $1 and \"place_embedding\".\"model\" = $2) where \"place\".\"place_type\" = $3\nparams: dedupe,text-embedding-3-small,CURATED",
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:10:01.866Z",
+  "updatedAt": "2026-03-09T16:10:51.823Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/iloilo-festive-mall-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/iloilo-festive-mall-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/iloilo-festive-mall-courts",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.865Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "iloilo festive mall courts|iloilo city|iloilo",
+      "lastRowName": "Iloilo Festive Mall Courts"
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.865Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/cpu-gymnasium": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/cpu-gymnasium",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/cpu-gymnasium",
+      "firstDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "lastDiscoveredAt": "2026-03-09T16:10:01.865Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:10:01.865Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "cpu gymnasium|iloilo city|iloilo",
+      "lastRowName": "Cpu Gymnasium"
+    }
+  },
+  "rows": {
+    "iloilo festive mall courts|iloilo city|iloilo": {
+      "rowKey": "iloilo festive mall courts|iloilo city|iloilo",
+      "name": "Iloilo Festive Mall Courts",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/iloilo-festive-mall-courts",
+      "firstSeenAt": "2026-03-09T16:10:01.865Z",
+      "lastSeenAt": "2026-03-09T16:10:01.865Z"
+    },
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-09T16:10:01.865Z",
+      "lastSeenAt": "2026-03-09T16:10:01.865Z"
+    },
+    "cpu gymnasium|iloilo city|iloilo": {
+      "rowKey": "cpu gymnasium|iloilo city|iloilo",
+      "name": "Cpu Gymnasium",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/cpu-gymnasium",
+      "firstSeenAt": "2026-03-09T16:10:01.865Z",
+      "lastSeenAt": "2026-03-09T16:10:01.865Z"
+    }
+  }
+}

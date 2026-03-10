@@ -1,0 +1,52 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-09T16:21:58.535Z",
+  "updatedAt": "2026-03-09T16:22:16.720Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-pickleball-club",
+      "firstDiscoveredAt": "2026-03-09T16:21:58.534Z",
+      "lastDiscoveredAt": "2026-03-09T16:21:58.534Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:21:58.534Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "makati pickleball club|city of makati|metro manila",
+      "lastRowName": "Makati Pickleball Club"
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/makati/zone-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/zone-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/zone-sports-center",
+      "firstDiscoveredAt": "2026-03-09T16:21:58.534Z",
+      "lastDiscoveredAt": "2026-03-09T16:21:58.534Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-09T16:21:58.534Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "zone sports center|city of makati|metro manila",
+      "lastRowName": "Zone Sports Center"
+    }
+  },
+  "rows": {
+    "makati pickleball club|city of makati|metro manila": {
+      "rowKey": "makati pickleball club|city of makati|metro manila",
+      "name": "Makati Pickleball Club",
+      "city": "CITY OF MAKATI",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/makati-pickleball-club",
+      "firstSeenAt": "2026-03-09T16:21:58.534Z",
+      "lastSeenAt": "2026-03-09T16:21:58.534Z"
+    },
+    "zone sports center|city of makati|metro manila": {
+      "rowKey": "zone sports center|city of makati|metro manila",
+      "name": "Zone Sports Center",
+      "city": "CITY OF MAKATI",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/makati/zone-sports-center",
+      "firstSeenAt": "2026-03-09T16:21:58.534Z",
+      "lastSeenAt": "2026-03-09T16:21:58.534Z"
+    }
+  }
+}

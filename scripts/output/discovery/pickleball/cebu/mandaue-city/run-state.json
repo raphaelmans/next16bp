@@ -1,0 +1,58 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:mandaue-city",
+  "createdAt": "2026-03-09T16:41:37.904Z",
+  "updatedAt": "2026-03-09T16:41:37.909Z",
+  "scope": {
+    "provinceSlug": "cebu",
+    "citySlug": "mandaue-city",
+    "provinceName": "Cebu",
+    "cityName": "Mandaue City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.906Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.908Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.908Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.909Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.909Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.909Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

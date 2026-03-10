@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:liloan",
+  "createdAt": "2026-03-09T17:30:40.227Z",
+  "updatedAt": "2026-03-09T17:31:10.736Z",
+  "queries": [
+    "pickleball courts in Cebu Liloan",
+    "pickleball court Liloan Cebu",
+    "Liloan pickleball",
+    "courts in Liloan Cebu pickleball",
+    "sports center Liloan Cebu pickleball",
+    "pickleball club Liloan Cebu",
+    "pickleball reservations Liloan Cebu",
+    "host-map:cebupickleballcourts.com:Liloan",
+    "host-map:dumapickleball.com:Liloan",
+    "site:cebupickleballcourts.com Liloan Cebu pickleball",
+    "site:dumapickleball.com Liloan Cebu pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/liloan/match-point-badminton-and-pickleball",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "pickleball reservations Liloan Cebu",
+      "title": "Match Point Badminton & Pickleball",
+      "snippet": "Match Point Badminton & Pickleball is one of the most popular places to play pickleball in Liloan, Central Visayas. There are 2 indoor hard courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/hillhouse-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/hillhouse-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/hillhouse-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "site:cebupickleballcourts.com Liloan Cebu pickleball",
+      "title": "HillHouse Liloan - Cebu Pickleball Courts",
+      "snippet": "HillHouse Liloan offers outdoor pickleball courts in Liloan, Cebu with hourly rentals and on-site amenities. View court details and contact ...",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@match-point": {
+      "canonicalUrl": "https://reclub.co/clubs/@match-point",
+      "latestUrl": "https://reclub.co/clubs/@match-point",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "pickleball reservations Liloan Cebu",
+      "title": "Match Point Liloan Cebu Pickleball",
+      "snippet": "215 activities. Indoor badminton and Cebu's first dedicated indoor pickleball courts. Open daily from 8am-12mn. Organized By. Ryan Ong. Cleofe Gejon ...",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/match-point-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/match-point-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/match-point-liloan/",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "site:cebupickleballcourts.com Liloan Cebu pickleball",
+      "title": "Match Point Liloan - Cebu Pickleball Courts",
+      "snippet": "Match Point Liloan offers 2 indoor pickleball courts in Catarman, Liloan at ₱300 per hour. Open daily from 8AM to 12AM with paddle rentals ...",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match": {
+      "canonicalUrl": "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match",
+      "latestUrl": "https://keeta.ph/pickleball-fever-cebus-hottest-spots-for-your-next-match/",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "pickleball courts in Cebu Liloan",
+      "title": "Pickleball Fever: Cebu's Hottest Spots for your Next Match | Keeta",
+      "snippet": "An all-around reliable spot to sharpen your game, you may visit them at Landing, Catarman, Liloan. ... With its pickleball courts (convertible ...",
+      "domain": "keeta.ph",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pages.ph/2025/02/pickleball-in-cebu": {
+      "canonicalUrl": "https://pages.ph/2025/02/pickleball-in-cebu",
+      "latestUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "sports center Liloan Cebu pickleball",
+      "title": "Pickleball's rising popularity in Cebu",
+      "snippet": "Guinto: “We are seeing increased interest in several locations across Cebu, including SM Seaside, MatchPoint in Tayud, Liloan; City Sports, ...",
+      "domain": "pages.ph",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/1DOT8D": {
+      "canonicalUrl": "https://reclub.co/m/1DOT8D",
+      "latestUrl": "https://reclub.co/m/1DOT8D",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "pickleball club Liloan Cebu",
+      "title": "Wednesday LILOAN All Skill Levels Open Play | 7pm-11pm | 4 HOURS",
+      "snippet": "Looking for Pickleball meets in Cebu, Philippines? Check out this Reclub meet at Match Point - Badminton and Pickleball Court hosted by Iris Garvez and ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/TWRN4C": {
+      "canonicalUrl": "https://reclub.co/m/TWRN4C",
+      "latestUrl": "https://reclub.co/m/TWRN4C",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "pickleball reservations Liloan Cebu",
+      "title": "Monday MP LILOAN Pickleball Open Play | 7pm-11pm",
+      "snippet": "All bookings at Match Point Sports Center & Café are non-refundable once confirmed. ... Match Point Liloan Cebu Pickleball. Every Monday · 7:00 PM. Confirmed · 1.",
+      "domain": "reclub.co",
+      "relevanceScore": 17,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebupickleballcourts.com/ceh-abc-gym": {
+      "canonicalUrl": "https://cebupickleballcourts.com/ceh-abc-gym",
+      "latestUrl": "https://cebupickleballcourts.com/ceh-abc-gym/",
+      "firstDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "lastDiscoveredAt": "2026-03-09T17:30:40.227Z",
+      "sourceQuery": "site:cebupickleballcourts.com Liloan Cebu pickleball",
+      "title": "CEH-ABC Gym | Cebu Pickleball Courts",
+      "snippet": "CEH-ABC Gym in Liloan, Cebu offers indoor pickleball courts available for group rental. View court details, schedules, ...",
+      "domain": "cebupickleballcourts.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

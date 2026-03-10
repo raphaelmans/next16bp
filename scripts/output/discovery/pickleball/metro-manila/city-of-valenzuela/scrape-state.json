@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T02:32:55.752Z",
+  "updatedAt": "2026-03-10T02:33:14.464Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@smash-plus-pickleball-valenzuela": {
+      "canonicalUrl": "https://reclub.co/clubs/@smash-plus-pickleball-valenzuela",
+      "latestUrl": "https://reclub.co/clubs/@smash-plus-pickleball-valenzuela",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela/actifit-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela/actifit-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela/actifit-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "actifit sports complex|city of valenzuela|metro manila",
+      "lastRowName": "Actifit Sports Complex"
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/QGTWWO": {
+      "canonicalUrl": "https://reclub.co/m/QGTWWO",
+      "latestUrl": "https://reclub.co/m/QGTWWO",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820": {
+      "canonicalUrl": "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820",
+      "latestUrl": "https://metro.style/metro-style/wellness/2025/6/16/pickleball-courts-in-manila-1820",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@the-smash-city-valenzuela": {
+      "canonicalUrl": "https://reclub.co/clubs/@the-smash-city-valenzuela",
+      "latestUrl": "https://reclub.co/clubs/@the-smash-city-valenzuela",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/47EGED": {
+      "canonicalUrl": "https://reclub.co/m/47EGED",
+      "latestUrl": "https://reclub.co/m/47EGED",
+      "firstDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "lastDiscoveredAt": "2026-03-10T02:32:55.752Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T02:32:55.752Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "actifit sports complex|city of valenzuela|metro manila": {
+      "rowKey": "actifit sports complex|city of valenzuela|metro manila",
+      "name": "Actifit Sports Complex",
+      "city": "CITY OF VALENZUELA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/valenzuela/actifit-sports-complex",
+      "firstSeenAt": "2026-03-10T02:32:55.752Z",
+      "lastSeenAt": "2026-03-10T02:32:55.752Z"
+    }
+  }
+}

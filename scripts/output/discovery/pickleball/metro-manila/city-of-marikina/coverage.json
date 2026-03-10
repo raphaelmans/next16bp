@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-09T17:12:42.499Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 4,
+  "scrapedUrls": 1,
+  "noDataUrls": 3,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "suburbia east tennis court|city of marikina|metro manila",
+      "name": "Suburbia East Tennis Court",
+      "city": "CITY OF MARIKINA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/marikina/suburbia-east-tennis-court",
+      "firstSeenAt": "2026-03-09T17:12:42.499Z",
+      "lastSeenAt": "2026-03-09T17:12:42.499Z"
+    }
+  ]
+}

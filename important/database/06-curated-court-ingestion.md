@@ -52,6 +52,18 @@ For a source site named `<source>`:
 
 Keep the original source CSV. It is the audit input for later threshold tuning.
 
+## Manual Completion Path
+
+When discovery succeeds but automatic extraction is weak or unsupported, switch to the manual completion path:
+
+- source leads:
+  - `scripts/output/discovery-facebook/<sport>/<province>/<city>/facebook-pages.urls.txt`
+  - or `scripts/output/discovery/<sport>/<province>/<city>/leads.urls.txt`
+- import-ready template:
+  - `scripts/templates/curated-courts-import-ready-template.csv`
+- manual execution guide:
+  - `important/automations/01-manual-import-from-leads.md`
+
 ## Source Website to CSV
 
 ### Preferred path
@@ -76,6 +88,8 @@ If the generic scraper does not yield rows because the site structure is too cus
 1. Discover explicit venue-detail URLs from sitemap, page source, Firecrawl map, or browser inspection.
 2. Extract venue records from those detail pages directly.
 3. Materialize a CSV that matches `scripts/import-curated-courts.ts`.
+
+If the source is a Facebook page/profile lead, use the manual completion guide instead of attempting direct Facebook scraping.
 
 Required importer columns:
 

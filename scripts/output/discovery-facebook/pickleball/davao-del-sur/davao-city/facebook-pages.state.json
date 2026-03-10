@@ -1,0 +1,147 @@
+{
+  "version": 1,
+  "scopeKey": "facebook:pickleball:davao-del-sur:davao-city",
+  "createdAt": "2026-03-09T16:13:47.423Z",
+  "updatedAt": "2026-03-09T16:13:55.225Z",
+  "queries": [
+    "site:facebook.com pickleball Davao City Davao Del Sur",
+    "site:facebook.com \"Davao City\" \"Davao Del Sur\" \"pickleball\"",
+    "site:facebook.com \"Davao City\" \"pickleball club\"",
+    "site:facebook.com \"Davao City\" \"pickleball court\"",
+    "site:facebook.com \"Davao Del Sur\" \"pickleball\""
+  ],
+  "urls": {
+    "https://facebook.com/p/Pickle-Hive-61582854800777": {
+      "canonicalUrl": "https://facebook.com/p/Pickle-Hive-61582854800777",
+      "latestUrl": "https://www.facebook.com/p/Pickle-Hive-61582854800777/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com pickleball Davao City Davao Del Sur",
+      "title": "Pickle Hive | Davao City - Facebook",
+      "snippet": "Pickle Hive, Davao City. 1951 likes · 83 talking about this · 334 were here. Play pickleball, relax, enjoy great food, and connect with others. Come and...",
+      "domain": "facebook.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": "2026-03-09T16:13:47.424Z"
+    },
+    "https://facebook.com/groups/2723933654561525/posts/4373916109563263": {
+      "canonicalUrl": "https://facebook.com/groups/2723933654561525/posts/4373916109563263",
+      "latestUrl": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao Del Sur\" \"pickleball\"",
+      "title": "New pickleball court in Davao City - Facebook",
+      "snippet": "Pickleball Point Sports Center is fast becoming a favorite hub for Picklers. Digos City, Davao del Sur #pickleball #PickleballCommunity # ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/500616635082157/posts/1346500643827081": {
+      "canonicalUrl": "https://facebook.com/groups/500616635082157/posts/1346500643827081",
+      "latestUrl": "https://www.facebook.com/groups/500616635082157/posts/1346500643827081/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"Davao Del Sur\" \"pickleball\"",
+      "title": "After 2 long years, Davao Pickleball League by DPC is officially back ...",
+      "snippet": "Digos City, Davao del Sur #pickleball #PickleballCommunity #pickleballcourt #pickleballgame #pickleballworld ... pickleball in davao city.,. We ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/groups/500616635082157/posts/1371997687944043": {
+      "canonicalUrl": "https://facebook.com/groups/500616635082157/posts/1371997687944043",
+      "latestUrl": "https://www.facebook.com/groups/500616635082157/posts/1371997687944043/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"Davao Del Sur\" \"pickleball\"",
+      "title": "Davao Pickleball League 2026, season 2 by Davao ... - Facebook",
+      "snippet": "Digos City, Davao del Sur #pickleball #PickleballCommunity #pickleballcourt #pickleballgame #pickleballworld ... pickleball in davao city.,. We ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/dcpci": {
+      "canonicalUrl": "https://facebook.com/dcpci",
+      "latestUrl": "https://www.facebook.com/dcpci/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"pickleball club\"",
+      "title": "Davao City Pickleball Club Inc. - Facebook",
+      "snippet": "Davao City Pickleball Club Inc. We're passionate pickleball enthusiasts dedicated to sharing our love for this addictive sport. From tips and tricks ...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:47.424Z"
+    },
+    "https://m.facebook.com/61559247602225/about": {
+      "canonicalUrl": "https://m.facebook.com/61559247602225/about",
+      "latestUrl": "https://m.facebook.com/61559247602225/about/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"pickleball club\"",
+      "title": "Davao City Pickleball Club Inc. - Facebook",
+      "snippet": "Davao City Pickleball Club Inc. We're passionate pickleball enthusiasts dedicated to sharing our love for this addictive sport. From tips and tricks ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/ftc.love/videos/pickleball-sunday/2326101744523389": {
+      "canonicalUrl": "https://facebook.com/ftc.love/videos/pickleball-sunday/2326101744523389",
+      "latestUrl": "https://www.facebook.com/ftc.love/videos/pickleball-sunday/2326101744523389/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"pickleball club\"",
+      "title": "At Davao City Pickleball Club Inc. what a fun time playing with these ...",
+      "snippet": "At Davao City Pickleball Club Inc. what a fun time playing with these awesome Picklers. Whew! They are good! Friendly atmosphere at this ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/paddleupdavao": {
+      "canonicalUrl": "https://facebook.com/paddleupdavao",
+      "latestUrl": "https://www.facebook.com/paddleupdavao/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"pickleball court\"",
+      "title": "Paddle Up Davao - Pickleball Court | Davao City - Facebook",
+      "snippet": "Paddle Up Davao - Pickleball Court, Davao City. 4971 likes · 352 talking about this · 837 were here. https://picklehub.ph/paddle-up!-davao (Behind)...",
+      "domain": "facebook.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": "2026-03-09T16:13:47.424Z"
+    },
+    "https://facebook.com/eydventuretime/posts/newest-pickleball-court-in-obrero-davao-citypickleville-davao600-am-500-pm-300ho/1335976278555912": {
+      "canonicalUrl": "https://facebook.com/eydventuretime/posts/newest-pickleball-court-in-obrero-davao-citypickleville-davao600-am-500-pm-300ho/1335976278555912",
+      "latestUrl": "https://www.facebook.com/eydventuretime/posts/newest-pickleball-court-in-obrero-davao-citypickleville-davao600-am-500-pm-300ho/1335976278555912/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao City\" \"pickleball court\"",
+      "title": "NEWEST PICKLEBALL COURT IN OBRERO DAVAO CITY! PickleVille",
+      "snippet": "NEWEST PICKLEBALL COURT IN OBRERO DAVAO CITY! PickleVille - Davao! 6:00 am-5:00 pm: ₱300/hour 5:00 pm- 6:00 am: ₱350/hour Location: Sobrecary ...",
+      "domain": "facebook.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234": {
+      "canonicalUrl": "https://facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234",
+      "latestUrl": "https://www.facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao Del Sur\" \"pickleball\"",
+      "title": "Davao Pickleball at the MTS Pavilion is your go-to spot for fun and ...",
+      "snippet": "No photo description available.",
+      "domain": "facebook.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397": {
+      "canonicalUrl": "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397",
+      "latestUrl": "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+      "firstDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "lastDiscoveredAt": "2026-03-09T16:13:47.424Z",
+      "sourceQuery": "site:facebook.com \"Davao Del Sur\" \"pickleball\"",
+      "title": "Digos Prime Pickleball Club - Facebook",
+      "snippet": "The Pickle Bay - Bansalan is at Bansalan davao del Sur. 1d󰞋󱟠. The Pickle ... #pickleball #PickleballCommunity #pickleballtournamentPrime Pickleball Club # ...",
+      "domain": "facebook.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": "2026-03-09T16:13:47.424Z"
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:davao-city",
+  "createdAt": "2026-03-09T16:37:54.931Z",
+  "updatedAt": "2026-03-09T16:56:35.378Z",
+  "urls": {
+    "https://facebook.com/p/Pickle-Hive-61582854800777": {
+      "canonicalUrl": "https://facebook.com/p/Pickle-Hive-61582854800777",
+      "latestUrl": "https://www.facebook.com/p/Pickle-Hive-61582854800777/",
+      "firstCapturedAt": "2026-03-09T16:38:15.527Z",
+      "lastCapturedAt": "2026-03-09T16:54:56.031Z",
+      "status": "captured",
+      "title": "Pickle Hive | Davao City | Facebook",
+      "venueName": "Pickle Hive",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pickle Hive"
+    },
+    "https://facebook.com/dcpci": {
+      "canonicalUrl": "https://facebook.com/dcpci",
+      "latestUrl": "https://www.facebook.com/dcpci/",
+      "firstCapturedAt": "2026-03-09T16:38:49.228Z",
+      "lastCapturedAt": "2026-03-09T16:55:19.564Z",
+      "status": "captured",
+      "title": "Davao City Pickleball Club Inc. | Davao City | Facebook",
+      "venueName": "Davao City Pickleball Club Inc.",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Davao City Pickleball Club Inc."
+    },
+    "https://facebook.com/paddleupdavao": {
+      "canonicalUrl": "https://facebook.com/paddleupdavao",
+      "latestUrl": "https://www.facebook.com/paddleupdavao/",
+      "firstCapturedAt": "2026-03-09T16:39:13.101Z",
+      "lastCapturedAt": "2026-03-09T16:55:38.785Z",
+      "status": "captured",
+      "title": "Paddle Up Davao - Pickleball Court | Davao City | Facebook",
+      "venueName": "Paddle Up Davao - Pickleball Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Paddle Up Davao - Pickleball Court"
+    },
+    "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397": {
+      "canonicalUrl": "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397",
+      "latestUrl": "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+      "firstCapturedAt": "2026-03-09T16:39:52.772Z",
+      "lastCapturedAt": "2026-03-09T16:56:09.423Z",
+      "status": "captured",
+      "title": "Digos Prime Pickleball Club | Facebook",
+      "venueName": "Digos Prime Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

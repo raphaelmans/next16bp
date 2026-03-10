@@ -1,0 +1,50 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Mandaue City",
+    "citySlug": "mandaue-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-09T16:13:27.335Z",
+  "queries": [
+    "site:facebook.com pickleball Mandaue City Cebu",
+    "site:facebook.com \"Mandaue City\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Mandaue City\" \"pickleball club\"",
+    "site:facebook.com \"Mandaue City\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/Sweetspotpickleballcourts/",
+    "https://www.facebook.com/ChoiPickleballMandaue/",
+    "https://www.facebook.com/p/All-Aces-Pickleball-Club-61578165434754/",
+    "https://www.facebook.com/61578165434754/?locale=fy_NL",
+    "https://www.facebook.com/cebupickleball/",
+    "https://www.facebook.com/p/Cebu-Pickleball-DUPR-Club-61575304645845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1432637021040691/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1414728019498258/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1336925840611810/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1364657938329407/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1346978700097331/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/mandaue-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/mandaue-city/facebook-pages.state.json"
+}

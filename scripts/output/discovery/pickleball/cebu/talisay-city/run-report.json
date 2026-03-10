@@ -1,0 +1,56 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cebu",
+    "citySlug": "talisay-city",
+    "provinceName": "Cebu",
+    "cityName": "Talisay City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.914Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "scrape": {
+      "status": "failed",
+      "startedAt": "2026-03-09T16:41:37.916Z",
+      "finishedAt": "2026-03-09T16:41:48.861Z",
+      "lastError": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs.",
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.915Z",
+      "lastError": null,
+      "notes": "reconciled from artifacts"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.916Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.916Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-09T16:41:37.916Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  },
+  "failedStage": "scrape",
+  "error": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs."
+}
