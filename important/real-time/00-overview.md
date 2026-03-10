@@ -1,6 +1,6 @@
 # Real-Time Architecture
 
-Last updated: 2026-03-09
+Last updated: 2026-03-11
 
 ## Goal
 Capture the current modular real-time architecture after the reservation-first and availability event work.
@@ -39,12 +39,24 @@ The app intentionally uses two event-driven patterns:
 
 ## Operational Requirement
 
-Availability realtime on `availability_change_event` depends on two environment-side requirements:
+Every table subscribed via Supabase Realtime depends on these environment-side requirements:
 
 - the table must be present in the `supabase_realtime` publication
-- subscribing roles must have `SELECT` on `public.availability_change_event`
+- subscribing roles must have `SELECT` on the table
+- if the subscription uses a column filter (e.g. `reservation_id=eq.<id>`), the filter column must be in the WAL output — tables with `REPLICA IDENTITY DEFAULT` only expose PK columns; set `REPLICA IDENTITY FULL` when filtering on non-PK columns
 
-Without the `SELECT` grant, Supabase Realtime can accept `phx_join` and still emit a delayed `system` error like `invalid column for filter court_id`.
+Without the `SELECT` grant, Supabase Realtime can accept `phx_join` and still emit a delayed `system` error like `invalid column for filter <column>`. The same error occurs when filtering on a column not present in the replica identity.
+
+The browser Supabase client connects with the publishable key, which maps to the `anon` role. Tables using column filters must grant `SELECT` to `anon` so the filter validation function (`realtime.subscription_check_filters`) can verify column access via `has_column_privilege`. Tables without filters (e.g. `user_notification`) only need `authenticated` since the filter validation loop is skipped.
+
+Tables and required grants:
+
+| Table | Roles | Publication + Grant migration |
+|---|---|---|
+| `public.availability_change_event` | `authenticated`, `anon` | `drizzle/0044_availability_change_event_realtime_grants.sql` |
+| `public.chat_message` | `authenticated` | (added manually to publication) |
+| `public.reservation_event` | `authenticated`, `anon` | `drizzle/0046_reservation_notification_realtime_grants.sql` |
+| `public.user_notification` | `authenticated` | `drizzle/0046_reservation_notification_realtime_grants.sql` |
 
 ## Current Limitation
 

@@ -16,6 +16,7 @@ export function ChatPocClient() {
   const [threadId, setThreadId] = useState<string | null>(null);
   const [channelError, setChannelError] = useState<string | null>(null);
 
+  const utils = trpc.useUtils();
   const authQuery = useQueryChatPocAuth();
   const dmMutation = useMutChatPocGetOrCreateDm();
   const sendMutation = trpc.chatMessage.sendMessage.useMutation();
@@ -38,6 +39,7 @@ export function ChatPocClient() {
         otherUserId: trimmedOtherUserId,
       });
       setThreadId(result.channelId);
+      void utils.reservationChat.getThreadMetas.invalidate();
     } catch (error) {
       setChannelError(
         error instanceof Error ? error.message : "Failed to open DM channel.",

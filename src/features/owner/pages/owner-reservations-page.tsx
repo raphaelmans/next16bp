@@ -1,17 +1,8 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { differenceInSeconds, format } from "date-fns";
-import {
-  Calendar as CalendarIcon,
-  CheckCircle2,
-  Clock3,
-  History,
-  RefreshCw,
-  Search,
-} from "lucide-react";
-import Link from "next/link";
-import { parseAsString, useQueryState } from "nuqs";
+import { CheckCircle2, RefreshCw, Search } from "lucide-react";
+import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -19,7 +10,6 @@ import { appRoutes } from "@/common/app-routes";
 import {
   formatCurrency,
   formatDateShortInTimeZone,
-  formatRelativeFrom,
   formatTimeRangeInTimeZone,
 } from "@/common/format";
 import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
@@ -33,14 +23,6 @@ import {
 import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -58,13 +40,7 @@ import {
 } from "@/components/ui/empty";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -81,6 +57,7 @@ import {
   useModOwnerInvalidation,
   useModOwnerPlaceFilter,
   useModOwnerReservationRealtimeStream,
+  useModOwnerReservations,
   useMutAcceptReservation,
   useMutCancelReservation,
   useMutConfirmReservation,
@@ -90,84 +67,20 @@ import {
   useQueryOwnerCourts,
   useQueryOwnerOrganization,
   useQueryOwnerPlaces,
-  useQueryOwnerReservationHistoryList,
-  useQueryOwnerReservationInbox,
-  useQueryOwnerReservationSchedule,
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
-type ReservationsView = "inbox" | "schedule" | "history";
-type HistoryFilter = "completed" | "cancelled" | "expired";
-type InboxSectionKey =
-  | "payment-marked"
-  | "needs-acceptance"
-  | "awaiting-payment";
+const STATUS_VALUES = [
+  "all",
+  "needs-action",
+  "awaiting-payment",
+  "confirmed",
+  "past",
+] as const;
 
-const VIEW_PARAM = "view";
+type StatusFilter = (typeof STATUS_VALUES)[number];
+
 const SEARCH_PARAM = "q";
-const DATE_FROM_PARAM = "from";
-const DATE_TO_PARAM = "to";
-const HISTORY_PARAM = "history";
-const HISTORY_PAGE_SIZE = 20;
-
-const HISTORY_STATUS_MAP: Record<
-  HistoryFilter,
-  {
-    statuses: Reservation["reservationStatus"][];
-    timeBucket?: "past";
-    label: string;
-  }
-> = {
-  completed: {
-    statuses: ["CONFIRMED"],
-    timeBucket: "past",
-    label: "Completed",
-  },
-  cancelled: {
-    statuses: ["CANCELLED"],
-    label: "Cancelled",
-  },
-  expired: {
-    statuses: ["EXPIRED"],
-    label: "Expired",
-  },
-};
-
-const INBOX_SECTIONS: {
-  key: InboxSectionKey;
-  label: string;
-  description: string;
-  emptyTitle: string;
-  emptyDescription: string;
-}[] = [
-  {
-    key: "payment-marked",
-    label: "Payment marked",
-    description: "Payments awaiting your confirmation.",
-    emptyTitle: "No payments to confirm",
-    emptyDescription: "New payment proofs will appear here.",
-  },
-  {
-    key: "needs-acceptance",
-    label: "Needs acceptance",
-    description: "New booking requests that need a decision.",
-    emptyTitle: "No new booking requests",
-    emptyDescription: "Fresh requests will land here first.",
-  },
-  {
-    key: "awaiting-payment",
-    label: "Awaiting payment",
-    description: "Accepted bookings waiting on the player.",
-    emptyTitle: "Nothing is waiting on payment",
-    emptyDescription: "Accepted bookings will show here until players pay.",
-  },
-];
-
-const VIEW_OPTIONS: { value: ReservationsView; label: string }[] = [
-  { value: "inbox", label: "Inbox" },
-  { value: "schedule", label: "Schedule" },
-  { value: "history", label: "History" },
-];
 
 const paidOfflineFormSchema = z.object({
   paymentMethodId: z.string().min(1, "Payment method is required"),
@@ -175,40 +88,6 @@ const paidOfflineFormSchema = z.object({
 });
 
 type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
-
-function parseDayKey(value: string | null): Date | undefined {
-  if (!value) return undefined;
-  const [year, month, day] = value.split("-").map((part) => Number(part));
-  if (!year || !month || !day) return undefined;
-  return new Date(year, month - 1, day);
-}
-
-function isValidView(value: string | null): value is ReservationsView {
-  return value === "inbox" || value === "schedule" || value === "history";
-}
-
-function isValidHistoryFilter(value: string | null): value is HistoryFilter {
-  return value === "completed" || value === "cancelled" || value === "expired";
-}
-
-function parseDate(value: string | null | undefined) {
-  if (!value) return null;
-  const parsed = new Date(value);
-  return Number.isNaN(parsed.getTime()) ? null : parsed;
-}
-
-function getReservationStartMs(reservation: Reservation) {
-  return (
-    parseDate(reservation.slotStartTime ?? reservation.createdAt)?.getTime() ??
-    0
-  );
-}
-
-function getReservationEndMs(reservation: Reservation) {
-  return (
-    parseDate(reservation.slotEndTime ?? reservation.createdAt)?.getTime() ?? 0
-  );
-}
 
 function formatReservationDate(reservation: Reservation) {
   return formatDateShortInTimeZone(
@@ -229,243 +108,122 @@ function formatReservationTimeRange(reservation: Reservation) {
   );
 }
 
-function getReservationExpiresLabel(
-  reservation: Reservation,
-  nowMs: number,
-): string | null {
-  if (!reservation.expiresAt) return null;
-  const expiresAt = parseDate(reservation.expiresAt);
-  if (!expiresAt) return null;
+function isUpcoming(reservation: Reservation): boolean {
+  const today = getZonedDayKey(new Date(), reservation.placeTimeZone);
+  return reservation.date >= today;
+}
 
-  if (reservation.reservationStatus === "EXPIRED") {
-    return `Expired ${format(expiresAt, "MMM d, h:mm a")}`;
+function filterByStatus(
+  reservations: Reservation[],
+  status: StatusFilter,
+): Reservation[] {
+  switch (status) {
+    case "all":
+      return reservations.filter((r) => {
+        if (
+          r.reservationStatus === "CREATED" ||
+          r.reservationStatus === "AWAITING_PAYMENT" ||
+          r.reservationStatus === "PAYMENT_MARKED_BY_USER"
+        ) {
+          return true;
+        }
+        if (r.reservationStatus === "CONFIRMED") {
+          return isUpcoming(r);
+        }
+        return false;
+      });
+    case "needs-action":
+      return reservations.filter(
+        (r) =>
+          r.reservationStatus === "CREATED" ||
+          r.reservationStatus === "PAYMENT_MARKED_BY_USER",
+      );
+    case "awaiting-payment":
+      return reservations.filter(
+        (r) => r.reservationStatus === "AWAITING_PAYMENT",
+      );
+    case "confirmed":
+      return reservations.filter(
+        (r) => r.reservationStatus === "CONFIRMED" && isUpcoming(r),
+      );
+    case "past":
+      return reservations.filter((r) => {
+        if (
+          r.reservationStatus === "EXPIRED" ||
+          r.reservationStatus === "CANCELLED"
+        ) {
+          return true;
+        }
+        if (r.reservationStatus === "CONFIRMED") {
+          return !isUpcoming(r);
+        }
+        return false;
+      });
+  }
+}
+
+function computeCounts(reservations: Reservation[]) {
+  let needsAction = 0;
+  let awaitingPayment = 0;
+  let confirmed = 0;
+  let past = 0;
+
+  for (const r of reservations) {
+    if (
+      r.reservationStatus === "CREATED" ||
+      r.reservationStatus === "PAYMENT_MARKED_BY_USER"
+    ) {
+      needsAction++;
+    } else if (r.reservationStatus === "AWAITING_PAYMENT") {
+      awaitingPayment++;
+    } else if (r.reservationStatus === "CONFIRMED") {
+      if (isUpcoming(r)) {
+        confirmed++;
+      } else {
+        past++;
+      }
+    } else {
+      past++;
+    }
   }
 
-  const secondsRemaining = Math.max(0, differenceInSeconds(expiresAt, nowMs));
-  const minutes = Math.floor(secondsRemaining / 60);
-  const seconds = secondsRemaining % 60;
-  return `${minutes}m ${seconds}s left`;
+  return { needsAction, awaitingPayment, confirmed, past };
 }
 
-function ReservationsEmptyState({
-  icon: Icon,
-  title,
-  description,
-}: {
-  icon: React.ComponentType<{ className?: string }>;
-  title: string;
-  description: string;
-}) {
-  return (
-    <Empty className="border-0 bg-muted/20 py-10">
-      <EmptyHeader>
-        <EmptyMedia variant="icon">
-          <Icon />
-        </EmptyMedia>
-        <EmptyTitle>{title}</EmptyTitle>
-        <EmptyDescription>{description}</EmptyDescription>
-      </EmptyHeader>
-    </Empty>
-  );
-}
-
-function InboxReservationCard({
-  reservation,
-  nowMs,
-  isLoading,
-  onConfirm,
-  onReject,
-  onPaidOffline,
-}: {
-  reservation: Reservation;
-  nowMs: number;
-  isLoading?: boolean;
-  onConfirm: (reservationId: string) => void;
-  onReject: (reservation: Reservation, mode: "reject" | "cancel") => void;
-  onPaidOffline: (reservationId: string) => void;
-}) {
-  const isCreated = reservation.reservationStatus === "CREATED";
-  const isAwaitingPayment =
-    reservation.reservationStatus === "AWAITING_PAYMENT";
-  const stageLabel = isCreated
-    ? "Needs acceptance"
-    : isAwaitingPayment
-      ? "Awaiting payment"
-      : "Payment marked";
-  const stageClassName = isCreated
-    ? "bg-warning-light text-warning border-warning/20"
-    : isAwaitingPayment
-      ? "bg-warning/10 text-warning border-warning/20"
-      : "bg-primary/10 text-primary border-primary/20";
-  const expiryLabel = getReservationExpiresLabel(reservation, nowMs);
-
-  return (
-    <Card className="gap-4 border-border/80 shadow-none">
-      <CardHeader className="gap-4 sm:grid-cols-[1fr_auto]">
-        <div className="space-y-2">
-          <div className="flex flex-wrap items-center gap-2">
-            <CardTitle className="text-base font-heading">
-              {reservation.playerName}
-            </CardTitle>
-            <Badge variant="outline" className={stageClassName}>
-              {stageLabel}
-            </Badge>
-            {reservation.isGroupPrimary && reservation.groupItemCount ? (
-              <Badge variant="secondary">
-                Group booking · {reservation.groupItemCount}
-              </Badge>
-            ) : null}
-          </div>
-          <CardDescription className="text-sm">
-            {reservation.courtName}
-          </CardDescription>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
-            <span>
-              {formatReservationDate(reservation)} ·{" "}
-              {formatReservationTimeRange(reservation)}
-            </span>
-            <span>{reservation.playerPhone || reservation.playerEmail}</span>
-            <span>
-              {formatCurrency(reservation.amountCents, reservation.currency)}
-            </span>
-          </div>
-        </div>
-        <div className="space-y-1 text-left text-sm sm:text-right">
-          <p className="font-medium text-foreground">
-            {formatCurrency(reservation.amountCents, reservation.currency)}
-          </p>
-          {expiryLabel ? (
-            <p className="text-muted-foreground">{expiryLabel}</p>
-          ) : null}
-          <p className="text-muted-foreground">
-            Created {formatRelativeFrom(reservation.createdAt, nowMs)}
-          </p>
-        </div>
-      </CardHeader>
-
-      <CardContent className="space-y-4">
-        {reservation.paymentProof ? (
-          <div className="rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-sm text-primary">
-            Payment proof attached
-            {reservation.paymentProof.referenceNumber
-              ? ` · Ref ${reservation.paymentProof.referenceNumber}`
-              : ""}
-          </div>
-        ) : null}
-
-        {reservation.isGroupPrimary && reservation.groupItems?.length ? (
-          <div className="rounded-lg border bg-muted/20 p-3">
-            <p className="text-sm font-medium">Grouped items</p>
-            <div className="mt-2 space-y-2">
-              {reservation.groupItems.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex flex-wrap items-center justify-between gap-2 text-sm"
-                >
-                  <span>{item.courtName}</span>
-                  <span className="text-muted-foreground">
-                    {formatReservationDate(item)} ·{" "}
-                    {formatReservationTimeRange(item)}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-        ) : null}
-
-        <div className="flex flex-wrap gap-2">
-          {!isAwaitingPayment ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onConfirm(reservation.id)}
-              disabled={isLoading}
-            >
-              {isCreated ? "Accept" : "Confirm"}
-            </Button>
-          ) : null}
-
-          {isCreated && reservation.amountCents > 0 ? (
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={() => onPaidOffline(reservation.id)}
-              disabled={isLoading}
-            >
-              Paid & Confirmed
-            </Button>
-          ) : null}
-
-          {isAwaitingPayment ? (
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={() => onReject(reservation, "cancel")}
-              disabled={isLoading}
-            >
-              Cancel
-            </Button>
-          ) : (
-            <Button
-              variant="outline"
-              size="sm"
-              className="text-destructive hover:text-destructive hover:bg-destructive/10"
-              onClick={() => onReject(reservation, "reject")}
-              disabled={isLoading}
-            >
-              Reject
-            </Button>
-          )}
-
-          <Button variant="ghost" size="sm" asChild>
-            <Link
-              href={appRoutes.organization.reservationDetail(reservation.id)}
-            >
-              View details
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
-    </Card>
-  );
-}
+const STATUS_CHIPS: {
+  value: StatusFilter;
+  label: string;
+  countKey?: keyof ReturnType<typeof computeCounts>;
+}[] = [
+  { value: "all", label: "All Active" },
+  { value: "needs-action", label: "Needs Action", countKey: "needsAction" },
+  {
+    value: "awaiting-payment",
+    label: "Awaiting Payment",
+    countKey: "awaitingPayment",
+  },
+  { value: "confirmed", label: "Confirmed", countKey: "confirmed" },
+  { value: "past", label: "Past", countKey: "past" },
+];
 
 export default function OwnerReservationsPage() {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
   const { invalidateOwnerReservationsOverview } = useModOwnerInvalidation();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
-  const [nowMs, setNowMs] = React.useState(() => Date.now());
 
-  const [viewParam, setViewParam] = useQueryState(
-    VIEW_PARAM,
-    parseAsString.withOptions({ history: "replace" }),
+  const [statusParam, setStatusParam] = useQueryState(
+    "status",
+    parseAsStringLiteral(STATUS_VALUES)
+      .withDefault("all")
+      .withOptions({ history: "replace" }),
   );
   const [searchQuery, setSearchQuery] = useQueryState(
     SEARCH_PARAM,
     parseAsString.withOptions({ history: "replace" }),
   );
-  const [dateFromQuery, setDateFromQuery] = useQueryState(
-    DATE_FROM_PARAM,
-    parseAsString.withOptions({ history: "replace" }),
-  );
-  const [dateToQuery, setDateToQuery] = useQueryState(
-    DATE_TO_PARAM,
-    parseAsString.withOptions({ history: "replace" }),
-  );
-  const [historyParam, setHistoryParam] = useQueryState(
-    HISTORY_PARAM,
-    parseAsString.withOptions({ history: "replace" }),
-  );
 
-  const activeView = isValidView(viewParam) ? viewParam : "inbox";
-  const historyFilter = isValidHistoryFilter(historyParam)
-    ? historyParam
-    : "completed";
-
-  const dateFrom = parseDayKey(dateFromQuery);
-  const dateTo = parseDayKey(dateToQuery);
+  const activeStatus: StatusFilter = statusParam;
 
   const {
     organization,
@@ -482,7 +240,6 @@ export default function OwnerReservationsPage() {
     persistToStorage: false,
   });
 
-  const [historyPage, setHistoryPage] = React.useState(0);
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
   const [paidOfflineDialogOpen, setPaidOfflineDialogOpen] =
@@ -495,47 +252,15 @@ export default function OwnerReservationsPage() {
 
   const search = searchQuery?.trim() || undefined;
 
-  const inboxQuery = useQueryOwnerReservationInbox(organization?.id ?? null, {
+  const allQuery = useModOwnerReservations(organization?.id ?? null, {
     placeId: placeId || undefined,
     courtId: courtId || undefined,
     search,
-    dateFrom,
-    dateTo,
     refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
-    enabled: activeView === "inbox",
   });
 
-  const scheduleQuery = useQueryOwnerReservationSchedule(
-    organization?.id ?? null,
-    {
-      placeId: placeId || undefined,
-      courtId: courtId || undefined,
-      search,
-      dateFrom,
-      dateTo,
-      enabled: activeView === "schedule",
-    },
-  );
-
-  const historyScope = HISTORY_STATUS_MAP[historyFilter];
-  const historyQuery = useQueryOwnerReservationHistoryList(
-    organization?.id ?? null,
-    {
-      placeId: placeId || undefined,
-      courtId: courtId || undefined,
-      search,
-      dateFrom,
-      dateTo,
-      statuses: historyScope.statuses,
-      timeBucket: historyScope.timeBucket,
-      limit: HISTORY_PAGE_SIZE,
-      offset: historyPage * HISTORY_PAGE_SIZE,
-      enabled: activeView === "history",
-    },
-  );
-
   useModOwnerReservationRealtimeStream({
-    enabled: Boolean(organization?.id) && activeView === "inbox",
+    enabled: Boolean(organization?.id),
   });
 
   const acceptMutation = useMutAcceptReservation();
@@ -566,108 +291,20 @@ export default function OwnerReservationsPage() {
     defaultValues: { paymentMethodId: "", paymentReference: "" },
   });
 
-  React.useEffect(() => {
-    if (activeView !== "inbox") return;
-    const timer = window.setInterval(() => setNowMs(Date.now()), 1000);
-    return () => window.clearInterval(timer);
-  }, [activeView]);
+  const allReservations = allQuery.data ?? [];
 
-  const historyResetKey = [
-    placeId,
-    courtId,
-    searchQuery ?? "",
-    dateFromQuery ?? "",
-    dateToQuery ?? "",
-    historyFilter,
-  ].join("::");
-
-  React.useEffect(() => {
-    if (!historyResetKey) return;
-    setHistoryPage(0);
-  }, [historyResetKey]);
-
-  const inboxReservations = React.useMemo(() => {
-    const reservations = inboxQuery.data ?? [];
-    const priority: Record<InboxSectionKey, Reservation["reservationStatus"]> =
-      {
-        "payment-marked": "PAYMENT_MARKED_BY_USER",
-        "needs-acceptance": "CREATED",
-        "awaiting-payment": "AWAITING_PAYMENT",
-      };
-
-    return INBOX_SECTIONS.map((section) => ({
-      ...section,
-      reservations: reservations
-        .filter(
-          (reservation) =>
-            reservation.reservationStatus === priority[section.key],
-        )
-        .sort((a, b) => getReservationStartMs(a) - getReservationStartMs(b)),
-    }));
-  }, [inboxQuery.data]);
-
-  const inboxCounts = React.useMemo(() => {
-    const reservations = inboxQuery.data ?? [];
-    const needsAcceptance = reservations.filter(
-      (reservation) => reservation.reservationStatus === "CREATED",
-    ).length;
-    const paymentMarked = reservations.filter(
-      (reservation) =>
-        reservation.reservationStatus === "PAYMENT_MARKED_BY_USER",
-    ).length;
-    const awaitingPayment = reservations.filter(
-      (reservation) => reservation.reservationStatus === "AWAITING_PAYMENT",
-    ).length;
-
-    return {
-      total: reservations.length,
-      needsAcceptance,
-      paymentMarked,
-      awaitingPayment,
-    };
-  }, [inboxQuery.data]);
-
-  const scheduleReservations = React.useMemo(
-    () =>
-      [...(scheduleQuery.data ?? [])].sort(
-        (a, b) => getReservationStartMs(a) - getReservationStartMs(b),
-      ),
-    [scheduleQuery.data],
+  const counts = React.useMemo(
+    () => computeCounts(allReservations),
+    [allReservations],
   );
 
-  const todayReservations = React.useMemo(
-    () =>
-      scheduleReservations.filter(
-        (reservation) =>
-          reservation.date ===
-          getZonedDayKey(new Date(), reservation.placeTimeZone),
-      ),
-    [scheduleReservations],
-  );
-
-  const upcomingReservations = React.useMemo(
-    () =>
-      scheduleReservations.filter(
-        (reservation) =>
-          reservation.date !==
-          getZonedDayKey(new Date(), reservation.placeTimeZone),
-      ),
-    [scheduleReservations],
-  );
-
-  const historyReservations = React.useMemo(() => {
-    const reservations = [...(historyQuery.data ?? [])];
-    if (historyFilter === "completed") {
-      return reservations.sort(
-        (a, b) => getReservationEndMs(b) - getReservationEndMs(a),
-      );
-    }
-    return reservations.sort(
+  const filteredReservations = React.useMemo(() => {
+    const filtered = filterByStatus(allReservations, activeStatus);
+    return [...filtered].sort(
       (a, b) =>
-        (parseDate(b.createdAt)?.getTime() ?? 0) -
-        (parseDate(a.createdAt)?.getTime() ?? 0),
+        new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
-  }, [historyFilter, historyQuery.data]);
+  }, [allReservations, activeStatus]);
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -687,7 +324,7 @@ export default function OwnerReservationsPage() {
   };
 
   const handleOpenConfirm = (reservationId: string) => {
-    const reservation = inboxQuery.data?.find(
+    const reservation = allReservations.find(
       (item) => item.id === reservationId,
     );
     if (!reservation) return;
@@ -695,17 +332,28 @@ export default function OwnerReservationsPage() {
     setConfirmDialogOpen(true);
   };
 
-  const handleOpenReject = (
-    reservation: Reservation,
-    mode: "reject" | "cancel",
-  ) => {
+  const handleOpenReject = (reservationId: string) => {
+    const reservation = allReservations.find(
+      (item) => item.id === reservationId,
+    );
+    if (!reservation) return;
     setSelectedReservation(reservation);
-    setRejectMode(mode);
+    setRejectMode("reject");
+    setRejectModalOpen(true);
+  };
+
+  const handleOpenCancel = (reservationId: string) => {
+    const reservation = allReservations.find(
+      (item) => item.id === reservationId,
+    );
+    if (!reservation) return;
+    setSelectedReservation(reservation);
+    setRejectMode("cancel");
     setRejectModalOpen(true);
   };
 
   const handleOpenPaidOffline = (reservationId: string) => {
-    const reservation = inboxQuery.data?.find(
+    const reservation = allReservations.find(
       (item) => item.id === reservationId,
     );
     if (!reservation) return;
@@ -833,12 +481,24 @@ export default function OwnerReservationsPage() {
       >
         <div className="space-y-6">
           <Skeleton className="h-12 w-72" />
-          <Skeleton className="h-28 w-full" />
-          <Skeleton className="h-20 w-full" />
+          <Skeleton className="h-10 w-full" />
           <Skeleton className="h-96 w-full" />
         </div>
       </AppShell>
     );
+  }
+
+  const summaryParts: string[] = [];
+  if (counts.needsAction > 0) {
+    summaryParts.push(
+      `${counts.needsAction} need${counts.needsAction === 1 ? "s" : ""} action`,
+    );
+  }
+  if (counts.awaitingPayment > 0) {
+    summaryParts.push(`${counts.awaitingPayment} awaiting payment`);
+  }
+  if (counts.confirmed > 0) {
+    summaryParts.push(`${counts.confirmed} confirmed`);
   }
 
   return (
@@ -869,7 +529,6 @@ export default function OwnerReservationsPage() {
       <div className="space-y-6">
         <PageHeader
           title="Reservations"
-          description="Clear urgent requests fast, then switch to schedule or history when you need to browse."
           actions={
             <Button
               variant="outline"
@@ -887,339 +546,100 @@ export default function OwnerReservationsPage() {
 
         <OwnerPaymentMethodReminder />
 
-        {activeView === "inbox" ? (
-          <div className="grid gap-4 md:grid-cols-3">
-            <Card className="gap-3 shadow-none">
-              <CardHeader className="gap-1">
-                <CardDescription>Ready now</CardDescription>
-                <CardTitle className="font-heading text-2xl">
-                  {inboxCounts.paymentMarked + inboxCounts.needsAcceptance}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                Payment confirmations and fresh booking requests.
-              </CardContent>
-            </Card>
-            <Card className="gap-3 shadow-none">
-              <CardHeader className="gap-1">
-                <CardDescription>Awaiting player</CardDescription>
-                <CardTitle className="font-heading text-2xl">
-                  {inboxCounts.awaitingPayment}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                Accepted reservations that still need payment.
-              </CardContent>
-            </Card>
-            <Card className="gap-3 shadow-none">
-              <CardHeader className="gap-1">
-                <CardDescription>Queue size</CardDescription>
-                <CardTitle className="font-heading text-2xl">
-                  {inboxCounts.total}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                Unresolved reservations currently in your inbox.
-              </CardContent>
-            </Card>
-          </div>
+        {summaryParts.length > 0 && !allQuery.isLoading ? (
+          <p className="text-sm text-muted-foreground">
+            {summaryParts.join(" · ")}
+          </p>
         ) : null}
 
-        <div className="sticky top-3 z-10 rounded-xl border bg-background/95 p-4 shadow-sm backdrop-blur supports-[backdrop-filter]:bg-background/80">
-          <div className="flex flex-col gap-4">
-            <Tabs
-              value={activeView}
-              onValueChange={(value) => {
-                void setViewParam(value);
-              }}
-            >
-              <TabsList>
-                {VIEW_OPTIONS.map((option) => (
-                  <TabsTrigger key={option.value} value={option.value}>
-                    {option.label}
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
-
-            <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
-              <PlaceCourtFilter
-                places={places}
-                courts={courts}
-                placeId={placeId}
-                courtId={courtId}
-                onPlaceChange={(value) =>
-                  setPlaceId(value === "all" ? "" : value)
-                }
-                onCourtChange={(value) =>
-                  setCourtId(value === "all" ? "" : value)
-                }
-              />
-
-              <div className="flex flex-wrap gap-2">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "justify-start text-left font-normal",
-                        !dateFrom && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateFrom ? format(dateFrom, "MMM d") : "From"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateFrom}
-                      onSelect={(value) =>
-                        void setDateFromQuery(
-                          value ? format(value, "yyyy-MM-dd") : null,
-                        )
-                      }
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "justify-start text-left font-normal",
-                        !dateTo && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {dateTo ? format(dateTo, "MMM d") : "To"}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={dateTo}
-                      onSelect={(value) =>
-                        void setDateToQuery(
-                          value ? format(value, "yyyy-MM-dd") : null,
-                        )
-                      }
-                      disabled={(value) =>
-                        dateFrom ? value < dateFrom : false
-                      }
-                    />
-                  </PopoverContent>
-                </Popover>
-
-                {(dateFromQuery || dateToQuery) && (
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => {
-                      void setDateFromQuery(null);
-                      void setDateToQuery(null);
-                    }}
+        <div className="flex flex-wrap gap-2">
+          {STATUS_CHIPS.map((chip) => {
+            const isActive = activeStatus === chip.value;
+            const count = chip.countKey ? counts[chip.countKey] : undefined;
+            return (
+              <Button
+                key={chip.value}
+                type="button"
+                variant={isActive ? "secondary" : "outline"}
+                onClick={() => void setStatusParam(chip.value)}
+              >
+                {chip.label}
+                {count !== undefined && count > 0 ? (
+                  <Badge
+                    variant="secondary"
+                    className={cn(
+                      "ml-2 px-1.5 py-0 text-xs",
+                      isActive && "bg-background",
+                    )}
                   >
-                    Clear dates
-                  </Button>
-                )}
-              </div>
-
-              <div className="relative w-full xl:ml-auto xl:max-w-sm">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-                <Input
-                  placeholder="Search player, phone, email, or court"
-                  value={searchQuery ?? ""}
-                  onChange={(event) =>
-                    void setSearchQuery(event.target.value || null)
-                  }
-                  className="pl-9"
-                />
-              </div>
-            </div>
-          </div>
+                    {count}
+                  </Badge>
+                ) : null}
+              </Button>
+            );
+          })}
         </div>
 
-        {activeView === "inbox" ? (
-          <div className="space-y-6">
-            {inboxQuery.isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-36 w-full" />
-                <Skeleton className="h-36 w-full" />
-                <Skeleton className="h-36 w-full" />
-              </div>
-            ) : inboxCounts.total === 0 ? (
-              <ReservationsEmptyState
-                icon={CheckCircle2}
-                title="Inbox cleared"
-                description="All unresolved reservations are handled. New requests will appear here."
-              />
-            ) : (
-              inboxReservations.map((section) => (
-                <section key={section.key} className="space-y-3">
-                  <div className="flex flex-wrap items-end justify-between gap-3">
-                    <div>
-                      <h2 className="font-heading text-lg font-semibold">
-                        {section.label}
-                      </h2>
-                      <p className="text-sm text-muted-foreground">
-                        {section.description}
-                      </p>
-                    </div>
-                    <Badge variant="secondary">
-                      {section.reservations.length}
-                    </Badge>
-                  </div>
-
-                  {section.reservations.length === 0 ? (
-                    <ReservationsEmptyState
-                      icon={Clock3}
-                      title={section.emptyTitle}
-                      description={section.emptyDescription}
-                    />
-                  ) : (
-                    <div className="space-y-4">
-                      {section.reservations.map((reservation) => (
-                        <InboxReservationCard
-                          key={reservation.id}
-                          reservation={reservation}
-                          nowMs={nowMs}
-                          isLoading={mutationIsPending}
-                          onConfirm={handleOpenConfirm}
-                          onReject={handleOpenReject}
-                          onPaidOffline={handleOpenPaidOffline}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </section>
-              ))
-            )}
+        <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
+          <div className="relative w-full xl:max-w-sm">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder="Search player, phone, email, or court"
+              value={searchQuery ?? ""}
+              onChange={(event) =>
+                void setSearchQuery(event.target.value || null)
+              }
+              className="pl-9"
+            />
           </div>
-        ) : null}
+          <PlaceCourtFilter
+            places={places}
+            courts={courts}
+            placeId={placeId}
+            courtId={courtId}
+            onPlaceChange={(value) =>
+              setPlaceId(value === "all" ? "" : value)
+            }
+            onCourtChange={(value) =>
+              setCourtId(value === "all" ? "" : value)
+            }
+          />
+        </div>
 
-        {activeView === "schedule" ? (
-          <div>
-            {scheduleQuery.isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-14 w-full" />
-                <Skeleton className="h-64 w-full" />
-              </div>
-            ) : scheduleReservations.length === 0 ? (
-              <ReservationsEmptyState
-                icon={CalendarIcon}
-                title="No upcoming reservations"
-                description="Confirmed reservations for today and later will appear here."
-              />
-            ) : (
-              <div className="space-y-6">
-                <section className="space-y-3">
-                  <div>
-                    <h2 className="font-heading text-lg font-semibold">
-                      Today
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Confirmed reservations happening today.
-                    </p>
-                  </div>
-                  {todayReservations.length === 0 ? (
-                    <ReservationsEmptyState
-                      icon={CalendarIcon}
-                      title="Nothing booked today"
-                      description="Today's confirmed reservations will appear here."
-                    />
-                  ) : (
-                    <ReservationsTable reservations={todayReservations} />
-                  )}
-                </section>
-
-                <section className="space-y-3">
-                  <div>
-                    <h2 className="font-heading text-lg font-semibold">
-                      Upcoming
-                    </h2>
-                    <p className="text-sm text-muted-foreground">
-                      Future confirmed reservations across your venues.
-                    </p>
-                  </div>
-                  {upcomingReservations.length === 0 ? (
-                    <ReservationsEmptyState
-                      icon={CalendarIcon}
-                      title="No future bookings"
-                      description="Future confirmed reservations will show here."
-                    />
-                  ) : (
-                    <ReservationsTable reservations={upcomingReservations} />
-                  )}
-                </section>
-              </div>
-            )}
+        {allQuery.isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-36 w-full" />
+            <Skeleton className="h-36 w-full" />
+            <Skeleton className="h-36 w-full" />
           </div>
-        ) : null}
-
-        {activeView === "history" ? (
-          <div>
-            <div className="mb-4 flex flex-wrap gap-2">
-              {Object.entries(HISTORY_STATUS_MAP).map(([value, config]) => {
-                const isActive = historyFilter === value;
-                return (
-                  <Button
-                    key={value}
-                    type="button"
-                    size="sm"
-                    variant={isActive ? "secondary" : "ghost"}
-                    onClick={() => void setHistoryParam(value)}
-                  >
-                    {config.label}
-                  </Button>
-                );
-              })}
-            </div>
-
-            {historyQuery.isLoading ? (
-              <div className="space-y-4">
-                <Skeleton className="h-14 w-full" />
-                <Skeleton className="h-64 w-full" />
-              </div>
-            ) : historyReservations.length === 0 ? (
-              <ReservationsEmptyState
-                icon={History}
-                title={`No ${historyScope.label.toLowerCase()} reservations`}
-                description="Adjust your filters or date range to broaden the result set."
-              />
-            ) : (
-              <div className="space-y-4">
-                <ReservationsTable reservations={historyReservations} />
-                <div className="flex items-center justify-between gap-3">
-                  <p className="text-sm text-muted-foreground">
-                    Page {historyPage + 1}
-                  </p>
-                  <div className="flex gap-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={historyPage === 0}
-                      onClick={() =>
-                        setHistoryPage((page) => Math.max(0, page - 1))
-                      }
-                    >
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      disabled={historyReservations.length < HISTORY_PAGE_SIZE}
-                      onClick={() => setHistoryPage((page) => page + 1)}
-                    >
-                      Next
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ) : null}
+        ) : filteredReservations.length === 0 ? (
+          <Empty className="border-0 bg-muted/20 py-10">
+            <EmptyHeader>
+              <EmptyMedia variant="icon">
+                <CheckCircle2 />
+              </EmptyMedia>
+              <EmptyTitle>
+                {activeStatus === "all" ? "All clear" : "No reservations"}
+              </EmptyTitle>
+              <EmptyDescription>
+                {activeStatus === "all"
+                  ? "No active reservations right now. New requests will appear here."
+                  : activeStatus === "past"
+                    ? "No past reservations found."
+                    : "Nothing matches this filter right now."}
+              </EmptyDescription>
+            </EmptyHeader>
+          </Empty>
+        ) : (
+          <ReservationsTable
+            reservations={filteredReservations}
+            onConfirm={handleOpenConfirm}
+            onConfirmPaidOffline={handleOpenPaidOffline}
+            onReject={handleOpenReject}
+            onCancel={handleOpenCancel}
+            isLoading={mutationIsPending}
+          />
+        )}
       </div>
 
       <ConfirmDialog

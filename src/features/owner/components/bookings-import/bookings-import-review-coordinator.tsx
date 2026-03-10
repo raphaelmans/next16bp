@@ -248,6 +248,10 @@ export default function OwnerBookingsImportReviewView({
 
   const discardMutation = useMutOwnerImportDiscardJob({
     onSuccess: () => {
+      void invalidateImportRowsAndJob(rowsQueryInput, { jobId });
+      void invalidateImportAiUsage({
+        placeId: jobQuery.data?.placeId ?? "",
+      });
       toast.success("Import discarded");
       if (onComplete) {
         onComplete();

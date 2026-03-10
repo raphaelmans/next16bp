@@ -12,6 +12,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface PaymentMethod {
   id: string;
@@ -26,12 +27,14 @@ interface PaymentMethod {
 interface PaymentInfoCardProps {
   paymentMethods?: PaymentMethod[];
   expiresInMinutes?: number;
+  isLoading?: boolean;
   className?: string;
 }
 
 export function PaymentInfoCard({
   paymentMethods = [],
   expiresInMinutes = 15,
+  isLoading = false,
   className,
 }: PaymentInfoCardProps) {
   const hasMethods = paymentMethods.length > 0;
@@ -50,7 +53,12 @@ export function PaymentInfoCard({
           </AlertDescription>
         </Alert>
 
-        {hasMethods ? (
+        {isLoading ? (
+          <div className="space-y-4">
+            <Skeleton className="h-28 w-full rounded-lg" />
+            <Skeleton className="h-28 w-full rounded-lg" />
+          </div>
+        ) : hasMethods ? (
           <div className="space-y-4">
             {paymentMethods.map((method) => (
               <PaymentMethodItem key={method.id} method={method} />

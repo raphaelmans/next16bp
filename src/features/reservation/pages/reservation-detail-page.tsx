@@ -28,7 +28,6 @@ import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
 import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
@@ -620,22 +619,11 @@ export default function ReservationDetailPage({
                   </Card>
 
                   <div ref={paymentInfoSectionRef}>
-                    {isPaymentPanelBusy ? (
-                      <Card>
-                        <CardHeader>
-                          <Skeleton className="h-6 w-40" />
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <Skeleton className="h-14 w-full rounded-xl" />
-                          <Skeleton className="h-24 w-full rounded-xl" />
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <PaymentInfoCard
-                        paymentMethods={paymentInfo?.methods}
-                        expiresInMinutes={groupExpiresInMinutes}
-                      />
-                    )}
+                    <PaymentInfoCard
+                      paymentMethods={paymentInfo?.methods}
+                      expiresInMinutes={groupExpiresInMinutes}
+                      isLoading={isPaymentPanelBusy}
+                    />
                   </div>
 
                   {isChatEnabledForReservationStatus ? (
@@ -702,22 +690,11 @@ export default function ReservationDetailPage({
                   </Card>
 
                   <div ref={paymentInfoSectionRef}>
-                    {isPaymentPanelBusy ? (
-                      <Card>
-                        <CardHeader>
-                          <Skeleton className="h-6 w-40" />
-                        </CardHeader>
-                        <CardContent className="space-y-4">
-                          <Skeleton className="h-14 w-full rounded-xl" />
-                          <Skeleton className="h-24 w-full rounded-xl" />
-                        </CardContent>
-                      </Card>
-                    ) : (
-                      <PaymentInfoCard
-                        paymentMethods={paymentInfo?.methods}
-                        expiresInMinutes={expiresInMinutes}
-                      />
-                    )}
+                    <PaymentInfoCard
+                      paymentMethods={paymentInfo?.methods}
+                      expiresInMinutes={expiresInMinutes}
+                      isLoading={isPaymentPanelBusy}
+                    />
                   </div>
 
                   {isChatEnabledForReservationStatus ? (

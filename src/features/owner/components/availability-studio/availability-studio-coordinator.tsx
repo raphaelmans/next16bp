@@ -486,7 +486,6 @@ function OwnerAvailabilityStudioInner() {
   const {
     invalidateActiveReservationsForCourtRange,
     invalidateCourtBlocksRange,
-    invalidateImportRows,
     invalidateImportRowsAndJob,
   } = useModOwnerInvalidation();
   const [pendingBlockIds, setPendingBlockIds] = React.useState<Set<string>>(
@@ -1099,7 +1098,7 @@ function OwnerAvailabilityStudioInner() {
       closeReplaceDialog();
       void invalidateCourtBlocksRange(blocksQueryInput);
       void invalidateActiveReservationsForCourtRange(reservationsQueryInput);
-      void invalidateImportRows(draftRowsQueryInput);
+      void invalidateImportRowsAndJob(draftRowsQueryInput, { jobId });
     },
     onError(error) {
       toast.error("Unable to replace block", {
@@ -1108,11 +1107,13 @@ function OwnerAvailabilityStudioInner() {
     },
   });
   const convertWalkInMutation = useMutOwnerConvertWalkInBlockToGuest({
+    onSettled() {
+      void invalidateCourtBlocksRange(blocksQueryInput);
+      void invalidateActiveReservationsForCourtRange(reservationsQueryInput);
+    },
     onSuccess() {
       toast.success("Walk-in converted to guest booking");
       closeReplaceDialog();
-      void invalidateCourtBlocksRange(blocksQueryInput);
-      void invalidateActiveReservationsForCourtRange(reservationsQueryInput);
     },
     onError(error) {
       toast.error("Unable to convert walk-in", {
@@ -1267,13 +1268,14 @@ function OwnerAvailabilityStudioInner() {
     try {
       await discardImport.mutateAsync({ jobId });
       toast.success("Import discarded");
+      void invalidateImportRowsAndJob(draftRowsQueryInput, { jobId });
       setJobIdParam(null);
     } catch (error) {
       toast.error("Unable to discard import", {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
-  }, [discardImport, jobId, setJobIdParam]);
+  }, [discardImport, draftRowsQueryInput, invalidateImportRowsAndJob, jobId, setJobIdParam]);
 
   // Track which day column committed the range in week view
   const [weekCommittedDayKey, setWeekCommittedDayKey] = React.useState<

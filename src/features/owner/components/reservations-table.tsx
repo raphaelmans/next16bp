@@ -34,6 +34,7 @@ interface ReservationsTableProps {
   onConfirm?: (reservationId: string) => void;
   onConfirmPaidOffline?: (reservationId: string) => void;
   onReject?: (reservationId: string) => void;
+  onCancel?: (reservationId: string) => void;
   isLoading?: boolean;
 }
 
@@ -97,6 +98,7 @@ export function ReservationsTable({
   onConfirm,
   onConfirmPaidOffline,
   onReject,
+  onCancel,
   isLoading,
 }: ReservationsTableProps) {
   const [expandedRow, setExpandedRow] = React.useState<string | null>(null);
@@ -156,8 +158,10 @@ export function ReservationsTable({
     const canAccept = reservation.reservationStatus === "CREATED";
     const canConfirm =
       reservation.reservationStatus === "PAYMENT_MARKED_BY_USER";
+    const canCancel = reservation.reservationStatus === "AWAITING_PAYMENT";
     const canReject = canAccept || canConfirm;
     const confirmLabel = canAccept ? "Accept" : "Confirm";
+    const hasActions = canReject || canCancel;
 
     const createdAtDate = parseIsoDate(reservation.createdAt);
     const expiresAtDate = parseIsoDate(reservation.expiresAt);
@@ -173,7 +177,7 @@ export function ReservationsTable({
         <CardContent className="p-4">
           <div className="flex items-start justify-between mb-3">
             <div>
-              <p className="font-medium">{reservation.courtName}</p>
+              <p className="text-base font-medium">{reservation.courtName}</p>
               <p className="text-sm text-muted-foreground">
                 {format(new Date(reservation.date), "MMM d, yyyy")} &middot;{" "}
                 {reservation.startTime} - {reservation.endTime}
@@ -191,7 +195,7 @@ export function ReservationsTable({
             <div className="flex flex-col items-end gap-1">
               <Badge
                 variant={config.variant}
-                className={cn("whitespace-nowrap", config.className)}
+                className={cn("whitespace-nowrap text-sm", config.className)}
               >
                 {config.label}
               </Badge>
@@ -203,7 +207,7 @@ export function ReservationsTable({
             </div>
           </div>
 
-          <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center justify-between text-base">
             <div className="flex items-center gap-2">
               <User className="h-4 w-4 text-muted-foreground" />
               <span>{reservation.playerName}</span>
@@ -213,8 +217,8 @@ export function ReservationsTable({
             </span>
           </div>
 
-          <div className="flex gap-2 mt-3">
-            <Button variant="outline" size="sm" className="flex-1" asChild>
+          <div className="flex gap-3 mt-3">
+            <Button variant="outline" className="flex-1" asChild>
               <Link
                 href={appRoutes.organization.reservationDetail(reservation.id)}
               >
@@ -222,10 +226,58 @@ export function ReservationsTable({
                 View
               </Link>
             </Button>
+            {canReject && (
+              <Button
+                className="flex-1 bg-success hover:bg-success/90"
+                onClick={() => onConfirm?.(reservation.id)}
+                disabled={isLoading}
+              >
+                <Check className="h-4 w-4 mr-1" />
+                {confirmLabel}
+              </Button>
+            )}
+            {canReject && (
+              <Button
+                variant="destructive"
+                className="flex-1"
+                onClick={() => onReject?.(reservation.id)}
+                disabled={isLoading}
+              >
+                <X className="h-4 w-4 mr-1" />
+                Reject
+              </Button>
+            )}
+            {canCancel && onCancel && (
+              <Button
+                variant="destructive"
+                className="flex-1"
+                onClick={() => onCancel(reservation.id)}
+                disabled={isLoading}
+              >
+                <X className="h-4 w-4 mr-1" />
+                Cancel
+              </Button>
+            )}
+          </div>
+
+          {hasActions && canAccept && reservation.amountCents > 0 && (
+            <div className="mt-2">
+              <Button
+                variant="outline"
+                className="w-full"
+                onClick={() => onConfirmPaidOffline?.(reservation.id)}
+                disabled={isLoading}
+              >
+                Paid & Confirmed
+              </Button>
+            </div>
+          )}
+
+          <div className="mt-2">
             <Button
               variant="ghost"
               size="sm"
-              className="flex-1"
+              className="w-full"
               onClick={() => toggleRow(reservation.id)}
             >
               {isExpanded ? (
@@ -236,7 +288,7 @@ export function ReservationsTable({
               ) : (
                 <>
                   <ChevronDown className="h-4 w-4 mr-2" />
-                  Expand
+                  Details
                 </>
               )}
             </Button>
@@ -268,41 +320,6 @@ export function ReservationsTable({
                   <p className="text-sm text-muted-foreground">
                     {reservation.notes}
                   </p>
-                </div>
-              )}
-
-              {canReject && (
-                <div className="flex gap-2 pt-2">
-                  <Button
-                    size="sm"
-                    className="flex-1 bg-success hover:bg-success/90"
-                    onClick={() => onConfirm?.(reservation.id)}
-                    disabled={isLoading}
-                  >
-                    <Check className="h-4 w-4 mr-1" />
-                    {confirmLabel}
-                  </Button>
-                  {canAccept && reservation.amountCents > 0 && (
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      className="flex-1"
-                      onClick={() => onConfirmPaidOffline?.(reservation.id)}
-                      disabled={isLoading}
-                    >
-                      Paid & Confirmed
-                    </Button>
-                  )}
-                  <Button
-                    size="sm"
-                    variant="destructive"
-                    className="flex-1"
-                    onClick={() => onReject?.(reservation.id)}
-                    disabled={isLoading}
-                  >
-                    <X className="h-4 w-4 mr-1" />
-                    Reject
-                  </Button>
                 </div>
               )}
             </div>
@@ -342,6 +359,8 @@ export function ReservationsTable({
               const canAccept = reservation.reservationStatus === "CREATED";
               const canConfirm =
                 reservation.reservationStatus === "PAYMENT_MARKED_BY_USER";
+              const canCancel =
+                reservation.reservationStatus === "AWAITING_PAYMENT";
               const canReject = canAccept || canConfirm;
 
               const createdAtDate = parseIsoDate(reservation.createdAt);
@@ -479,6 +498,20 @@ export function ReservationsTable({
                               <X className="h-4 w-4" />
                             </Button>
                           </>
+                        )}
+                        {canCancel && onCancel && (
+                          <Button
+                            size="sm"
+                            variant="destructive"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              onCancel(reservation.id);
+                            }}
+                            disabled={isLoading}
+                          >
+                            <X className="h-4 w-4 mr-1" />
+                            Cancel
+                          </Button>
                         )}
                       </div>
                     </TableCell>

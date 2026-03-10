@@ -35,6 +35,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import {
+  useModOwnerInvalidation,
   useMutOwnerImportCreateDraft,
   useQueryOwnerCourtsByPlace,
   useQueryOwnerImportAiUsage,
@@ -149,6 +150,7 @@ export function BookingsImportUploadForm({
   const [fileRejections, setFileRejections] = useState<FileRejection[]>([]);
   const [inputKey, setInputKey] = useState(0);
 
+  const { invalidateImportJob } = useModOwnerInvalidation();
   const createDraftMutation = useMutOwnerImportCreateDraft();
   const aiUsageQuery = useQueryOwnerImportAiUsage(
     { placeId: selectedPlaceId },
@@ -238,6 +240,7 @@ export function BookingsImportUploadForm({
 
     try {
       const job = await createDraftMutation.mutateAsync(formData);
+      void invalidateImportJob();
       toast.success("Import draft uploaded", {
         description: "Proceeding to review...",
       });

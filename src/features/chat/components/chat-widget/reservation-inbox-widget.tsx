@@ -161,6 +161,7 @@ export function ReservationInboxWidget({
   const [syncErrorMessage, setSyncErrorMessage] = useState<string | null>(null);
   const [isManualRefreshing, setIsManualRefreshing] = useState(false);
 
+  const utils = trpc.useUtils();
   const sendMessageMutation = useMutReservationChatSendMessage();
   const sendGroupMessageMutation = useMutReservationGroupChatSendMessage();
   const archiveThreadMutation = useMutChatInboxArchiveThread();
@@ -909,6 +910,7 @@ export function ReservationInboxWidget({
                 mime_type: a.mimeType,
               })),
             });
+            void utils.chatMessage.listThreadSummaries.invalidate();
             return;
           }
 
@@ -928,6 +930,7 @@ export function ReservationInboxWidget({
               mime_type: a.mimeType,
             })),
           });
+          void utils.chatMessage.listThreadSummaries.invalidate();
         }}
       />
     </div>
