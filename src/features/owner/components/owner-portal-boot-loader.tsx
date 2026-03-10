@@ -5,7 +5,7 @@ import { KudosLogo } from "@/components/kudos";
 export function OwnerPortalBootLoader() {
   return (
     <div
-      className="flex min-h-screen items-center justify-center bg-background"
+      className="flex min-h-dvh items-center justify-center bg-background"
       aria-live="polite"
     >
       <div className="flex flex-col items-center gap-3">

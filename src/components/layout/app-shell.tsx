@@ -31,7 +31,7 @@ export function AppShell({
 
   return (
     <AppShellNestingContext.Provider value={true}>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-dvh bg-background">
         <a
           href="#main-content"
           className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 rounded-md bg-background px-3 py-2 text-sm font-heading font-semibold text-foreground shadow-md"

@@ -31,7 +31,7 @@ export default async function AuthLayout({
     return (
       <AppClientProviders>
         <DiscoveryPublicShell>
-          <div className="flex min-h-[calc(100vh-6rem)] items-center justify-center px-4 py-12">
+          <div className="flex min-h-[calc(100dvh-6rem)] items-center justify-center px-4 py-12">
             {children}
           </div>
         </DiscoveryPublicShell>

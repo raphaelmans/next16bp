@@ -18,7 +18,7 @@ export function PageLayout({
   return (
     <main
       className={cn(
-        "min-h-screen",
+        "min-h-dvh",
         hasNavbar && "pt-24", // Account for fixed navbar
         className,
       )}

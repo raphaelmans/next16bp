@@ -1,5 +1,5 @@
 import { Analytics } from "@vercel/analytics/next";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { IBM_Plex_Mono, Outfit, Source_Sans_3 } from "next/font/google";
 import Script from "next/script";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
@@ -63,6 +63,10 @@ const structuredData = {
       },
     },
   ],
+};
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
 };
 
 export const metadata: Metadata = {

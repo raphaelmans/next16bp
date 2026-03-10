@@ -15,7 +15,7 @@ export default function ProtectedLayout({
 }) {
   return (
     <AppClientProviders>
-      <div className="min-h-screen bg-background">
+      <div className="min-h-dvh bg-background">
         <header className="border-b bg-card">
           <div className="mx-auto w-full px-4 py-4 sm:px-6 lg:px-8">
             <h1 className="text-xl font-heading font-semibold text-foreground">

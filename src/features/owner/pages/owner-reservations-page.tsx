@@ -1,7 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { CheckCircle2, RefreshCw, Search } from "lucide-react";
+import {
+  AlertCircle,
+  CheckCircle2,
+  Clock,
+  CreditCard,
+  ListChecks,
+  RefreshCw,
+  Search,
+  X,
+} from "lucide-react";
 import { parseAsString, parseAsStringLiteral, useQueryState } from "nuqs";
 import * as React from "react";
 import { useForm } from "react-hook-form";
@@ -21,7 +30,6 @@ import {
   StandardFormSelect,
 } from "@/components/form";
 import { AppShell } from "@/components/layout";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -70,6 +78,10 @@ import {
 } from "@/features/owner/hooks";
 import { cn } from "@/lib/utils";
 
+// ---------------------------------------------------------------------------
+// Status filter
+// ---------------------------------------------------------------------------
+
 const STATUS_VALUES = [
   "all",
   "needs-action",
@@ -89,6 +101,10 @@ const paidOfflineFormSchema = z.object({
 
 type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
 
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
+
 function formatReservationDate(reservation: Reservation) {
   return formatDateShortInTimeZone(
     reservation.slotStartTime ?? reservation.createdAt,
@@ -100,7 +116,6 @@ function formatReservationTimeRange(reservation: Reservation) {
   if (!reservation.slotStartTime || !reservation.slotEndTime) {
     return `${reservation.startTime} - ${reservation.endTime}`;
   }
-
   return formatTimeRangeInTimeZone(
     reservation.slotStartTime,
     reservation.slotEndTime,
@@ -124,12 +139,9 @@ function filterByStatus(
           r.reservationStatus === "CREATED" ||
           r.reservationStatus === "AWAITING_PAYMENT" ||
           r.reservationStatus === "PAYMENT_MARKED_BY_USER"
-        ) {
+        )
           return true;
-        }
-        if (r.reservationStatus === "CONFIRMED") {
-          return isUpcoming(r);
-        }
+        if (r.reservationStatus === "CONFIRMED") return isUpcoming(r);
         return false;
       });
     case "needs-action":
@@ -151,12 +163,9 @@ function filterByStatus(
         if (
           r.reservationStatus === "EXPIRED" ||
           r.reservationStatus === "CANCELLED"
-        ) {
+        )
           return true;
-        }
-        if (r.reservationStatus === "CONFIRMED") {
-          return !isUpcoming(r);
-        }
+        if (r.reservationStatus === "CONFIRMED") return !isUpcoming(r);
         return false;
       });
   }
@@ -177,11 +186,8 @@ function computeCounts(reservations: Reservation[]) {
     } else if (r.reservationStatus === "AWAITING_PAYMENT") {
       awaitingPayment++;
     } else if (r.reservationStatus === "CONFIRMED") {
-      if (isUpcoming(r)) {
-        confirmed++;
-      } else {
-        past++;
-      }
+      if (isUpcoming(r)) confirmed++;
+      else past++;
     } else {
       past++;
     }
@@ -190,21 +196,58 @@ function computeCounts(reservations: Reservation[]) {
   return { needsAction, awaitingPayment, confirmed, past };
 }
 
-const STATUS_CHIPS: {
+// ---------------------------------------------------------------------------
+// Chip config
+// ---------------------------------------------------------------------------
+
+type ChipConfig = {
   value: StatusFilter;
   label: string;
+  icon: React.ComponentType<{ className?: string }>;
   countKey?: keyof ReturnType<typeof computeCounts>;
-}[] = [
-  { value: "all", label: "All Active" },
-  { value: "needs-action", label: "Needs Action", countKey: "needsAction" },
+  activeClassName: string;
+};
+
+const STATUS_CHIPS: ChipConfig[] = [
+  {
+    value: "all",
+    label: "All Active",
+    icon: ListChecks,
+    activeClassName: "border-primary/30 bg-primary/5 text-primary",
+  },
+  {
+    value: "needs-action",
+    label: "Needs Action",
+    icon: AlertCircle,
+    countKey: "needsAction",
+    activeClassName: "border-warning/30 bg-warning/10 text-warning",
+  },
   {
     value: "awaiting-payment",
     label: "Awaiting Payment",
+    icon: Clock,
     countKey: "awaitingPayment",
+    activeClassName: "border-warning/30 bg-warning/5 text-warning",
   },
-  { value: "confirmed", label: "Confirmed", countKey: "confirmed" },
-  { value: "past", label: "Past", countKey: "past" },
+  {
+    value: "confirmed",
+    label: "Confirmed",
+    icon: CheckCircle2,
+    countKey: "confirmed",
+    activeClassName: "border-success/30 bg-success/5 text-success",
+  },
+  {
+    value: "past",
+    label: "Past",
+    icon: CreditCard,
+    countKey: "past",
+    activeClassName: "border-border bg-muted/60 text-muted-foreground",
+  },
 ];
+
+// ---------------------------------------------------------------------------
+// Page
+// ---------------------------------------------------------------------------
 
 export default function OwnerReservationsPage() {
   const { data: user } = useQueryAuthSession();
@@ -212,6 +255,7 @@ export default function OwnerReservationsPage() {
   const { invalidateOwnerReservationsOverview } = useModOwnerInvalidation();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
 
+  // URL state
   const [statusParam, setStatusParam] = useQueryState(
     "status",
     parseAsStringLiteral(STATUS_VALUES)
@@ -223,8 +267,17 @@ export default function OwnerReservationsPage() {
     parseAsString.withOptions({ history: "replace" }),
   );
 
+  // Local search input (only applied on submit)
+  const [searchInput, setSearchInput] = React.useState(searchQuery ?? "");
+
+  // Sync local input when URL param changes externally (e.g. back/forward)
+  React.useEffect(() => {
+    setSearchInput(searchQuery ?? "");
+  }, [searchQuery]);
+
   const activeStatus: StatusFilter = statusParam;
 
+  // Org / places / courts
   const {
     organization,
     organizations,
@@ -240,6 +293,7 @@ export default function OwnerReservationsPage() {
     persistToStorage: false,
   });
 
+  // Dialog state
   const [confirmDialogOpen, setConfirmDialogOpen] = React.useState(false);
   const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
   const [paidOfflineDialogOpen, setPaidOfflineDialogOpen] =
@@ -250,8 +304,10 @@ export default function OwnerReservationsPage() {
     "reject",
   );
 
+  // Applied search (from URL)
   const search = searchQuery?.trim() || undefined;
 
+  // Single unified query
   const allQuery = useModOwnerReservations(organization?.id ?? null, {
     placeId: placeId || undefined,
     courtId: courtId || undefined,
@@ -259,10 +315,12 @@ export default function OwnerReservationsPage() {
     refetchIntervalMs: OWNER_UNRESOLVED_REFRESH_INTERVAL_MS,
   });
 
+  // Realtime always on
   useModOwnerReservationRealtimeStream({
     enabled: Boolean(organization?.id),
   });
 
+  // Mutations
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
   const rejectMutation = useMutRejectReservation();
@@ -275,22 +333,20 @@ export default function OwnerReservationsPage() {
     },
   });
 
+  // Payment methods
   const { data: paymentMethodsData } = useQueryOrganizationPaymentMethods(
     organization?.id,
   );
   const paymentMethods = paymentMethodsData?.methods ?? [];
-  const activePaymentMethods = paymentMethods.filter(
-    (method) => method.isActive,
-  );
-  const defaultPaymentMethod = activePaymentMethods.find(
-    (method) => method.isDefault,
-  );
+  const activePaymentMethods = paymentMethods.filter((m) => m.isActive);
+  const defaultPaymentMethod = activePaymentMethods.find((m) => m.isDefault);
 
   const paidOfflineForm = useForm<PaidOfflineFormValues>({
     resolver: zodResolver(paidOfflineFormSchema),
     defaultValues: { paymentMethodId: "", paymentReference: "" },
   });
 
+  // Derived data
   const allReservations = allQuery.data ?? [];
 
   const counts = React.useMemo(
@@ -305,6 +361,10 @@ export default function OwnerReservationsPage() {
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime(),
     );
   }, [allReservations, activeStatus]);
+
+  // -------------------------------------------------------------------------
+  // Handlers
+  // -------------------------------------------------------------------------
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -323,19 +383,25 @@ export default function OwnerReservationsPage() {
     }
   };
 
+  const handleSearchSubmit = () => {
+    const trimmed = searchInput.trim();
+    void setSearchQuery(trimmed || null);
+  };
+
+  const handleSearchClear = () => {
+    setSearchInput("");
+    void setSearchQuery(null);
+  };
+
   const handleOpenConfirm = (reservationId: string) => {
-    const reservation = allReservations.find(
-      (item) => item.id === reservationId,
-    );
+    const reservation = allReservations.find((r) => r.id === reservationId);
     if (!reservation) return;
     setSelectedReservation(reservation);
     setConfirmDialogOpen(true);
   };
 
   const handleOpenReject = (reservationId: string) => {
-    const reservation = allReservations.find(
-      (item) => item.id === reservationId,
-    );
+    const reservation = allReservations.find((r) => r.id === reservationId);
     if (!reservation) return;
     setSelectedReservation(reservation);
     setRejectMode("reject");
@@ -343,9 +409,7 @@ export default function OwnerReservationsPage() {
   };
 
   const handleOpenCancel = (reservationId: string) => {
-    const reservation = allReservations.find(
-      (item) => item.id === reservationId,
-    );
+    const reservation = allReservations.find((r) => r.id === reservationId);
     if (!reservation) return;
     setSelectedReservation(reservation);
     setRejectMode("cancel");
@@ -353,9 +417,7 @@ export default function OwnerReservationsPage() {
   };
 
   const handleOpenPaidOffline = (reservationId: string) => {
-    const reservation = allReservations.find(
-      (item) => item.id === reservationId,
-    );
+    const reservation = allReservations.find((r) => r.id === reservationId);
     if (!reservation) return;
     setSelectedReservation(reservation);
     paidOfflineForm.reset({
@@ -369,25 +431,23 @@ export default function OwnerReservationsPage() {
     if (!selectedReservation) return;
     const isCreated = selectedReservation.reservationStatus === "CREATED";
     const mutation = isCreated ? acceptMutation : confirmMutation;
-    const successMessage = isCreated
-      ? "Reservation accepted"
-      : "Payment confirmed";
-    const errorMessage = isCreated
-      ? "Failed to accept reservation"
-      : "Failed to confirm payment";
 
     mutation.mutate(
-      {
-        reservationId: selectedReservation.id,
-      },
+      { reservationId: selectedReservation.id },
       {
         onSuccess: () => {
-          toast.success(successMessage);
+          toast.success(
+            isCreated ? "Reservation accepted" : "Payment confirmed",
+          );
           setConfirmDialogOpen(false);
           setSelectedReservation(null);
         },
         onError: () => {
-          toast.error(errorMessage);
+          toast.error(
+            isCreated
+              ? "Failed to accept reservation"
+              : "Failed to confirm payment",
+          );
         },
       },
     );
@@ -398,10 +458,7 @@ export default function OwnerReservationsPage() {
     const mutation = rejectMode === "cancel" ? cancelMutation : rejectMutation;
 
     mutation.mutate(
-      {
-        reservationId: selectedReservation.id,
-        reason,
-      },
+      { reservationId: selectedReservation.id, reason },
       {
         onSuccess: () => {
           toast.success(
@@ -441,6 +498,10 @@ export default function OwnerReservationsPage() {
     );
   };
 
+  // -------------------------------------------------------------------------
+  // Derived labels
+  // -------------------------------------------------------------------------
+
   const confirmTitle =
     selectedReservation?.reservationStatus === "CREATED"
       ? "Accept Reservation"
@@ -454,6 +515,10 @@ export default function OwnerReservationsPage() {
     rejectMutation.isPending ||
     cancelMutation.isPending ||
     confirmPaidOfflineMutation.isPending;
+
+  // -------------------------------------------------------------------------
+  // Loading skeleton
+  // -------------------------------------------------------------------------
 
   if (orgLoading) {
     return (
@@ -481,6 +546,11 @@ export default function OwnerReservationsPage() {
       >
         <div className="space-y-6">
           <Skeleton className="h-12 w-72" />
+          <div className="grid gap-3 sm:grid-cols-3">
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+            <Skeleton className="h-20" />
+          </div>
           <Skeleton className="h-10 w-full" />
           <Skeleton className="h-96 w-full" />
         </div>
@@ -488,18 +558,11 @@ export default function OwnerReservationsPage() {
     );
   }
 
-  const summaryParts: string[] = [];
-  if (counts.needsAction > 0) {
-    summaryParts.push(
-      `${counts.needsAction} need${counts.needsAction === 1 ? "s" : ""} action`,
-    );
-  }
-  if (counts.awaitingPayment > 0) {
-    summaryParts.push(`${counts.awaitingPayment} awaiting payment`);
-  }
-  if (counts.confirmed > 0) {
-    summaryParts.push(`${counts.confirmed} confirmed`);
-  }
+  // -------------------------------------------------------------------------
+  // Render
+  // -------------------------------------------------------------------------
+
+  const isSearchActive = Boolean(search);
 
   return (
     <AppShell
@@ -527,6 +590,7 @@ export default function OwnerReservationsPage() {
       }
     >
       <div className="space-y-6">
+        {/* Header */}
         <PageHeader
           title="Reservations"
           actions={
@@ -546,52 +610,96 @@ export default function OwnerReservationsPage() {
 
         <OwnerPaymentMethodReminder />
 
-        {summaryParts.length > 0 && !allQuery.isLoading ? (
-          <p className="text-sm text-muted-foreground">
-            {summaryParts.join(" · ")}
-          </p>
+        {/* Summary triage strip */}
+        {!allQuery.isLoading && (counts.needsAction > 0 || counts.awaitingPayment > 0) ? (
+          <div className="flex flex-wrap items-center gap-3 rounded-xl border border-warning/20 bg-warning/5 px-4 py-3">
+            <AlertCircle className="h-5 w-5 shrink-0 text-warning" />
+            <p className="text-sm font-medium text-foreground">
+              {[
+                counts.needsAction > 0 &&
+                  `${counts.needsAction} need${counts.needsAction === 1 ? "s" : ""} action`,
+                counts.awaitingPayment > 0 &&
+                  `${counts.awaitingPayment} awaiting payment`,
+              ]
+                .filter(Boolean)
+                .join(" · ")}
+            </p>
+          </div>
         ) : null}
 
+        {/* Status filter chips */}
         <div className="flex flex-wrap gap-2">
           {STATUS_CHIPS.map((chip) => {
             const isActive = activeStatus === chip.value;
             const count = chip.countKey ? counts[chip.countKey] : undefined;
+            const ChipIcon = chip.icon;
+
             return (
-              <Button
+              <button
                 key={chip.value}
                 type="button"
-                variant={isActive ? "secondary" : "outline"}
                 onClick={() => void setStatusParam(chip.value)}
+                className={cn(
+                  "inline-flex items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors",
+                  isActive
+                    ? chip.activeClassName
+                    : "border-border bg-background text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                )}
               >
+                <ChipIcon className="h-4 w-4" />
                 {chip.label}
                 {count !== undefined && count > 0 ? (
-                  <Badge
-                    variant="secondary"
+                  <span
                     className={cn(
-                      "ml-2 px-1.5 py-0 text-xs",
-                      isActive && "bg-background",
+                      "ml-0.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-xs font-semibold",
+                      isActive
+                        ? "bg-current/10 text-inherit"
+                        : "bg-muted-foreground/10 text-muted-foreground",
                     )}
                   >
                     {count}
-                  </Badge>
+                  </span>
                 ) : null}
-              </Button>
+              </button>
             );
           })}
         </div>
 
-        <div className="flex flex-col gap-4 xl:flex-row xl:items-center">
-          <div className="relative w-full xl:max-w-sm">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        {/* Search + venue/court filter */}
+        <div className="flex flex-col gap-3 xl:flex-row xl:items-center">
+          <form
+            className="relative w-full xl:max-w-sm"
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleSearchSubmit();
+            }}
+          >
+            <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
-              placeholder="Search player, phone, email, or court"
-              value={searchQuery ?? ""}
-              onChange={(event) =>
-                void setSearchQuery(event.target.value || null)
-              }
-              className="pl-9"
+              type="text"
+              placeholder="Search player, phone, or court"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              className={cn("pl-9", isSearchActive ? "pr-20" : "pr-16")}
             />
-          </div>
+            <div className="absolute right-1.5 top-1/2 flex -translate-y-1/2 items-center gap-1">
+              {isSearchActive ? (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  className="h-7 w-7"
+                  onClick={handleSearchClear}
+                >
+                  <X className="h-3.5 w-3.5" />
+                </Button>
+              ) : null}
+              <Button type="submit" size="sm" className="h-7 rounded-md px-2.5">
+                Search
+              </Button>
+            </div>
+          </form>
+
           <PlaceCourtFilter
             places={places}
             courts={courts}
@@ -606,27 +714,54 @@ export default function OwnerReservationsPage() {
           />
         </div>
 
+        {/* Active search indicator */}
+        {isSearchActive ? (
+          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <span>
+              Showing results for <span className="font-medium text-foreground">"{search}"</span>
+            </span>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="h-6 px-2 text-xs"
+              onClick={handleSearchClear}
+            >
+              Clear
+            </Button>
+          </div>
+        ) : null}
+
+        {/* List */}
         {allQuery.isLoading ? (
-          <div className="space-y-4">
-            <Skeleton className="h-36 w-full" />
-            <Skeleton className="h-36 w-full" />
-            <Skeleton className="h-36 w-full" />
+          <div className="space-y-3">
+            <Skeleton className="h-32 w-full rounded-xl" />
+            <Skeleton className="h-32 w-full rounded-xl" />
+            <Skeleton className="h-32 w-full rounded-xl" />
           </div>
         ) : filteredReservations.length === 0 ? (
-          <Empty className="border-0 bg-muted/20 py-10">
+          <Empty className="border-0 bg-muted/20 py-12">
             <EmptyHeader>
               <EmptyMedia variant="icon">
                 <CheckCircle2 />
               </EmptyMedia>
               <EmptyTitle>
-                {activeStatus === "all" ? "All clear" : "No reservations"}
+                {activeStatus === "all"
+                  ? "All clear"
+                  : activeStatus === "past"
+                    ? "No past reservations"
+                    : "Nothing here"}
               </EmptyTitle>
               <EmptyDescription>
                 {activeStatus === "all"
-                  ? "No active reservations right now. New requests will appear here."
-                  : activeStatus === "past"
-                    ? "No past reservations found."
-                    : "Nothing matches this filter right now."}
+                  ? "No active reservations right now. New requests will appear here automatically."
+                  : activeStatus === "needs-action"
+                    ? "No reservations need your attention right now."
+                    : activeStatus === "awaiting-payment"
+                      ? "No reservations are waiting on payment."
+                      : activeStatus === "confirmed"
+                        ? "No upcoming confirmed reservations."
+                        : "No past reservations found."}
               </EmptyDescription>
             </EmptyHeader>
           </Empty>
@@ -642,6 +777,7 @@ export default function OwnerReservationsPage() {
         )}
       </div>
 
+      {/* Dialogs */}
       <ConfirmDialog
         open={confirmDialogOpen}
         onOpenChange={setConfirmDialogOpen}

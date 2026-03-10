@@ -398,7 +398,9 @@ async function capturePagePayload(
   await page.waitForTimeout(1_500);
 
   const payload = await page.evaluate(() => {
-    const links = Array.from(document.querySelectorAll("a[href]"))
+    const links = Array.from(
+      document.querySelectorAll<HTMLAnchorElement>("a[href]"),
+    )
       .map((anchor) => anchor.href)
       .filter(Boolean)
       .slice(0, 200);

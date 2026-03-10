@@ -212,7 +212,7 @@ export function PlaceDetailMobileSheet({
   }
 
   return (
-    <div className="fixed inset-x-0 bottom-0 z-[60] flex max-h-[85vh] flex-col rounded-t-3xl bg-background pb-[max(0px,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_oklch(0_0_0/0.15)] lg:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-[60] flex max-h-[85dvh] flex-col rounded-t-3xl bg-background pb-[max(0px,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_oklch(0_0_0/0.15)] lg:hidden">
       <button
         type="button"
         className="flex w-full flex-col items-center pt-3 pb-2"

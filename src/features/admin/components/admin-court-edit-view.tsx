@@ -580,7 +580,7 @@ export function AdminCourtEditView({ courtId }: AdminCourtEditViewProps) {
 
   if (courtLoading || provincesCitiesQuery.isLoading || !isFormReady) {
     return (
-      <div className="flex min-h-screen items-center justify-center">
+      <div className="flex min-h-dvh items-center justify-center">
         <Spinner className="size-8" />
       </div>
     );
