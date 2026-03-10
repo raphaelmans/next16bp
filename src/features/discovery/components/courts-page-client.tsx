@@ -545,7 +545,6 @@ function CourtsPageContent({
   );
 
   const filterProps = {
-    q: queryDraft,
     amenities: staged.amenities ?? undefined,
     province: staged.province ?? effectiveProvince ?? undefined,
     city: staged.city ?? effectiveCity ?? undefined,
@@ -555,8 +554,6 @@ function CourtsPageContent({
     verification: staged.verification ?? filters.verification ?? undefined,
     hasClearableFilters,
     resetLocationHref,
-    onQueryChange: setQueryDraft,
-    onQuerySubmit: handleQuerySubmit,
     ...stagedFilterHandlers,
   } as const;
 

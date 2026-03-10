@@ -116,7 +116,6 @@ export default function ReservationDetailPage({
   const {
     data: reservationDetail,
     isLoading: isLoadingReservation,
-    isFetching: isFetchingReservation,
   } = useQueryReservationDetail(
     reservationId,
     RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
@@ -538,11 +537,11 @@ export default function ReservationDetailPage({
             variant="outline"
             size="sm"
             onClick={handleRefresh}
-            disabled={isRefreshing || isFetchingReservation}
+            disabled={isRefreshing}
           >
             <RefreshCw
               className={`h-4 w-4 mr-2 ${
-                isRefreshing || isFetchingReservation ? "animate-spin" : ""
+                isRefreshing ? "animate-spin" : ""
               }`}
             />
             Refresh

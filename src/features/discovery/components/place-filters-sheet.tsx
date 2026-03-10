@@ -14,10 +14,8 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { PlaceFilters } from "./court-filters";
-import { DiscoverySearchField } from "./discovery-search-field";
 
 interface PlaceFiltersSheetProps {
-  q?: string;
   amenities?: string[];
   province?: string;
   city?: string;
@@ -27,8 +25,6 @@ interface PlaceFiltersSheetProps {
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
   hasClearableFilters?: boolean;
   resetLocationHref?: string;
-  onQueryChange: (query: string) => void;
-  onQuerySubmit: () => void;
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
@@ -48,7 +44,6 @@ interface PlaceFiltersSheetProps {
 }
 
 export function PlaceFiltersSheet({
-  q,
   amenities,
   province,
   city,
@@ -58,8 +53,6 @@ export function PlaceFiltersSheet({
   verification,
   hasClearableFilters,
   resetLocationHref,
-  onQueryChange,
-  onQuerySubmit,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
@@ -125,16 +118,7 @@ export function PlaceFiltersSheet({
             <SheetTitle className="font-heading text-base">Filters</SheetTitle>
           </SheetHeader>
 
-          <div className="border-b px-4 py-3">
-            <DiscoverySearchField
-              value={q ?? ""}
-              onValueChange={onQueryChange}
-              onSubmit={onQuerySubmit}
-              className="w-full"
-            />
-          </div>
-
-          <ScrollArea className="flex-1">
+          <ScrollArea className="min-h-0 flex-1">
             <div className="px-4 py-4">
               <PlaceFilters
                 layout="sheet"
