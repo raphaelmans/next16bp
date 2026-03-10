@@ -502,6 +502,19 @@ function buildCsvRow(
   };
 }
 
+function hasReadyVenueAnalysis(
+  item: CapturedPageRecord,
+): item is CapturedPageRecord & { analysis: FacebookPageAnalysis } {
+  return (
+    item.analysis !== null &&
+    item.analysis.status === "ready" &&
+    item.analysis.isVenue &&
+    item.analysis.isWithinScope &&
+    Boolean(item.analysis.name?.trim()) &&
+    Boolean(item.analysis.address?.trim())
+  );
+}
+
 function getPrompt(
   scope: ResolvedCuratedDiscoveryScope,
   payload: CapturedPagePayload,
@@ -782,14 +795,7 @@ async function runScope(
 
   const allCapturedRecords = Array.from(capturedByUrl.values());
   const rows = allCapturedRecords
-    .filter(
-      (item) =>
-        item.analysis?.status === "ready" &&
-        item.analysis.isVenue &&
-        item.analysis.isWithinScope &&
-        item.analysis.name?.trim() &&
-        item.analysis.address?.trim(),
-    )
+    .filter(hasReadyVenueAnalysis)
     .map((item) => buildCsvRow(scope, item.url, item.analysis));
   const dedupedRows = dedupeRows(rows);
   const report = {

@@ -1,13 +1,31 @@
 import { mkdir, readdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { PlaceListingVerifierService } from "@/lib/modules/automations/listing-verifier/services/place-listing-verifier.service";
-import { PlaceListingFixtureSchema } from "@/lib/modules/automations/listing-verifier/shared/place-listing-verifier.schemas";
+import {
+  type PlaceListingDecision,
+  type PlaceListingFixture,
+  PlaceListingFixtureSchema,
+} from "@/lib/modules/automations/listing-verifier/shared/place-listing-verifier.schemas";
 
 interface EvalOptions {
   model: string;
   fixtureDir: string;
   fixtureName: string | null;
   outputDir: string;
+}
+
+interface LoadedFixture {
+  fileName: string;
+  fixture: PlaceListingFixture;
+}
+
+interface EvalResult {
+  fileName: string;
+  fixtureName: string;
+  caseCount: number;
+  mismatchCount: number;
+  mismatches: string[];
+  actual: PlaceListingDecision[];
 }
 
 const DEFAULT_MODEL = "gpt-5-mini";
@@ -85,7 +103,7 @@ function parseArgs(): EvalOptions {
   return options;
 }
 
-async function loadFixtures(options: EvalOptions) {
+async function loadFixtures(options: EvalOptions): Promise<LoadedFixture[]> {
   const fixtureDir = path.resolve(process.cwd(), options.fixtureDir);
   const entries = await readdir(fixtureDir);
   const targetFiles = entries
@@ -93,7 +111,7 @@ async function loadFixtures(options: EvalOptions) {
     .filter((entry) => !options.fixtureName || entry === options.fixtureName)
     .sort();
 
-  const fixtures = [];
+  const fixtures: LoadedFixture[] = [];
   for (const entry of targetFiles) {
     const raw = await readFile(path.join(fixtureDir, entry), "utf-8");
     fixtures.push({
@@ -110,7 +128,7 @@ async function main() {
   const fixtures = await loadFixtures(options);
   const verifier = new PlaceListingVerifierService();
 
-  const results = [];
+  const results: EvalResult[] = [];
 
   for (const { fileName, fixture } of fixtures) {
     const actual = await verifier.verifyBatch(

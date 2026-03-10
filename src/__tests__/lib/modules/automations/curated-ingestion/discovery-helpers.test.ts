@@ -53,7 +53,7 @@ describe("curated lead discovery helpers", () => {
 
   it("classifies static directory pages as map-first and detail pages as direct", () => {
     expect(
-      classifyDiscoveryUrl("https://cebupickleballcourts.com/courts", {}),
+      classifyDiscoveryUrl("https://cebupickleballcourts.com/courts"),
     ).toMatchObject({
       strategy: "map_static_directory",
       shouldMap: true,

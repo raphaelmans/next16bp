@@ -7,6 +7,10 @@ import type {
   PlaceListingEvidenceRow,
 } from "@/lib/modules/automations/listing-verifier/repositories/place-listing-verifier.repository";
 import type { IPlaceListingVerifierService } from "@/lib/modules/automations/listing-verifier/services/place-listing-verifier.service";
+import type {
+  PlaceListingDecision,
+  PlaceListingEvidence,
+} from "@/lib/modules/automations/listing-verifier/shared/place-listing-verifier.schemas";
 import { RunPlaceListingVerifierUseCase } from "@/lib/modules/automations/listing-verifier/use-cases/run-place-listing-verifier.use-case";
 
 class FakeRepository implements IPlaceListingVerifierRepository {
@@ -19,11 +23,9 @@ class FakeRepository implements IPlaceListingVerifierRepository {
 
 class FakeVerifier implements IPlaceListingVerifierService {
   async verifyBatch(
-    batch: Array<{
-      placeId: string;
-      trackingBucket: "curated_place" | "org_created_place";
-    }>,
-  ) {
+    batch: PlaceListingEvidence[],
+    _options: { model: string },
+  ): Promise<PlaceListingDecision[]> {
     return batch.map((item) => ({
       placeId: item.placeId,
       trackingBucket: item.trackingBucket,
