@@ -29,7 +29,7 @@ export function DashboardLayout({
   className,
 }: DashboardLayoutProps) {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="!h-dvh">
       {sidebar}
       <SidebarInset>
         {/* Top navbar */}
