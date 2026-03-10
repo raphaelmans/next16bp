@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "floridablanca",
+    "provinceName": "Pampanga",
+    "cityName": "Floridablanca"
+  },
+  "generatedAt": "2026-03-10T15:07:30.869Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 8,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 8,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 7,
+  "csvRowCount": 0,
+  "failures": []
+}

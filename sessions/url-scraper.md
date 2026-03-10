@@ -62,6 +62,70 @@ Useful artifacts for each scope:
 - `scripts/output/discovery/pickleball/<province>/<city>/curated-courts.approved.csv`
 - `scripts/output/discovery/pickleball/<province>/<city>/curated-courts.dedupe-report.json`
 
+## Most Recent 10-Scope Batch
+
+Run on: `2026-03-11 00:08 PST`
+
+Selection basis:
+
+- highest-density unprocessed cities inferred from `scripts/output/curated-places-export.csv`
+
+Batch scopes executed:
+
+- `negros-occidental / bacolod-city` -> completed duplicate-only (`0 approved`, `1 duplicate`)
+- `bohol / dauis` -> imported `1` new place and left `1` review row
+- `bohol / tagbilaran-city` -> completed duplicate-only (`0 approved`, `1 duplicate`, `1 review`)
+- `bohol / panglao` -> completed duplicate-only (`0 approved`, `1 duplicate`, `1 review`)
+- `leyte / tacloban-city` -> imported `1` new place
+- `misamis-oriental / cagayan-de-oro-city` -> imported `3` new places and matched `1` duplicate
+- `nueva-ecija / cabanatuan-city` -> completed duplicate-only (`0 approved`, `3 duplicates`)
+- `camarines-sur / naga-city` -> completed duplicate-only (`0 approved`, `1 duplicate`)
+- `cebu / toledo-city` -> completed duplicate-only (`0 approved`, `1 duplicate`)
+- `maguindanao / cotabato-city` -> imported `3` new places
+
+Net result for this batch:
+
+- `8` imported places
+- `6` duplicate-only completions
+- `3` review rows
+- `0` scrape failures
+
+Artifacts:
+
+- `scripts/output/discovery/pickleball/bohol/dauis/run-report.json`
+- `scripts/output/discovery/pickleball/leyte/tacloban-city/run-report.json`
+- `scripts/output/discovery/pickleball/misamis-oriental/cagayan-de-oro-city/run-report.json`
+- `scripts/output/discovery/pickleball/maguindanao/cotabato-city/run-report.json`
+
+## Previous 10-Scope Batch
+
+Run on: `2026-03-10 22:56 PST`
+
+Batch scopes executed:
+
+- `cebu / cebu-city` -> completed duplicate-only (`0 approved`, `1 duplicate`)
+- `pampanga / guagua` -> failed at `scrape` with `No candidate URLs after filtering and no fallback rows found`
+- `pampanga / lubao` -> failed at `scrape` with `No candidate URLs after filtering and no fallback rows found`
+- `pampanga / magalang` -> imported `1` new place
+- `pampanga / floridablanca` -> failed at `scrape` with `No candidate URLs after filtering and no fallback rows found`
+- `laguna / san-pablo-city` -> imported `1` new place
+- `laguna / santa-cruz` -> failed at `scrape` with `No candidate URLs after filtering and no fallback rows found`
+- `batangas / tanauan-city` -> failed at `scrape` with `No candidate URLs after filtering and no fallback rows found`
+- `batangas / nasugbu` -> imported `1` new place
+- `negros-oriental / bayawan-city-tulong` -> completed duplicate-only (`0 approved`, `2 duplicates`)
+
+Net result for this batch:
+
+- `3` imported places
+- `2` duplicate-only completions
+- `5` scrape failures
+
+Artifacts:
+
+- `scripts/output/discovery/pickleball/pampanga/magalang/run-report.json`
+- `scripts/output/discovery/pickleball/laguna/san-pablo-city/run-report.json`
+- `scripts/output/discovery/pickleball/batangas/nasugbu/run-report.json`
+
 ## Proven Production Outcomes
 
 Verified net-new places created during this session included:
@@ -105,6 +169,17 @@ Verified net-new places created during this session included:
 - `Zamboanguita Beach Court`
 - `Pototan Pickleball Club`
 - `Sm City Baliwag`
+- `Tg Residence`
+- `Paraiso De Avedad`
+- `Pico De Loro Beach And Country Club`
+- `Quirmita Pickleball Court`
+- `Robinsons North Tacloban`
+- `Middleton Pickleball Club`
+- `Match Point Sports Center`
+- `Xavier Sports And Country Club`
+- `Pmo Court`
+- `Roadside Pickleball`
+- `5th Street Pickleball Court`
 
 ## Repeated Failure Patterns
 
@@ -127,9 +202,16 @@ Verified net-new places created during this session included:
 - Some scopes hit a runner/database failure during duplicate preflight.
 - Example recurring signature:
   - failed stage: `duplicatePreflight`
-  - large `select ... from place left join place_contact_detail left join place_embedding ...`
+- large `select ... from place left join place_contact_detail left join place_embedding ...`
 - One confirmed recent case:
   - `iloilo / cabatuan`
+
+5. Historical complete-state / missing-report mismatch
+- Some older scopes reconcile to fully completed in `run-state.json` but do not have a `run-report.json`.
+- Cause:
+  - the runner skips already-complete scopes before writing a fresh report
+- Resume implication:
+  - when a completed scope has no `run-report.json`, fall back to `run-state.json`
 
 ## Current Safety Status
 
@@ -153,11 +235,15 @@ Verified net-new places created during this session included:
 1. Fix the `duplicatePreflight` DB query failure path before widening to more low-signal municipalities.
 2. Add stronger host-level extraction for the municipalities that repeatedly discover only neighboring-city venues.
 3. Prefer continuing from high-signal adjacent areas first:
-- more Bulacan urban centers
-- more Rizal suburban/club-heavy areas
-- more Negros Oriental municipalities adjacent to Dumaguete/Dauin/Bacong
-- more Iloilo municipalities adjacent to known venue clusters
-4. Use `run-report.json` as the source of truth for whether a scope actually imported, skipped, or failed.
+- use `scripts/output/curated-places-export.csv` to prioritize high-density unprocessed cities before blind geographic expansion
+- review-bearing scopes from the latest batch:
+  - `bohol / dauis`
+  - `bohol / tagbilaran-city`
+  - `bohol / panglao`
+- more Pampanga cluster-adjacent cities after `magalang`
+- more Laguna / Batangas club-heavy cities after `san-pablo-city` and `nasugbu`
+- revisit weak-source scopes only when explicit venue URLs are available for `--urls-file`
+4. Use `run-report.json` as the source of truth when it exists; for older completed scopes with no report, inspect `run-state.json`.
 
 ## Resume Checklist
 
@@ -165,10 +251,11 @@ When resuming later:
 
 1. Read this file.
 2. Inspect recent scope artifacts under `scripts/output/discovery/pickleball/**/run-report.json`.
-3. Continue with:
+3. If a historical completed scope has no `run-report.json`, inspect `run-state.json` for final stage status.
+4. Continue with:
 
 ```bash
 pnpm scrape:curated:run -- --province <province-slug> --city <city-slug>
 ```
 
-4. After any run, verify the `run-report.json` instead of trusting console output alone.
+5. After any run, verify `run-report.json` instead of trusting console output alone. If no report exists for an older completed scope, use `run-state.json`.

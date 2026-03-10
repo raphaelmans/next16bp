@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "pandi",
+    "provinceName": "Bulacan",
+    "cityName": "Pandi"
+  },
+  "generatedAt": "2026-03-10T14:53:20.525Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/pandi/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/pandi/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/pandi/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/pandi/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 1,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 1,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 1,
+  "csvRowCount": 0,
+  "failures": []
+}

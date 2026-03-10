@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:san-pablo-city",
+  "createdAt": "2026-03-10T14:50:49.003Z",
+  "updatedAt": "2026-03-10T14:51:29.198Z",
+  "queries": [
+    "pickleball courts in Laguna San Pablo City",
+    "pickleball court San Pablo City Laguna",
+    "San Pablo City pickleball",
+    "courts in San Pablo City Laguna pickleball",
+    "sports center San Pablo City Laguna pickleball",
+    "pickleball club San Pablo City Laguna",
+    "pickleball reservations San Pablo City Laguna",
+    "host-map:cebupickleballcourts.com:San Pablo City",
+    "host-map:cebupickleballcourts.com:San Pablo",
+    "host-map:dumapickleball.com:San Pablo City",
+    "host-map:dumapickleball.com:San Pablo",
+    "site:cebupickleballcourts.com San Pablo City Laguna pickleball",
+    "site:dumapickleball.com San Pablo City Laguna pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball reservations San Pablo City Laguna",
+      "title": "Play Pickleball at Paraiso de Avedad: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Paraiso de Avedad! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/2ZA6HV": {
+      "canonicalUrl": "https://reclub.co/m/2ZA6HV",
+      "latestUrl": "https://reclub.co/m/2ZA6HV",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball courts in Laguna San Pablo City",
+      "title": "sunday open play",
+      "snippet": "Dink City Pickleball Court, San Pablo City ✔️ 1 standard pickleball indoor court available for Open Play Free parking for your ...",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@sanpablocitypickleballclub": {
+      "canonicalUrl": "https://reclub.co/clubs/@sanpablocitypickleballclub",
+      "latestUrl": "https://reclub.co/clubs/@sanpablocitypickleballclub",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball club San Pablo City Laguna",
+      "title": "San Pablo City Pickleball Club",
+      "snippet": "Play Pickleball with San Pablo City Pickleball Club! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/Y5YNLA": {
+      "canonicalUrl": "https://reclub.co/m/Y5YNLA",
+      "latestUrl": "https://reclub.co/m/Y5YNLA",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "courts in San Pablo City Laguna pickleball",
+      "title": "wednesday open play",
+      "snippet": "Dink City Pickleball Court, San Pablo City ✔️ 1 standard pickleball indoor court available for Open Play Free parking for your ...",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://playtimescheduler.com/region/san_pablo_city-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/san_pablo_city-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/san_pablo_city-luzon",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball reservations San Pablo City Laguna",
+      "title": "Find Pickleball Games in San Pablo City, Luzon",
+      "snippet": "PlayTime Scheduler is a free site that lets you easily arrange pickleball games and play sessions with other players in your area.",
+      "domain": "playtimescheduler.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "sports center San Pablo City Laguna pickleball",
+      "title": "PLACES TO PLAY, 01.20.24.xlsx",
+      "snippet": "The Zone Sports Center. 7224 Malugay St., cor Buendia. Makati. NCR. 6 ... Purok 6 Elarti St San Pablo. Magalang. Pampamga. 1. Outdoor Court.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "sports center San Pablo City Laguna pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/MUV2JA": {
+      "canonicalUrl": "https://reclub.co/m/MUV2JA",
+      "latestUrl": "https://reclub.co/m/MUV2JA",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball club San Pablo City Laguna",
+      "title": "Dinking Spot's Sunday Pickleball Session",
+      "snippet": "Open to ALL LEVELS (Beginner friendly) YMCA, San Pablo City ✔️ Two (2) indoor courts available Free parking for your vehicles",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/T4UVNN": {
+      "canonicalUrl": "https://reclub.co/m/T4UVNN",
+      "latestUrl": "https://reclub.co/m/T4UVNN",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball reservations San Pablo City Laguna",
+      "title": "saturday open play",
+      "snippet": "Looking for Pickleball meets in Laguna, Philippines? Check out this Reclub meet at 203 Crispin Calabia Ave hosted by Lorraine A and friends.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals",
+      "firstDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:49.004Z",
+      "sourceQuery": "pickleball reservations San Pablo City Laguna",
+      "title": "Vacation Rentals and Pickleball Stays in San Pablo, PH",
+      "snippet": "Find Vacation Rentals in San Pablo, PH. Discover 47 vacation rentals, resorts, and hotels with private courts and nearby facilities in San Pablo.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

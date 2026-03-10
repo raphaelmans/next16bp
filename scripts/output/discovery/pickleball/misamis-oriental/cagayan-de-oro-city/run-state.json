@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:misamis-oriental:cagayan-de-oro-city",
+  "createdAt": "2026-03-10T16:01:54.116Z",
+  "updatedAt": "2026-03-10T16:03:27.055Z",
+  "scope": {
+    "provinceSlug": "misamis-oriental",
+    "citySlug": "cagayan-de-oro-city",
+    "provinceName": "Misamis Oriental",
+    "cityName": "Cagayan De Oro City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "e76c7174-bb13-4a41-a975-32dd1a75ee2a",
+    "18856be4-af86-4187-822c-a6184e0f5d9a",
+    "f54b9adb-7496-4e83-8a0f-405a49d8d2b4"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:01:54.117Z",
+      "finishedAt": "2026-03-10T16:02:33.708Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:02:33.708Z",
+      "finishedAt": "2026-03-10T16:03:18.860Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:03:18.861Z",
+      "finishedAt": "2026-03-10T16:03:21.099Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:03:21.502Z",
+      "finishedAt": "2026-03-10T16:03:25.927Z",
+      "lastError": null,
+      "notes": "processed 3 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T16:03:25.927Z",
+      "lastError": null,
+      "notes": "verified 3 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:03:25.928Z",
+      "finishedAt": "2026-03-10T16:03:27.055Z",
+      "lastError": null,
+      "notes": "backfilled 3 place ids"
+    }
+  }
+}

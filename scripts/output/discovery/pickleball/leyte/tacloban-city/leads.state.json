@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:leyte:tacloban-city",
+  "createdAt": "2026-03-10T16:00:23.193Z",
+  "updatedAt": "2026-03-10T16:01:04.044Z",
+  "queries": [
+    "pickleball courts in Leyte Tacloban City",
+    "pickleball court Tacloban City Leyte",
+    "Tacloban City pickleball",
+    "courts in Tacloban City Leyte pickleball",
+    "sports center Tacloban City Leyte pickleball",
+    "pickleball club Tacloban City Leyte",
+    "pickleball reservations Tacloban City Leyte",
+    "host-map:cebupickleballcourts.com:Tacloban City",
+    "host-map:cebupickleballcourts.com:Tacloban",
+    "host-map:dumapickleball.com:Tacloban City",
+    "host-map:dumapickleball.com:Tacloban",
+    "site:cebupickleballcourts.com Tacloban City Leyte pickleball",
+    "site:dumapickleball.com Tacloban City Leyte pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball reservations Tacloban City Leyte",
+      "title": "Play Pickleball at Smash Zone: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Smash Zone! View information on courts, open play sessions, reservations, lessons, weather and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball reservations Tacloban City Leyte",
+      "title": "Play Pickleball at Robinsons North Tacloban: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Robinsons North Tacloban! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://tacloban.bomboradyo.com/pickleball-ha-leyte-mas-naribhong-pa-nagduduso-hin-inklusibo-nga-kultura": {
+      "canonicalUrl": "https://tacloban.bomboradyo.com/pickleball-ha-leyte-mas-naribhong-pa-nagduduso-hin-inklusibo-nga-kultura",
+      "latestUrl": "https://tacloban.bomboradyo.com/pickleball-ha-leyte-mas-naribhong-pa-nagduduso-hin-inklusibo-nga-kultura/",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball club Tacloban City Leyte",
+      "title": "Pickleball ha Leyte, mas naribhong pa; nagduduso hin inklusibo nga kultura",
+      "snippet": "Bombo Radyo Tacloban 95.1 mHz is located in the heart of Eastern Visayas, particularly in 4th Floor Esperas Building, Real St., Tacloban City, ...",
+      "domain": "tacloban.bomboradyo.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball reservations Tacloban City Leyte",
+      "title": "Pickleball Stays with Courts Near Robinsons Place Tacloban",
+      "snippet": "Plan Your Perfect Pickleball Getaway in Robinsons Place Tacloban on PickleTrip™ — Upgrade to Premiere Brand Homes! Great Deals on Places to Rent in ...",
+      "domain": "pickletrip.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/BBYBSW": {
+      "canonicalUrl": "https://reclub.co/m/BBYBSW",
+      "latestUrl": "https://reclub.co/m/BBYBSW",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball reservations Tacloban City Leyte",
+      "title": "Del Niño Pickleball Club Open Play - Beginners 6-9pm",
+      "snippet": "6X4R+H6M, Tacloban Bypass Road, Tacloban City, Leyte, Philippines. see map. Per Player. $100.00. Welcome Everyone! We're happy to have you with us for Del Niño ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/c/019b8572-fffe-7284-8e4e-220d11da6cce": {
+      "canonicalUrl": "https://reclub.co/c/019b8572-fffe-7284-8e4e-220d11da6cce",
+      "latestUrl": "https://reclub.co/c/019b8572-fffe-7284-8e4e-220d11da6cce",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "Tacloban City pickleball",
+      "title": "1st Tacloban City National Pickleball Tournament - Mixed Intermediate",
+      "snippet": "1st Tacloban City National Pickleball Tournament - Mixed Intermediate Open ; Saturday, Jan 3 @ 8:00 AM. Registration open ; Sunday, Jan 25 @ 11:55 PM.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/RRVP44": {
+      "canonicalUrl": "https://reclub.co/m/RRVP44",
+      "latestUrl": "https://reclub.co/m/RRVP44",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball club Tacloban City Leyte",
+      "title": "Pickleball Social with Pansit Scott",
+      "snippet": "6245+2CG, Tabuan National Hwy, Tacloban City, Leyte, Philippines. see map. 2450 PHP. $2,450.00. Zone 2 8-11pm. Zone 3 7-11pm. Hosted By. Gio. Francis Ian.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "pickleball club Tacloban City Leyte",
+      "title": "Member Clubs",
+      "snippet": "Tacloban, Leyte. Pagadian Pickleball. April 9, 2025. Picture. https://www.facebook.com/PagadianPB · Picture. Pagadian City, Mindanao. Palawan Pickleball Club.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "lastDiscoveredAt": "2026-03-10T16:00:23.194Z",
+      "sourceQuery": "sports center Tacloban City Leyte pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "Discover specialized clinics for your favorite sports at Milo Best. Enhance your abilities and excel in your chosen discipline. Enroll today!",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

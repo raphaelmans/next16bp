@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T14:54:22.926Z",
+  "updatedAt": "2026-03-10T14:54:53.319Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/nasugbu/pico-de-loro-beach-and-country-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/nasugbu/pico-de-loro-beach-and-country-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/nasugbu/pico-de-loro-beach-and-country-club",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pico de loro beach and country club|nasugbu|batangas",
+      "lastRowName": "Pico De Loro Beach And Country Club"
+    },
+    "https://reclub.co/zh-hant/clubs/@voles-social-play": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@voles-social-play",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@voles-social-play",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu/cabins": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu/cabins",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu/cabins",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Nasugbu%2C+Batangas": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Nasugbu%2C+Batangas",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Nasugbu%2C+Batangas",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.picosandshotel.com/pico-de-loro-cove-hosts-its-1st-pickleball-open-invitational": {
+      "canonicalUrl": "https://www.picosandshotel.com/pico-de-loro-cove-hosts-its-1st-pickleball-open-invitational",
+      "latestUrl": "https://www.picosandshotel.com/pico-de-loro-cove-hosts-its-1st-pickleball-open-invitational/",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.picodeloroclub.com/sports-recreation": {
+      "canonicalUrl": "https://www.picodeloroclub.com/sports-recreation",
+      "latestUrl": "https://www.picodeloroclub.com/sports-recreation/",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.yelp.com/search?find_desc=Sports+Clubs&find_loc=Nasugbu%2C+Batangas": {
+      "canonicalUrl": "https://www.yelp.com/search?find_desc=Sports+Clubs&find_loc=Nasugbu%2C+Batangas",
+      "latestUrl": "https://www.yelp.com/search?find_desc=Sports+Clubs&find_loc=Nasugbu%2C+Batangas",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/7VAZ7V": {
+      "canonicalUrl": "https://reclub.co/m/7VAZ7V",
+      "latestUrl": "https://reclub.co/m/7VAZ7V",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu",
+      "firstDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "lastDiscoveredAt": "2026-03-10T14:54:22.926Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:54:22.926Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "pico de loro beach and country club|nasugbu|batangas": {
+      "rowKey": "pico de loro beach and country club|nasugbu|batangas",
+      "name": "Pico De Loro Beach And Country Club",
+      "city": "NASUGBU",
+      "province": "BATANGAS",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/nasugbu/pico-de-loro-beach-and-country-club",
+      "firstSeenAt": "2026-03-10T14:54:22.926Z",
+      "lastSeenAt": "2026-03-10T14:54:22.926Z"
+    }
+  }
+}

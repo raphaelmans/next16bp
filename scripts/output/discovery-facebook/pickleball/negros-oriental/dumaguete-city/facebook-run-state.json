@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:dumaguete-city:facebook",
   "createdAt": "2026-03-09T17:14:44.186Z",
-  "updatedAt": "2026-03-10T11:42:23.458Z",
+  "updatedAt": "2026-03-10T15:52:41.740Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "dumaguete-city",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": "2026-03-09T17:15:21.459Z",
-      "finishedAt": "2026-03-10T11:42:23.458Z",
+      "finishedAt": "2026-03-10T15:52:41.740Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:42:23.458Z",
+      "finishedAt": "2026-03-10T15:52:41.740Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:42:23.458Z",
+      "finishedAt": "2026-03-10T15:52:41.740Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:42:23.458Z",
+      "finishedAt": "2026-03-10T15:52:41.740Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

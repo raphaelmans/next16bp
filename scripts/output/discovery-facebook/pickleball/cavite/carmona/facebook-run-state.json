@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:carmona:facebook",
   "createdAt": "2026-03-10T08:14:40.790Z",
-  "updatedAt": "2026-03-10T11:30:08.037Z",
+  "updatedAt": "2026-03-10T15:52:37.797Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "carmona",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:08.037Z",
+      "finishedAt": "2026-03-10T15:52:37.797Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:08.037Z",
+      "finishedAt": "2026-03-10T15:52:37.797Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:08.037Z",
+      "finishedAt": "2026-03-10T15:52:37.797Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:08.037Z",
+      "finishedAt": "2026-03-10T15:52:37.797Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

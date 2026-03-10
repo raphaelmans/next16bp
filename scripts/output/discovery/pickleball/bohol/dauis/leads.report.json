@@ -1,0 +1,107 @@
+{
+  "scope": {
+    "provinceName": "Bohol",
+    "provinceSlug": "bohol",
+    "cityName": "Dauis",
+    "citySlug": "dauis",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:57:55.009Z",
+  "queries": [
+    "pickleball courts in Bohol Dauis",
+    "pickleball court Dauis Bohol",
+    "Dauis pickleball",
+    "courts in Dauis Bohol pickleball",
+    "sports center Dauis Bohol pickleball",
+    "pickleball club Dauis Bohol",
+    "pickleball reservations Dauis Bohol",
+    "host-map:cebupickleballcourts.com:Dauis",
+    "host-map:dumapickleball.com:Dauis",
+    "site:cebupickleballcourts.com Dauis Bohol pickleball",
+    "site:dumapickleball.com Dauis Bohol pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+    "https://www.airbnb.co.za/dauis-philippines/stays/beachfront",
+    "https://reclub.co/m/S3QN4K"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.courtogo.com/venues/picklegaaa",
+      "score": 12
+    },
+    {
+      "url": "https://www.courtogo.com/venues/picklegaaa",
+      "score": 12
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+      "score": 12
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+      "score": 12
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.instagram.com/thepicklehaus.bhl/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.facebook.com/groups/281360938092149/posts/784679427760295/",
+    "https://www.facebook.com/christianjay.araraoestano/videos/looking-for-a-budget-friendly-pickleball-court-visit-pickle-zone-located-at-puro/860349970351641/",
+    "https://www.facebook.com/61578885637008/posts/soft-opening-today-at-5pmpurok-4-tinago-dauis-bohol/122128165214962854/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.instagram.com/thepicklehaus.bhl/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.facebook.com/groups/281360938092149/posts/784679427760295/",
+    "https://www.facebook.com/christianjay.araraoestano/videos/looking-for-a-budget-friendly-pickleball-court-visit-pickle-zone-located-at-puro/860349970351641/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/groups/281360938092149/posts/567612359467004/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.facebook.com/christianjay.araraoestano/videos/looking-for-a-budget-friendly-pickleball-court-visit-pickle-zone-located-at-puro/860349970351641/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.instagram.com/p/DOA_DCViX1J/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.facebook.com/100090118434192/videos/happening-now-at-our-newest-pickleball-court%EF%B8%8F/1651648409337533/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/groups/2790295614693053/posts/2803776816678266/",
+    "https://www.instagram.com/p/DR6Wh7WDark/",
+    "https://www.facebook.com/61578885637008/videos/giving-you-a-little-bts-to-our-pickleball-courts-soon-to-openpurok-4-tinago-daui/1341656690851754/",
+    "https://www.facebook.com/groups/2790295614693053/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.instagram.com/thepicklehaus.bhl/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.facebook.com/christianjay.araraoestano/videos/looking-for-a-budget-friendly-pickleball-court-visit-pickle-zone-located-at-puro/860349970351641/",
+    "https://www.facebook.com/groups/281360938092149/posts/567612359467004/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.facebook.com/groups/281360938092149/posts/784679427760295/",
+    "https://www.instagram.com/p/DOA_DCViX1J/",
+    "https://www.facebook.com/p/Bohol-Pickleball-Association-100094209163752/",
+    "https://www.facebook.com/pickledistrict/",
+    "https://www.facebook.com/p/The-Picklers-Point-61584906092974/",
+    "https://www.facebook.com/61552806707272/videos/discover-pickleball/814558557864268/",
+    "https://www.instagram.com/thepicklehaus.bhl/",
+    "https://www.facebook.com/p/JL-Pckld-Pickleball-Courts-61578885637008/",
+    "https://www.facebook.com/groups/2790295614693053/posts/2803776816678266/",
+    "https://www.reddit.com/r/Bohol/comments/1p6rm5w/beginner_friendly_pickleball_spots_in_bohol/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/bohol/dauis/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/bohol/dauis/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/bohol/dauis/scrape-state.json"
+}

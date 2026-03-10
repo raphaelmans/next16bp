@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:batangas:tanauan-city",
+  "createdAt": "2026-03-10T14:52:58.095Z",
+  "updatedAt": "2026-03-10T14:53:38.912Z",
+  "queries": [
+    "pickleball courts in Batangas Tanauan City",
+    "pickleball court Tanauan City Batangas",
+    "Tanauan City pickleball",
+    "courts in Tanauan City Batangas pickleball",
+    "sports center Tanauan City Batangas pickleball",
+    "pickleball club Tanauan City Batangas",
+    "pickleball reservations Tanauan City Batangas",
+    "host-map:cebupickleballcourts.com:Tanauan City",
+    "host-map:cebupickleballcourts.com:Tanauan",
+    "host-map:dumapickleball.com:Tanauan City",
+    "host-map:dumapickleball.com:Tanauan",
+    "site:cebupickleballcourts.com Tanauan City Batangas pickleball",
+    "site:dumapickleball.com Tanauan City Batangas pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/m/U4VBKK": {
+      "canonicalUrl": "https://reclub.co/m/U4VBKK",
+      "latestUrl": "https://reclub.co/m/U4VBKK",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "pickleball court Tanauan City Batangas",
+      "title": "FEEL THE RUSH OPEN PLAY — ALL LEVEL - Pickle Studio",
+      "snippet": "Come play pickleball at Pickle Studio, a stylish, modern facility designed for smooth play, great ventilation, and a comfortable experience on and off court.",
+      "domain": "reclub.co",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/SZMAMU": {
+      "canonicalUrl": "https://reclub.co/m/SZMAMU",
+      "latestUrl": "https://reclub.co/m/SZMAMU",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "pickleball club Tanauan City Batangas",
+      "title": "Pickleball Social at Pickle Point",
+      "snippet": "34VR+JHX, J Gonzales St, Tanauan City, Batangas, Philippines. see map. Notes: Join us for regular open play and enjoy fun games with fellow pickleball ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Tanauan+City%2C": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Tanauan+City%2C",
+      "latestUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Tanauan+City%2C",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "sports center Tanauan City Batangas pickleball",
+      "title": "Top 10 Best Sports Clubs Near Tanauan City, Batangas",
+      "snippet": "Moro Lorenzo Sports Center - Sports Clubs near me - Tanauan City, Batangas ... They cater pickleball, basketball, badminton reservation and also they have ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/QM3Z5C": {
+      "canonicalUrl": "https://reclub.co/m/QM3Z5C",
+      "latestUrl": "https://reclub.co/m/QM3Z5C",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "sports center Tanauan City Batangas pickleball",
+      "title": "Pickleball Social at Pickle Point",
+      "snippet": "Join us for regular open play and enjoy fun games with fellow pickleball enthusiasts! Open Play Rate – P150.00 for 4 hours. Paddle Rent – P50.00. To secure your ...",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/DBRTQW": {
+      "canonicalUrl": "https://reclub.co/m/DBRTQW",
+      "latestUrl": "https://reclub.co/m/DBRTQW",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "pickleball reservations Tanauan City Batangas",
+      "title": "Pickleball Jumpstart with Coach Pao",
+      "snippet": "Pickleball Jumpstart with Coach Pao Pickle Studio February 18 ⏰ 3:00–5:00 PM Limited to 8 slots only Php 750.00 per participant",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/calabarzon/tanauan-city/cottages": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/calabarzon/tanauan-city/cottages",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/tanauan-city/cottages",
+      "firstDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "lastDiscoveredAt": "2026-03-10T14:52:58.096Z",
+      "sourceQuery": "pickleball reservations Tanauan City Batangas",
+      "title": "Pickleball Resorts and Cottages in Tanauan City, PH",
+      "snippet": "PickleTrip™ provides a variety of properties with private or nearby pickleball courts for pickleball enthusiasts and travelers.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

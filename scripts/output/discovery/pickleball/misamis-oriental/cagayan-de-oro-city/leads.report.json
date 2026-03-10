@@ -1,0 +1,104 @@
+{
+  "scope": {
+    "provinceName": "Misamis Oriental",
+    "provinceSlug": "misamis-oriental",
+    "cityName": "Cagayan De Oro City",
+    "citySlug": "cagayan-de-oro-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T16:01:54.120Z",
+  "queries": [
+    "pickleball courts in Misamis Oriental Cagayan De Oro City",
+    "pickleball court Cagayan De Oro City Misamis Oriental",
+    "Cagayan De Oro City pickleball",
+    "courts in Cagayan De Oro City Misamis Oriental pickleball",
+    "sports center Cagayan De Oro City Misamis Oriental pickleball",
+    "pickleball club Cagayan De Oro City Misamis Oriental",
+    "pickleball reservations Cagayan De Oro City Misamis Oriental",
+    "host-map:cebupickleballcourts.com:Cagayan De Oro City",
+    "host-map:cebupickleballcourts.com:Cagayan De Oro",
+    "host-map:dumapickleball.com:Cagayan De Oro City",
+    "host-map:dumapickleball.com:Cagayan De Oro",
+    "site:cebupickleballcourts.com Cagayan De Oro City Misamis Oriental pickleball",
+    "site:dumapickleball.com Cagayan De Oro City Misamis Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro",
+    "https://picklehub.ph/pickle-world-cdo?tab=home",
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club",
+    "https://metrocdodev.com/2026/02/02/pickleball-fever-is-on-the-rise-in-cagayan-de-oro23a/",
+    "https://metrocdodev.com/2025/08/15/pcklpark-cagayan-de-oros-newest-pickleball-court-facility/",
+    "https://reclub.co/m/BAGKEL",
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center",
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone",
+    "https://reclub.co/clubs/@dinkerbell-pickleball-club",
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club",
+    "https://reclub.co/m/LMT9T3"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/zh-hant/communities/misamis-oriental-philippines-323",
+      "score": 11
+    },
+    {
+      "url": "https://www.cagayandeoro.gov.ph/index.php/news-and-article/item/3508-city-council-honors-cdo-pickleball-team.html",
+      "score": 8
+    },
+    {
+      "url": "https://reclub.co/m/L3MFM0",
+      "score": 14
+    },
+    {
+      "url": "https://www.ustp.edu.ph/championing-sports-excellence-ustp-claveria-honors-pickleball-team-winners/",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1njm1oj/pickleball_court/?tl=en",
+    "https://www.instagram.com/p/DUu_lVpklsv/",
+    "https://www.facebook.com/officialoscarsmoreno/videos/recently-started-my-pickleball-journey-can-you-comment-any-pickleball-courts-in-/761817533280439/",
+    "https://www.facebook.com/officialoscarsmoreno/posts/recently-started-my-pickleball-journey-can-you-comment-any-pickleball-courts-in-/1379907297514688/",
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1njm1oj/pickleball_court/?tl=en",
+    "https://www.tiktok.com/@cha_mcband/video/7614340156274904338",
+    "https://www.facebook.com/officialoscarsmoreno/videos/recently-started-my-pickleball-journey-can-you-comment-any-pickleball-courts-in-/761817533280439/",
+    "https://www.instagram.com/p/DUu_lVpklsv/",
+    "https://www.facebook.com/smcitycdouptown/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/624039697064787/",
+    "https://www.facebook.com/groups/2012437722447468/",
+    "https://www.instagram.com/cdopickleballclub/",
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1njm1oj/pickleball_court/?tl=en",
+    "https://www.facebook.com/smcitycdouptown/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/624039697064787/",
+    "https://www.facebook.com/cityinfo.cdo.ph/videos/pickle-ball-national-championship/1534389303950649/",
+    "https://www.tiktok.com/@cha_mcband/video/7605617488759508231",
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1njm1oj/pickleball_court/?tl=en",
+    "https://www.facebook.com/officialoscarsmoreno/posts/recently-started-my-pickleball-journey-can-you-comment-any-pickleball-courts-in-/1379907297514688/",
+    "https://www.facebook.com/officialoscarsmoreno/videos/recently-started-my-pickleball-journey-can-you-comment-any-pickleball-courts-in-/761817533280439/",
+    "https://www.instagram.com/p/DUu_lVpklsv/",
+    "https://www.tiktok.com/@cha_mcband/video/7614340156274904338",
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.instagram.com/p/DUu_lVpklsv/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1ok7zgk/pickleball_sports/?tl=en",
+    "https://www.facebook.com/smcitycdouptown/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/624039697064787/",
+    "https://www.facebook.com/p/Matchpoint-SC-Pickleball-Courts-61584447735739/",
+    "https://www.facebook.com/cdopickleballclub/",
+    "https://www.instagram.com/cdopickleballclub/",
+    "https://www.facebook.com/groups/2012437722447468/",
+    "https://www.tiktok.com/@cha_mcband/video/7614340156274904338",
+    "https://www.tiktok.com/@cha_mcband/video/7583572180387073288",
+    "https://www.facebook.com/smcitycdouptown/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/624039697064787/",
+    "https://www.facebook.com/groups/2012437722447468/posts/2669873546703879/",
+    "https://www.facebook.com/CDODev/posts/pickleball-courts-in-cagayan-de-oro-as-of-february-2026-updatedthe-popularity-of/1344530417707676/",
+    "https://www.reddit.com/r/cagayandeoro/comments/1njm1oj/pickleball_court/?tl=en",
+    "https://www.tiktok.com/@cha_mcband/video/7614340156274904338",
+    "https://www.facebook.com/smcitycdouptown/videos/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/624039697064787/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/misamis-oriental/cagayan-de-oro-city/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/misamis-oriental/cagayan-de-oro-city/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/misamis-oriental/cagayan-de-oro-city/scrape-state.json"
+}

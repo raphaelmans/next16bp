@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:rizal:morong:facebook",
   "createdAt": "2026-03-10T11:21:26.841Z",
-  "updatedAt": "2026-03-10T11:21:53.999Z",
+  "updatedAt": "2026-03-10T15:52:43.913Z",
   "scope": {
     "provinceSlug": "rizal",
     "citySlug": "morong",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:21:53.999Z",
+      "finishedAt": "2026-03-10T15:52:43.913Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:21:53.999Z",
+      "finishedAt": "2026-03-10T15:52:43.913Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:21:53.999Z",
+      "finishedAt": "2026-03-10T15:52:43.913Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:21:53.999Z",
+      "finishedAt": "2026-03-10T15:52:43.913Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:batangas:santo-tomas:facebook",
   "createdAt": "2026-03-10T06:29:03.580Z",
-  "updatedAt": "2026-03-10T11:29:04.411Z",
+  "updatedAt": "2026-03-10T15:52:36.700Z",
   "scope": {
     "provinceSlug": "batangas",
     "citySlug": "santo-tomas",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:29:04.411Z",
+      "finishedAt": "2026-03-10T15:52:36.700Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:29:04.411Z",
+      "finishedAt": "2026-03-10T15:52:36.700Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:29:04.411Z",
+      "finishedAt": "2026-03-10T15:52:36.700Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:29:04.411Z",
+      "finishedAt": "2026-03-10T15:52:36.700Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

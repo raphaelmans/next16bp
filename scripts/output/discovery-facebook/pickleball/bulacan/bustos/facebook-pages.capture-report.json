@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "bustos",
+    "provinceName": "Bulacan",
+    "cityName": "Bustos"
+  },
+  "generatedAt": "2026-03-10T14:51:49.124Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 2,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 0,
+  "failures": []
+}

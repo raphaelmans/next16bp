@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:bacoor-city:facebook",
   "createdAt": "2026-03-10T05:00:30.101Z",
-  "updatedAt": "2026-03-10T11:30:08.036Z",
+  "updatedAt": "2026-03-10T15:52:37.796Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "bacoor-city",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T05:02:28.282Z",
-      "finishedAt": "2026-03-10T11:30:08.036Z",
+      "finishedAt": "2026-03-10T15:52:37.796Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

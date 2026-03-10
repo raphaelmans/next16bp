@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T14:55:29.687Z",
+  "updatedAt": "2026-03-10T14:56:04.511Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Dr Pickle Pickleball Court"
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "slv courts|dumaguete city|negros oriental",
+      "lastRowName": "Slv Courts"
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://www.sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@bacolod-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@bacolod-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@bacolod-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.questadventure.ph/pickleball": {
+      "canonicalUrl": "https://www.questadventure.ph/pickleball",
+      "latestUrl": "https://www.questadventure.ph/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "lastDiscoveredAt": "2026-03-10T14:55:29.687Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:55:29.687Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "dr pickle pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T14:55:29.687Z",
+      "lastSeenAt": "2026-03-10T14:55:29.687Z"
+    },
+    "slv courts|dumaguete city|negros oriental": {
+      "rowKey": "slv courts|dumaguete city|negros oriental",
+      "name": "Slv Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstSeenAt": "2026-03-10T14:55:29.687Z",
+      "lastSeenAt": "2026-03-10T14:55:29.687Z"
+    }
+  }
+}

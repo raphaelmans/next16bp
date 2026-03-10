@@ -1,0 +1,193 @@
+{
+  "batch": 2,
+  "generatedAt": "2026-03-10T15:51:28.750Z",
+  "exitCode": 0,
+  "completedTargets": 11,
+  "incompleteTargets": 0,
+  "failedTargets": 0,
+  "states": [
+    {
+      "province": "bulacan",
+      "city": "bustos",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "bulacan",
+      "city": "calumpit",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "bulacan",
+      "city": "pandi",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "bulacan",
+      "city": "paombong",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "davao-del-sur",
+      "city": "malalag",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "davao-del-sur",
+      "city": "matanao",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "davao-del-sur",
+      "city": "padada",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "skipped",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    },
+    {
+      "province": "negros-oriental",
+      "city": "mabinay",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "completed",
+        "facebookImportApproved": "completed",
+        "dbVerification": "completed",
+        "embeddingBackfill": "completed"
+      },
+      "importedPlaceIds": [
+        "7f984152-9f26-4a0b-a32a-7a74a4ec02d9",
+        "c7b00e89-9ae2-48fe-8e7b-63b2577124c8"
+      ],
+      "lastError": null
+    },
+    {
+      "province": "negros-oriental",
+      "city": "santa-catalina",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "completed",
+        "facebookImportApproved": "completed",
+        "dbVerification": "completed",
+        "embeddingBackfill": "completed"
+      },
+      "importedPlaceIds": [
+        "d71a2a4e-4a58-4f8d-964e-0a97ff76c241"
+      ],
+      "lastError": null
+    },
+    {
+      "province": "negros-oriental",
+      "city": "siaton",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "completed",
+        "facebookImportApproved": "completed",
+        "dbVerification": "completed",
+        "embeddingBackfill": "completed"
+      },
+      "importedPlaceIds": [
+        "17e121a1-166b-416f-8328-76198f60de49"
+      ],
+      "lastError": null
+    },
+    {
+      "province": "rizal",
+      "city": "teresa",
+      "complete": true,
+      "failedStages": [],
+      "stages": {
+        "facebookDiscovery": "completed",
+        "facebookCapture": "completed",
+        "facebookDuplicatePreflight": "completed",
+        "facebookImportApproved": "skipped",
+        "dbVerification": "skipped",
+        "embeddingBackfill": "skipped"
+      },
+      "importedPlaceIds": [],
+      "lastError": null
+    }
+  ]
+}

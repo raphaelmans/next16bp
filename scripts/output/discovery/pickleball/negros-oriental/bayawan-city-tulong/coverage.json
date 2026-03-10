@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T14:55:29.687Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 2,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 2,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T14:55:29.687Z",
+      "lastSeenAt": "2026-03-10T14:55:29.687Z"
+    },
+    {
+      "rowKey": "slv courts|dumaguete city|negros oriental",
+      "name": "Slv Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstSeenAt": "2026-03-10T14:55:29.687Z",
+      "lastSeenAt": "2026-03-10T14:55:29.687Z"
+    }
+  ]
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:sibulan:facebook",
   "createdAt": "2026-03-10T06:06:56.353Z",
-  "updatedAt": "2026-03-10T11:44:40.408Z",
+  "updatedAt": "2026-03-10T15:52:42.608Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "sibulan",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T06:12:38.099Z",
-      "finishedAt": "2026-03-10T11:44:40.408Z",
+      "finishedAt": "2026-03-10T15:52:42.608Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

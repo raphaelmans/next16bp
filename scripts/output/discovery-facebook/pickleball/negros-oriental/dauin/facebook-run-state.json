@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:dauin:facebook",
   "createdAt": "2026-03-10T08:39:34.821Z",
-  "updatedAt": "2026-03-10T11:42:23.457Z",
+  "updatedAt": "2026-03-10T15:52:41.740Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "dauin",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:41:52.144Z",
-      "finishedAt": "2026-03-10T11:42:23.457Z",
+      "finishedAt": "2026-03-10T15:52:41.740Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

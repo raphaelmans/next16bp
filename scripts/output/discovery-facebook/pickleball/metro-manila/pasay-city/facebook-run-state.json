@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:pasay-city:facebook",
   "createdAt": "2026-03-09T17:21:46.541Z",
-  "updatedAt": "2026-03-10T11:40:31.742Z",
+  "updatedAt": "2026-03-10T15:52:40.869Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "pasay-city",
@@ -10,7 +10,9 @@
     "cityName": "Pasay City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [],
+  "importedPlaceIds": [
+    "e085f744-5b47-45b1-bcaa-de93e22b1f92"
+  ],
   "stages": {
     "discovery": {
       "status": "pending",
@@ -76,11 +78,11 @@
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
-      "status": "skipped",
+      "status": "completed",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:22:25.687Z",
+      "finishedAt": "2026-03-10T15:52:40.869Z",
       "lastError": null,
-      "notes": "facebook capture CSV has no data rows"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:bulacan:pulilan:facebook",
   "createdAt": "2026-03-10T11:05:14.664Z",
-  "updatedAt": "2026-03-10T11:30:07.541Z",
+  "updatedAt": "2026-03-10T15:52:37.365Z",
   "scope": {
     "provinceSlug": "bulacan",
     "citySlug": "pulilan",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:07.541Z",
+      "finishedAt": "2026-03-10T15:52:37.365Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:07.541Z",
+      "finishedAt": "2026-03-10T15:52:37.365Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:07.541Z",
+      "finishedAt": "2026-03-10T15:52:37.365Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:07.541Z",
+      "finishedAt": "2026-03-10T15:52:37.365Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

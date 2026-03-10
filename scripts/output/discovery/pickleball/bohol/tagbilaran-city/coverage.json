@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T15:58:34.218Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 7,
+  "scrapedUrls": 2,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "the pickle labb|tagbilaran city|bohol",
+      "name": "The Pickle Labb",
+      "city": "TAGBILARAN CITY",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "firstSeenAt": "2026-03-10T15:58:34.218Z",
+      "lastSeenAt": "2026-03-10T15:58:34.218Z"
+    },
+    {
+      "rowKey": "courtwoods pickleball|tagbilaran city|bohol",
+      "name": "Courtwoods Pickleball",
+      "city": "TAGBILARAN CITY",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "firstSeenAt": "2026-03-10T15:58:34.218Z",
+      "lastSeenAt": "2026-03-10T15:58:34.218Z"
+    }
+  ]
+}

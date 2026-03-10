@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:san-juan-city:facebook",
   "createdAt": "2026-03-09T17:28:35.109Z",
-  "updatedAt": "2026-03-10T11:40:32.023Z",
+  "updatedAt": "2026-03-10T15:52:41.089Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "san-juan-city",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:32.023Z",
+      "finishedAt": "2026-03-10T15:52:41.089Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:32.023Z",
+      "finishedAt": "2026-03-10T15:52:41.089Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:32.023Z",
+      "finishedAt": "2026-03-10T15:52:41.089Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:32.023Z",
+      "finishedAt": "2026-03-10T15:52:41.089Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

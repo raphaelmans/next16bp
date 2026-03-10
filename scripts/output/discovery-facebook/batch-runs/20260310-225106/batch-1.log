@@ -1,0 +1,832 @@
+
+> next16bp@0.1.0 scrape:curated:run:facebook /home/raphaelm/kudoscourts
+> dotenvx run --env-file=.env.production -- tsx scripts/run-curated-facebook-ingestion.ts -- --scope-source artifact:url
+
+[dotenvx@1.51.4] injecting env (52) from .env.production
+
+=== FACEBOOK RUN batangas / batangas-city ===
+Skipping completed Facebook scope: batangas / batangas-city
+
+=== FACEBOOK RUN batangas / lipa-city ===
+Skipping completed Facebook scope: batangas / lipa-city
+
+=== FACEBOOK RUN batangas / santo-tomas ===
+Skipping completed Facebook scope: batangas / santo-tomas
+
+=== FACEBOOK RUN benguet / baguio-city ===
+Skipping completed Facebook scope: benguet / baguio-city
+
+=== FACEBOOK RUN bulacan / baliuag ===
+Skipping completed Facebook scope: bulacan / baliuag
+
+=== FACEBOOK RUN bulacan / bocaue ===
+Skipping completed Facebook scope: bulacan / bocaue
+
+=== FACEBOOK RUN bulacan / bustos ===
+Scope: bulacan / bustos
+Processed URLs: 2
+Captured pages: 2
+Ready rows: 0
+Reviews: 1
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN bulacan / calumpit ===
+Scope: bulacan / calumpit
+Processed URLs: 4
+Captured pages: 4
+Ready rows: 0
+Reviews: 2
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN bulacan / guiguinto ===
+Skipping completed Facebook scope: bulacan / guiguinto
+
+=== FACEBOOK RUN bulacan / malolos-city ===
+Skipping completed Facebook scope: bulacan / malolos-city
+
+=== FACEBOOK RUN bulacan / marilao ===
+Skipping completed Facebook scope: bulacan / marilao
+
+=== FACEBOOK RUN bulacan / meycauayan-city ===
+Skipping completed Facebook scope: bulacan / meycauayan-city
+
+=== FACEBOOK RUN bulacan / pandi ===
+Scope: bulacan / pandi
+Processed URLs: 1
+Captured pages: 1
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN bulacan / paombong ===
+Scope: bulacan / paombong
+Processed URLs: 1
+Captured pages: 1
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN bulacan / plaridel ===
+Skipping completed Facebook scope: bulacan / plaridel
+
+=== FACEBOOK RUN bulacan / pulilan ===
+Skipping completed Facebook scope: bulacan / pulilan
+
+=== FACEBOOK RUN bulacan / san-jose-del-monte-city ===
+Skipping completed Facebook scope: bulacan / san-jose-del-monte-city
+
+=== FACEBOOK RUN bulacan / santa-maria ===
+Skipping completed Facebook scope: bulacan / santa-maria
+
+=== FACEBOOK RUN cavite / bacoor-city ===
+Skipping completed Facebook scope: cavite / bacoor-city
+
+=== FACEBOOK RUN cavite / carmona ===
+Skipping completed Facebook scope: cavite / carmona
+
+=== FACEBOOK RUN cavite / dasmarinas-city ===
+Skipping completed Facebook scope: cavite / dasmarinas-city
+
+=== FACEBOOK RUN cavite / general-trias-city ===
+Skipping completed Facebook scope: cavite / general-trias-city
+
+=== FACEBOOK RUN cavite / imus-city ===
+Skipping completed Facebook scope: cavite / imus-city
+
+=== FACEBOOK RUN cavite / kawit ===
+Skipping completed Facebook scope: cavite / kawit
+
+=== FACEBOOK RUN cavite / naic ===
+Skipping completed Facebook scope: cavite / naic
+
+=== FACEBOOK RUN cavite / noveleta ===
+Skipping completed Facebook scope: cavite / noveleta
+
+=== FACEBOOK RUN cavite / silang ===
+Skipping completed Facebook scope: cavite / silang
+
+=== FACEBOOK RUN cavite / tagaytay-city ===
+Skipping completed Facebook scope: cavite / tagaytay-city
+
+=== FACEBOOK RUN cavite / tanza ===
+Skipping completed Facebook scope: cavite / tanza
+
+=== FACEBOOK RUN cavite / trece-martires-city ===
+Skipping completed Facebook scope: cavite / trece-martires-city
+
+=== FACEBOOK RUN cebu / carcar-city ===
+Skipping completed Facebook scope: cebu / carcar-city
+
+=== FACEBOOK RUN cebu / cebu-city ===
+Facebook scope: cebu / cebu-city
+Queries run: 5
+Qualified Facebook pages: 6
+Already discovered: 0
+Low relevance: 37
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages.state.json
+Scope: cebu / cebu-city
+Processed URLs: 6
+Captured pages: 6
+Ready rows: 3
+Reviews: 1
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 3
+Rows approved: 1
+Rows duplicates: 2
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-import-queue/0001.csv
+  Created: Linkers Pickleball Court (CEBU CITY, CEBU)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 1
+Embeddings already current: 0
+Embeddings to generate: 1
+
+  Upserted embedding: Linkers Pickleball Court (e7a742d3-5da5-488a-9b86-ab6f4a764163)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN cebu / compostela ===
+Skipping completed Facebook scope: cebu / compostela
+
+=== FACEBOOK RUN cebu / consolacion ===
+Skipping completed Facebook scope: cebu / consolacion
+
+=== FACEBOOK RUN cebu / cordoba ===
+Skipping completed Facebook scope: cebu / cordoba
+
+=== FACEBOOK RUN cebu / danao-city ===
+Skipping completed Facebook scope: cebu / danao-city
+
+=== FACEBOOK RUN cebu / lapu-lapu-city-opon ===
+Skipping completed Facebook scope: cebu / lapu-lapu-city-opon
+
+=== FACEBOOK RUN cebu / liloan ===
+Skipping completed Facebook scope: cebu / liloan
+
+=== FACEBOOK RUN cebu / mandaue-city ===
+Skipping completed Facebook scope: cebu / mandaue-city
+
+=== FACEBOOK RUN cebu / minglanilla ===
+Skipping completed Facebook scope: cebu / minglanilla
+
+=== FACEBOOK RUN cebu / naga-city ===
+Skipping completed Facebook scope: cebu / naga-city
+
+=== FACEBOOK RUN cebu / talisay-city ===
+Skipping completed Facebook scope: cebu / talisay-city
+
+=== FACEBOOK RUN davao-del-sur / bansalan ===
+Skipping completed Facebook scope: davao-del-sur / bansalan
+
+=== FACEBOOK RUN davao-del-sur / davao-city ===
+Skipping completed Facebook scope: davao-del-sur / davao-city
+
+=== FACEBOOK RUN davao-del-sur / digos-city ===
+Skipping completed Facebook scope: davao-del-sur / digos-city
+
+=== FACEBOOK RUN davao-del-sur / hagonoy ===
+Skipping completed Facebook scope: davao-del-sur / hagonoy
+
+=== FACEBOOK RUN davao-del-sur / malalag ===
+Scope: davao-del-sur / malalag
+Processed URLs: 4
+Captured pages: 4
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN davao-del-sur / matanao ===
+Scope: davao-del-sur / matanao
+Processed URLs: 0
+Captured pages: 0
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN davao-del-sur / padada ===
+Scope: davao-del-sur / padada
+Processed URLs: 1
+Captured pages: 1
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN davao-del-sur / santa-cruz ===
+Skipping completed Facebook scope: davao-del-sur / santa-cruz
+
+=== FACEBOOK RUN iloilo / cabatuan ===
+Skipping completed Facebook scope: iloilo / cabatuan
+
+=== FACEBOOK RUN iloilo / dumangas ===
+Skipping completed Facebook scope: iloilo / dumangas
+
+=== FACEBOOK RUN iloilo / iloilo-city ===
+Skipping completed Facebook scope: iloilo / iloilo-city
+
+=== FACEBOOK RUN iloilo / janiuay ===
+Skipping completed Facebook scope: iloilo / janiuay
+
+=== FACEBOOK RUN iloilo / leganes ===
+Skipping completed Facebook scope: iloilo / leganes
+
+=== FACEBOOK RUN iloilo / maasin ===
+Skipping completed Facebook scope: iloilo / maasin
+
+=== FACEBOOK RUN iloilo / miagao ===
+Skipping completed Facebook scope: iloilo / miagao
+
+=== FACEBOOK RUN iloilo / oton ===
+Skipping completed Facebook scope: iloilo / oton
+
+=== FACEBOOK RUN iloilo / pavia ===
+Skipping completed Facebook scope: iloilo / pavia
+
+=== FACEBOOK RUN iloilo / pototan ===
+Skipping completed Facebook scope: iloilo / pototan
+
+=== FACEBOOK RUN iloilo / san-rafael ===
+Skipping completed Facebook scope: iloilo / san-rafael
+
+=== FACEBOOK RUN iloilo / santa-barbara ===
+Skipping completed Facebook scope: iloilo / santa-barbara
+
+=== FACEBOOK RUN iloilo / tigbauan ===
+Skipping completed Facebook scope: iloilo / tigbauan
+
+=== FACEBOOK RUN iloilo / zarraga ===
+Skipping completed Facebook scope: iloilo / zarraga
+
+=== FACEBOOK RUN laguna / cabuyao-city ===
+Skipping completed Facebook scope: laguna / cabuyao-city
+
+=== FACEBOOK RUN laguna / calamba-city ===
+Skipping completed Facebook scope: laguna / calamba-city
+
+=== FACEBOOK RUN laguna / city-of-binan ===
+Skipping completed Facebook scope: laguna / city-of-binan
+
+=== FACEBOOK RUN laguna / los-banos ===
+Skipping completed Facebook scope: laguna / los-banos
+
+=== FACEBOOK RUN laguna / san-pablo-city ===
+Facebook scope: laguna / san-pablo-city
+Queries run: 5
+Qualified Facebook pages: 7
+Already discovered: 0
+Low relevance: 37
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.state.json
+Scope: laguna / san-pablo-city
+Processed URLs: 7
+Captured pages: 7
+Ready rows: 2
+Reviews: 2
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 2
+Rows approved: 2
+Rows duplicates: 0
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-import-queue/0001.csv
+  Created: Golden Pickle Court (SAN PABLO CITY, LAGUNA)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-import-queue/0002.csv
+  Created: PCKLD Pickleball Cafe (SAN PABLO CITY, LAGUNA)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 2
+Embeddings already current: 0
+Embeddings to generate: 2
+
+  Upserted embedding: Golden Pickle Court (9741b63f-4c5f-4189-b0b1-60e19a22e8bb)
+  Upserted embedding: PCKLD Pickleball Cafe (8563ba6a-08fe-4eaf-b5cb-fb9f16f50a74)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN laguna / san-pedro-city ===
+Skipping completed Facebook scope: laguna / san-pedro-city
+
+=== FACEBOOK RUN laguna / santa-rosa-city ===
+Skipping completed Facebook scope: laguna / santa-rosa-city
+
+=== FACEBOOK RUN metro-manila / caloocan-city ===
+Skipping completed Facebook scope: metro-manila / caloocan-city
+
+=== FACEBOOK RUN metro-manila / city-of-las-pinas ===
+Skipping completed Facebook scope: metro-manila / city-of-las-pinas
+
+=== FACEBOOK RUN metro-manila / city-of-makati ===
+Skipping completed Facebook scope: metro-manila / city-of-makati
+
+=== FACEBOOK RUN metro-manila / city-of-mandaluyong ===
+Skipping completed Facebook scope: metro-manila / city-of-mandaluyong
+
+=== FACEBOOK RUN metro-manila / city-of-marikina ===
+Skipping completed Facebook scope: metro-manila / city-of-marikina
+
+=== FACEBOOK RUN metro-manila / city-of-muntinlupa ===
+Skipping completed Facebook scope: metro-manila / city-of-muntinlupa
+
+=== FACEBOOK RUN metro-manila / city-of-paranaque ===
+Skipping completed Facebook scope: metro-manila / city-of-paranaque
+
+=== FACEBOOK RUN metro-manila / city-of-pasig ===
+Skipping completed Facebook scope: metro-manila / city-of-pasig
+
+=== FACEBOOK RUN metro-manila / city-of-valenzuela ===
+Skipping completed Facebook scope: metro-manila / city-of-valenzuela
+
+=== FACEBOOK RUN metro-manila / malabon-city ===
+Skipping completed Facebook scope: metro-manila / malabon-city
+
+=== FACEBOOK RUN metro-manila / manila ===
+Skipping completed Facebook scope: metro-manila / manila
+
+=== FACEBOOK RUN metro-manila / navotas-city ===
+Skipping completed Facebook scope: metro-manila / navotas-city
+
+=== FACEBOOK RUN metro-manila / pasay-city ===
+Skipping completed Facebook scope: metro-manila / pasay-city
+
+=== FACEBOOK RUN metro-manila / pateros ===
+Skipping completed Facebook scope: metro-manila / pateros
+
+=== FACEBOOK RUN metro-manila / quezon-city ===
+Skipping completed Facebook scope: metro-manila / quezon-city
+
+=== FACEBOOK RUN metro-manila / san-juan-city ===
+Skipping completed Facebook scope: metro-manila / san-juan-city
+
+=== FACEBOOK RUN metro-manila / taguig ===
+Skipping completed Facebook scope: metro-manila / taguig
+
+=== FACEBOOK RUN negros-oriental / bacong ===
+Skipping completed Facebook scope: negros-oriental / bacong
+
+=== FACEBOOK RUN negros-oriental / bais-city ===
+Skipping completed Facebook scope: negros-oriental / bais-city
+
+=== FACEBOOK RUN negros-oriental / canlaon-city ===
+Skipping completed Facebook scope: negros-oriental / canlaon-city
+
+=== FACEBOOK RUN negros-oriental / dauin ===
+Skipping completed Facebook scope: negros-oriental / dauin
+
+=== FACEBOOK RUN negros-oriental / dumaguete-city ===
+Skipping completed Facebook scope: negros-oriental / dumaguete-city
+
+=== FACEBOOK RUN negros-oriental / mabinay ===
+Scope: negros-oriental / mabinay
+Processed URLs: 5
+Captured pages: 5
+Ready rows: 2
+Reviews: 2
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 2
+Rows approved: 2
+Rows duplicates: 0
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-import-queue/0001.csv
+  Created: DoPickle Court (MABINAY, NEGROS ORIENTAL)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-import-queue/0002.csv
+  Created: LM Pickleball Court (MABINAY, NEGROS ORIENTAL)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 2
+Embeddings already current: 0
+Embeddings to generate: 2
+
+  Upserted embedding: DoPickle Court (7f984152-9f26-4a0b-a32a-7a74a4ec02d9)
+  Upserted embedding: LM Pickleball Court (c7b00e89-9ae2-48fe-8e7b-63b2577124c8)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN negros-oriental / pamplona ===
+Skipping completed Facebook scope: negros-oriental / pamplona
+
+=== FACEBOOK RUN negros-oriental / san-jose ===
+Skipping completed Facebook scope: negros-oriental / san-jose
+
+=== FACEBOOK RUN negros-oriental / santa-catalina ===
+Scope: negros-oriental / santa-catalina
+Processed URLs: 4
+Captured pages: 4
+Ready rows: 1
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 1
+Rows approved: 1
+Rows duplicates: 0
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-import-queue/0001.csv
+  Created: Picklerz Place (SANTA CATALINA, NEGROS ORIENTAL)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 1
+Embeddings already current: 0
+Embeddings to generate: 1
+
+  Upserted embedding: Picklerz Place (d71a2a4e-4a58-4f8d-964e-0a97ff76c241)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN negros-oriental / siaton ===
+Scope: negros-oriental / siaton
+Processed URLs: 3
+Captured pages: 3
+Ready rows: 1
+Reviews: 1
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 1
+Rows approved: 1
+Rows duplicates: 0
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-import-queue/0001.csv
+  Created: CurveSide Pickleball and Cafe (SIATON, NEGROS ORIENTAL)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 1
+Embeddings already current: 0
+Embeddings to generate: 1
+
+  Upserted embedding: CurveSide Pickleball and Cafe (17e121a1-166b-416f-8328-76198f60de49)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN negros-oriental / sibulan ===
+Skipping completed Facebook scope: negros-oriental / sibulan
+
+=== FACEBOOK RUN negros-oriental / tanjay-city ===
+Skipping completed Facebook scope: negros-oriental / tanjay-city
+
+=== FACEBOOK RUN negros-oriental / valencia-luzurriaga ===
+Skipping completed Facebook scope: negros-oriental / valencia-luzurriaga
+
+=== FACEBOOK RUN negros-oriental / vallehermoso ===
+Skipping completed Facebook scope: negros-oriental / vallehermoso
+
+=== FACEBOOK RUN negros-oriental / zamboanguita ===
+Skipping completed Facebook scope: negros-oriental / zamboanguita
+
+=== FACEBOOK RUN pampanga / angeles-city ===
+Skipping completed Facebook scope: pampanga / angeles-city
+
+=== FACEBOOK RUN pampanga / floridablanca ===
+Facebook scope: pampanga / floridablanca
+Queries run: 5
+Qualified Facebook pages: 8
+Already discovered: 0
+Low relevance: 40
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/floridablanca/facebook-pages.state.json
+Scope: pampanga / floridablanca
+Processed URLs: 8
+Captured pages: 8
+Ready rows: 0
+Reviews: 1
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN pampanga / guagua ===
+Facebook scope: pampanga / guagua
+Queries run: 5
+Qualified Facebook pages: 9
+Already discovered: 0
+Low relevance: 41
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.state.json
+Scope: pampanga / guagua
+Processed URLs: 9
+Captured pages: 9
+Ready rows: 0
+Reviews: 3
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN pampanga / lubao ===
+Facebook scope: pampanga / lubao
+Queries run: 5
+Qualified Facebook pages: 8
+Already discovered: 0
+Low relevance: 39
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/lubao/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/lubao/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/lubao/facebook-pages.state.json
+Scope: pampanga / lubao
+Processed URLs: 8
+Captured pages: 8
+Ready rows: 0
+Reviews: 0
+Skipped existing captures: 0
+Failures: 0
+
+=== FACEBOOK RUN pampanga / mabalacat-city ===
+Skipping completed Facebook scope: pampanga / mabalacat-city
+
+=== FACEBOOK RUN pampanga / magalang ===
+Facebook scope: pampanga / magalang
+Queries run: 5
+Qualified Facebook pages: 7
+Already discovered: 0
+Low relevance: 41
+Wrote Facebook lead URLs to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.urls.txt
+Wrote Facebook discovery report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.report.json
+Wrote Facebook discovery state to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.state.json
+Scope: pampanga / magalang
+Processed URLs: 7
+Captured pages: 7
+Ready rows: 1
+Reviews: 1
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 1
+Rows approved: 1
+Rows duplicates: 0
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.dedupe-report.json
+Starting curated court import...
+
+File: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-import-queue/0001.csv
+  Created: Suncoast Pickleball Club (MAGALANG, PAMPANGA)
+
+--- Import Summary ---
+Places verified in DB: 1
+Places created: 1
+Places skipped: 0
+Rows failed: 0
+
+Import completed successfully!
+Starting place embedding backfill...
+
+Purpose: dedupe
+Mode: write
+Model: text-embedding-3-small
+Dimensions: 1536
+
+Active curated places scanned: 1
+Embeddings already current: 0
+Embeddings to generate: 1
+
+  Upserted embedding: Suncoast Pickleball Club (b6c44297-9296-4c72-a579-c359a2ccbc6d)
+
+Place embedding backfill completed successfully!
+
+=== FACEBOOK RUN pampanga / mexico ===
+Skipping completed Facebook scope: pampanga / mexico
+
+=== FACEBOOK RUN pampanga / porac ===
+Skipping completed Facebook scope: pampanga / porac
+
+=== FACEBOOK RUN pampanga / san-fernando-city ===
+Skipping completed Facebook scope: pampanga / san-fernando-city
+
+=== FACEBOOK RUN rizal / angono ===
+Skipping completed Facebook scope: rizal / angono
+
+=== FACEBOOK RUN rizal / baras ===
+Skipping completed Facebook scope: rizal / baras
+
+=== FACEBOOK RUN rizal / binangonan ===
+Skipping completed Facebook scope: rizal / binangonan
+
+=== FACEBOOK RUN rizal / cainta ===
+Skipping completed Facebook scope: rizal / cainta
+
+=== FACEBOOK RUN rizal / cardona ===
+Skipping completed Facebook scope: rizal / cardona
+
+=== FACEBOOK RUN rizal / city-of-antipolo ===
+Skipping completed Facebook scope: rizal / city-of-antipolo
+
+=== FACEBOOK RUN rizal / jala-jala ===
+Skipping completed Facebook scope: rizal / jala-jala
+
+=== FACEBOOK RUN rizal / morong ===
+Skipping completed Facebook scope: rizal / morong
+
+=== FACEBOOK RUN rizal / pililla ===
+Skipping completed Facebook scope: rizal / pililla
+
+=== FACEBOOK RUN rizal / rodriguez-montalban ===
+Skipping completed Facebook scope: rizal / rodriguez-montalban
+
+=== FACEBOOK RUN rizal / san-mateo ===
+Skipping completed Facebook scope: rizal / san-mateo
+
+=== FACEBOOK RUN rizal / tanay ===
+Skipping completed Facebook scope: rizal / tanay
+
+=== FACEBOOK RUN rizal / taytay ===
+Skipping completed Facebook scope: rizal / taytay
+
+=== FACEBOOK RUN rizal / teresa ===
+Scope: rizal / teresa
+Processed URLs: 5
+Captured pages: 5
+Ready rows: 1
+Reviews: 2
+Skipped existing captures: 0
+Failures: 0
+Starting curated duplicate check...
+
+Input: /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages-curated-courts.csv
+Model: text-embedding-3-small
+Mode: write outputs
+
+Rows parsed: 1
+Rows approved: 0
+Rows duplicates: 1
+Rows review: 0
+Rows invalid: 0
+
+Wrote approved rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages-curated-courts.approved.csv
+Wrote duplicate rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages-curated-courts.duplicates.csv
+Wrote review rows to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages-curated-courts.review.csv
+Wrote dedupe report to /home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages-curated-courts.dedupe-report.json
+
+=== Facebook Curated Ingestion Runner Summary ===
+Completed scopes: 17
+Skipped scopes: 109
+Failed scopes: 0

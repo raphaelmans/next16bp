@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:quezon-city:facebook",
   "createdAt": "2026-03-09T17:14:43.061Z",
-  "updatedAt": "2026-03-10T11:40:32.020Z",
+  "updatedAt": "2026-03-10T15:52:41.088Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "quezon-city",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:32.020Z",
+      "finishedAt": "2026-03-10T15:52:41.088Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

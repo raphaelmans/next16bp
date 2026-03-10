@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T14:49:36.604Z",
+  "updatedAt": "2026-03-10T14:49:57.630Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-luzon/magalang/tg-residence": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang/tg-residence",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang/tg-residence",
+      "firstDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:49:36.604Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "tg residence|magalang|pampanga",
+      "lastRowName": "Tg Residence"
+    },
+    "https://www.airbnb.co.in/rooms/10329070": {
+      "canonicalUrl": "https://www.airbnb.co.in/rooms/10329070",
+      "latestUrl": "https://www.airbnb.co.in/rooms/10329070",
+      "firstDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:49:36.604Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga",
+      "firstDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:49:36.604Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@northzone-pickleball-courts": {
+      "canonicalUrl": "https://reclub.co/clubs/@northzone-pickleball-courts",
+      "latestUrl": "https://reclub.co/clubs/@northzone-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:49:36.604Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/magalang": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang",
+      "firstDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:36.604Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:49:36.604Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "tg residence|magalang|pampanga": {
+      "rowKey": "tg residence|magalang|pampanga",
+      "name": "Tg Residence",
+      "city": "MAGALANG",
+      "province": "PAMPANGA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang/tg-residence",
+      "firstSeenAt": "2026-03-10T14:49:36.604Z",
+      "lastSeenAt": "2026-03-10T14:49:36.604Z"
+    }
+  }
+}

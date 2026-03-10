@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:pampanga:porac:facebook",
   "createdAt": "2026-03-10T11:49:24.351Z",
-  "updatedAt": "2026-03-10T12:14:22.801Z",
+  "updatedAt": "2026-03-10T15:52:43.478Z",
   "scope": {
     "provinceSlug": "pampanga",
     "citySlug": "porac",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:14:22.801Z",
+      "finishedAt": "2026-03-10T15:52:43.478Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:14:22.801Z",
+      "finishedAt": "2026-03-10T15:52:43.478Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:14:22.801Z",
+      "finishedAt": "2026-03-10T15:52:43.478Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:14:22.801Z",
+      "finishedAt": "2026-03-10T15:52:43.478Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

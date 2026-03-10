@@ -1,0 +1,143 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Toledo City",
+    "citySlug": "toledo-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T16:05:37.910Z",
+  "queries": [
+    "pickleball courts in Cebu Toledo City",
+    "pickleball court Toledo City Cebu",
+    "Toledo City pickleball",
+    "courts in Toledo City Cebu pickleball",
+    "sports center Toledo City Cebu pickleball",
+    "pickleball club Toledo City Cebu",
+    "pickleball reservations Toledo City Cebu",
+    "host-map:cebupickleballcourts.com:Toledo City",
+    "host-map:cebupickleballcourts.com:Toledo",
+    "host-map:dumapickleball.com:Toledo City",
+    "host-map:dumapickleball.com:Toledo",
+    "site:cebupickleballcourts.com Toledo City Cebu pickleball",
+    "site:dumapickleball.com Toledo City Cebu pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+    "https://reclub.co/m/X0SQRW",
+    "https://www.pickletrip.com/all/philippines/central-visayas/toledo-city/cottages",
+    "https://reclub.co/m/WP1T44",
+    "https://www.pages.ph/2025/02/pickleball-in-cebu/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/c/019cafa7-54b5-79b8-8b22-f903c3d2a4e1",
+      "score": 14
+    },
+    {
+      "url": "https://pickleballtournaments.com/tournaments/2024-toledo-pickleball-glass-city-invitational",
+      "score": 5
+    },
+    {
+      "url": "https://toledo.oh.gov/events/pickleball-clinic-highland-park-session-2",
+      "score": 5
+    },
+    {
+      "url": "https://toledopickle.com/",
+      "score": 5
+    },
+    {
+      "url": "https://www.cityoftoledo.org/library/page/pickleball-clinic",
+      "score": 5
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=-XSu7MtKfSI",
+      "score": 1
+    },
+    {
+      "url": "https://reclub.co/c/019cafa7-54b5-79b8-8b22-f903c3d2a4e1",
+      "score": 14
+    },
+    {
+      "url": "https://reclub.co/c/019caf84-585c-7015-9849-75199e36ccbe",
+      "score": 14
+    },
+    {
+      "url": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "score": 10
+    },
+    {
+      "url": "https://reclub.co/c/019caf84-585c-7015-9849-75199e36ccbe?at=GGJJL79A",
+      "score": 14
+    },
+    {
+      "url": "https://www.sunstar.com.ph/cebu/pages-pickleball-in-cebu",
+      "score": 10
+    },
+    {
+      "url": "https://reclub.co/c/019c8cd0-9bfb-75b3-8d5e-ec86e1333e99",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+      "score": 9
+    },
+    {
+      "url": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/61577984048202/posts/the-toledo-city-pickleball-club-is-opening-its-doors-we-are-officially-inviting-/122160470240932801/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/cabanashorepickleball/mentions/",
+    "https://www.facebook.com/cabanashorepickleball/videos/-have-you-heard-about-pickleball-its-a-fun-and-exciting-sport-that-combines-elem/338377452660067/",
+    "https://www.instagram.com/reel/DFhW9G_P0Ia/",
+    "https://www.instagram.com/explore/locations/363961820650986/bato-covered-court-bato-toledo-city-cebu-phils/",
+    "https://www.facebook.com/groups/1435040334346107/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/toledo.bjmpro7/videos/serving-up-fitness-pickleball-hits-tcjmd-the-toledo-city-jail-male-dormitory-suc/1180868700781604/",
+    "https://www.facebook.com/61577984048202/videos/%F0%9D%97%9B%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%B1%F0%9D%97%BC-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%BC%F0%9D%97%BA%F0%9D%97%BA%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-hows-everyone-doingwe-hope-all-is-w/1600674737971305/",
+    "https://www.facebook.com/61577984048202/posts/the-toledo-city-pickleball-club-is-opening-its-doors-we-are-officially-inviting-/122160470240932801/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3584673158487566/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/cabanashorepickleball/videos/-have-you-heard-about-pickleball-its-a-fun-and-exciting-sport-that-combines-elem/338377452660067/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3327903620831189/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/61577984048202/posts/the-toledo-city-pickleball-club-is-opening-its-doors-we-are-officially-inviting-/122160470240932801/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/61577984048202/videos/%F0%9D%97%9B%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%B1%F0%9D%97%BC-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%BC%F0%9D%97%BA%F0%9D%97%BA%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-hows-everyone-doingwe-hope-all-is-w/1600674737971305/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3327903620831189/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/sugboph/posts/check-out-the-new-toledo-city-sports-center-the-megadome-has-an-area-of-more-tha/3609944099081293/",
+    "https://www.facebook.com/61577984048202/videos/%F0%9D%97%9B%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%B1%F0%9D%97%BC-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%BC%F0%9D%97%BA%F0%9D%97%BA%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-hows-everyone-doingwe-hope-all-is-w/1600674737971305/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/61577984048202/posts/the-toledo-city-pickleball-club-is-opening-its-doors-we-are-officially-inviting-/122160470240932801/",
+    "https://www.facebook.com/cabanashorepickleball/videos/-have-you-heard-about-pickleball-its-a-fun-and-exciting-sport-that-combines-elem/338377452660067/",
+    "https://www.instagram.com/reel/DKpVYGgv6We/",
+    "https://www.facebook.com/dyLA909/posts/1423671919792198/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/61577984048202/posts/the-toledo-city-pickleball-club-is-opening-its-doors-we-are-officially-inviting-/122160470240932801/",
+    "https://www.facebook.com/61577984048202/videos/%F0%9D%97%9B%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%98%86-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%B1%F0%9D%97%BC-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%BC%F0%9D%97%BA%F0%9D%97%BA%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-hows-everyone-doingwe-hope-all-is-w/1600674737971305/",
+    "https://www.facebook.com/groups/1435040334346107/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.instagram.com/reel/DKpVYGgv6We/",
+    "https://www.facebook.com/cabanashorepickleball/",
+    "https://www.facebook.com/p/Sip-Serve-61579062813906/",
+    "https://www.instagram.com/p/DUV1j6oEXEQ/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3584673158487566/",
+    "https://www.tiktok.com/discover/toledo-cebu-tennis-court"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/cebu/toledo-city/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/cebu/toledo-city/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/cebu/toledo-city/scrape-state.json"
+}

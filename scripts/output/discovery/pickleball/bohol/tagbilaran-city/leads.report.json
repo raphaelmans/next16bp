@@ -1,0 +1,111 @@
+{
+  "scope": {
+    "provinceName": "Bohol",
+    "provinceSlug": "bohol",
+    "cityName": "Tagbilaran City",
+    "citySlug": "tagbilaran-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:54:54.790Z",
+  "queries": [
+    "pickleball courts in Bohol Tagbilaran City",
+    "pickleball court Tagbilaran City Bohol",
+    "Tagbilaran City pickleball",
+    "courts in Tagbilaran City Bohol pickleball",
+    "sports center Tagbilaran City Bohol pickleball",
+    "pickleball club Tagbilaran City Bohol",
+    "pickleball reservations Tagbilaran City Bohol",
+    "host-map:cebupickleballcourts.com:Tagbilaran City",
+    "host-map:cebupickleballcourts.com:Tagbilaran",
+    "host-map:dumapickleball.com:Tagbilaran City",
+    "host-map:dumapickleball.com:Tagbilaran",
+    "site:cebupickleballcourts.com Tagbilaran City Bohol pickleball",
+    "site:dumapickleball.com Tagbilaran City Bohol pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+    "https://the-pickle-labb.rezerv.co/home",
+    "https://app.sports360.ph/sportshub/court-x",
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+    "https://reclub.co/th/clubs/@tagbilaran-pickleball-association",
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city",
+    "https://reclub.co/clubs/@tagbilaran-pickleball-association"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://the-pickle-labb.rezerv.co/home",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/m/5DSCVW",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/CY5VTL",
+      "score": 14
+    },
+    {
+      "url": "https://the-pickle-labb.rezerv.co/home",
+      "score": 3
+    },
+    {
+      "url": "https://app.sports360.ph/sportshub/court-x",
+      "score": 12
+    },
+    {
+      "url": "https://reclub.co/m/5DSCVW",
+      "score": 14
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/ThePickleLabb/",
+    "https://www.facebook.com/simpdapar/videos/court-x/1175560651273223/",
+    "https://www.facebook.com/p/Courtwoods-Pickleball-61578757235670/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.reddit.com/r/Bohol/comments/1hgzuex/looking_for_pickleball_court_in_tagbilaran/",
+    "https://www.instagram.com/p/DM2RY6Pzp_F/",
+    "https://www.facebook.com/p/Courtwoods-Pickleball-61578757235670/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/simpdapar/posts/court-x-pickleball-courttagbilaran-city-boholofficial-page-court-x/4246390425618455/",
+    "https://www.facebook.com/ThePickleLabb/",
+    "https://www.tiktok.com/@doyskiee07/video/7598795047034785038",
+    "https://www.instagram.com/p/DVKxd1Tj9fC/",
+    "https://www.facebook.com/ThePickleLabb/",
+    "https://www.facebook.com/p/Tagbilaran-Pickleball-Association-61582376930506/",
+    "https://www.facebook.com/simpdapar/posts/court-x-pickleball-courttagbilaran-city-boholofficial-page-court-x/4246390425618455/",
+    "https://www.instagram.com/p/DRppblgCQk_/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/p/Courtwoods-Pickleball-61578757235670/",
+    "https://www.facebook.com/p/Courtwoods-Pickleball-61578757235670/",
+    "https://www.facebook.com/simpdapar/posts/court-x-pickleball-courttagbilaran-city-boholofficial-page-court-x/4246390425618455/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/groups/281360938092149/posts/783275907900647/",
+    "https://www.instagram.com/p/DVKxd1Tj9fC/",
+    "https://www.tiktok.com/@doyskiee07/video/7598795047034785038",
+    "https://www.facebook.com/p/Tagbilaran-Pickleball-Association-61582376930506/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/61584205359038",
+    "https://www.facebook.com/61584205359038/videos/badpickle-center-cabawan-tagbilaran-city/1564419051402955/",
+    "https://www.instagram.com/p/DRppblgCQk_/",
+    "https://www.tiktok.com/@doyskiee07/video/7598795047034785038",
+    "https://www.facebook.com/sample.king.7/videos/%F0%9D%90%8D%F0%9D%90%9E%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AC%F0%9D%90%A9%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%93%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%9B%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-8-brand-new-pickleball-courtslocated-at-p/921569527713633/",
+    "https://www.facebook.com/p/Tagbilaran-Pickleball-Association-61582376930506/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.facebook.com/ThePickleLabb/",
+    "https://www.instagram.com/p/DVKxd1Tj9fC/",
+    "https://www.facebook.com/simpdapar/videos/court-x/1175560651273223/",
+    "https://www.facebook.com/p/PickleBohol-61580468226384/",
+    "https://www.facebook.com/sample.king.7/videos/%F0%9D%90%8D%F0%9D%90%9E%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AC%F0%9D%90%A9%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%93%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%9B%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-8-brand-new-pickleball-courtslocated-at-p/921569527713633/",
+    "https://www.facebook.com/ThePickleLabb/",
+    "https://www.facebook.com/p/Courtwoods-Pickleball-61578757235670/",
+    "https://www.facebook.com/ThePickleLabb/videos/new-sports-in-bohol-the-pickleball-labb/798524749247797/",
+    "https://www.instagram.com/p/DM2RY6Pzp_F/",
+    "https://www.tiktok.com/@doyskiee07/video/7598795047034785038"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/.local/share/Trash/files/kudoscourts/scripts/output/discovery/pickleball/bohol/tagbilaran-city/leads.urls.txt",
+  "statePath": "/home/raphaelm/.local/share/Trash/files/kudoscourts/scripts/output/discovery/pickleball/bohol/tagbilaran-city/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/.local/share/Trash/files/kudoscourts/scripts/output/discovery/pickleball/bohol/tagbilaran-city/scrape-state.json"
+}

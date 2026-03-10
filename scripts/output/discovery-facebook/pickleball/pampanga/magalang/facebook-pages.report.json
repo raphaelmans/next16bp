@@ -1,0 +1,195 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Magalang",
+    "citySlug": "magalang",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:13:47.315Z",
+  "queries": [
+    "site:facebook.com pickleball Magalang Pampanga",
+    "site:facebook.com \"Magalang\" \"Pampanga\" \"pickleball\"",
+    "site:facebook.com \"Magalang\" \"pickleball club\"",
+    "site:facebook.com \"Magalang\" \"pickleball court\"",
+    "site:facebook.com \"Pampanga\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/pampangapickleballcommunity/",
+    "https://www.facebook.com/photo.php?fbid=10237968272613241&set=a.10200292150813743&type=3",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/745567121984101/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/iorbitnews/posts/suncoast-pickleball-club-opens-in-magalang-amid-sports-rising-popularity-in-pamp/1499583268838927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373303902957817/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/suncoast-is-growing-our-new-pickleball-courts-are-coming-soon-stay-tuned-for-our/874020862167500/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61578129831707/videos/discovered-new-courts-in-magalang-pampanga-complete-with-villas-and-a-pool-i-wou/1462464572199252/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/study-dates-chika-sessions-or-solo-me-time-suncoast-is-the-place-to-be-%EF%B8%8F/895307393372180/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364457507175790/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/were-so-excited-to-welcome-you-soon-in-our-first-pickleball-court-in-magalang-pa/122093889045236760/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338221509799390/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iorbitnews/posts/suncoast-pickleball-club-opens-in-magalang-amid-sports-rising-popularity-in-pamp/1499583268838927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373303902957817/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/suncoast-is-growing-our-new-pickleball-courts-are-coming-soon-stay-tuned-for-our/874020862167500/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61578129831707/videos/discovered-new-courts-in-magalang-pampanga-complete-with-villas-and-a-pool-i-wou/1462464572199252/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/study-dates-chika-sessions-or-solo-me-time-suncoast-is-the-place-to-be-%EF%B8%8F/895307393372180/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/were-so-excited-to-welcome-you-soon-in-our-first-pickleball-court-in-magalang-pa/122093889045236760/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364457507175790/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338221509799390/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iorbitnews/posts/suncoast-pickleball-club-opens-in-magalang-amid-sports-rising-popularity-in-pamp/1499583268838927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/suncoast-is-growing-our-new-pickleball-courts-are-coming-soon-stay-tuned-for-our/874020862167500/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/were-so-excited-to-welcome-you-soon-in-our-first-pickleball-court-in-magalang-pa/122093889045236760/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/suncoastspecialtycoffee/posts/paddles-up-its-officially-game-timesuncoast-just-dropped-its-newest-baby-suncoas/893673613535558/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/paddles-up-bring-your-friends-join-the-fun-soft-opening-schedulemonday-sunday700/122108725455236760/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61578129831707/videos/discovered-new-courts-in-magalang-pampanga-complete-with-villas-and-a-pool-i-wou/1462464572199252/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/iorbitnews/photos/d41d8cd9/1499524058844848/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/ready-to-rally-pickleball-courts-coming-soon-stay-tuned-for-our-soft-opening-feb/122098576833236760/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/pampangapickleballcommunity/posts/another-one-in-magalang/122121808755060591/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iorbitnews/posts/suncoast-pickleball-club-opens-in-magalang-amid-sports-rising-popularity-in-pamp/1499583268838927/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/posts/were-so-excited-to-welcome-you-soon-in-our-first-pickleball-court-in-magalang-pa/122093889045236760/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373303902957817/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364457507175790/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338221509799390/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3617639068524308/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61587102801789/videos/paddles-up-bring-your-friends-join-the-fun-soft-opening-schedulemonday-sunday700/1956111448665123/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/234753426648665/posts/8922302477893673/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4316532578634950/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4297207483900793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/chezkadennise/videos/newly-opened-pickleball-court-in-pampanga-kingscourt-pickleball-probably-the-bes/804352612637429/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.state.json"
+}

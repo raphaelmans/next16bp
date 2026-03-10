@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "mabinay",
+    "provinceName": "Negros Oriental",
+    "cityName": "Mabinay"
+  },
+  "generatedAt": "2026-03-10T15:01:30.617Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 5,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 5,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 2,
+  "skipCount": 1,
+  "csvRowCount": 2,
+  "failures": []
+}

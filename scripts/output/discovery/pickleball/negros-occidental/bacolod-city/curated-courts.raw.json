@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-03-10T15:53:23.689Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 3,
+  "candidateUrlsCount": 3,
+  "candidateUrlsSelectedForRunCount": 3,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+    "https://reclub.co/clubs/@bacolod-pickleball-club",
+    "https://reclub.co/ko/clubs/@bacolod-pickleball-club"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+    "https://reclub.co/clubs/@bacolod-pickleball-club",
+    "https://reclub.co/ko/clubs/@bacolod-pickleball-club"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+    "https://reclub.co/clubs/@bacolod-pickleball-club",
+    "https://reclub.co/ko/clubs/@bacolod-pickleball-club"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "One Pickle Hub",
+        "address": "Bacolod, Western Visayas, Philippines",
+        "city": "BACOLOD CITY",
+        "province": "NEGROS OCCIDENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 0,
+    "aiResolved": 1,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

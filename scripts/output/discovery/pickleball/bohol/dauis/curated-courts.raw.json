@@ -1,0 +1,91 @@
+{
+  "generatedAt": "2026-03-10T15:57:59.491Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 4,
+  "candidateUrlsCount": 4,
+  "candidateUrlsSelectedForRunCount": 4,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+    "https://www.airbnb.co.za/dauis-philippines/stays/beachfront",
+    "https://reclub.co/m/S3QN4K"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+    "https://www.airbnb.co.za/dauis-philippines/stays/beachfront",
+    "https://reclub.co/m/S3QN4K"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+    "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+    "https://www.airbnb.co.za/dauis-philippines/stays/beachfront",
+    "https://reclub.co/m/S3QN4K"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Elstar Pickleball Courts",
+        "address": "Dauis, Central Visayas, Philippines",
+        "city": "DAUIS",
+        "province": "BOHOL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts"
+    },
+    {
+      "row": {
+        "name": "Quirmita Pickleball Court",
+        "address": "Dauis, Central Visayas, Philippines",
+        "city": "DAUIS",
+        "province": "BOHOL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 2,
+    "pendingMigrationRows": 2,
+    "dbCoverageEnabled": false
+  }
+}

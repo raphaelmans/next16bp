@@ -1,0 +1,197 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Guagua",
+    "citySlug": "guagua",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:07:30.872Z",
+  "queries": [
+    "site:facebook.com pickleball Guagua Pampanga",
+    "site:facebook.com \"Guagua\" \"Pampanga\" \"pickleball\"",
+    "site:facebook.com \"Guagua\" \"pickleball club\"",
+    "site:facebook.com \"Guagua\" \"pickleball court\"",
+    "site:facebook.com \"Pampanga\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Courtside-Pickleball-61580808570268/",
+    "https://www.facebook.com/61551345238116/?locale=eu_ES",
+    "https://www.facebook.com/61551345238116/?locale=fr_FR",
+    "https://www.facebook.com/pampangapickleballcommunity/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/745567121984101/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/capizeria/posts/-soonest-at-capizeria-get-ready-to-serve-and-smash-our-pickleball-badminton-area/1521830143285974/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/496697237365589/posts/2653461268355831/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2376758865708719/posts/25346140115010602/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1754234658123864/posts/4211940762353229/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/963560727838639/posts/2015125116015523/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/7033683366672564/posts/34226790463601820/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/342184658231135/posts/748666037582993/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thehauslandsofficial/posts/-pickleball-at-the-hauslands-subic-laughter-and-rallies-will-fill-the-air-as-we-/1091786986316750/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2376758865708719/posts/25346140115010602/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/capizeria/posts/-soonest-at-capizeria-get-ready-to-serve-and-smash-our-pickleball-badminton-area/1521830143285974/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1754234658123864/posts/4211940762353229/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/963560727838639/posts/2015125116015523/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2687607474935514/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/406441704083762/posts/1418012586259997/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/158723637611297/posts/3788716977945260/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thehauslandsofficial/posts/-pickleball-at-the-hauslands-subic-laughter-and-rallies-will-fill-the-air-as-we-/1091786986316750/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1958049248143553/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/shoelessguagua/posts/for-outdoor-play-and-all-day-comfortbuilt-for-the-seasons-active-lifestyle-now-a/122291528786074895/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleballmalaysia/posts/1236511361457482/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2687607474935514/",
+      "score": 15
+    },
+    {
+      "url": "https://m.facebook.com/61573478469890/photos/122147227544782615/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100088184325677/posts/congrats-po-cabalenguagua-plaza-winner/885396891076447/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/lapreguntapickleballstore/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thehauslandsofficial/posts/-pickleball-at-the-hauslands-subic-laughter-and-rallies-will-fill-the-air-as-we-/1091786986316750/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/598677743537088/posts/34291604853817611/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/gnc.edu.ph/posts/congratulations-we-are-proud-of-you-see-you-nationals/914138261367528/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/kiwanisbulletin/posts/1597062801324071/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/CabareteRD/posts/4184173431836292/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/963560727838639/posts/2015125116015523/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2376758865708719/posts/25346140115010602/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/406441704083762/posts/1418012586259997/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1268226220758651/posts/1989295121985087/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1125175514801495/posts/1919617982023907/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleballmalaysia/posts/1236511361457482/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/963560727838639/posts/1972367093624659/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/963560727838639/posts/1972368796957822/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1125175514801495/posts/1376348413017536/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4297207483900793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/chezkadennise/videos/newly-opened-pickleball-court-in-pampanga-kingscourt-pickleball-probably-the-bes/804352612637429/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.state.json"
+}

@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:lubao",
+  "createdAt": "2026-03-10T14:48:26.450Z",
+  "updatedAt": "2026-03-10T14:48:51.327Z",
+  "queries": [
+    "pickleball courts in Pampanga Lubao",
+    "pickleball court Lubao Pampanga",
+    "Lubao pickleball",
+    "courts in Lubao Pampanga pickleball",
+    "sports center Lubao Pampanga pickleball",
+    "pickleball club Lubao Pampanga",
+    "pickleball reservations Lubao Pampanga",
+    "host-map:cebupickleballcourts.com:Lubao",
+    "host-map:dumapickleball.com:Lubao",
+    "site:cebupickleballcourts.com Lubao Pampanga pickleball",
+    "site:dumapickleball.com Lubao Pampanga pickleball"
+  ],
+  "urls": {
+    "https://pickletrip.com/all/philippines/central-luzon/lubao/cottages": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/central-luzon/lubao/cottages",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/lubao/cottages",
+      "firstDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "lastDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "sourceQuery": "pickleball reservations Lubao Pampanga",
+      "title": "Pickleball Resorts and Cottages in Lubao, PH",
+      "snippet": "PickleTrip™ provides a variety of properties with private or nearby pickleball courts for pickleball enthusiasts and travelers.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pampanga-pickleball.rezerv.co/": {
+      "canonicalUrl": "https://pampanga-pickleball.rezerv.co/",
+      "latestUrl": "https://pampanga-pickleball.rezerv.co/",
+      "firstDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "lastDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "sourceQuery": "pickleball reservations Lubao Pampanga",
+      "title": "Pampanga Pickleball Center",
+      "snippet": "Welcome to Pampanga Pickleball Club — the home of pickleball enthusiasts in ... Book private sessions, coaching, or court rentals at your preferred time.",
+      "domain": "pampanga-pickleball.rezerv.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Lubao%2C+Pampanga": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Lubao%2C+Pampanga",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Lubao,+Pampanga",
+      "firstDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "lastDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "sourceQuery": "sports center Lubao Pampanga pickleball",
+      "title": "THE BEST 10 BADMINTON in LUBAO, PAMPANGA, PHILIPPINES",
+      "snippet": "Moro Lorenzo Sports Center - Badminton near me - Lubao, Pampanga. 19. Moro ... They cater pickleball, basketball, badminton reservation and also they ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@pampanga-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/clubs/@pampanga-pickleball-center",
+      "latestUrl": "https://reclub.co/clubs/@pampanga-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "lastDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "sourceQuery": "pickleball club Lubao Pampanga",
+      "title": "Pampanga Pickleball Center",
+      "snippet": "Pampanga's first-ever Center Court --- where pickleball is more than a sport --- it's a lifestyle https://pampanga-pickleball.rezeve.com/.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://fpsdc.coop/cth-pickleball": {
+      "canonicalUrl": "https://fpsdc.coop/cth-pickleball",
+      "latestUrl": "https://www.fpsdc.coop/cth-pickleball",
+      "firstDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "lastDiscoveredAt": "2026-03-10T14:48:26.450Z",
+      "sourceQuery": "pickleball reservations Lubao Pampanga",
+      "title": "Pickleball Court – Reserve Your Game in Pampanga",
+      "snippet": "Reserve a Pickleball Court. Easily check available slots and reserve your pickleball court in Co-op Trading Hub (CTH) at Ayala Technopark Pampanga.",
+      "domain": "fpsdc.coop",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

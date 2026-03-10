@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:bacong:facebook",
   "createdAt": "2026-03-10T08:36:22.313Z",
-  "updatedAt": "2026-03-10T11:40:32.297Z",
+  "updatedAt": "2026-03-10T15:52:41.307Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "bacong",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:39:05.354Z",
-      "finishedAt": "2026-03-10T11:40:32.297Z",
+      "finishedAt": "2026-03-10T15:52:41.307Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

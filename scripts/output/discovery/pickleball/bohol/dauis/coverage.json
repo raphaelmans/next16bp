@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T15:57:59.491Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 4,
+  "scrapedUrls": 2,
+  "noDataUrls": 2,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "elstar pickleball courts|dauis|bohol",
+      "name": "Elstar Pickleball Courts",
+      "city": "DAUIS",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+      "firstSeenAt": "2026-03-10T15:57:59.491Z",
+      "lastSeenAt": "2026-03-10T15:57:59.491Z"
+    },
+    {
+      "rowKey": "quirmita pickleball court|dauis|bohol",
+      "name": "Quirmita Pickleball Court",
+      "city": "DAUIS",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+      "firstSeenAt": "2026-03-10T15:57:59.491Z",
+      "lastSeenAt": "2026-03-10T15:57:59.491Z"
+    }
+  ]
+}

@@ -1,0 +1,178 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T16:02:33.709Z",
+  "updatedAt": "2026-03-10T16:03:18.860Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/pickle-world-cdo?tab=home": {
+      "canonicalUrl": "https://picklehub.ph/pickle-world-cdo?tab=home",
+      "latestUrl": "https://picklehub.ph/pickle-world-cdo?tab=home",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "middleton pickleball club|cagayan de oro city|misamis oriental",
+      "lastRowName": "Middleton Pickleball Club"
+    },
+    "https://metrocdodev.com/2026/02/02/pickleball-fever-is-on-the-rise-in-cagayan-de-oro23a": {
+      "canonicalUrl": "https://metrocdodev.com/2026/02/02/pickleball-fever-is-on-the-rise-in-cagayan-de-oro23a",
+      "latestUrl": "https://metrocdodev.com/2026/02/02/pickleball-fever-is-on-the-rise-in-cagayan-de-oro23a/",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://metrocdodev.com/2025/08/15/pcklpark-cagayan-de-oros-newest-pickleball-court-facility": {
+      "canonicalUrl": "https://metrocdodev.com/2025/08/15/pcklpark-cagayan-de-oros-newest-pickleball-court-facility",
+      "latestUrl": "https://metrocdodev.com/2025/08/15/pcklpark-cagayan-de-oros-newest-pickleball-court-facility/",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/BAGKEL": {
+      "canonicalUrl": "https://reclub.co/m/BAGKEL",
+      "latestUrl": "https://reclub.co/m/BAGKEL",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "match point sports center|cagayan de oro city|misamis oriental",
+      "lastRowName": "Match Point Sports Center"
+    },
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sports zone|cagayan de oro city|misamis oriental",
+      "lastRowName": "Sports Zone"
+    },
+    "https://reclub.co/clubs/@dinkerbell-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@dinkerbell-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@dinkerbell-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "xavier sports and country club|cagayan de oro city|misamis oriental",
+      "lastRowName": "Xavier Sports And Country Club"
+    },
+    "https://reclub.co/m/LMT9T3": {
+      "canonicalUrl": "https://reclub.co/m/LMT9T3",
+      "latestUrl": "https://reclub.co/m/LMT9T3",
+      "firstDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "lastDiscoveredAt": "2026-03-10T16:02:33.709Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:02:33.709Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "middleton pickleball club|cagayan de oro city|misamis oriental": {
+      "rowKey": "middleton pickleball club|cagayan de oro city|misamis oriental",
+      "name": "Middleton Pickleball Club",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    "match point sports center|cagayan de oro city|misamis oriental": {
+      "rowKey": "match point sports center|cagayan de oro city|misamis oriental",
+      "name": "Match Point Sports Center",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    "sports zone|cagayan de oro city|misamis oriental": {
+      "rowKey": "sports zone|cagayan de oro city|misamis oriental",
+      "name": "Sports Zone",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    "xavier sports and country club|cagayan de oro city|misamis oriental": {
+      "rowKey": "xavier sports and country club|cagayan de oro city|misamis oriental",
+      "name": "Xavier Sports And Country Club",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:general-trias-city:facebook",
   "createdAt": "2026-03-10T05:13:11.711Z",
-  "updatedAt": "2026-03-10T11:30:08.535Z",
+  "updatedAt": "2026-03-10T15:52:38.232Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "general-trias-city",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T05:15:45.043Z",
-      "finishedAt": "2026-03-10T11:30:08.535Z",
+      "finishedAt": "2026-03-10T15:52:38.232Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

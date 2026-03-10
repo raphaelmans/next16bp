@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:naic:facebook",
   "createdAt": "2026-03-10T11:19:31.898Z",
-  "updatedAt": "2026-03-10T11:30:09.031Z",
+  "updatedAt": "2026-03-10T15:52:38.455Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "naic",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:09.031Z",
+      "finishedAt": "2026-03-10T15:52:38.455Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:09.031Z",
+      "finishedAt": "2026-03-10T15:52:38.455Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:09.031Z",
+      "finishedAt": "2026-03-10T15:52:38.455Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:09.031Z",
+      "finishedAt": "2026-03-10T15:52:38.455Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

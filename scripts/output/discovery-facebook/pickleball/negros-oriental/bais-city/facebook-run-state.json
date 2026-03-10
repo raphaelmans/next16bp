@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:bais-city:facebook",
   "createdAt": "2026-03-10T11:38:36.730Z",
-  "updatedAt": "2026-03-10T11:42:23.208Z",
+  "updatedAt": "2026-03-10T15:52:41.523Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "bais-city",
@@ -80,9 +80,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T11:41:46.763Z",
-      "finishedAt": "2026-03-10T11:42:23.208Z",
+      "finishedAt": "2026-03-10T15:52:41.523Z",
       "lastError": null,
-      "notes": "backfilled 1 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

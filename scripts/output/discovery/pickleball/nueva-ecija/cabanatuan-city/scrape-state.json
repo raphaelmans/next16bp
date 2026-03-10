@@ -1,0 +1,157 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T16:04:07.122Z",
+  "updatedAt": "2026-03-10T16:04:37.178Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/camella-covered-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/camella-covered-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/camella-covered-court",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "camella covered court|cabanatuan city|nueva ecija",
+      "lastRowName": "Camella Covered Court"
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/kalamandarin-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/kalamandarin-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/kalamandarin-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "kalamandarin pickleball court|cabanatuan city|nueva ecija",
+      "lastRowName": "Kalamandarin Pickleball Court"
+    },
+    "https://reclub.co/clubs/@cabsy-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@cabsy-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@cabsy-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/groups/cabsy-pickleball-club-cabanatuan-city-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/groups/cabsy-pickleball-club-cabanatuan-city-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/groups/cabsy-pickleball-club-cabanatuan-city-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://playtimescheduler.com/region/cabanatuan_city-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/cabanatuan_city-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/cabanatuan_city-luzon",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://chrissports.com/?srsltid=AfmBOormcLdDwaiKiLKMCOsWjadirN-B3kThe2W1mdHVKzQBOXNb-Y0t": {
+      "canonicalUrl": "https://chrissports.com/?srsltid=AfmBOormcLdDwaiKiLKMCOsWjadirN-B3kThe2W1mdHVKzQBOXNb-Y0t",
+      "latestUrl": "https://chrissports.com/?srsltid=AfmBOormcLdDwaiKiLKMCOsWjadirN-B3kThe2W1mdHVKzQBOXNb-Y0t",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "smash cab badminton and fitness|cabanatuan city|nueva ecija",
+      "lastRowName": "Smash Cab Badminton And Fitness"
+    },
+    "https://reclub.co/ja/clubs/@cabsy-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/ja/clubs/@cabsy-pickleball-club",
+      "latestUrl": "https://reclub.co/ja/clubs/@cabsy-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "lastDiscoveredAt": "2026-03-10T16:04:07.122Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:04:07.122Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "camella covered court|cabanatuan city|nueva ecija": {
+      "rowKey": "camella covered court|cabanatuan city|nueva ecija",
+      "name": "Camella Covered Court",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/camella-covered-court",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    },
+    "kalamandarin pickleball court|cabanatuan city|nueva ecija": {
+      "rowKey": "kalamandarin pickleball court|cabanatuan city|nueva ecija",
+      "name": "Kalamandarin Pickleball Court",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/kalamandarin-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    },
+    "smash cab badminton and fitness|cabanatuan city|nueva ecija": {
+      "rowKey": "smash cab badminton and fitness|cabanatuan city|nueva ecija",
+      "name": "Smash Cab Badminton And Fitness",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    }
+  }
+}

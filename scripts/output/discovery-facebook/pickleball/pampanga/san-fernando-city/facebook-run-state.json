@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:pampanga:san-fernando-city:facebook",
   "createdAt": "2026-03-10T08:47:20.278Z",
-  "updatedAt": "2026-03-10T08:52:58.006Z",
+  "updatedAt": "2026-03-10T15:52:43.692Z",
   "scope": {
     "provinceSlug": "pampanga",
     "citySlug": "san-fernando-city",
@@ -80,9 +80,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:52:31.591Z",
-      "finishedAt": "2026-03-10T08:52:58.004Z",
+      "finishedAt": "2026-03-10T15:52:43.692Z",
       "lastError": null,
-      "notes": "backfilled 1 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:silang:facebook",
   "createdAt": "2026-03-10T08:16:35.611Z",
-  "updatedAt": "2026-03-10T11:30:09.297Z",
+  "updatedAt": "2026-03-10T15:52:38.672Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "silang",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:20:15.930Z",
-      "finishedAt": "2026-03-10T11:30:09.297Z",
+      "finishedAt": "2026-03-10T15:52:38.672Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

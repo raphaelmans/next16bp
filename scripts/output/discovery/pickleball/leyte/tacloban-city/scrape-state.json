@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T16:01:04.046Z",
+  "updatedAt": "2026-03-10T16:01:47.809Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "firstDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "lastDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:01:04.046Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "smash zone|philippines|eastern visayas",
+      "lastRowName": "Smash Zone"
+    },
+    "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "firstDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "lastDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:01:04.046Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "robinsons north tacloban|tacloban city|leyte",
+      "lastRowName": "Robinsons North Tacloban"
+    },
+    "https://www.pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/eastern-visayas/tacloban/robinsons-place-tacloban",
+      "firstDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "lastDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:01:04.046Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/BBYBSW": {
+      "canonicalUrl": "https://reclub.co/m/BBYBSW",
+      "latestUrl": "https://reclub.co/m/BBYBSW",
+      "firstDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "lastDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:01:04.046Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "lastDiscoveredAt": "2026-03-10T16:01:04.046Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:01:04.046Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "smash zone|philippines|eastern visayas": {
+      "rowKey": "smash zone|philippines|eastern visayas",
+      "name": "Smash Zone",
+      "city": "Philippines",
+      "province": "Eastern Visayas",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "firstSeenAt": "2026-03-10T16:01:04.046Z",
+      "lastSeenAt": "2026-03-10T16:01:04.046Z"
+    },
+    "robinsons north tacloban|tacloban city|leyte": {
+      "rowKey": "robinsons north tacloban|tacloban city|leyte",
+      "name": "Robinsons North Tacloban",
+      "city": "TACLOBAN CITY",
+      "province": "LEYTE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "firstSeenAt": "2026-03-10T16:01:04.046Z",
+      "lastSeenAt": "2026-03-10T16:01:04.046Z"
+    }
+  }
+}

@@ -1,0 +1,179 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "San Pablo City",
+    "citySlug": "san-pablo-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:57:27.283Z",
+  "queries": [
+    "site:facebook.com pickleball San Pablo City Laguna",
+    "site:facebook.com \"San Pablo City\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"San Pablo City\" \"pickleball club\"",
+    "site:facebook.com \"San Pablo City\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Golden-Pickle-Court-61581893280394/",
+    "https://www.facebook.com/p/SmashxSociety-Pickleball-Cafe-61578603867471/",
+    "https://www.facebook.com/61586093523226",
+    "https://www.facebook.com/p/Paraiso-de-Avedad-Pickleball-Club-61556385868847/",
+    "https://www.facebook.com/61581893280394/?locale=en_GB",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4165278183760391/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266121587009383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/865366504095390/posts/1793488821283149/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4167195203568689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4165278183760391/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266121587009383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4167195203568689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/865366504095390/posts/1793488821283149/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4328569214097953/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/664226421148528/posts/1593909758180185/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4167195203568689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4165278183760391/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4328569214097953/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266121587009383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/865366504095390/posts/1793488821283149/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4305171443104397/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1048387712667634/posts/1866580150848382/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4328569214097953/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4167195203568689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266121587009383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4165278183760391/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/865366504095390/posts/1793488821283149/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1407726017355932/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1412744266854107/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.state.json"
+}

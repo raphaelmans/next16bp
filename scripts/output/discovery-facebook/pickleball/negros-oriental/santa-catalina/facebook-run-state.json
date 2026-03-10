@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:santa-catalina:facebook",
+  "createdAt": "2026-03-10T14:42:50.956Z",
+  "updatedAt": "2026-03-10T15:52:42.176Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "santa-catalina",
+    "provinceName": "Negros Oriental",
+    "cityName": "Santa Catalina",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "d71a2a4e-4a58-4f8d-964e-0a97ff76c241"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:42:50.956Z",
+      "finishedAt": "2026-03-10T14:42:58.533Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:01:38.049Z",
+      "finishedAt": "2026-03-10T15:03:08.592Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:03:08.593Z",
+      "finishedAt": "2026-03-10T15:03:11.623Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:03:11.745Z",
+      "finishedAt": "2026-03-10T15:03:13.257Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:03:13.384Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:03:13.385Z",
+      "finishedAt": "2026-03-10T15:52:42.176Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

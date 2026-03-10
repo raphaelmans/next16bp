@@ -1,0 +1,114 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Floridablanca",
+    "citySlug": "floridablanca",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:50:05.830Z",
+  "queries": [
+    "pickleball courts in Pampanga Floridablanca",
+    "pickleball court Floridablanca Pampanga",
+    "Floridablanca pickleball",
+    "courts in Floridablanca Pampanga pickleball",
+    "sports center Floridablanca Pampanga pickleball",
+    "pickleball club Floridablanca Pampanga",
+    "pickleball reservations Floridablanca Pampanga",
+    "host-map:cebupickleballcourts.com:Floridablanca",
+    "host-map:dumapickleball.com:Floridablanca",
+    "site:cebupickleballcourts.com Floridablanca Pampanga pickleball",
+    "site:dumapickleball.com Floridablanca Pampanga pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/clubs/@floridablanca-pickleball-zone"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619/",
+      "score": 3
+    },
+    {
+      "url": "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619/",
+      "score": 3
+    },
+    {
+      "url": "https://m.facebook.com/TheDenzoneLifestyle/about/",
+      "score": 6
+    },
+    {
+      "url": "https://m.facebook.com/TheDenzoneLifestyle/videos/denzone-x-palakol-pickleball-open-playwhy-palakol-it-represents-strength-passion/1772448453334730/",
+      "score": 1
+    },
+    {
+      "url": "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619/",
+      "score": 8
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.facebook.com/61572802178684/videos/%F0%9D%97%99%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%BA-%F0%9D%97%AF%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%81%F0%9D%97%BC-%F0%9D%97%BD%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%98%82%F0%9D%97%B6%F0%9D%97%B9%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%98%80%F0%9D%97%BD%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%B2%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%86%F0%9D%97%BC%F0%9D%97%BB%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%97%B2/831769526505680/",
+    "https://www.instagram.com/p/DIJiIjjy62F/",
+    "https://www.facebook.com/TheDenzoneLifestyle/posts/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/1098706628947807/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.instagram.com/reel/DI5nKTAxIJ9/",
+    "https://www.tiktok.com/@ysapickles/video/7593341395323063560",
+    "https://www.tiktok.com/@btzpampanga",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7565327181572885768",
+    "https://www.facebook.com/TheDenzoneLifestyle/posts/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/1098706628947807/",
+    "https://www.instagram.com/p/DIJiIjjy62F/",
+    "https://www.facebook.com/61572802178684/videos/%F0%9D%97%99%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%BA-%F0%9D%97%AF%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%81%F0%9D%97%BC-%F0%9D%97%BD%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%98%82%F0%9D%97%B6%F0%9D%97%B9%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%98%80%F0%9D%97%BD%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%B2%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%86%F0%9D%97%BC%F0%9D%97%BB%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%97%B2/831769526505680/",
+    "https://www.facebook.com/solarispicklehub/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.tiktok.com/@btzpampanga",
+    "https://www.instagram.com/reel/DI5nKTAxIJ9/",
+    "https://www.tiktok.com/@ysapickles/video/7593341395323063560",
+    "https://www.facebook.com/solarispicklehub/",
+    "https://www.instagram.com/p/DIJiIjjy62F/",
+    "https://www.facebook.com/pampangapickleballcommunity/posts/just-discovered-this-court-in-floridablanca-by-beyond-the-zone/122107525449060591/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.instagram.com/reel/DI5nKTAxIJ9/",
+    "https://www.tiktok.com/discover/fun-place-pickleball-in-pampanga",
+    "https://www.facebook.com/TheDenzoneLifestyle/posts/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/1098706628947807/",
+    "https://www.instagram.com/p/DIJiIjjy62F/",
+    "https://www.facebook.com/61572802178684/videos/%F0%9D%97%99%F0%9D%97%BF%F0%9D%97%BC%F0%9D%97%BA-%F0%9D%97%AF%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%81%F0%9D%97%BC-%F0%9D%97%BD%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%81%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%98%82%F0%9D%97%B6%F0%9D%97%B9%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%98%80%F0%9D%97%BD%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%84%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-%F0%9D%97%B2%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%86%F0%9D%97%BC%F0%9D%97%BB%F0%9D%97%B2-%F0%9D%97%AF%F0%9D%97%B2/831769526505680/",
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.instagram.com/reel/DI5nKTAxIJ9/",
+    "https://www.tiktok.com/@btzpampanga",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7565327181572885768",
+    "https://www.tiktok.com/@ysapickles/video/7593341395323063560",
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.instagram.com/p/DIJiIjjy62F/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.facebook.com/photo.php?fbid=122118744555060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7565327181572885768",
+    "https://www.instagram.com/p/DQgvcX5kgOI/?hl=en",
+    "https://www.instagram.com/reel/DVTMda7ERXz/",
+    "https://www.tiktok.com/discover/fun-place-pickleball-in-pampanga",
+    "https://www.tiktok.com/@ysapickles/video/7583299403373432071",
+    "https://www.facebook.com/solarispicklehub/",
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.facebook.com/groups/475322191759618/posts/829114996380334/",
+    "https://www.instagram.com/reel/DSHiTTHEdvh/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.instagram.com/p/DUnlxmwj3FU/",
+    "https://www.tiktok.com/discover/fun-place-pickleball-in-pampanga",
+    "https://www.tiktok.com/@bacanisam/video/7370259969221954836",
+    "https://www.instagram.com/reel/DUpKL0Wgogs/",
+    "https://www.facebook.com/groups/238353692870199/posts/26151169054495308/",
+    "https://www.facebook.com/groups/659712605850207/posts/1480083113813148/",
+    "https://www.facebook.com/groups/261701332189767/posts/1480722000287688/",
+    "https://www.instagram.com/reel/DI5nKTAxIJ9/",
+    "https://www.instagram.com/p/DI2xtOEhROW/",
+    "https://www.instagram.com/reel/DSCTqi7EZ4Q/",
+    "https://www.facebook.com/TheDenzoneLifestyle/posts/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/1098706628947807/",
+    "https://www.facebook.com/TheDenzoneLifestyle/videos/fast-hands-quick-feet-big-fun-pickleball-is-on-are-you-ready-to-rallydrop-in-at-/827688919744375/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/pampanga/floridablanca/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/pampanga/floridablanca/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/pampanga/floridablanca/scrape-state.json"
+}

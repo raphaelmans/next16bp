@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:santa-cruz:facebook",
+  "createdAt": "2026-03-10T15:25:35.664Z",
+  "updatedAt": "2026-03-10T15:52:40.647Z",
+  "scope": {
+    "provinceSlug": "laguna",
+    "citySlug": "santa-cruz",
+    "provinceName": "Laguna",
+    "cityName": "Santa Cruz",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "84ae50af-5abc-44c8-9127-b68243318b38"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:25:35.664Z",
+      "finishedAt": "2026-03-10T15:25:42.942Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:25:42.943Z",
+      "finishedAt": "2026-03-10T15:26:28.463Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:26:28.463Z",
+      "finishedAt": "2026-03-10T15:26:30.320Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:26:30.460Z",
+      "finishedAt": "2026-03-10T15:26:31.994Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:26:32.139Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:26:32.140Z",
+      "finishedAt": "2026-03-10T15:52:40.647Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:iloilo:iloilo-city:facebook",
   "createdAt": "2026-03-09T17:12:33.870Z",
-  "updatedAt": "2026-03-10T11:32:18.598Z",
+  "updatedAt": "2026-03-10T15:52:39.772Z",
   "scope": {
     "provinceSlug": "iloilo",
     "citySlug": "iloilo-city",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:32:18.598Z",
+      "finishedAt": "2026-03-10T15:52:39.772Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

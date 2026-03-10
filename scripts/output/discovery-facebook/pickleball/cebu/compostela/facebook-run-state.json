@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cebu:compostela:facebook",
   "createdAt": "2026-03-10T12:20:22.076Z",
-  "updatedAt": "2026-03-10T12:22:58.729Z",
+  "updatedAt": "2026-03-10T15:52:39.113Z",
   "scope": {
     "provinceSlug": "cebu",
     "citySlug": "compostela",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:22:58.729Z",
+      "finishedAt": "2026-03-10T15:52:39.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:22:58.729Z",
+      "finishedAt": "2026-03-10T15:52:39.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:22:58.729Z",
+      "finishedAt": "2026-03-10T15:52:39.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:22:58.729Z",
+      "finishedAt": "2026-03-10T15:52:39.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

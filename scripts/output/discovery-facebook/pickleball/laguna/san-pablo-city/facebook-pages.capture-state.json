@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:san-pablo-city",
+  "createdAt": "2026-03-10T14:57:36.767Z",
+  "updatedAt": "2026-03-10T14:59:31.483Z",
+  "urls": {
+    "https://facebook.com/p/Golden-Pickle-Court-61581893280394": {
+      "canonicalUrl": "https://facebook.com/p/Golden-Pickle-Court-61581893280394",
+      "latestUrl": "https://www.facebook.com/p/Golden-Pickle-Court-61581893280394/",
+      "firstCapturedAt": "2026-03-10T14:57:36.825Z",
+      "lastCapturedAt": "2026-03-10T14:57:36.825Z",
+      "status": "captured",
+      "title": "Golden Pickle Court | San Pablo City | Facebook",
+      "venueName": "Golden Pickle Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Golden Pickle Court"
+    },
+    "https://facebook.com/p/SmashxSociety-Pickleball-Cafe-61578603867471": {
+      "canonicalUrl": "https://facebook.com/p/SmashxSociety-Pickleball-Cafe-61578603867471",
+      "latestUrl": "https://www.facebook.com/p/SmashxSociety-Pickleball-Cafe-61578603867471/",
+      "firstCapturedAt": "2026-03-10T14:57:55.427Z",
+      "lastCapturedAt": "2026-03-10T14:57:55.427Z",
+      "status": "captured",
+      "title": "PCKLD Pickleball Cafe | San Pablo City | Facebook",
+      "venueName": "PCKLD Pickleball Cafe",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "PCKLD Pickleball Cafe"
+    },
+    "https://facebook.com/61586093523226": {
+      "canonicalUrl": "https://facebook.com/61586093523226",
+      "latestUrl": "https://www.facebook.com/61586093523226",
+      "firstCapturedAt": "2026-03-10T14:58:05.156Z",
+      "lastCapturedAt": "2026-03-10T14:58:05.156Z",
+      "status": "captured",
+      "title": "Dinking Spot Pickleball Club | San Pablo City | Facebook",
+      "venueName": "Dinking Spot Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Paraiso-de-Avedad-Pickleball-Club-61556385868847": {
+      "canonicalUrl": "https://facebook.com/p/Paraiso-de-Avedad-Pickleball-Club-61556385868847",
+      "latestUrl": "https://www.facebook.com/p/Paraiso-de-Avedad-Pickleball-Club-61556385868847/",
+      "firstCapturedAt": "2026-03-10T14:58:21.038Z",
+      "lastCapturedAt": "2026-03-10T14:58:21.038Z",
+      "status": "captured",
+      "title": "Paraiso de Avedad Pickleball Club | San Pablo City | Facebook",
+      "venueName": "Paraiso de Avedad Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61581893280394?locale=en_GB": {
+      "canonicalUrl": "https://facebook.com/61581893280394?locale=en_GB",
+      "latestUrl": "https://www.facebook.com/61581893280394/?locale=en_GB",
+      "firstCapturedAt": "2026-03-10T14:58:36.705Z",
+      "lastCapturedAt": "2026-03-10T14:58:36.705Z",
+      "status": "captured",
+      "title": "Golden Pickle Court | San Pablo City | Facebook",
+      "venueName": "Golden Pickle Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Golden Pickle Court"
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T14:58:55.547Z",
+      "lastCapturedAt": "2026-03-10T14:58:55.547Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T14:59:13.468Z",
+      "lastCapturedAt": "2026-03-10T14:59:13.468Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

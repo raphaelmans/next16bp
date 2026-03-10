@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T15:53:23.689Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 0,
+    "aiResolved": 1,
+    "unresolved": 0
+  },
+  "discoveredUrls": 3,
+  "scrapedUrls": 1,
+  "noDataUrls": 2,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "one pickle hub|bacolod city|negros occidental",
+      "name": "One Pickle Hub",
+      "city": "BACOLOD CITY",
+      "province": "NEGROS OCCIDENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+      "firstSeenAt": "2026-03-10T15:53:23.689Z",
+      "lastSeenAt": "2026-03-10T15:53:23.689Z"
+    }
+  ]
+}

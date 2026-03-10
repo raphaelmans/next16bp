@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-occidental:bacolod-city:facebook",
+  "createdAt": "2026-03-10T15:53:25.802Z",
+  "updatedAt": "2026-03-10T15:56:04.843Z",
+  "scope": {
+    "provinceSlug": "negros-occidental",
+    "citySlug": "bacolod-city",
+    "provinceName": "Negros Occidental",
+    "cityName": "Bacolod City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:53:25.803Z",
+      "finishedAt": "2026-03-10T15:53:35.873Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:53:35.873Z",
+      "finishedAt": "2026-03-10T15:56:04.841Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "failed",
+      "startedAt": "2026-03-10T15:56:04.842Z",
+      "finishedAt": "2026-03-10T15:56:04.843Z",
+      "lastError": "ENOENT: no such file or directory, open '/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages-curated-courts.csv'",
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  }
+}

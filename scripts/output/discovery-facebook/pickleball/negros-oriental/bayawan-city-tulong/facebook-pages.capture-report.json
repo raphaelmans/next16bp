@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "bayawan-city-tulong",
+    "provinceName": "Negros Oriental",
+    "cityName": "Bayawan City (Tulong)"
+  },
+  "generatedAt": "2026-03-10T15:27:54.354Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 4,
+  "csvRowCount": 0,
+  "failures": []
+}

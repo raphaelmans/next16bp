@@ -1,0 +1,86 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "maguindanao",
+    "citySlug": "cotabato-city",
+    "provinceName": "Maguindanao",
+    "cityName": "Cotabato City"
+  },
+  "importedPlaceIds": [
+    "85de8456-b33d-44f1-a9cb-739f116b87aa",
+    "6aeba35c-e0fa-4a42-889d-7aefaecc06f8",
+    "64af265a-87f1-43f3-b820-f978a767bb89"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:06:59.807Z",
+      "finishedAt": "2026-03-10T16:07:39.580Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:07:39.581Z",
+      "finishedAt": "2026-03-10T16:08:05.282Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:08:05.282Z",
+      "finishedAt": "2026-03-10T16:08:09.164Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:08:09.618Z",
+      "finishedAt": "2026-03-10T16:08:14.228Z",
+      "lastError": null,
+      "notes": "processed 3 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T16:08:14.228Z",
+      "lastError": null,
+      "notes": "verified 3 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:08:14.228Z",
+      "finishedAt": "2026-03-10T16:08:15.414Z",
+      "lastError": null,
+      "notes": "backfilled 3 place ids"
+    }
+  }
+}

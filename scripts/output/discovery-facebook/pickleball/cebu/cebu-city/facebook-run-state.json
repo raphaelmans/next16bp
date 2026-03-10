@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:cebu-city:facebook",
+  "createdAt": "2026-03-10T14:53:38.680Z",
+  "updatedAt": "2026-03-10T15:52:39.111Z",
+  "scope": {
+    "provinceSlug": "cebu",
+    "citySlug": "cebu-city",
+    "provinceName": "Cebu",
+    "cityName": "Cebu City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "e7a742d3-5da5-488a-9b86-ab6f4a764163"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:53:38.680Z",
+      "finishedAt": "2026-03-10T14:53:47.422Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:53:47.422Z",
+      "finishedAt": "2026-03-10T14:56:05.696Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:56:05.696Z",
+      "finishedAt": "2026-03-10T14:56:08.948Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:56:09.070Z",
+      "finishedAt": "2026-03-10T14:56:10.622Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T14:56:10.738Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:56:10.738Z",
+      "finishedAt": "2026-03-10T15:52:39.111Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

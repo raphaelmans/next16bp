@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:leyte:tacloban-city",
+  "createdAt": "2026-03-10T16:00:23.189Z",
+  "updatedAt": "2026-03-10T16:01:53.239Z",
+  "scope": {
+    "provinceSlug": "leyte",
+    "citySlug": "tacloban-city",
+    "provinceName": "Leyte",
+    "cityName": "Tacloban City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "837aafc1-273a-4a29-a5c8-8e6d4418c53d"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:00:23.191Z",
+      "finishedAt": "2026-03-10T16:01:04.045Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:01:04.045Z",
+      "finishedAt": "2026-03-10T16:01:47.810Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:01:47.810Z",
+      "finishedAt": "2026-03-10T16:01:50.314Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:01:50.704Z",
+      "finishedAt": "2026-03-10T16:01:52.161Z",
+      "lastError": null,
+      "notes": "processed 1 approved rows sequentially; skipped 1 out-of-scope rows"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T16:01:52.161Z",
+      "lastError": null,
+      "notes": "verified 1 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T16:01:52.162Z",
+      "finishedAt": "2026-03-10T16:01:53.239Z",
+      "lastError": null,
+      "notes": "backfilled 1 place ids"
+    }
+  }
+}

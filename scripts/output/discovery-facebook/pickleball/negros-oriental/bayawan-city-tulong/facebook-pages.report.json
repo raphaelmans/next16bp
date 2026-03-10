@@ -1,0 +1,92 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Bayawan City (Tulong)",
+    "citySlug": "bayawan-city-tulong",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:26:34.444Z",
+  "queries": [
+    "site:facebook.com pickleball Bayawan City (Tulong) Negros Oriental",
+    "site:facebook.com \"Bayawan City (Tulong)\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Bayawan City (Tulong)\" \"pickleball club\"",
+    "site:facebook.com \"Bayawan City (Tulong)\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://cs-cz.facebook.com/rotarycluboftolong/",
+    "https://www.facebook.com/rotaractcluboftolong/",
+    "https://www.facebook.com/photo.php?fbid=1260565579439129&set=a.455553306607031&type=3",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/rotarycluboftolong/posts/1st-rotary-club-of-tolong-pickleball-tournament-for-a-causedink-for-pink-for-bre/1255900456580048/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/142896755886772/posts/3547690368740710/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/142896755886772/posts/3547617638747983/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/cheriescheesecakehouse/posts/our-vip-pica-pica-table-spread-during-the-3rd-dumaguete-baby-boys-pickle-ball-le/889593627167388/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/100079243231623/photos/d41d8cd9/949049171079849/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/142896755886772/posts/3546471082195972/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/505965599867393/posts/2399790183818249/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1380630140324249/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1365053751881888/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-pages.state.json"
+}

@@ -1,0 +1,211 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Siaton",
+    "citySlug": "siaton",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:42:58.542Z",
+  "queries": [
+    "site:facebook.com pickleball Siaton Negros Oriental",
+    "site:facebook.com \"Siaton\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Siaton\" \"pickleball club\"",
+    "site:facebook.com \"Siaton\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/people/Siaton-Dinkers-Club/61583699640253/",
+    "https://www.facebook.com/people/CurveSide-Pickleball-and-Cafe/61588200697647/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/cute.jade/videos/in-todays-vlog-im-interviewing-some-of-the-players-here-at-curveside-pickleball-/1906804686892272/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583699640253/posts/congratulations-to-jill-and-jeanette-for-securing-1st-place-in-the-womens-beginn/122122161111123321/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/johnricacademiaabordo/posts/%F0%9D%90%8F%F0%9D%90%88%F0%9D%90%82%F0%9D%90%8A%F0%9D%90%8B%F0%9D%90%84%F0%9D%90%81%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-%F0%9D%96%A5%F0%9D%97%82%F0%9D%97%8B%F0%9D%97%8C%F0%9D%97%8D-%F0%9D%97%89%F0%9D%97%85%F0%9D%96%BA%F0%9D%97%92-%F0%9D%96%A5%F0%9D%97%82%F0%9D%97%8B%F0%9D%97%8C%F0%9D%97%8D-%F0%9D%97%8C%F0%9D%97%89%F0%9D%97%82%F0%9D%97%87-%F0%9D%96%A5%F0%9D%97%82%F0%9D%97%8B%F0%9D%97%8C%F0%9D%97%8D-%F0%9D%97%90%F0%9D%97%82%F0%9D%97%87%F0%9D%96%B3%F0%9D%97%8B%F0%9D%97%82%F0%9D%96%BE%F0%9D%96%BD-%F0%9D%97%89%F0%9D%97%82%F0%9D%96%BC%F0%9D%97%84%F0%9D%97%85%F0%9D%96%BE%F0%9D%96%BB%F0%9D%96%BA%F0%9D%97%85%F0%9D%97%85-%F0%9D%96%BF%F0%9D%97%88%F0%9D%97%8B-%F0%9D%97%8D%F0%9D%97%81%F0%9D%96%BE-%F0%9D%96%BF%F0%9D%97%82%F0%9D%97%8B%F0%9D%97%8C%F0%9D%97%8D-%F0%9D%97%8D%F0%9D%97%82%F0%9D%97%86%F0%9D%96%BE-%F0%9D%96%BA%F0%9D%97%87/25334480786180198/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1001312810360155/posts/2315524528938970/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1423334219387174/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/siatonbuynsell/posts/25317996361207013/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445421267178469/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/NegrosOrientalTourismBoard/photos/%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B8-%F0%9D%98%86%F0%9D%97%BC%F0%9D%98%82%F0%9D%98%83%F0%9D%97%B2-%F0%9D%97%B4%F0%9D%97%BC%F0%9D%98%81-%F0%9D%98%84%F0%9D%97%B5%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%B6%F0%9D%98%81-%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%80-%F0%9D%98%81%F0%9D%97%BC-%F0%9D%98%84%F0%9D%97%B6%F0%9D%97%BB-%F0%9D%9F%8F%F0%9D%9F%8E%F0%9D%9F%8E%F0%9D%9F%8E%F0%9D%9F%8E%F0%9D%9F%8E%F0%9D%9F%8E%EF%B8%8Fplanout-in-collaboration-with-the-p/122246568032120364/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cute.jade/videos/in-todays-vlog-im-interviewing-some-of-the-players-here-at-curveside-pickleball-/1906804686892272/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583699640253/posts/congratulations-to-jill-and-jeanette-for-securing-1st-place-in-the-womens-beginn/122122161111123321/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1001312810360155/posts/2315524528938970/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1423334219387174/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445421267178469/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1001312810360155/posts/2316647585493331/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583699640253/photos/d41d8cd9/122122167681123321/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/169231751959476/posts/1109311727951469/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583699640253/posts/congratulations-to-jill-and-jeanette-for-securing-1st-place-in-the-womens-beginn/122122161111123321/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1348444453542818/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/avatar.quang.duong/posts/practice-covering-for-vu-yenpickleball-propickleball-pickleballtraining-modernpi/2645367772496284/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1411646323889297/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cebunibaiph/posts/opening-soon-pickle-ball-courts-and-cebu-fun-parkcebunibai-cebufunpark-picklebal/1448807856600885/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1423334219387174/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/169231751959476/posts/1109311727951469/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2725088671187394/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61587406156876/posts/the-opening-week-at-bemilds-active-zone-is-officially-in-the-books-we-loved-seei/122105210427246871/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cebunibaiph/posts/opening-soon-pickle-ball-courts-and-cebu-fun-parkcebunibai-cebufunpark-picklebal/1448807856600885/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/siatonbuynsell/posts/25317996361207013/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1301512258325920/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330365720584969/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1025169441244338/posts/2294535557641047/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1334252278295369/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-pages.state.json"
+}

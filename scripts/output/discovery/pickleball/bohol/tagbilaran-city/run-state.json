@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bohol:tagbilaran-city",
+  "createdAt": "2026-03-10T15:54:54.785Z",
+  "updatedAt": "2026-03-10T15:59:17.023Z",
+  "scope": {
+    "provinceSlug": "bohol",
+    "citySlug": "tagbilaran-city",
+    "provinceName": "Bohol",
+    "cityName": "Tagbilaran City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:54:54.786Z",
+      "finishedAt": "2026-03-10T15:55:42.731Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:58:34.217Z",
+      "finishedAt": "2026-03-10T15:59:14.793Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:59:14.793Z",
+      "finishedAt": "2026-03-10T15:59:17.022Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:59:17.023Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:59:17.023Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:59:17.023Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

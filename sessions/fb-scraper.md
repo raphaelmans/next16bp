@@ -14,9 +14,13 @@ This session note captures the state of the Facebook-page ingestion pipeline so 
 
 ## Current Production State
 
-- Current production curated export row count: `397`
+- Current production curated export row count: `412`
 - Verified from:
-  - [production-curated-places-latest.csv](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/production-curated-places-latest.csv)
+  - [curated-places-export.csv](/home/raphaelm/kudoscourts/scripts/output/curated-places-export.csv)
+- Current URL-trace frontier vs Facebook frontier:
+  - URL traces: `130`
+  - Facebook run-states: `130`
+  - Pending relative to URL traces: `0`
 
 ## Canonical Commands
 
@@ -51,9 +55,9 @@ pnpm scrape:curated:run:facebook -- --province <province-slug> --city <city-slug
   - URL traces: `scripts/output/discovery/**/run-state.json`
   - Facebook traces: `scripts/output/discovery-facebook/**/facebook-run-state.json`
 - The active Facebook runner code is:
-  - [curated-facebook-ingestion-runner.service.ts](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/src/lib/modules/automations/curated-ingestion/services/curated-facebook-ingestion-runner.service.ts)
+  - [curated-facebook-ingestion-runner.service.ts](/home/raphaelm/kudoscourts/src/lib/modules/automations/curated-ingestion/services/curated-facebook-ingestion-runner.service.ts)
 - The active Facebook capture code is:
-  - [curated-facebook-page-capture.service.ts](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/src/lib/modules/automations/curated-ingestion/services/curated-facebook-page-capture.service.ts)
+  - [curated-facebook-page-capture.service.ts](/home/raphaelm/kudoscourts/src/lib/modules/automations/curated-ingestion/services/curated-facebook-page-capture.service.ts)
 
 ## Important Fixes Already Made
 
@@ -63,12 +67,14 @@ pnpm scrape:curated:run:facebook -- --province <province-slug> --city <city-slug
 2. Empty capture CSVs no longer count as hard failures:
 - they are marked `skipped`
 
-3. `playwright-cli` calls now have a timeout:
-- prevents hanging forever on bad Facebook pages
+3. Facebook capture now uses direct Playwright instead of shelling out to `playwright-cli`:
+- avoids missing-CLI setup failures in fresh environments
+- uses persistent Playwright user-data dirs under `.playwright-facebook/`
+- prefers Chrome when available and falls back to bundled Chromium automatically
 
 4. Generated cache cleanup was required once:
 - `.next`
-- `.playwright-cli`
+- `.playwright-facebook`
 - `playwright-report`
 - `tsconfig.tsbuildinfo`
 
@@ -120,25 +126,26 @@ Notes:
 - `ACE covered Pickleball COURT` was a manual promotion from the duplicate gate’s review band.
 - All listed imports were production-verified and embedding-backfilled.
 
+10-batch continuation from the `397` baseline to the `412` baseline:
+
+- `Linkers Pickleball Court`
+- `Golden Pickle Court`
+- `PCKLD Pickleball Cafe`
+- `DoPickle Court`
+- `LM Pickleball Court`
+- `Picklerz Place`
+- `CurveSide Pickleball and Cafe`
+- `Suncoast Pickleball Club`
+- `Hambalos Pickleball Court`
+- `Court Hive by Reyes`
+- `The 33rd Athletics`
+- `Sta Cruz Pickleball Club`
+
 ## Current Pending Facebook Scopes
 
-The remaining unresolved Facebook scopes relative to URL traces are:
-
-- `bulacan / bustos`
-- `bulacan / calumpit`
-- `bulacan / pandi`
-- `bulacan / paombong`
-- `davao-del-sur / malalag`
-- `davao-del-sur / matanao`
-- `davao-del-sur / padada`
-- `negros-oriental / mabinay`
-- `negros-oriental / santa-catalina`
-- `negros-oriental / siaton`
-- `rizal / teresa`
-
-Count: `11`
-
-These are still `missing` Facebook run-state completions, not just review rows.
+- Relative to current URL traces, there are no pending Facebook scopes.
+- The original `11` missing scopes from the prior checkpoint are all complete.
+- Broader frontier coverage is now `130 / 130` URL-trace-to-Facebook-run-state parity.
 
 ## Repeated Failure Patterns
 
@@ -174,24 +181,24 @@ These are still `missing` Facebook run-state completions, not just review rows.
 
 Production export:
 
-- [production-curated-places-latest.csv](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/production-curated-places-latest.csv)
+- [curated-places-export.csv](/home/raphaelm/kudoscourts/scripts/output/curated-places-export.csv)
 
 Representative Facebook run states:
 
-- [bocaue facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-run-state.json)
-- [guiguinto facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-run-state.json)
-- [silang facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/silang/facebook-run-state.json)
-- [carcar-city facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/carcar-city/facebook-run-state.json)
-- [bacong facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bacong/facebook-run-state.json)
-- [dauin facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-run-state.json)
-- [mabalacat-city facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mabalacat-city/facebook-run-state.json)
-- [san-fernando-city facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/san-fernando-city/facebook-run-state.json)
-- [cainta facebook-run-state.json](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/cainta/facebook-run-state.json)
+- [bustos facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-run-state.json)
+- [cebu-city facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/cebu/cebu-city/facebook-run-state.json)
+- [mabinay facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/mabinay/facebook-run-state.json)
+- [santa-catalina facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-run-state.json)
+- [siaton facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/siaton/facebook-run-state.json)
+- [nasugbu facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/batangas/nasugbu/facebook-run-state.json)
+- [santa-cruz facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-run-state.json)
+- [bayawan-city-tulong facebook-run-state.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/bayawan-city-tulong/facebook-run-state.json)
 
-Manual promotion artifacts used successfully:
+10-batch run artifacts:
 
-- [final-batch10-promotions.csv](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/final-batch10-promotions.csv)
-- [final-batch10-last-row.csv](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/final-batch10-last-row.csv)
+- [batch-runs 20260310-225106](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/batch-runs/20260310-225106)
+- [batch-1-summary.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/batch-runs/20260310-225106/batch-1-summary.json)
+- [batch-10-summary.json](/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/batch-runs/20260310-225106/batch-10-summary.json)
 
 ## Resume Strategy
 
@@ -199,15 +206,19 @@ If resuming later, do this in order:
 
 1. Read this file.
 2. Confirm current production row count from:
-- [production-curated-places-latest.csv](/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/production-curated-places-latest.csv)
+- [curated-places-export.csv](/home/raphaelm/kudoscourts/scripts/output/curated-places-export.csv)
 3. Recompute pending scopes from URL traces.
-4. Continue with:
+4. If pending scopes are non-zero, continue with:
 
 ```bash
 pnpm scrape:curated:run:facebook -- --scope-source artifact:url
 ```
 
-5. If the runner becomes low-yield:
+5. If pending scopes are already `0`:
+- no Facebook runner work is required
+- only resume if new URL-trace scopes are added upstream
+
+6. If the runner becomes low-yield:
 - inspect existing `facebook-pages.capture-report.json`
 - inspect `facebook-pages.captured.json`
 - promote clearly distinct review-band rows into a temporary CSV
@@ -216,6 +227,6 @@ pnpm scrape:curated:run:facebook -- --scope-source artifact:url
 
 ## Practical Goal For Next Resume
 
-- Continue from the `397` production baseline
-- Work the remaining `11` pending Facebook scopes
-- Prefer finishing the missing scopes before broadening further
+- Continue from the `412` production baseline
+- Treat Facebook URL-trace coverage as complete unless new URL scopes appear
+- Prefer incremental reruns only after new upstream URL traces are generated

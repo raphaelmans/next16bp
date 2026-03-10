@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:iloilo:miagao:facebook",
   "createdAt": "2026-03-10T11:12:18.294Z",
-  "updatedAt": "2026-03-10T11:32:18.601Z",
+  "updatedAt": "2026-03-10T15:52:39.774Z",
   "scope": {
     "provinceSlug": "iloilo",
     "citySlug": "miagao",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:32:18.601Z",
+      "finishedAt": "2026-03-10T15:52:39.774Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:32:18.601Z",
+      "finishedAt": "2026-03-10T15:52:39.774Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:32:18.601Z",
+      "finishedAt": "2026-03-10T15:52:39.774Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:32:18.601Z",
+      "finishedAt": "2026-03-10T15:52:39.774Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

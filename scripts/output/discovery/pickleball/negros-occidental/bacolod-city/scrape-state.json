@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T15:53:23.689Z",
+  "updatedAt": "2026-03-10T15:53:45.402Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+      "firstDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "lastDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T15:53:23.689Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "one pickle hub|bacolod city|negros occidental",
+      "lastRowName": "One Pickle Hub"
+    },
+    "https://reclub.co/clubs/@bacolod-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@bacolod-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@bacolod-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "lastDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:53:23.689Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@bacolod-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@bacolod-pickleball-club",
+      "latestUrl": "https://reclub.co/ko/clubs/@bacolod-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "lastDiscoveredAt": "2026-03-10T15:53:23.689Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:53:23.689Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "one pickle hub|bacolod city|negros occidental": {
+      "rowKey": "one pickle hub|bacolod city|negros occidental",
+      "name": "One Pickle Hub",
+      "city": "BACOLOD CITY",
+      "province": "NEGROS OCCIDENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/bacolod/one-pickle-hub",
+      "firstSeenAt": "2026-03-10T15:53:23.689Z",
+      "lastSeenAt": "2026-03-10T15:53:23.689Z"
+    }
+  }
+}

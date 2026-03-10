@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "santa-catalina",
+    "provinceName": "Negros Oriental",
+    "cityName": "Santa Catalina"
+  },
+  "generatedAt": "2026-03-10T15:03:08.592Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-oriental/santa-catalina/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 0,
+  "skipCount": 2,
+  "csvRowCount": 1,
+  "failures": []
+}

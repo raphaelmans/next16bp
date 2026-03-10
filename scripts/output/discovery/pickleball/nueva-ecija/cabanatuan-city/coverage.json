@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-10T16:04:07.122Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 10,
+  "scrapedUrls": 3,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "camella covered court|cabanatuan city|nueva ecija",
+      "name": "Camella Covered Court",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/camella-covered-court",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    },
+    {
+      "rowKey": "kalamandarin pickleball court|cabanatuan city|nueva ecija",
+      "name": "Kalamandarin Pickleball Court",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/kalamandarin-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    },
+    {
+      "rowKey": "smash cab badminton and fitness|cabanatuan city|nueva ecija",
+      "name": "Smash Cab Badminton And Fitness",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "firstSeenAt": "2026-03-10T16:04:07.122Z",
+      "lastSeenAt": "2026-03-10T16:04:07.122Z"
+    }
+  ]
+}

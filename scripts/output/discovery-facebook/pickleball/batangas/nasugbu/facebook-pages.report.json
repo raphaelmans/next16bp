@@ -1,0 +1,169 @@
+{
+  "scope": {
+    "provinceName": "Batangas",
+    "provinceSlug": "batangas",
+    "cityName": "Nasugbu",
+    "citySlug": "nasugbu",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:19:50.935Z",
+  "queries": [
+    "site:facebook.com pickleball Nasugbu Batangas",
+    "site:facebook.com \"Nasugbu\" \"Batangas\" \"pickleball\"",
+    "site:facebook.com \"Nasugbu\" \"pickleball club\"",
+    "site:facebook.com \"Nasugbu\" \"pickleball court\"",
+    "site:facebook.com \"Batangas\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/968433519691871/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.facebook.com/BeautylurebyHer/",
+    "https://www.facebook.com/998353946685701/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Club-61566591501722/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Arena-61578531977462/",
+    "https://www.facebook.com/p/Batangas-City-Pickleball-Club-61575645631229/",
+    "https://www.facebook.com/p/EJs-Pickleball-Lounge-61579049522050/",
+    "https://www.facebook.com/474219265766513"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/clotilde.eventscenter/videos/exciting-news-from-clotilde-were-happy-to-introduce-our-new-pickleball-court-at-/933309699081450/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4279013755720166/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4372140529740821/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/BeautylurebyHer/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/clotilde.eventscenter/videos/exciting-news-from-clotilde-were-happy-to-introduce-our-new-pickleball-court-at-/933309699081450/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466969054764961/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4279013755720166/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/880878188232533/posts/926424273677924/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/picosandshotel/posts/mark-your-calendars-join-us-at-pico-de-loro-cove-for-a-thrilling-indoor-pickleba/1103865845110160/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4279013755720166/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/880878188232533/posts/926424273677924/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/BeautylurebyHer/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1093237842138086/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582826103444/posts/thank-you-court-hive-by-reyes-and-nasugbu-pickleball-community-for-visiting-atp-/122119707021094203/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thespinzonenasugbu/videos/capture-the-fun-at-the-spin-zone-/1361142002237310/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1284268005387702/posts/1943917912756038/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4277637672524441/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/clotilde.eventscenter/videos/exciting-news-from-clotilde-were-happy-to-introduce-our-new-pickleball-court-at-/933309699081450/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4279013755720166/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/BeautylurebyHer/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3406684009585886/posts/4218425601745052/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/WeLoveNasugbuOfficial/posts/25541660645441752/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566591501722/videos/1884617698834785/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/batangas/nasugbu/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/batangas/nasugbu/facebook-pages.state.json"
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:san-jose:facebook",
   "createdAt": "2026-03-10T11:43:12.711Z",
-  "updatedAt": "2026-03-10T11:44:40.157Z",
+  "updatedAt": "2026-03-10T15:52:41.960Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "san-jose",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:44:40.157Z",
+      "finishedAt": "2026-03-10T15:52:41.960Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:44:40.157Z",
+      "finishedAt": "2026-03-10T15:52:41.960Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:44:40.157Z",
+      "finishedAt": "2026-03-10T15:52:41.960Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:44:40.157Z",
+      "finishedAt": "2026-03-10T15:52:41.960Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

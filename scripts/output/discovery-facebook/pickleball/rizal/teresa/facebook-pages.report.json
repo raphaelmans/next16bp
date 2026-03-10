@@ -1,0 +1,209 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Teresa",
+    "citySlug": "teresa",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:43:09.328Z",
+  "queries": [
+    "site:facebook.com pickleball Teresa Rizal",
+    "site:facebook.com \"Teresa\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Teresa\" \"pickleball club\"",
+    "site:facebook.com \"Teresa\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/QuestAdventureCamp?locale=fr_CA",
+    "https://www.facebook.com/questsportsph?locale=fr_CA",
+    "https://www.facebook.com/QuestAdventureCamp?locale=zh_HK",
+    "https://www.facebook.com/QuestAdventureCamp?locale=es_LA",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/weekends-were-made-for-pickleball-rally-with-friends-and-family-on-quests-profes/1345989460880671/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/rally-dink-and-repeat-on-quests-premium-pickleball-courts-perfect-for-team-build/1332733072206310/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/videos/more-than-an-adventure-campquest-boasts-6-premium-pickleball-courts-built-for-pl/1237923844942160/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/photos/-rizal-meet-2026-register-now-register-here-httpsformjotformcom253057992260057qu/122175344636607965/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/serve-smash-succeed-book-your-pickleball-team-build-todayare-you-ready-to-build-/1328521112627506/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/videos/pickleball-for-parents-playtime-for-kids-enjoy-our-pickleball-day-out-packagespe/1630916288037718/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/photos/weekends-were-made-for-pickleball-rally-with-friends-and-family-on-quests-profes/1345989424214008/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/weekends-were-made-for-pickleball-rally-with-friends-and-family-on-quests-profes/1345989460880671/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/weekends-are-better-on-quests-premium-pickleball-courts-perfect-for-casual-games/1311905534289064/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/videos/pickleball-for-parents-playtime-for-kids-enjoy-our-pickleball-day-out-packagespe/1630916288037718/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/serve-smash-succeed-book-your-pickleball-team-build-todayare-you-ready-to-build-/1328521112627506/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/videos/more-than-an-adventure-campquest-boasts-6-premium-pickleball-courts-built-for-pl/1237923844942160/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/photos/-rizal-meet-2026-register-now-register-here-httpsformjotformcom253057992260057qu/122175344636607965/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/posts/rally-dink-and-repeat-on-quests-premium-pickleball-courts-perfect-for-team-build/1332733072206310/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/videos/rizal-meet-at-quest-adventure-camp/903110202104391/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QuestAdventureCamp/photos/weekends-are-better-on-quests-premium-pickleball-courts-perfect-for-casual-games/1311905494289068/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1657943697556505/posts/25207336318857245/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1710360665894257/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1657943697556505/posts/27332346133022909/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/s2pickleball/posts/meet-teresa-moitoso-program-director-at-s2-pickleballteresa-moitoso-brings-an-ex/431413356668556/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/335326878346250/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/spacecoastpickleball/posts/4012317785670554/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1657943697556505/posts/28684167884507387/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/25788444880800319/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1657943697556505/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/216766105069486/posts/6303236676422368/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1671610399983921/posts/2056775768134047/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/923889201488854/posts/1927179297826501/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/etobicoke/posts/1857506717777275/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1671610399983921/posts/2136675006810789/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/349313527786280/posts/633104576073839/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityBrampton/posts/just-released-pickleball-now-has-a-home-in-brampton-weve-officially-opened-outdo/1103807516483661/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityBrampton/posts/the-calvert-park-pickleball-courts-are-almost-ready-more-pickleball-is-coming-ac/740451534781115/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1671610399983921/posts/2013360799142211/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1671610399983921/posts/1874110026400623/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/352984265854190/posts/1400375757781697/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/rizal/teresa/facebook-pages.state.json"
+}

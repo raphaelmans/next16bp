@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "laguna",
+    "citySlug": "santa-cruz",
+    "provinceName": "Laguna",
+    "cityName": "Santa Cruz"
+  },
+  "generatedAt": "2026-03-10T15:26:28.462Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 3,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 0,
+  "skipCount": 2,
+  "csvRowCount": 1,
+  "failures": []
+}

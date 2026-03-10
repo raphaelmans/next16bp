@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "magalang",
+    "provinceName": "Pampanga",
+    "cityName": "Magalang"
+  },
+  "generatedAt": "2026-03-10T15:16:10.250Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/magalang/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 7,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 7,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 1,
+  "skipCount": 5,
+  "csvRowCount": 1,
+  "failures": []
+}

@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:siaton:facebook",
+  "createdAt": "2026-03-10T14:42:58.541Z",
+  "updatedAt": "2026-03-10T15:52:42.392Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "siaton",
+    "provinceName": "Negros Oriental",
+    "cityName": "Siaton",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "17e121a1-166b-416f-8328-76198f60de49"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T14:42:58.541Z",
+      "finishedAt": "2026-03-10T14:43:07.800Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:03:14.571Z",
+      "finishedAt": "2026-03-10T15:04:09.631Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:04:09.631Z",
+      "finishedAt": "2026-03-10T15:04:12.140Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:04:12.261Z",
+      "finishedAt": "2026-03-10T15:04:13.874Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T15:04:14.002Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T15:04:14.002Z",
+      "finishedAt": "2026-03-10T15:52:42.392Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

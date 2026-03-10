@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:city-of-las-pinas:facebook",
   "createdAt": "2026-03-10T04:00:52.519Z",
-  "updatedAt": "2026-03-10T11:40:31.731Z",
+  "updatedAt": "2026-03-10T15:52:40.650Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "city-of-las-pinas",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:31.731Z",
+      "finishedAt": "2026-03-10T15:52:40.650Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:31.731Z",
+      "finishedAt": "2026-03-10T15:52:40.650Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:31.731Z",
+      "finishedAt": "2026-03-10T15:52:40.650Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:40:31.731Z",
+      "finishedAt": "2026-03-10T15:52:40.650Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

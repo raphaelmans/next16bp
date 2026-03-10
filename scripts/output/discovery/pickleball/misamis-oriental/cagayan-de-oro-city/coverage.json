@@ -1,0 +1,58 @@
+{
+  "generatedAt": "2026-03-10T16:02:33.709Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 4,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 11,
+  "scrapedUrls": 4,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 4,
+  "migratedRows": 0,
+  "pendingMigrationRows": 4,
+  "pending": [
+    {
+      "rowKey": "middleton pickleball club|cagayan de oro city|misamis oriental",
+      "name": "Middleton Pickleball Club",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/middleton-pickleball-club",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    {
+      "rowKey": "match point sports center|cagayan de oro city|misamis oriental",
+      "name": "Match Point Sports Center",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/match-point-sports-center",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    {
+      "rowKey": "sports zone|cagayan de oro city|misamis oriental",
+      "name": "Sports Zone",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro/sports-zone",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    },
+    {
+      "rowKey": "xavier sports and country club|cagayan de oro city|misamis oriental",
+      "name": "Xavier Sports And Country Club",
+      "city": "CAGAYAN DE ORO CITY",
+      "province": "MISAMIS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/northern-mindanao/cagayan-de-oro-city/xavier-sports-and-country-club",
+      "firstSeenAt": "2026-03-10T16:02:33.709Z",
+      "lastSeenAt": "2026-03-10T16:02:33.709Z"
+    }
+  ]
+}

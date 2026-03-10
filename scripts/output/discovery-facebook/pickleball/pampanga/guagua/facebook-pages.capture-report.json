@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "guagua",
+    "provinceName": "Pampanga",
+    "cityName": "Guagua"
+  },
+  "generatedAt": "2026-03-10T15:11:18.531Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/pampanga/guagua/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 9,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 9,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 3,
+  "skipCount": 6,
+  "csvRowCount": 0,
+  "failures": []
+}

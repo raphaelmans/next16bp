@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Bustos",
+    "citySlug": "bustos",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:41:43.352Z",
+  "queries": [
+    "site:facebook.com pickleball Bustos Bulacan",
+    "site:facebook.com \"Bustos\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Bustos\" \"pickleball club\"",
+    "site:facebook.com \"Bustos\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/100063733970315/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/kickstart-monday-join-our-monday-open-play-and-court-rental-900-am-100-pm-for-15/122159870510941050/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/look-who-dropped-by-and-played-a-round-at-our-newly-opened-pickleball-courtwere-/611084868672576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/-casa-julita-just-got-an-upgrade-new-vibes-same-cozy-feels-now-made-even-better-/608356995612030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/7033683366672564/posts/30608938912053678/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4298621163759425/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4121745371447006/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/4164464496901426/posts/24768551162732791/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4291054357849439/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/kickstart-monday-join-our-monday-open-play-and-court-rental-900-am-100-pm-for-15/122159870510941050/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4298621163759425/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/-casa-julita-just-got-an-upgrade-new-vibes-same-cozy-feels-now-made-even-better-/608356995612030/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/look-who-dropped-by-and-played-a-round-at-our-newly-opened-pickleball-courtwere-/611084868672576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1939174129913881/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/7033683366672564/posts/30608938912053678/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4051369125151298/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1261771145168430/posts/1680193923326148/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1224252851319783/posts/1846971822381213/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/977463485641560/posts/9028577643863397/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2451916681602326/posts/10037792906347961/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1224252851319783/posts/2112849289126797/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/hamiltonwatch/posts/2045447939282102/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/379153029249896/posts/2043698632795319/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/CrownPointCommunity/posts/2440830356111616/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/simcoepickleballclub/posts/530129172876524/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1224252851319783/posts/2112849289126797/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1224252851319783/posts/2105024916575901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1224252851319783/posts/1846971822381213/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/-casa-julita-just-got-an-upgrade-new-vibes-same-cozy-feels-now-made-even-better-/608356995612030/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1671610399983921/posts/1726352344509726/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100093132034773/posts/look-who-dropped-by-and-played-a-round-at-our-newly-opened-pickleball-courtwere-/611084868672576/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/countryvillagehotelcdo/posts/our-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%9E%F0%9D%90%AB%F0%9D%90%AF%F0%9D%90%9A%F0%9D%90%AD%F0%9D%90%A2%F0%9D%90%A8%F0%9D%90%A7-%F0%9D%90%A8%F0%9D%90%A7%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%A7%F0%9D%90%9E-system-is-officially-liveyou-can-now-book-your/1402078711931342/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/977463485641560/posts/9028577643863397/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/globalpickleballnetwork/posts/3858206807604518/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/bustos/facebook-pages.state.json"
+}

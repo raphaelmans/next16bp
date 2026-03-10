@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:rizal:cardona:facebook",
   "createdAt": "2026-03-10T12:32:07.814Z",
-  "updatedAt": "2026-03-10T12:32:43.903Z",
+  "updatedAt": "2026-03-10T15:52:43.912Z",
   "scope": {
     "provinceSlug": "rizal",
     "citySlug": "cardona",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:43.903Z",
+      "finishedAt": "2026-03-10T15:52:43.912Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:43.903Z",
+      "finishedAt": "2026-03-10T15:52:43.912Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:43.903Z",
+      "finishedAt": "2026-03-10T15:52:43.912Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:43.903Z",
+      "finishedAt": "2026-03-10T15:52:43.912Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

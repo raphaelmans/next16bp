@@ -1,0 +1,169 @@
+{
+  "scope": {
+    "provinceName": "Negros Occidental",
+    "provinceSlug": "negros-occidental",
+    "cityName": "Bacolod City",
+    "citySlug": "bacolod-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:53:25.804Z",
+  "queries": [
+    "site:facebook.com pickleball Bacolod City Negros Occidental",
+    "site:facebook.com \"Bacolod City\" \"Negros Occidental\" \"pickleball\"",
+    "site:facebook.com \"Bacolod City\" \"pickleball club\"",
+    "site:facebook.com \"Bacolod City\" \"pickleball court\"",
+    "site:facebook.com \"Negros Occidental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/onepickleballhubbacolod/",
+    "https://www.facebook.com/p/The-Pickleball-Hideout-61579202885025/",
+    "https://www.facebook.com/bacolodpickleball/?locale=is_IS",
+    "https://www.facebook.com/photo.php?fbid=1441817114396553&set=a.138579538053657&type=3",
+    "https://www.facebook.com/photo.php?fbid=1383076370503783&set=a.664461099031984&id=100064042985496",
+    "https://www.facebook.com/bacolodpickleball/",
+    "https://www.facebook.com/photo.php?fbid=10214114706937668&set=a.2167740369043&type=3",
+    "https://www.facebook.com/p/Ikthus-Pickleball-Community-61579073907556/",
+    "https://www.facebook.com/61585435064955/?locale=en_GB"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1441359143992619/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4087178414903702/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2026485131182780/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/MetropolitanBacolodConstructionBoom/posts/rovoca-development-co-is-set-to-break-ground-on-pickle-drive-bacolod-our-second-/1180790680878670/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/digicastnegros/posts/bacolod-pickleball-club-wins-2-golds-1-silver-3-bronzes-during-the-1st-picklepoi/1398335472307093/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61583186165726/posts/pickleball-championship-tournament-at-city-mall-mandalagan-bacolod-city-2026-neg/122117126553106205/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2026485131182780/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/MetropolitanBacolodConstructionBoom/posts/rovoca-development-co-is-set-to-break-ground-on-pickle-drive-bacolod-our-second-/1180790680878670/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4343981965890011/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61583186165726/posts/pickleball-championship-tournament-at-city-mall-mandalagan-bacolod-city-2026-neg/122117126553106205/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/8293540450696412/posts/26418266574463856/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1432709275116335/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/bacolodpickleball/posts/congratulations-team-bacolod-what-an-outstanding-showing-at-the-ppl-luzon-open-2/122252145086061617/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/bacolodpickleball/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/bacolodpickleball/posts/we-celebrate-not-just-the-victories-but-the-blessings-that-came-with-themthe-fri/122251679432061617/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2705700999792828/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1441359143992619/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/bacolodpickleball/posts/122249106404061617/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342144152740459/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/negrosdailybulletin/posts/bacolod-pickleball-club-shines-at-1st-picklepoint-pickleballtournamentby-mary-gr/1296384492510213/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342109989410542/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/one-pickleball-hub/915549724731584/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/rovocadevt/posts/groundbreaking-for-dink-yard-6100-a-6-court-pickleball-facility-in-bacolod-cityt/802548398952701/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/bacolodpickleball/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2026485131182780/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/LaCarlotaCityPIO/photos/pickleball-medalists-guillerma-m-makilan-left-and-franz-lyle-o-dioso-right-of-do/122176114670928581/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/LaCarlotaCityPIO/photos/the-architects-of-victory-flanking-our-niraam-2026-pickleball-champions-are-the-/122176114874928581/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/LaCarlotaCityPIO/photos/franz-lyle-o-dioso-of-do%C3%B1a-hortencia-salas-benedicto-national-high-school-prepar/122176114568928581/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61564179670225/videos/%F0%9D%90%92%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%AF%F0%9D%90%9E%F0%9D%90%AB-%F0%9D%90%93%F0%9D%90%AB%F0%9D%90%A2%F0%9D%90%AE%F0%9D%90%A6%F0%9D%90%A9%F0%9D%90%A1-%F0%9D%90%9F%F0%9D%90%A8%F0%9D%90%AB-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AE%F0%9D%90%9A%F0%9D%90%B2%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%8D%F0%9D%90%87%F0%9D%90%92-%F0%9D%90%9A%F0%9D%90%AD-%F0%9D%90%AD%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%9F%8F%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8D%F0%9D%90%88%F0%9D%90%91%F0%9D%90%80%F0%9D%90%80-%F0%9D%90%8C%F0%9D%90%9E%F0%9D%90%9E%F0%9D%90%AD-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94a-silver-victory-was-ac/1451995969656977/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4087178414903702/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1976315392866421/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1448290323558230/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1448042726916323/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1122079919253878/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages.state.json"
+}

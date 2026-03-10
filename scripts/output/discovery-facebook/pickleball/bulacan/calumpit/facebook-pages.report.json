@@ -1,0 +1,200 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Calumpit",
+    "citySlug": "calumpit",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:41:53.399Z",
+  "queries": [
+    "site:facebook.com pickleball Calumpit Bulacan",
+    "site:facebook.com \"Calumpit\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Calumpit\" \"pickleball club\"",
+    "site:facebook.com \"Calumpit\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/people/Kenyo-Pickleball-Club/61578684192335/",
+    "https://www.facebook.com/61575725051723/?locale=zh_CN",
+    "https://www.facebook.com/p/Calumpit-Pickleball-Club-61575725051723/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61579610165193/videos/it-was-an-honor-to-welcome-our-calumpit-vice-mayor-and-councilors-to-the-court-t/1627166981833460/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/orange.heart.kommunity/posts/%F0%9D%97%9F%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%9E-calumpit-pickleball-club-with-mayor-lem-faustino/122200778048562018/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575725051723/photos/d41d8cd9/122118427166857501/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373296796291861/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4355062534781954/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2714488802247381/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/957158239079381/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4323132154641659/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/orange.heart.kommunity/posts/%F0%9D%97%9F%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%9E-calumpit-pickleball-club-with-mayor-lem-faustino/122200778048562018/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373296796291861/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61575725051723/photos/d41d8cd9/122118427166857501/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4355062534781954/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346244725663735/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/957158239079381/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4323132154641659/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351433318478209/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61579610165193/videos/it-was-an-honor-to-welcome-our-calumpit-vice-mayor-and-councilors-to-the-court-t/1627166981833460/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4281891105432431/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/orange.heart.kommunity/posts/%F0%9D%97%9F%F0%9D%97%A2%F0%9D%97%A2%F0%9D%97%9E-calumpit-pickleball-club-with-mayor-lem-faustino/122200778048562018/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4290089607945914/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/61575725051723/photos/122113774292857501/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/LemFaustinoOfficial/posts/live-opening-ceremony-of-1st-mayor-lem-faustinos-pickle-ball-tournament/1039703245889541/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61579610165193/posts/pickleball-night-is-on-calumpit-pickleball-club-invites-all-skill-levels-to-open/122138437364987005/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575725051723/photos/d41d8cd9/122118427166857501/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4290089607945914/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ZENtro2022/photos/calumpit-pickleball-club-cpcthursday-night-gamenovember-20-2025gear-up-for-a-nig/865385972668240/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ZENtro2022/posts/calumpit-pickleball-club-cpcthursday-night-gamenovember-20-2025gear-up-for-a-nig/865385999334904/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373296796291861/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4258316151123260/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361672684120939/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367885900166284/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4355295174758690/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364231320531742/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4359275424360665/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/calumpit/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/calumpit/facebook-pages.state.json"
+}

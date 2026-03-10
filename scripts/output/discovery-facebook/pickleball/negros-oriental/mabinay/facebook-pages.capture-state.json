@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:mabinay",
+  "createdAt": "2026-03-10T14:59:39.758Z",
+  "updatedAt": "2026-03-10T15:01:30.618Z",
+  "urls": {
+    "https://facebook.com/people/Mabinay-Pickleball-Club/61581694078627": {
+      "canonicalUrl": "https://facebook.com/people/Mabinay-Pickleball-Club/61581694078627",
+      "latestUrl": "https://www.facebook.com/people/Mabinay-Pickleball-Club/61581694078627/",
+      "firstCapturedAt": "2026-03-10T14:59:39.824Z",
+      "lastCapturedAt": "2026-03-10T14:59:39.824Z",
+      "status": "captured",
+      "title": "Mabinay Pickleball Club | Mabinay | Facebook",
+      "venueName": "Mabinay Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/Homecourt/61580869872917": {
+      "canonicalUrl": "https://facebook.com/people/Homecourt/61580869872917",
+      "latestUrl": "https://www.facebook.com/people/Homecourt/61580869872917/",
+      "firstCapturedAt": "2026-03-10T14:59:54.429Z",
+      "lastCapturedAt": "2026-03-10T14:59:54.429Z",
+      "status": "captured",
+      "title": "Homecourt | Mabinay | Facebook",
+      "venueName": "Homecourt",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/DoPickle-Court/61579959690581": {
+      "canonicalUrl": "https://facebook.com/people/DoPickle-Court/61579959690581",
+      "latestUrl": "https://www.facebook.com/people/DoPickle-Court/61579959690581/",
+      "firstCapturedAt": "2026-03-10T15:00:25.558Z",
+      "lastCapturedAt": "2026-03-10T15:00:25.558Z",
+      "status": "captured",
+      "title": "DoPickle Court | Facebook",
+      "venueName": "DoPickle Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "DoPickle Court"
+    },
+    "https://facebook.com/61583291649769": {
+      "canonicalUrl": "https://facebook.com/61583291649769",
+      "latestUrl": "https://www.facebook.com/61583291649769/",
+      "firstCapturedAt": "2026-03-10T15:00:51.364Z",
+      "lastCapturedAt": "2026-03-10T15:00:51.364Z",
+      "status": "captured",
+      "title": "LM Pickleball Court | Mabinay | Facebook",
+      "venueName": "LM Pickleball Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "LM Pickleball Court"
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T15:01:05.700Z",
+      "lastCapturedAt": "2026-03-10T15:01:05.700Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

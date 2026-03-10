@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:santa-catalina",
+  "createdAt": "2026-03-10T15:01:38.050Z",
+  "updatedAt": "2026-03-10T15:03:08.592Z",
+  "urls": {
+    "https://facebook.com/110970315426779": {
+      "canonicalUrl": "https://facebook.com/110970315426779",
+      "latestUrl": "https://www.facebook.com/110970315426779",
+      "firstCapturedAt": "2026-03-10T15:01:38.112Z",
+      "lastCapturedAt": "2026-03-10T15:01:38.112Z",
+      "status": "captured",
+      "title": "Picklerz Place | Santa Catalina | Facebook",
+      "venueName": "Picklerz Place",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Picklerz Place"
+    },
+    "https://facebook.com/photo.php?fbid=122170511900910391&set=a.122108522246910391&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=122170511900910391&set=a.122108522246910391&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=122170511900910391&set=a.122108522246910391&type=3",
+      "firstCapturedAt": "2026-03-10T15:01:53.933Z",
+      "lastCapturedAt": "2026-03-10T15:01:53.933Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "The Pickle House",
+      "confidence": "medium",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Villareal-Auto-Repair-Shop-100095313803284": {
+      "canonicalUrl": "https://facebook.com/p/Villareal-Auto-Repair-Shop-100095313803284",
+      "latestUrl": "https://www.facebook.com/p/Villareal-Auto-Repair-Shop-100095313803284/",
+      "firstCapturedAt": "2026-03-10T15:02:21.580Z",
+      "lastCapturedAt": "2026-03-10T15:02:21.580Z",
+      "status": "captured",
+      "title": "Picklerz Place | Santa Catalina | Facebook",
+      "venueName": "Picklerz Place",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Picklerz Place"
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T15:02:42.777Z",
+      "lastCapturedAt": "2026-03-10T15:02:42.777Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

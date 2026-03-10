@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T14:51:29.200Z",
+  "updatedAt": "2026-03-10T14:51:53.042Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "paraiso de avedad|san pablo city|laguna",
+      "lastRowName": "Paraiso De Avedad"
+    },
+    "https://reclub.co/m/2ZA6HV": {
+      "canonicalUrl": "https://reclub.co/m/2ZA6HV",
+      "latestUrl": "https://reclub.co/m/2ZA6HV",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@sanpablocitypickleballclub": {
+      "canonicalUrl": "https://reclub.co/clubs/@sanpablocitypickleballclub",
+      "latestUrl": "https://reclub.co/clubs/@sanpablocitypickleballclub",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/Y5YNLA": {
+      "canonicalUrl": "https://reclub.co/m/Y5YNLA",
+      "latestUrl": "https://reclub.co/m/Y5YNLA",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://playtimescheduler.com/region/san_pablo_city-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/san_pablo_city-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/san_pablo_city-luzon",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/MUV2JA": {
+      "canonicalUrl": "https://reclub.co/m/MUV2JA",
+      "latestUrl": "https://reclub.co/m/MUV2JA",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/san-pablo/vacation-rentals",
+      "firstDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "lastDiscoveredAt": "2026-03-10T14:51:29.200Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:51:29.200Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "paraiso de avedad|san pablo city|laguna": {
+      "rowKey": "paraiso de avedad|san pablo city|laguna",
+      "name": "Paraiso De Avedad",
+      "city": "SAN PABLO CITY",
+      "province": "LAGUNA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-pablo-city/paraiso-de-avedad",
+      "firstSeenAt": "2026-03-10T14:51:29.200Z",
+      "lastSeenAt": "2026-03-10T14:51:29.200Z"
+    }
+  }
+}

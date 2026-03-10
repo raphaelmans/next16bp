@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-occidental",
+    "citySlug": "bacolod-city",
+    "provinceName": "Negros Occidental",
+    "cityName": "Bacolod City"
+  },
+  "generatedAt": "2026-03-10T15:56:04.840Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/negros-occidental/bacolod-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 9,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 9,
+  "failedCount": 0,
+  "readyCount": 6,
+  "reviewCount": 1,
+  "skipCount": 2,
+  "csvRowCount": 6,
+  "failures": []
+}

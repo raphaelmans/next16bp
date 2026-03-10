@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:negros-oriental:canlaon-city:facebook",
   "createdAt": "2026-03-10T12:29:03.250Z",
-  "updatedAt": "2026-03-10T12:30:34.068Z",
+  "updatedAt": "2026-03-10T15:52:41.525Z",
   "scope": {
     "provinceSlug": "negros-oriental",
     "citySlug": "canlaon-city",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:30:34.068Z",
+      "finishedAt": "2026-03-10T15:52:41.525Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:30:34.068Z",
+      "finishedAt": "2026-03-10T15:52:41.525Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:30:34.068Z",
+      "finishedAt": "2026-03-10T15:52:41.525Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:30:34.068Z",
+      "finishedAt": "2026-03-10T15:52:41.525Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

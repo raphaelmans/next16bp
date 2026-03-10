@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:floridablanca",
+  "createdAt": "2026-03-10T14:50:05.829Z",
+  "updatedAt": "2026-03-10T14:50:33.969Z",
+  "queries": [
+    "pickleball courts in Pampanga Floridablanca",
+    "pickleball court Floridablanca Pampanga",
+    "Floridablanca pickleball",
+    "courts in Floridablanca Pampanga pickleball",
+    "sports center Floridablanca Pampanga pickleball",
+    "pickleball club Floridablanca Pampanga",
+    "pickleball reservations Floridablanca Pampanga",
+    "host-map:cebupickleballcourts.com:Floridablanca",
+    "host-map:dumapickleball.com:Floridablanca",
+    "site:cebupickleballcourts.com Floridablanca Pampanga pickleball",
+    "site:dumapickleball.com Floridablanca Pampanga pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@floridablanca-pickleball-zone": {
+      "canonicalUrl": "https://reclub.co/clubs/@floridablanca-pickleball-zone",
+      "latestUrl": "https://reclub.co/clubs/@floridablanca-pickleball-zone",
+      "firstDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "sourceQuery": "pickleball reservations Floridablanca Pampanga",
+      "title": "Floridablanca Pickleball Zone",
+      "snippet": "Pickleball Court / Community in Floridablanca Pampanga. 6:00AM to 12:00 Midnight Galacy Plaza and Events Center Valdez Floridablanca.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619": {
+      "canonicalUrl": "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619",
+      "latestUrl": "https://m.facebook.com/TheDenzoneLifestyle/videos/beyond-the-zone-community-court-a-premium-outdoor-court-in-floridablanca-pampang/2409112972808619/",
+      "firstDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "sourceQuery": "pickleball reservations Floridablanca Pampanga",
+      "title": "BEYOND THE ZONE “Community Court” 🔥 A Premium Outdoor ...",
+      "snippet": "BEYOND THE ZONE “Community Court” A Premium Outdoor Court in Floridablanca Pampanga Reserve your spot today for an EXCLUSIVE Premium Court ... Pickleball, ...",
+      "domain": "m.facebook.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.facebook.com/TheDenzoneLifestyle/about": {
+      "canonicalUrl": "https://m.facebook.com/TheDenzoneLifestyle/about",
+      "latestUrl": "https://m.facebook.com/TheDenzoneLifestyle/about/",
+      "firstDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "sourceQuery": "Floridablanca pickleball",
+      "title": "DENZONE | Floridablanca",
+      "snippet": "DENZONE. ☕️ Coffee Zone Tipsy Zone Sneaker Zone Waffle Zone Hobbies Zone Toy Zone Basketball Zone Pickleball Zone Badminton Zone ...",
+      "domain": "m.facebook.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.facebook.com/TheDenzoneLifestyle/videos/denzone-x-palakol-pickleball-open-playwhy-palakol-it-represents-strength-passion/1772448453334730": {
+      "canonicalUrl": "https://m.facebook.com/TheDenzoneLifestyle/videos/denzone-x-palakol-pickleball-open-playwhy-palakol-it-represents-strength-passion/1772448453334730",
+      "latestUrl": "https://m.facebook.com/TheDenzoneLifestyle/videos/denzone-x-palakol-pickleball-open-playwhy-palakol-it-represents-strength-passion/1772448453334730/",
+      "firstDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "lastDiscoveredAt": "2026-03-10T14:50:05.830Z",
+      "sourceQuery": "Floridablanca pickleball",
+      "title": "DENZONE x PALAKOL Pickleball Open Play “Why ...",
+      "snippet": "It represents strength, passion, and precision. Inspired by Filipino roots, they are here to empower Pickleball players at all levels.” Built for Champions.",
+      "domain": "m.facebook.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

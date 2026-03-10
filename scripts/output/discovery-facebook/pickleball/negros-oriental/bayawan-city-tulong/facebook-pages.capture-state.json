@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:bayawan-city-tulong",
+  "createdAt": "2026-03-10T15:26:44.281Z",
+  "updatedAt": "2026-03-10T15:27:54.354Z",
+  "urls": {
+    "https://cs-cz.facebook.com/rotarycluboftolong": {
+      "canonicalUrl": "https://cs-cz.facebook.com/rotarycluboftolong",
+      "latestUrl": "https://cs-cz.facebook.com/rotarycluboftolong/",
+      "firstCapturedAt": "2026-03-10T15:26:44.333Z",
+      "lastCapturedAt": "2026-03-10T15:26:44.333Z",
+      "status": "captured",
+      "title": "Rotary Club of Tolong | Facebook",
+      "venueName": "Rotary Club of Tolong",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/rotaractcluboftolong": {
+      "canonicalUrl": "https://facebook.com/rotaractcluboftolong",
+      "latestUrl": "https://www.facebook.com/rotaractcluboftolong/",
+      "firstCapturedAt": "2026-03-10T15:27:00.971Z",
+      "lastCapturedAt": "2026-03-10T15:27:00.971Z",
+      "status": "captured",
+      "title": "Rotaract Club Of Tolong - Bayawan City | Facebook",
+      "venueName": "Rotaract Club Of Tolong - Bayawan City",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1260565579439129&set=a.455553306607031&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1260565579439129&set=a.455553306607031&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1260565579439129&set=a.455553306607031&type=3",
+      "firstCapturedAt": "2026-03-10T15:27:13.873Z",
+      "lastCapturedAt": "2026-03-10T15:27:13.873Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Rotaract Club Of Tolong - Bayawan City",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T15:27:33.811Z",
+      "lastCapturedAt": "2026-03-10T15:27:33.811Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

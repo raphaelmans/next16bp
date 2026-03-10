@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T16:06:25.332Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 1,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "cabana shore pickleball court|toledo city|cebu",
+      "name": "Cabana Shore Pickleball Court",
+      "city": "TOLEDO CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:06:25.332Z",
+      "lastSeenAt": "2026-03-10T16:06:25.332Z"
+    }
+  ]
+}

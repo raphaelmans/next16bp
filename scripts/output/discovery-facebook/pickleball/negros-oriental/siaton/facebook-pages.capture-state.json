@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:siaton",
+  "createdAt": "2026-03-10T15:03:14.573Z",
+  "updatedAt": "2026-03-10T15:04:09.630Z",
+  "urls": {
+    "https://facebook.com/people/Siaton-Dinkers-Club/61583699640253": {
+      "canonicalUrl": "https://facebook.com/people/Siaton-Dinkers-Club/61583699640253",
+      "latestUrl": "https://www.facebook.com/people/Siaton-Dinkers-Club/61583699640253/",
+      "firstCapturedAt": "2026-03-10T15:03:14.631Z",
+      "lastCapturedAt": "2026-03-10T15:03:14.631Z",
+      "status": "captured",
+      "title": "Siaton Dinkers Club | Siaton | Facebook",
+      "venueName": "Siaton Dinkers Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/CurveSide-Pickleball-and-Cafe/61588200697647": {
+      "canonicalUrl": "https://facebook.com/people/CurveSide-Pickleball-and-Cafe/61588200697647",
+      "latestUrl": "https://www.facebook.com/people/CurveSide-Pickleball-and-Cafe/61588200697647/",
+      "firstCapturedAt": "2026-03-10T15:03:29.419Z",
+      "lastCapturedAt": "2026-03-10T15:03:29.419Z",
+      "status": "captured",
+      "title": "CurveSide Pickleball and Cafe | Siaton | Facebook",
+      "venueName": "CurveSide Pickleball and Cafe",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "CurveSide Pickleball and Cafe"
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T15:03:48.235Z",
+      "lastCapturedAt": "2026-03-10T15:03:48.235Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

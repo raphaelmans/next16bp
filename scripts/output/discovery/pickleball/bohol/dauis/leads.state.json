@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bohol:dauis",
+  "createdAt": "2026-03-10T15:57:55.009Z",
+  "updatedAt": "2026-03-10T15:57:59.490Z",
+  "queries": [
+    "pickleball courts in Bohol Dauis",
+    "pickleball court Dauis Bohol",
+    "Dauis pickleball",
+    "courts in Dauis Bohol pickleball",
+    "sports center Dauis Bohol pickleball",
+    "pickleball club Dauis Bohol",
+    "pickleball reservations Dauis Bohol",
+    "host-map:cebupickleballcourts.com:Dauis",
+    "host-map:dumapickleball.com:Dauis",
+    "site:cebupickleballcourts.com Dauis Bohol pickleball",
+    "site:dumapickleball.com Dauis Bohol pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/elstar-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "lastDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "sourceQuery": "pickleball reservations Dauis Bohol",
+      "title": "Elstar Pickleball Courts",
+      "snippet": "Everything you need to know about playing Pickleball at Elstar Pickleball Courts! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauis/quirmita-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "lastDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "sourceQuery": "pickleball reservations Dauis Bohol",
+      "title": "Quirmita Pickleball Court",
+      "snippet": "Everything you need to know about playing Pickleball at Quirmita Pickleball Court! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://courtogo.com/venues/picklegaaa": {
+      "canonicalUrl": "https://courtogo.com/venues/picklegaaa",
+      "latestUrl": "https://www.courtogo.com/venues/picklegaaa",
+      "firstDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "lastDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "sourceQuery": "Dauis pickleball",
+      "title": "PICKLEGAAA - Book Sports Court in Dauis | Courtogo",
+      "snippet": "PICKLEGAAA. Purok 7, Biking 3. Dauis. Available. Pickleball Court. Book About Open Play. Book Your Court. Select your preferred courts and time ...",
+      "domain": "courtogo.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.co.za/dauis-philippines/stays/beachfront": {
+      "canonicalUrl": "https://airbnb.co.za/dauis-philippines/stays/beachfront",
+      "latestUrl": "https://www.airbnb.co.za/dauis-philippines/stays/beachfront",
+      "firstDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "lastDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "sourceQuery": "sports center Dauis Bohol pickleball",
+      "title": "Dauis, Philippines Vacation Rentals - Airbnb",
+      "snippet": "Small private rocky/sandy beach with clear water 80 steps from the Villa. Sparkling INFINITY POOL and Jacuzzi. PICKLEBALL COURT. 15 minutes from the Panglao ...",
+      "domain": "airbnb.co.za",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/S3QN4K": {
+      "canonicalUrl": "https://reclub.co/m/S3QN4K",
+      "latestUrl": "https://reclub.co/m/S3QN4K",
+      "firstDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "lastDiscoveredAt": "2026-03-10T15:57:55.009Z",
+      "sourceQuery": "pickleball club Dauis Bohol",
+      "title": "Open Play Cancelled",
+      "snippet": "Looking for Pickleball meets in Bohol, Philippines? Check out this Reclub meet at Elstar Tennis Courts hosted by Achiyan. Join Reclub to find meets, ...",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

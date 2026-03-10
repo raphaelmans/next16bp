@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:padada",
+  "createdAt": "2026-03-10T14:57:07.677Z",
+  "updatedAt": "2026-03-10T14:57:26.624Z",
+  "urls": {
+    "https://facebook.com/darlaloominaling": {
+      "canonicalUrl": "https://facebook.com/darlaloominaling",
+      "latestUrl": "https://www.facebook.com/darlaloominaling/",
+      "firstCapturedAt": "2026-03-10T14:57:07.734Z",
+      "lastCapturedAt": "2026-03-10T14:57:07.734Z",
+      "status": "captured",
+      "title": "Darl Edith Rose Minaling | Facebook",
+      "venueName": "Darl Edith Rose Minaling",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

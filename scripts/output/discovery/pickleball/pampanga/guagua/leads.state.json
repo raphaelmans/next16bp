@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:guagua",
+  "createdAt": "2026-03-10T14:47:36.254Z",
+  "updatedAt": "2026-03-10T14:48:02.423Z",
+  "queries": [
+    "pickleball courts in Pampanga Guagua",
+    "pickleball court Guagua Pampanga",
+    "Guagua pickleball",
+    "courts in Guagua Pampanga pickleball",
+    "sports center Guagua Pampanga pickleball",
+    "pickleball club Guagua Pampanga",
+    "pickleball reservations Guagua Pampanga",
+    "host-map:cebupickleballcourts.com:Guagua",
+    "host-map:dumapickleball.com:Guagua",
+    "site:cebupickleballcourts.com Guagua Pampanga pickleball",
+    "site:dumapickleball.com Guagua Pampanga pickleball"
+  ],
+  "urls": {
+    "https://terracourts.com/": {
+      "canonicalUrl": "https://terracourts.com/",
+      "latestUrl": "https://www.terracourts.com/",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball courts in Pampanga Guagua",
+      "title": "Terra Courts",
+      "snippet": "TERRA COURTS. Play grounded. Play at Terra. New location is 1st Street, Dolores Homesite, Brgy. Dolores, City of San Fernando, Pampanga. BOOK A COURT.",
+      "domain": "terracourts.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball courts in Pampanga Guagua",
+      "title": "PLACES TO PLAY, 08.06.23",
+      "snippet": "Pampanga. 2. Indoor Courts. MWF: 8a-12nn. Invitation. Gilbert ... Outdoor Courts w lights. Daily, 730a-11a, 5p-9p; Sun 9a-12, 5p-9p p75 ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Santo+Cristo%2C+Guagua%2C+Pampanga": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Santo+Cristo%2C+Guagua%2C+Pampanga",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Santo+Cristo%2C+Guagua%2C+Pampanga",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "sports center Guagua Pampanga pickleball",
+      "title": "THE BEST 10 BADMINTON near STO. CRISTO, GUAGUA, PAMPANGA ...",
+      "snippet": "Moro Lorenzo Sports Center - Badminton near me - Guagua, Pampanga. 18. Moro ... They cater pickleball, basketball, badminton reservation and also they ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pampanga-pickleball.rezerv.co/": {
+      "canonicalUrl": "https://pampanga-pickleball.rezerv.co/",
+      "latestUrl": "https://pampanga-pickleball.rezerv.co/",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball reservations Guagua Pampanga",
+      "title": "Pampanga Pickleball Center",
+      "snippet": "Welcome to Pampanga Pickleball Club — the home of pickleball enthusiasts in ... Book private sessions, coaching, or court rentals at your preferred time.",
+      "domain": "pampanga-pickleball.rezerv.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.com/guagua-philippines/stays/villas": {
+      "canonicalUrl": "https://airbnb.com/guagua-philippines/stays/villas",
+      "latestUrl": "https://www.airbnb.com/guagua-philippines/stays/villas",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "Guagua pickleball",
+      "title": "Guagua, Philippines Vacation Rentals (5 out of 5)",
+      "snippet": "You have free access to our pickleball court for fun times during the day. ... Guagua stays are highly rated by guests—averaging 4.9 out of 5! Destinations ...",
+      "domain": "airbnb.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://shopee.ph/Pickleball-Is-Therapy-Shirt-Drifit-Thermotech-Activewear-Sports-Joola-Selkirk-Paddletek-Pickle-Ball-i.387819937.29356097569": {
+      "canonicalUrl": "https://shopee.ph/Pickleball-Is-Therapy-Shirt-Drifit-Thermotech-Activewear-Sports-Joola-Selkirk-Paddletek-Pickle-Ball-i.387819937.29356097569",
+      "latestUrl": "https://shopee.ph/Pickleball-Is-Therapy-Shirt-Drifit-Thermotech-Activewear-Sports-Joola-Selkirk-Paddletek-Pickle-Ball-i.387819937.29356097569",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "Guagua pickleball",
+      "title": "Pickleball Is Therapy Shirt Drifit Thermotech Activewear Sports ...",
+      "snippet": "They are designed to keep the athlete's body warm but dry and comfortable during training and high-intensity workouts. Always be power-driven with highly ...",
+      "domain": "shopee.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "sports center Guagua Pampanga pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "SPORTS CLINIC PARTNERS CONTACT INFO. Archery. Sports Center, Contact, Website/Email. Village Sports Club ... Pickleball. Sports Center, Contact, Website/Email.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@pampanga-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/clubs/@pampanga-pickleball-center",
+      "latestUrl": "https://reclub.co/clubs/@pampanga-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball club Guagua Pampanga",
+      "title": "Pampanga Pickleball Center",
+      "snippet": "Pampanga's first-ever Center Court --- where pickleball is more than a sport --- it's a lifestyle https://pampanga-pickleball.rezeve.com/.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://fpsdc.coop/cth-pickleball": {
+      "canonicalUrl": "https://fpsdc.coop/cth-pickleball",
+      "latestUrl": "https://www.fpsdc.coop/cth-pickleball",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball reservations Guagua Pampanga",
+      "title": "Pickleball Court – Reserve Your Game in Pampanga",
+      "snippet": "Reserve a Pickleball Court. Easily check available slots and reserve your pickleball court in Co-op Trading Hub (CTH) at Ayala Technopark Pampanga.",
+      "domain": "fpsdc.coop",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-luzon/san-fernando": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "firstDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "lastDiscoveredAt": "2026-03-10T14:47:36.255Z",
+      "sourceQuery": "pickleball reservations Guagua Pampanga",
+      "title": "The Most Popular Pickleball Courts in San Fernando, Central Luzon",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in San Fernando, Central Luzon! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

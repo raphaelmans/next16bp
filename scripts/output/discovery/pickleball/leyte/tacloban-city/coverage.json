@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T16:01:04.046Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 1
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 2,
+  "noDataUrls": 3,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "smash zone|philippines|eastern visayas",
+      "name": "Smash Zone",
+      "city": "Philippines",
+      "province": "Eastern Visayas",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/philippines/smash-zone",
+      "firstSeenAt": "2026-03-10T16:01:04.046Z",
+      "lastSeenAt": "2026-03-10T16:01:04.046Z"
+    },
+    {
+      "rowKey": "robinsons north tacloban|tacloban city|leyte",
+      "name": "Robinsons North Tacloban",
+      "city": "TACLOBAN CITY",
+      "province": "LEYTE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/tacloban-city/robinsons-north-tacloban",
+      "firstSeenAt": "2026-03-10T16:01:04.046Z",
+      "lastSeenAt": "2026-03-10T16:01:04.046Z"
+    }
+  ]
+}

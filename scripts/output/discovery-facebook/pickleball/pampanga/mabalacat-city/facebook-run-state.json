@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:pampanga:mabalacat-city:facebook",
   "createdAt": "2026-03-10T08:42:13.721Z",
-  "updatedAt": "2026-03-10T11:47:07.475Z",
+  "updatedAt": "2026-03-10T15:52:43.259Z",
   "scope": {
     "provinceSlug": "pampanga",
     "citySlug": "mabalacat-city",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:46:57.663Z",
-      "finishedAt": "2026-03-10T11:47:07.475Z",
+      "finishedAt": "2026-03-10T15:52:43.259Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

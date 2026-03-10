@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "matanao",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Matanao"
+  },
+  "generatedAt": "2026-03-10T14:57:07.674Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/davao-del-sur/matanao/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/davao-del-sur/matanao/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/davao-del-sur/matanao/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/davao-del-sur/matanao/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 0,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 0,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": []
+}

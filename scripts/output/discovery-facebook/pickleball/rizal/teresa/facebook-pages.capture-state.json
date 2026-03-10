@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:teresa",
+  "createdAt": "2026-03-10T15:16:17.408Z",
+  "updatedAt": "2026-03-10T15:18:32.362Z",
+  "urls": {
+    "https://facebook.com/QuestAdventureCamp?locale=fr_CA": {
+      "canonicalUrl": "https://facebook.com/QuestAdventureCamp?locale=fr_CA",
+      "latestUrl": "https://www.facebook.com/QuestAdventureCamp?locale=fr_CA",
+      "firstCapturedAt": "2026-03-10T15:16:17.468Z",
+      "lastCapturedAt": "2026-03-10T15:16:17.468Z",
+      "status": "captured",
+      "title": "Quest Adventure Camp | Teresa | Facebook",
+      "venueName": "Quest Adventure Camp",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/questsportsph?locale=fr_CA": {
+      "canonicalUrl": "https://facebook.com/questsportsph?locale=fr_CA",
+      "latestUrl": "https://www.facebook.com/questsportsph?locale=fr_CA",
+      "firstCapturedAt": "2026-03-10T15:16:48.409Z",
+      "lastCapturedAt": "2026-03-10T15:16:48.409Z",
+      "status": "captured",
+      "title": "Quest Sports | Antipolo | Facebook",
+      "venueName": "Quest Sports",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/QuestAdventureCamp?locale=zh_HK": {
+      "canonicalUrl": "https://facebook.com/QuestAdventureCamp?locale=zh_HK",
+      "latestUrl": "https://www.facebook.com/QuestAdventureCamp?locale=zh_HK",
+      "firstCapturedAt": "2026-03-10T15:17:05.508Z",
+      "lastCapturedAt": "2026-03-10T15:17:05.508Z",
+      "status": "captured",
+      "title": "Quest Adventure Camp | Teresa | Facebook",
+      "venueName": "Quest Adventure Camp",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Quest Adventure Camp"
+    },
+    "https://facebook.com/QuestAdventureCamp?locale=es_LA": {
+      "canonicalUrl": "https://facebook.com/QuestAdventureCamp?locale=es_LA",
+      "latestUrl": "https://www.facebook.com/QuestAdventureCamp?locale=es_LA",
+      "firstCapturedAt": "2026-03-10T15:17:48.926Z",
+      "lastCapturedAt": "2026-03-10T15:17:48.926Z",
+      "status": "captured",
+      "title": "Quest Adventure Camp | Teresa | Facebook",
+      "venueName": "Quest Adventure Camp",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T15:18:18.315Z",
+      "lastCapturedAt": "2026-03-10T15:18:18.315Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

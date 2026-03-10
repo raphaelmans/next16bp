@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "laguna",
+    "citySlug": "san-pablo-city",
+    "provinceName": "Laguna",
+    "cityName": "San Pablo City"
+  },
+  "generatedAt": "2026-03-10T14:59:31.482Z",
+  "urlsPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.captured.json",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/san-pablo-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 7,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 7,
+  "failedCount": 0,
+  "readyCount": 3,
+  "reviewCount": 2,
+  "skipCount": 2,
+  "csvRowCount": 2,
+  "failures": []
+}

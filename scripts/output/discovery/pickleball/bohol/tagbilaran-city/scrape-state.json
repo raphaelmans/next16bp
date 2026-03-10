@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T15:58:34.218Z",
+  "updatedAt": "2026-03-10T15:59:14.792Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the pickle labb|tagbilaran city|bohol",
+      "lastRowName": "The Pickle Labb"
+    },
+    "https://the-pickle-labb.rezerv.co/home": {
+      "canonicalUrl": "https://the-pickle-labb.rezerv.co/home",
+      "latestUrl": "https://the-pickle-labb.rezerv.co/home",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.sports360.ph/sportshub/court-x": {
+      "canonicalUrl": "https://app.sports360.ph/sportshub/court-x",
+      "latestUrl": "https://app.sports360.ph/sportshub/court-x",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "courtwoods pickleball|tagbilaran city|bohol",
+      "lastRowName": "Courtwoods Pickleball"
+    },
+    "https://reclub.co/th/clubs/@tagbilaran-pickleball-association": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@tagbilaran-pickleball-association",
+      "latestUrl": "https://reclub.co/th/clubs/@tagbilaran-pickleball-association",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@tagbilaran-pickleball-association": {
+      "canonicalUrl": "https://reclub.co/clubs/@tagbilaran-pickleball-association",
+      "latestUrl": "https://reclub.co/clubs/@tagbilaran-pickleball-association",
+      "firstDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "lastDiscoveredAt": "2026-03-10T15:58:34.218Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:58:34.218Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "the pickle labb|tagbilaran city|bohol": {
+      "rowKey": "the pickle labb|tagbilaran city|bohol",
+      "name": "The Pickle Labb",
+      "city": "TAGBILARAN CITY",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "firstSeenAt": "2026-03-10T15:58:34.218Z",
+      "lastSeenAt": "2026-03-10T15:58:34.218Z"
+    },
+    "courtwoods pickleball|tagbilaran city|bohol": {
+      "rowKey": "courtwoods pickleball|tagbilaran city|bohol",
+      "name": "Courtwoods Pickleball",
+      "city": "TAGBILARAN CITY",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "firstSeenAt": "2026-03-10T15:58:34.218Z",
+      "lastSeenAt": "2026-03-10T15:58:34.218Z"
+    }
+  }
+}

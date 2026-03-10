@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T15:59:46.140Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 2,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "kartways pickleball|panglao|bohol",
+      "name": "Kartways Pickleball",
+      "city": "PANGLAO",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/kartways-pickleball",
+      "firstSeenAt": "2026-03-10T15:59:46.140Z",
+      "lastSeenAt": "2026-03-10T15:59:46.140Z"
+    },
+    {
+      "rowKey": "the courts at alona|panglao|bohol",
+      "name": "The Courts At Alona",
+      "city": "PANGLAO",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/the-courts-at-alona",
+      "firstSeenAt": "2026-03-10T15:59:46.140Z",
+      "lastSeenAt": "2026-03-10T15:59:46.140Z"
+    }
+  ]
+}

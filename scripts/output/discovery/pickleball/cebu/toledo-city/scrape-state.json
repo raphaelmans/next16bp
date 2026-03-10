@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T16:06:25.332Z",
+  "updatedAt": "2026-03-10T16:06:55.667Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "lastDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:06:25.332Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "cabana shore pickleball court|toledo city|cebu",
+      "lastRowName": "Cabana Shore Pickleball Court"
+    },
+    "https://reclub.co/m/X0SQRW": {
+      "canonicalUrl": "https://reclub.co/m/X0SQRW",
+      "latestUrl": "https://reclub.co/m/X0SQRW",
+      "firstDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "lastDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:06:25.332Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-visayas/toledo-city/cottages": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-visayas/toledo-city/cottages",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-visayas/toledo-city/cottages",
+      "firstDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "lastDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:06:25.332Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/WP1T44": {
+      "canonicalUrl": "https://reclub.co/m/WP1T44",
+      "latestUrl": "https://reclub.co/m/WP1T44",
+      "firstDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "lastDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:06:25.332Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pages.ph/2025/02/pickleball-in-cebu": {
+      "canonicalUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu",
+      "latestUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "firstDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "lastDiscoveredAt": "2026-03-10T16:06:25.332Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:06:25.332Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "cabana shore pickleball court|toledo city|cebu": {
+      "rowKey": "cabana shore pickleball court|toledo city|cebu",
+      "name": "Cabana Shore Pickleball Court",
+      "city": "TOLEDO CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/toledo/cabana-shore-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:06:25.332Z",
+      "lastSeenAt": "2026-03-10T16:06:25.332Z"
+    }
+  }
+}

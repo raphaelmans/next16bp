@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:davao-del-sur:hagonoy:facebook",
   "createdAt": "2026-03-10T11:28:34.608Z",
-  "updatedAt": "2026-03-10T11:30:10.301Z",
+  "updatedAt": "2026-03-10T15:52:39.551Z",
   "scope": {
     "provinceSlug": "davao-del-sur",
     "citySlug": "hagonoy",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:10.301Z",
+      "finishedAt": "2026-03-10T15:52:39.551Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:10.301Z",
+      "finishedAt": "2026-03-10T15:52:39.551Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:10.301Z",
+      "finishedAt": "2026-03-10T15:52:39.551Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:30:10.301Z",
+      "finishedAt": "2026-03-10T15:52:39.551Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:magalang",
+  "createdAt": "2026-03-10T14:49:10.869Z",
+  "updatedAt": "2026-03-10T14:49:36.602Z",
+  "queries": [
+    "pickleball courts in Pampanga Magalang",
+    "pickleball court Magalang Pampanga",
+    "Magalang pickleball",
+    "courts in Magalang Pampanga pickleball",
+    "sports center Magalang Pampanga pickleball",
+    "pickleball club Magalang Pampanga",
+    "pickleball reservations Magalang Pampanga",
+    "host-map:cebupickleballcourts.com:Magalang",
+    "host-map:dumapickleball.com:Magalang",
+    "site:cebupickleballcourts.com Magalang Pampanga pickleball",
+    "site:dumapickleball.com Magalang Pampanga pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-luzon/magalang/tg-residence": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/magalang/tg-residence",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang/tg-residence",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "pickleball reservations Magalang Pampanga",
+      "title": "Play Pickleball at TG Residence: Court Information",
+      "snippet": "View information on courts, open play sessions, reservations, lessons, weather and more ... Come play pickleball at TG Residence in Magalang, Central Luzon! There ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.co.in/rooms/10329070": {
+      "canonicalUrl": "https://airbnb.co.in/rooms/10329070",
+      "latestUrl": "https://www.airbnb.co.in/rooms/10329070",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "courts in Magalang Pampanga pickleball",
+      "title": "Stay and Play All-day-Pickleball at TG Residence",
+      "snippet": "Aside from a huge swimming pool, TG has a multi-purpose court: basketball, volleyball, badminton and pickleball, a pool table, and putting green to keep your ...",
+      "domain": "airbnb.co.in",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Magalang%2C+Pampanga",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "sports center Magalang Pampanga pickleball",
+      "title": "Top 10 Best Badminton Near Magalang, Pampanga",
+      "snippet": "Moro Lorenzo Sports Center - Badminton near me - Magalang, Pampanga. 12. Moro ... They cater pickleball, basketball, badminton reservation and also they ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@northzone-pickleball-courts": {
+      "canonicalUrl": "https://reclub.co/clubs/@northzone-pickleball-courts",
+      "latestUrl": "https://reclub.co/clubs/@northzone-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "pickleball club Magalang Pampanga",
+      "title": "Northzone Pickleball Courts",
+      "snippet": "5 Standard Pickleball Courts housed in a newly built warehouse located along Mabalacat-Magalang Road. Google maps: https://maps.app.goo.gl/n3AZSPKMVBeiGpBM6?",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-luzon/magalang": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/magalang",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/magalang",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "Magalang pickleball",
+      "title": "The Most Popular Pickleball Courts in Magalang, Central Luzon",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Magalang, Central Luzon! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/XFPWLM": {
+      "canonicalUrl": "https://reclub.co/m/XFPWLM",
+      "latestUrl": "https://reclub.co/m/XFPWLM",
+      "firstDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "lastDiscoveredAt": "2026-03-10T14:49:10.870Z",
+      "sourceQuery": "Magalang pickleball",
+      "title": "TRND Pickleball In-house OP",
+      "snippet": "TRND PICKLEBALL. 135 Magalang Rd, Angeles, 2009 Pampanga, Philippines. see map. Per Player. $250.00. TRND Pickleball in house open play Join us on our soft ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

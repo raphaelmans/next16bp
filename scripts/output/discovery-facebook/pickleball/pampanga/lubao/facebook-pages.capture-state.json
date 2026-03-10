@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:lubao",
+  "createdAt": "2026-03-10T15:11:28.201Z",
+  "updatedAt": "2026-03-10T15:13:47.091Z",
+  "urls": {
+    "https://facebook.com/pampangapickleballcommunity": {
+      "canonicalUrl": "https://facebook.com/pampangapickleballcommunity",
+      "latestUrl": "https://www.facebook.com/pampangapickleballcommunity/",
+      "firstCapturedAt": "2026-03-10T15:11:28.258Z",
+      "lastCapturedAt": "2026-03-10T15:11:28.258Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Community | Facebook",
+      "venueName": "Pampanga Pickleball Community",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1494922015971719&set=a.498082375655693&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1494922015971719&set=a.498082375655693&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1494922015971719&set=a.498082375655693&type=3",
+      "firstCapturedAt": "2026-03-10T15:11:43.866Z",
+      "lastCapturedAt": "2026-03-10T15:11:43.866Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo?fbid=1251794270284496&set=a.498082368989027": {
+      "canonicalUrl": "https://facebook.com/photo?fbid=1251794270284496&set=a.498082368989027",
+      "latestUrl": "https://www.facebook.com/photo/?fbid=1251794270284496&set=a.498082368989027",
+      "firstCapturedAt": "2026-03-10T15:11:59.329Z",
+      "lastCapturedAt": "2026-03-10T15:11:59.329Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "iOrbitNews Online",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+      "firstCapturedAt": "2026-03-10T15:12:12.777Z",
+      "lastCapturedAt": "2026-03-10T15:12:12.777Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Center | San Fernando | Facebook",
+      "venueName": "Pampanga Pickleball Center",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/PCPH-Pampanga-61563494852035": {
+      "canonicalUrl": "https://facebook.com/p/PCPH-Pampanga-61563494852035",
+      "latestUrl": "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+      "firstCapturedAt": "2026-03-10T15:12:34.484Z",
+      "lastCapturedAt": "2026-03-10T15:12:34.484Z",
+      "status": "captured",
+      "title": "PCPH Pampanga | Angeles City | Facebook",
+      "venueName": "PCPH Pampanga (Pickleball Central Philippines)",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/pickleballworldpam": {
+      "canonicalUrl": "https://facebook.com/pickleballworldpam",
+      "latestUrl": "https://www.facebook.com/pickleballworldpam/",
+      "firstCapturedAt": "2026-03-10T15:12:56.878Z",
+      "lastCapturedAt": "2026-03-10T15:12:56.878Z",
+      "status": "captured",
+      "title": "Pickleball World | San Fernando | Facebook",
+      "venueName": "Pickleball World",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/745567121984101": {
+      "canonicalUrl": "https://facebook.com/745567121984101",
+      "latestUrl": "https://www.facebook.com/745567121984101/",
+      "firstCapturedAt": "2026-03-10T15:13:17.051Z",
+      "lastCapturedAt": "2026-03-10T15:13:17.051Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Community | Facebook",
+      "venueName": "Pampanga Pickleball Community",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/",
+      "firstCapturedAt": "2026-03-10T15:13:31.694Z",
+      "lastCapturedAt": "2026-03-10T15:13:31.694Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Club | Facebook",
+      "venueName": "Pampanga Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

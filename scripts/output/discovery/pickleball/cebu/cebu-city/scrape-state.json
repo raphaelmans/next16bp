@@ -1,0 +1,163 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T14:46:46.216Z",
+  "updatedAt": "2026-03-10T14:47:30.728Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage": {
+      "canonicalUrl": "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage",
+      "latestUrl": "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.philstar.com/sports/2026/03/10/2513318/all-systems-go-kosmas-pickle-fest-pickleball-tilt-cebu": {
+      "canonicalUrl": "https://www.philstar.com/sports/2026/03/10/2513318/all-systems-go-kosmas-pickle-fest-pickleball-tilt-cebu",
+      "latestUrl": "https://www.philstar.com/sports/2026/03/10/2513318/all-systems-go-kosmas-pickle-fest-pickleball-tilt-cebu",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/cebu-sports-hub": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/cebu-sports-hub",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/cebu-sports-hub",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "cebu sports hub|mandaue city|cebu",
+      "lastRowName": "Cebu Sports Hub"
+    },
+    "https://cebupickleballcourts.com/hq-pickleball-cebu": {
+      "canonicalUrl": "https://cebupickleballcourts.com/hq-pickleball-cebu",
+      "latestUrl": "https://cebupickleballcourts.com/hq-pickleball-cebu/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/sweetspot-pickleball-courts-cebu": {
+      "canonicalUrl": "https://cebupickleballcourts.com/sweetspot-pickleball-courts-cebu",
+      "latestUrl": "https://cebupickleballcourts.com/sweetspot-pickleball-courts-cebu/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/magnum-sports-complex": {
+      "canonicalUrl": "https://cebupickleballcourts.com/magnum-sports-complex",
+      "latestUrl": "https://cebupickleballcourts.com/magnum-sports-complex/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/dh-sports-hub": {
+      "canonicalUrl": "https://cebupickleballcourts.com/dh-sports-hub",
+      "latestUrl": "https://cebupickleballcourts.com/dh-sports-hub/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/fervent-academy": {
+      "canonicalUrl": "https://cebupickleballcourts.com/fervent-academy",
+      "latestUrl": "https://cebupickleballcourts.com/fervent-academy/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/hillhouse-liloan": {
+      "canonicalUrl": "https://cebupickleballcourts.com/hillhouse-liloan",
+      "latestUrl": "https://cebupickleballcourts.com/hillhouse-liloan/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/net-and-paddle": {
+      "canonicalUrl": "https://cebupickleballcourts.com/net-and-paddle",
+      "latestUrl": "https://cebupickleballcourts.com/net-and-paddle/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://cebupickleballcourts.com/the-smash-yard": {
+      "canonicalUrl": "https://cebupickleballcourts.com/the-smash-yard",
+      "latestUrl": "https://cebupickleballcourts.com/the-smash-yard/",
+      "firstDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "lastDiscoveredAt": "2026-03-10T14:46:46.216Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T14:46:46.216Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "cebu sports hub|mandaue city|cebu": {
+      "rowKey": "cebu sports hub|mandaue city|cebu",
+      "name": "Cebu Sports Hub",
+      "city": "MANDAUE CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/mandaue/cebu-sports-hub",
+      "firstSeenAt": "2026-03-10T14:46:46.216Z",
+      "lastSeenAt": "2026-03-10T14:46:46.216Z"
+    }
+  }
+}

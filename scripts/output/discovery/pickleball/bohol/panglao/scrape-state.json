@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T15:59:46.140Z",
+  "updatedAt": "2026-03-10T16:00:17.888Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/panglao/kartways-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/kartways-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/kartways-pickleball",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "kartways pickleball|panglao|bohol",
+      "lastRowName": "Kartways Pickleball"
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/panglao/the-courts-at-alona": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/the-courts-at-alona",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/the-courts-at-alona",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the courts at alona|panglao|bohol",
+      "lastRowName": "The Courts At Alona"
+    },
+    "https://reclub.co/m/4VY75G": {
+      "canonicalUrl": "https://reclub.co/m/4VY75G",
+      "latestUrl": "https://reclub.co/m/4VY75G",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@panglao-pickleball-parc": {
+      "canonicalUrl": "https://reclub.co/clubs/@panglao-pickleball-parc",
+      "latestUrl": "https://reclub.co/clubs/@panglao-pickleball-parc",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/YHE5VC": {
+      "canonicalUrl": "https://reclub.co/m/YHE5VC",
+      "latestUrl": "https://reclub.co/m/YHE5VC",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/C2HLNC": {
+      "canonicalUrl": "https://reclub.co/m/C2HLNC",
+      "latestUrl": "https://reclub.co/m/C2HLNC",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@pickleball-yellows-bohol-and-panglao": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickleball-yellows-bohol-and-panglao",
+      "latestUrl": "https://reclub.co/clubs/@pickleball-yellows-bohol-and-panglao",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-visayas/tagbilaran/bohol-national-museum": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-visayas/tagbilaran/bohol-national-museum",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-visayas/tagbilaran/bohol-national-museum",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@panglao-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@panglao-pickleball-club",
+      "latestUrl": "https://reclub.co/ko/clubs/@panglao-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "lastDiscoveredAt": "2026-03-10T15:59:46.140Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T15:59:46.140Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "kartways pickleball|panglao|bohol": {
+      "rowKey": "kartways pickleball|panglao|bohol",
+      "name": "Kartways Pickleball",
+      "city": "PANGLAO",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/kartways-pickleball",
+      "firstSeenAt": "2026-03-10T15:59:46.140Z",
+      "lastSeenAt": "2026-03-10T15:59:46.140Z"
+    },
+    "the courts at alona|panglao|bohol": {
+      "rowKey": "the courts at alona|panglao|bohol",
+      "name": "The Courts At Alona",
+      "city": "PANGLAO",
+      "province": "BOHOL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/panglao/the-courts-at-alona",
+      "firstSeenAt": "2026-03-10T15:59:46.140Z",
+      "lastSeenAt": "2026-03-10T15:59:46.140Z"
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "Santa Cruz",
+    "citySlug": "santa-cruz",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T15:25:35.666Z",
+  "queries": [
+    "site:facebook.com pickleball Santa Cruz Laguna",
+    "site:facebook.com \"Santa Cruz\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"Santa Cruz\" \"pickleball club\"",
+    "site:facebook.com \"Santa Cruz\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61585746699575",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1464722348322965/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375174752770732/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1960930744522070/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1256299209165281/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3806520566302823/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1465824898212710/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1464722348322965/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375174752770732/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1960930744522070/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1961500997798378/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/iamfromsantacruzlaguna/posts/1513316756427779/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/TagaStaCruzLagunaKaKung/posts/2418870955212477/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/763625683817475/posts/3115216355325051/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1381155576679643/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1149349213559603/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/poblacion2santacruz/posts/%F0%9D%97%95%F0%9D%97%9C%F0%9D%97%9A-%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA%F0%9D%97%A6-%F0%9D%97%A6%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%94-%F0%9D%97%96%F0%9D%97%A5%F0%9D%97%A8%F0%9D%97%AD-a-new-%F0%9D%97%BA%F0%9D%98%82%F0%9D%97%B9%F0%9D%98%81%F0%9D%97%B6-%F0%9D%98%80%F0%9D%97%BD%F0%9D%97%BC%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%B4%F0%9D%98%86%F0%9D%97%BA-is-rising-very-soon-there-will-be-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8/122330496026006826/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santacruzpickleballclub/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1373934481101074/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1450322743462247/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1361660215661834/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1415704086924113/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santacruzpickleballclub/posts/1673540750670395/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santacruzpickleballclub/posts/1626258448731959/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1362382575589598/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1221312379696619/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1221312379696619/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1622582694754492/posts/2141181832894573/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santacruzpickleballclub/posts/1565194894838315/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/294549495706250/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1622582694754492/posts/2411411035871650/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/etobicoke/posts/2717559895105282/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1622582694754492/posts/2435447013468052/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1149349213559603/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/276563824171484/posts/1380948000399722/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/laguna/santa-cruz/facebook-pages.state.json"
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:rizal:baras:facebook",
   "createdAt": "2026-03-10T11:21:57.642Z",
-  "updatedAt": "2026-03-10T12:32:04.565Z",
+  "updatedAt": "2026-03-10T15:52:43.694Z",
   "scope": {
     "provinceSlug": "rizal",
     "citySlug": "baras",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:04.565Z",
+      "finishedAt": "2026-03-10T15:52:43.694Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:04.565Z",
+      "finishedAt": "2026-03-10T15:52:43.694Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:04.565Z",
+      "finishedAt": "2026-03-10T15:52:43.694Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T12:32:04.565Z",
+      "finishedAt": "2026-03-10T15:52:43.694Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

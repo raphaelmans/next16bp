@@ -1,0 +1,113 @@
+{
+  "scope": {
+    "provinceName": "Maguindanao",
+    "provinceSlug": "maguindanao",
+    "cityName": "Cotabato City",
+    "citySlug": "cotabato-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T16:06:59.811Z",
+  "queries": [
+    "pickleball courts in Maguindanao Cotabato City",
+    "pickleball court Cotabato City Maguindanao",
+    "Cotabato City pickleball",
+    "courts in Cotabato City Maguindanao pickleball",
+    "sports center Cotabato City Maguindanao pickleball",
+    "pickleball club Cotabato City Maguindanao",
+    "pickleball reservations Cotabato City Maguindanao",
+    "host-map:cebupickleballcourts.com:Cotabato City",
+    "host-map:cebupickleballcourts.com:Cotabato",
+    "host-map:dumapickleball.com:Cotabato City",
+    "host-map:dumapickleball.com:Cotabato",
+    "site:cebupickleballcourts.com Cotabato City Maguindanao pickleball",
+    "site:dumapickleball.com Cotabato City Maguindanao pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court",
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball",
+    "https://picklehub.ph/clubs",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city",
+    "https://app.court-access.com/",
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+    "https://picklehub.ph/",
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.sunstar.com.ph/davao/cotabato-duo-rules-kadayawan-pickleball",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.sunstar.com.ph/davao/cotabato-duo-rules-kadayawan-pickleball",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/communities/cotabato-city-philippines-571",
+      "score": 12
+    },
+    {
+      "url": "https://www.globalpickleball.network/pickleball/city/24552-cotabato-city-philippines",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/communities/cotabato-city-philippines-571",
+      "score": 12
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.instagram.com/p/DVDfuveEcNk/",
+    "https://www.facebook.com/eightzproperties/posts/8z-pickleball-courtthree-3-pickleball-courts-now-open-for-rent-located-in-front-/578397234703846/",
+    "https://www.facebook.com/p/Pickle-Play-Cotabato-61586855562410/",
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.facebook.com/eightzproperties/posts/8z-pickleball-courtthree-3-pickleball-courts-now-open-for-rent-located-in-front-/578397234703846/",
+    "https://www.facebook.com/riversidepickleballcourt/",
+    "https://www.facebook.com/p/Dink-N-Drive-Pickleball-Club-61572878412074/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.facebook.com/p/Roadside-pickleball-cotabato-city-61561898164630/",
+    "https://www.facebook.com/kizadythegreat/videos/catch-us-here-cotabato-city-hall-peoples-palace-gymnasium-we-are-here-until-octo/1134363758828938/",
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3655047501450131/",
+    "https://www.instagram.com/p/DVDfuveEcNk/",
+    "https://www.facebook.com/eightzproperties/posts/8z-pickleball-courtthree-3-pickleball-courts-now-open-for-rent-located-in-front-/578397234703846/",
+    "https://www.facebook.com/p/Pickle-Play-Cotabato-61586855562410/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/kizadythegreat/videos/catch-us-here-cotabato-city-hall-peoples-palace-gymnasium-we-are-here-until-octo/1134363758828938/",
+    "https://www.facebook.com/61575752114633/posts/stop-calling-start-playing-is-booking-a-pickleball-court-harder-than-the-actual-/122164003676858403/",
+    "https://www.instagram.com/p/DVXVFQhiWAn/",
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/p/Pickle-Play-Cotabato-61586855562410/",
+    "https://www.facebook.com/eightzproperties/posts/8z-pickleball-courtthree-3-pickleball-courts-now-open-for-rent-located-in-front-/578397234703846/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4156617491293127/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4175194392768770/",
+    "https://www.facebook.com/p/Pickle-Play-Cotabato-61586855562410/",
+    "https://www.facebook.com/SypikPickleballCotabato/",
+    "https://www.facebook.com/kizadythegreat/videos/catch-us-here-cotabato-city-hall-peoples-palace-gymnasium-we-are-here-until-octo/1134363758828938/",
+    "https://www.facebook.com/p/Dink-N-Drive-Pickleball-Club-61572878412074/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/maguindanao/cotabato-city/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/maguindanao/cotabato-city/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/maguindanao/cotabato-city/scrape-state.json"
+}

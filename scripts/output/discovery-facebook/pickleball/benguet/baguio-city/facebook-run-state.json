@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:benguet:baguio-city:facebook",
   "createdAt": "2026-03-10T03:42:29.747Z",
-  "updatedAt": "2026-03-10T11:29:04.663Z",
+  "updatedAt": "2026-03-10T15:52:36.919Z",
   "scope": {
     "provinceSlug": "benguet",
     "citySlug": "baguio-city",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T03:45:19.110Z",
-      "finishedAt": "2026-03-10T11:29:04.663Z",
+      "finishedAt": "2026-03-10T15:52:36.919Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

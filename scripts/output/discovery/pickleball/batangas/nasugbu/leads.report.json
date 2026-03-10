@@ -1,0 +1,109 @@
+{
+  "scope": {
+    "provinceName": "Batangas",
+    "provinceSlug": "batangas",
+    "cityName": "Nasugbu",
+    "citySlug": "nasugbu",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:53:56.274Z",
+  "queries": [
+    "pickleball courts in Batangas Nasugbu",
+    "pickleball court Nasugbu Batangas",
+    "Nasugbu pickleball",
+    "courts in Nasugbu Batangas pickleball",
+    "sports center Nasugbu Batangas pickleball",
+    "pickleball club Nasugbu Batangas",
+    "pickleball reservations Nasugbu Batangas",
+    "host-map:cebupickleballcourts.com:Nasugbu",
+    "host-map:dumapickleball.com:Nasugbu",
+    "site:cebupickleballcourts.com Nasugbu Batangas pickleball",
+    "site:dumapickleball.com Nasugbu Batangas pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/nasugbu/pico-de-loro-beach-and-country-club",
+    "https://reclub.co/zh-hant/clubs/@voles-social-play",
+    "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu/cabins",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Nasugbu%2C+Batangas",
+    "https://www.picosandshotel.com/pico-de-loro-cove-hosts-its-1st-pickleball-open-invitational/",
+    "https://www.picodeloroclub.com/sports-recreation/",
+    "https://www.yelp.com/search?find_desc=Sports+Clubs&find_loc=Nasugbu%2C+Batangas",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://reclub.co/m/7VAZ7V",
+    "https://www.pickletrip.com/all/philippines/calabarzon/nasugbu"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/7VAZ7V",
+      "score": 14
+    },
+    {
+      "url": "https://www.clubpuntafuego.com.ph/facilities/",
+      "score": 7
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.clubpuntafuego.com.ph/facilities/",
+      "score": 7
+    },
+    {
+      "url": "https://www.clubpuntafuego.com.ph/wp-content/uploads/2020/12/PEAK-LIST-OF-GUEST-ACTIVITIES.pdf",
+      "score": 6
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/groups/WeLoveNasugbuOfficial/posts/25494994180108399/",
+    "https://www.facebook.com/61588377512419",
+    "https://www.facebook.com/thespinzonenasugbu/videos/capture-the-fun-at-the-spin-zone-/1361142002237310/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+    "https://www.facebook.com/clotilde.eventscenter/videos/exciting-news-from-clotilde-were-happy-to-introduce-our-new-pickleball-court-at-/933309699081450/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/raciram.montemar/videos/mag-pickleball-na-and-mag-train-with-beebong-jonson-pwede-with-group-or-one-on-o/1550247676180475/",
+    "https://www.facebook.com/thespinzonenasugbu/videos/capture-the-fun-at-the-spin-zone-/1361142002237310/",
+    "https://www.facebook.com/BeautylurebyHer/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.facebook.com/groups/WeLoveNasugbuOfficial/posts/25494994180108399/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+    "https://www.facebook.com/clotilde.eventscenter/videos/exciting-news-from-clotilde-were-happy-to-introduce-our-new-pickleball-court-at-/933309699081450/",
+    "https://www.facebook.com/61582826103444/posts/wonder-where-are-the-courts-near-you-meet-the-12-teams-ready-to-battle-it-out-at/122114970507094203/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/groups/WeLoveNasugbuOfficial/posts/25494994180108399/",
+    "https://www.facebook.com/BeautylurebyHer/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.instagram.com/reel/DA-FVrevjCK/",
+    "https://www.facebook.com/nawawellness/posts/ready-set-play-avail-of-our-two-pickleball-courts-at-nawa-wellness-recharge-with/382008841355378/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/thespinzonenasugbu/videos/capture-the-fun-at-the-spin-zone-/1361142002237310/",
+    "https://www.facebook.com/61588377512419",
+    "https://www.tiktok.com/@yourlovedars/video/7497855972413754642",
+    "https://www.facebook.com/groups/2723933654561525/posts/4260563317565210/",
+    "https://www.facebook.com/groups/WeLoveNasugbuOfficial/posts/25494994180108399/",
+    "https://www.instagram.com/p/DVafIKjEkDa/",
+    "https://www.facebook.com/thespinzonenasugbu/",
+    "https://www.instagram.com/reel/DA5WSR3JwII/?hl=en",
+    "https://www.instagram.com/p/DUFQtaeknwX/",
+    "https://www.facebook.com/nawawellness/posts/ready-set-play-avail-of-our-two-pickleball-courts-at-nawa-wellness-recharge-with/382008841355378/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/batangas/nasugbu/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/batangas/nasugbu/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/batangas/nasugbu/scrape-state.json"
+}

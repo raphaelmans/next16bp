@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T16:07:39.581Z",
+  "updatedAt": "2026-03-10T16:08:05.281Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pmo court|cotabato city|maguindanao",
+      "lastRowName": "Pmo Court"
+    },
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "roadside pickleball|cotabato city|maguindanao",
+      "lastRowName": "Roadside Pickleball"
+    },
+    "https://picklehub.ph/clubs": {
+      "canonicalUrl": "https://picklehub.ph/clubs",
+      "latestUrl": "https://picklehub.ph/clubs",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/": {
+      "canonicalUrl": "https://picklehub.ph/",
+      "latestUrl": "https://picklehub.ph/",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "lastDiscoveredAt": "2026-03-10T16:07:39.581Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T16:07:39.581Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "5th street pickleball court|cotabato city|maguindanao",
+      "lastRowName": "5th Street Pickleball Court"
+    }
+  },
+  "rows": {
+    "pmo court|cotabato city|maguindanao": {
+      "rowKey": "pmo court|cotabato city|maguindanao",
+      "name": "Pmo Court",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    },
+    "roadside pickleball|cotabato city|maguindanao": {
+      "rowKey": "roadside pickleball|cotabato city|maguindanao",
+      "name": "Roadside Pickleball",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    },
+    "5th street pickleball court|cotabato city|maguindanao": {
+      "rowKey": "5th street pickleball court|cotabato city|maguindanao",
+      "name": "5th Street Pickleball Court",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    }
+  }
+}

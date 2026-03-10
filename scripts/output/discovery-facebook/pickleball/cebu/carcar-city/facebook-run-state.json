@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cebu:carcar-city:facebook",
   "createdAt": "2026-03-10T05:42:56.346Z",
-  "updatedAt": "2026-03-10T11:30:09.551Z",
+  "updatedAt": "2026-03-10T15:52:38.892Z",
   "scope": {
     "provinceSlug": "cebu",
     "citySlug": "carcar-city",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T08:24:46.705Z",
-      "finishedAt": "2026-03-10T11:30:09.551Z",
+      "finishedAt": "2026-03-10T15:52:38.892Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

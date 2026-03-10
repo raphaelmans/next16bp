@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:santa-cruz",
+  "createdAt": "2026-03-10T15:25:42.944Z",
+  "updatedAt": "2026-03-10T15:26:28.463Z",
+  "urls": {
+    "https://facebook.com/61585746699575": {
+      "canonicalUrl": "https://facebook.com/61585746699575",
+      "latestUrl": "https://www.facebook.com/61585746699575",
+      "firstCapturedAt": "2026-03-10T15:25:43.006Z",
+      "lastCapturedAt": "2026-03-10T15:25:43.006Z",
+      "status": "captured",
+      "title": "Sta Cruz Pickleball Club | Facebook",
+      "venueName": "Sta Cruz Pickleball Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Sta Cruz Pickleball Club"
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T15:25:55.266Z",
+      "lastCapturedAt": "2026-03-10T15:25:55.266Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T15:26:15.096Z",
+      "lastCapturedAt": "2026-03-10T15:26:15.096Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

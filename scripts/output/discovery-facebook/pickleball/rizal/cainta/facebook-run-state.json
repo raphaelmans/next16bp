@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:rizal:cainta:facebook",
   "createdAt": "2026-03-10T08:57:08.643Z",
-  "updatedAt": "2026-03-10T09:00:53.155Z",
+  "updatedAt": "2026-03-10T15:52:43.910Z",
   "scope": {
     "provinceSlug": "rizal",
     "citySlug": "cainta",
@@ -82,9 +82,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T09:00:32.002Z",
-      "finishedAt": "2026-03-10T09:00:53.155Z",
+      "finishedAt": "2026-03-10T15:52:43.910Z",
       "lastError": null,
-      "notes": "backfilled 3 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

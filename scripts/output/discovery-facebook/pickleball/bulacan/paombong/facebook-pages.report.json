@@ -1,0 +1,221 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Paombong",
+    "citySlug": "paombong",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:42:08.173Z",
+  "queries": [
+    "site:facebook.com pickleball Paombong Bulacan",
+    "site:facebook.com \"Paombong\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Paombong\" \"pickleball club\"",
+    "site:facebook.com \"Paombong\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/243756409604955/posts/1907502809896965/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/5K.BASKETBALLCLUB/posts/2258573811300495/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2273846536414279/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1432938654343861/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304231033198438/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1758104321258752/posts/2566327983769711/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/295562878361069/posts/1432966171287395/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449505820103347/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/216129859704206/posts/1613319609985217/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1502547113473550/posts/2565936153801302/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/243756409604955/posts/1907502809896965/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/5K.BASKETBALLCLUB/posts/2258573811300495/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304231033198438/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1432938654343861/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1758104321258752/posts/2566327983769711/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2273846536414279/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/216129859704206/posts/1613319609985217/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/groups/609093076623194/posts/2032864910912663/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/295562878361069/posts/1432966171287395/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449505820103347/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/cant-get-over-this-cousins-duo-on-the-court-laban-kung-laban-family-that-plays-t/122136113918941050/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1432938654343861/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304231033198438/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1638444529751821/posts/4208403822755866/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/fetchdowntown/posts/2069410754014398/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1960560031225808/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/240886309760197/posts/1760090961173050/?comment_id=1760093084506171",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1107752219581358/posts/2381043975585503/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/manila.tennis.enthusiasts/posts/2817806108574139/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1081244806150845/posts/1959844204957563/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/243756409604955/posts/1907502809896965/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/5K.BASKETBALLCLUB/posts/2258573811300495/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304231033198438/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1432938654343861/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/BulaKennYo/posts/%EF%B8%8F-private-resort-for-as-low-as-12000-dito-sa-paombong-bulacan-%EF%B8%8F-villa-benedicto-/835459562188531/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/badmintonmalaysiafans/posts/1266733928522522/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2099421530397806/posts/2306232856383338/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1638444529751821/posts/4208403822755866/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ParkRangerPH/posts/weekend-court-brew-at-domesal-sports-events-%EF%B8%8Fdomesalph-bulihan-city-of-malolos/1311210784360055/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2810709232564654/posts/3884059518562948/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/paombong/facebook-pages.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery-facebook/pickleball/bulacan/paombong/facebook-pages.state.json"
+}

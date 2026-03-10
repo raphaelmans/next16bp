@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-10T16:07:39.581Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 11,
+  "scrapedUrls": 3,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 2,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "pmo court|cotabato city|maguindanao",
+      "name": "Pmo Court",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/soccsksargen/cotabato-city/pmo-court",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    },
+    {
+      "rowKey": "roadside pickleball|cotabato city|maguindanao",
+      "name": "Roadside Pickleball",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/roadside-pickleball",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    },
+    {
+      "rowKey": "5th street pickleball court|cotabato city|maguindanao",
+      "name": "5th Street Pickleball Court",
+      "city": "COTABATO CITY",
+      "province": "MAGUINDANAO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/bangsamoro-autonomous-region-in-muslim-mindanao/cotabato-city/5th-street-pickleball-court",
+      "firstSeenAt": "2026-03-10T16:07:39.581Z",
+      "lastSeenAt": "2026-03-10T16:07:39.581Z"
+    }
+  ]
+}

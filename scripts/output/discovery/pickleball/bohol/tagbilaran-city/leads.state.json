@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bohol:tagbilaran-city",
+  "createdAt": "2026-03-10T15:54:54.789Z",
+  "updatedAt": "2026-03-10T15:55:42.731Z",
+  "queries": [
+    "pickleball courts in Bohol Tagbilaran City",
+    "pickleball court Tagbilaran City Bohol",
+    "Tagbilaran City pickleball",
+    "courts in Tagbilaran City Bohol pickleball",
+    "sports center Tagbilaran City Bohol pickleball",
+    "pickleball club Tagbilaran City Bohol",
+    "pickleball reservations Tagbilaran City Bohol",
+    "host-map:cebupickleballcourts.com:Tagbilaran City",
+    "host-map:cebupickleballcourts.com:Tagbilaran",
+    "host-map:dumapickleball.com:Tagbilaran City",
+    "host-map:dumapickleball.com:Tagbilaran",
+    "site:cebupickleballcourts.com Tagbilaran City Bohol pickleball",
+    "site:dumapickleball.com Tagbilaran City Bohol pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/the-pickle-labb",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball reservations Tagbilaran City Bohol",
+      "title": "Play Pickleball at The Pickle Labb: Court Information",
+      "snippet": "The Pickle Labb is a place to play pickleball in Tagbilaran City, Central Visayas. There are 5 indoor hard courts. These are dedicated courts with permanent ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://the-pickle-labb.rezerv.co/home": {
+      "canonicalUrl": "https://the-pickle-labb.rezerv.co/home",
+      "latestUrl": "https://the-pickle-labb.rezerv.co/home",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball reservations Tagbilaran City Bohol",
+      "title": "Tagbilaran's Premier Pickleball Court! - Rezerv",
+      "snippet": "About Us. The Pickle Labb is a premier destination for pickleball enthusiasts seeking a refined and high-quality playing environment.",
+      "domain": "the-pickle-labb.rezerv.co",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://app.sports360.ph/sportshub/court-x": {
+      "canonicalUrl": "https://app.sports360.ph/sportshub/court-x",
+      "latestUrl": "https://app.sports360.ph/sportshub/court-x",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball reservations Tagbilaran City Bohol",
+      "title": "Court X - Sports 360",
+      "snippet": "Court X Peñaflor Street, Taloto, Tagbilaran City, Bohol 8 Pickleball Courts ... Strictly no bringing of outside food and drinks. Contact Information. 09681770861.",
+      "domain": "app.sports360.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city/courtwoods-pickleball",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball reservations Tagbilaran City Bohol",
+      "title": "Courtwoods Pickleball",
+      "snippet": "Courtwoods Pickleball is one of the most popular places to play pickleball in Tagbilaran City, Central Visayas. There are 2 outdoor hard courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/th/clubs/@tagbilaran-pickleball-association": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@tagbilaran-pickleball-association",
+      "latestUrl": "https://reclub.co/th/clubs/@tagbilaran-pickleball-association",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "Tagbilaran City pickleball",
+      "title": "TAGBILARAN PICKLEBALL ASSOCIATION",
+      "snippet": "The Prime Pioneer, we started in November 2024 in Barangay Poblacion-3. Tagbilaran City's First \"Pickleball OPEN PLAY for the General Welfare\". Through a Sport ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/tagbilaran-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/tagbilaran-city",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "Tagbilaran City pickleball",
+      "title": "2 pickleball courts in Tagbilaran City, Central Visayas",
+      "snippet": "How many pickleball courts are there in Tagbilaran City? There are 2 pickleball locations with 7 courts in Tagbilaran City.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/5DSCVW": {
+      "canonicalUrl": "https://reclub.co/m/5DSCVW",
+      "latestUrl": "https://reclub.co/m/5DSCVW",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball reservations Tagbilaran City Bohol",
+      "title": "Tagbilaran Pickleball Association, Sunday's OPEN PLAY and Picoolers ...",
+      "snippet": "Cogon, Tagbilaran City, Bohol. see map. Per Player. $50.00. Minimal Fees for the General Welfare: □Guests & Visitors at 50/head only □TPA's ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@tagbilaran-pickleball-association": {
+      "canonicalUrl": "https://reclub.co/clubs/@tagbilaran-pickleball-association",
+      "latestUrl": "https://reclub.co/clubs/@tagbilaran-pickleball-association",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball club Tagbilaran City Bohol",
+      "title": "TAGBILARAN PICKLEBALL ASSOCIATION",
+      "snippet": "The Prime Pioneer, we started in November 2024 in Barangay Poblacion-3. Tagbilaran City's First \"Pickleball OPEN PLAY for the General Welfare\". Through a Sport ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/CY5VTL": {
+      "canonicalUrl": "https://reclub.co/m/CY5VTL",
+      "latestUrl": "https://reclub.co/m/CY5VTL",
+      "firstDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "lastDiscoveredAt": "2026-03-10T15:54:54.790Z",
+      "sourceQuery": "pickleball club Tagbilaran City Bohol",
+      "title": "Tagbilaran Pickleball Association, Sunday's OPEN PLAY and Picoolers ...",
+      "snippet": "Cogon, Tagbilaran City, Bohol. see map. Per Player. $50.00. Minimal Fees for the General Welfare: □Guests & Visitors at 50/head only □TPA's with membership ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

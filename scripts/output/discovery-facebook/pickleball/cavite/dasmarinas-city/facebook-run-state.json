@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:dasmarinas-city:facebook",
   "createdAt": "2026-03-10T05:02:48.638Z",
-  "updatedAt": "2026-03-10T11:30:08.283Z",
+  "updatedAt": "2026-03-10T15:52:38.014Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "dasmarinas-city",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T05:12:51.660Z",
-      "finishedAt": "2026-03-10T11:30:08.283Z",
+      "finishedAt": "2026-03-10T15:52:38.014Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

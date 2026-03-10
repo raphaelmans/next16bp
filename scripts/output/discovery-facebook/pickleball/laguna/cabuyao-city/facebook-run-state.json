@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:laguna:cabuyao-city:facebook",
   "createdAt": "2026-03-10T08:33:06.788Z",
-  "updatedAt": "2026-03-10T11:37:23.050Z",
+  "updatedAt": "2026-03-10T15:52:39.994Z",
   "scope": {
     "provinceSlug": "laguna",
     "citySlug": "cabuyao-city",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:37:23.050Z",
+      "finishedAt": "2026-03-10T15:52:39.994Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:37:23.050Z",
+      "finishedAt": "2026-03-10T15:52:39.994Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:37:23.050Z",
+      "finishedAt": "2026-03-10T15:52:39.994Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T11:37:23.050Z",
+      "finishedAt": "2026-03-10T15:52:39.994Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

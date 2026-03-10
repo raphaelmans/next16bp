@@ -5,12 +5,11 @@
  *   facebook page urls.txt -> playwright-cli capture -> AI extraction -> CSV rows
  */
 
-import { execFile } from "node:child_process";
 import { mkdir, readFile, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { promisify } from "node:util";
 import { openai } from "@ai-sdk/openai";
 import { generateObject } from "ai";
+import { type BrowserContext, chromium, type Page } from "playwright";
 import { z } from "zod";
 import {
   CuratedFacebookPageCaptureStateRepository,
@@ -29,8 +28,6 @@ import {
   canonicalizeLeadUrl,
   normalizeLocationSlug,
 } from "../shared/url-normalization";
-
-const execFileAsync = promisify(execFile);
 
 interface ScriptOptions {
   province: string | null;
@@ -86,6 +83,11 @@ interface CuratedCsvRow {
   amenities: string;
   courts: string;
   photo_urls: string;
+}
+
+interface PlaywrightSession {
+  context: BrowserContext;
+  page: Page;
 }
 
 const FACEBOOK_PAGE_ANALYSIS_SCHEMA = z.object({
@@ -313,91 +315,114 @@ async function loadExistingCapturedRecords(
   }
 }
 
-async function runPlaywrightCli(args: string[]): Promise<string> {
-  const { stdout, stderr } = await execFileAsync("playwright-cli", args, {
-    cwd: process.cwd(),
-    maxBuffer: 1024 * 1024 * 8,
-    timeout: 45_000,
-  });
+function isMissingPlaywrightBrowserError(
+  browser: string,
+  error: unknown,
+): boolean {
+  const message = error instanceof Error ? error.message : String(error);
 
-  return `${stdout}${stderr}`.trim();
+  return (
+    message.includes(`distribution '${browser}' is not found`) ||
+    message.includes(`Executable doesn't exist at`) ||
+    message.includes(`browserType.launchPersistentContext`) ||
+    message.includes(`channel "${browser}"`)
+  );
 }
 
-function extractJsonResult(stdout: string): string {
-  const resultMarker = "### Result";
-  const codeMarker = "### Ran Playwright code";
-  const resultIndex = stdout.indexOf(resultMarker);
+function buildPlaywrightUserDataDir(sessionName: string): string {
+  return path.join(process.cwd(), ".playwright-facebook", sessionName);
+}
 
-  if (resultIndex >= 0) {
-    const start = resultIndex + resultMarker.length;
-    const codeIndex = stdout.indexOf(codeMarker, start);
-    const end = codeIndex >= 0 ? codeIndex : stdout.length;
-    return stdout.slice(start, end).trim();
+async function openPlaywrightSession(
+  sessionName: string,
+): Promise<PlaywrightSession> {
+  const requestedBrowser = process.env.PLAYWRIGHT_CLI_BROWSER?.trim();
+  const browserCandidates =
+    requestedBrowser === "chromium"
+      ? [{ browser: "chromium", channel: undefined }]
+      : [
+          { browser: requestedBrowser || "chrome", channel: "chrome" as const },
+          { browser: "chromium", channel: undefined },
+        ];
+  const userDataDir = buildPlaywrightUserDataDir(sessionName);
+  await mkdir(userDataDir, { recursive: true });
+
+  let lastError: unknown = null;
+  for (const candidate of browserCandidates) {
+    try {
+      const context = await chromium.launchPersistentContext(userDataDir, {
+        channel: candidate.channel,
+        headless: true,
+        viewport: {
+          width: 1280,
+          height: 900,
+        },
+      });
+      context.setDefaultNavigationTimeout(45_000);
+      context.setDefaultTimeout(45_000);
+
+      const page = context.pages()[0] ?? (await context.newPage());
+      await page.goto("about:blank", { waitUntil: "domcontentloaded" });
+
+      return { context, page };
+    } catch (error) {
+      lastError = error;
+      if (!isMissingPlaywrightBrowserError(candidate.browser, error)) {
+        throw error;
+      }
+    }
   }
 
-  return stdout.trim();
-}
-
-async function openPlaywrightSession(sessionName: string) {
-  try {
-    await runPlaywrightCli([`-s=${sessionName}`, "close"]);
-  } catch {
-    // ignore missing session close errors
+  if (lastError instanceof Error) {
+    throw lastError;
   }
-
-  await runPlaywrightCli([
-    `-s=${sessionName}`,
-    "open",
-    "--browser=chrome",
-    "--persistent",
-    "about:blank",
-  ]);
+  throw new Error("Failed to open Playwright session");
 }
 
-async function closePlaywrightSession(sessionName: string) {
+async function closePlaywrightSession(session: PlaywrightSession) {
   try {
-    await runPlaywrightCli([`-s=${sessionName}`, "close"]);
+    await session.context.close();
   } catch {
     // ignore close errors
   }
 }
 
 async function capturePagePayload(
-  sessionName: string,
+  session: PlaywrightSession,
   url: string,
 ): Promise<CapturedPagePayload> {
-  await runPlaywrightCli([`-s=${sessionName}`, "goto", url]);
-  const raw = await runPlaywrightCli([
-    `-s=${sessionName}`,
-    "eval",
-    `() => JSON.stringify((() => {
-      const links = Array.from(document.querySelectorAll('a[href]'))
-        .map((anchor) => anchor.href)
-        .filter(Boolean)
-        .slice(0, 200);
-      const ogTitle =
-        document.querySelector('meta[property="og:title"]')?.getAttribute('content') ?? '';
-      const ogDescription =
-        document.querySelector('meta[property="og:description"]')?.getAttribute('content') ?? '';
+  const page = session.page.isClosed()
+    ? await session.context.newPage()
+    : session.page;
+  await page.goto(url, { waitUntil: "domcontentloaded", timeout: 45_000 });
+  await page.waitForTimeout(1_500);
 
-      return {
-        pageUrl: location.href,
-        title: document.title,
-        bodyText: document.body ? document.body.innerText.slice(0, 16000) : '',
-        links,
-        ogTitle,
-        ogDescription,
-      };
-    })())`,
-  ]);
+  const payload = await page.evaluate(() => {
+    const links = Array.from(document.querySelectorAll("a[href]"))
+      .map((anchor) => anchor.href)
+      .filter(Boolean)
+      .slice(0, 200);
+    const ogTitle =
+      document
+        .querySelector('meta[property="og:title"]')
+        ?.getAttribute("content") ?? "";
+    const ogDescription =
+      document
+        .querySelector('meta[property="og:description"]')
+        ?.getAttribute("content") ?? "";
 
-  const parsed = JSON.parse(extractJsonResult(raw)) as
-    | CapturedPagePayload
-    | string;
-  if (typeof parsed === "string") {
-    return JSON.parse(parsed) as CapturedPagePayload;
-  }
-  return parsed;
+    return {
+      pageUrl: location.href,
+      title: document.title,
+      bodyText: document.body ? document.body.innerText.slice(0, 16000) : "",
+      links,
+      ogTitle,
+      ogDescription,
+    };
+  });
+
+  session.page = page;
+  return payload satisfies CapturedPagePayload;
 }
 
 function buildCourtValue(courtCount: number | null): string {
@@ -716,7 +741,7 @@ async function runScope(
   const currentRunCaptured: CapturedPageRecord[] = [];
   let skippedExistingCount = 0;
 
-  await openPlaywrightSession(sessionName);
+  const session = await openPlaywrightSession(sessionName);
 
   try {
     for (const originalUrl of targetUrls) {
@@ -730,7 +755,7 @@ async function runScope(
       const capturedAt = new Date().toISOString();
 
       try {
-        const payload = await capturePagePayload(sessionName, originalUrl);
+        const payload = await capturePagePayload(session, originalUrl);
         const analysis = postProcessAnalysis(
           scope,
           payload,
@@ -790,7 +815,7 @@ async function runScope(
       }
     }
   } finally {
-    await closePlaywrightSession(sessionName);
+    await closePlaywrightSession(session);
   }
 
   const allCapturedRecords = Array.from(capturedByUrl.values());

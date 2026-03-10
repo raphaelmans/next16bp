@@ -1,0 +1,120 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Bayawan City (Tulong)",
+    "citySlug": "bayawan-city-tulong",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T14:55:00.126Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Bayawan City (Tulong)",
+    "pickleball court Bayawan City (Tulong) Negros Oriental",
+    "Bayawan City (Tulong) pickleball",
+    "courts in Bayawan City (Tulong) Negros Oriental pickleball",
+    "sports center Bayawan City (Tulong) Negros Oriental pickleball",
+    "pickleball club Bayawan City (Tulong) Negros Oriental",
+    "pickleball reservations Bayawan City (Tulong) Negros Oriental",
+    "host-map:cebupickleballcourts.com:Bayawan City (Tulong)",
+    "host-map:dumapickleball.com:Bayawan City (Tulong)",
+    "site:cebupickleballcourts.com Bayawan City (Tulong) Negros Oriental pickleball",
+    "site:dumapickleball.com Bayawan City (Tulong) Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+    "https://app.court-access.com/",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+    "https://www.sparrk.ph/explore/pickleball",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+    "https://reclub.co/clubs/@bacolod-pickleball-club",
+    "https://www.questadventure.ph/pickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://bayawancity.gov.ph/",
+      "score": 0
+    },
+    {
+      "url": "https://metropost-online.com/negors-growing-pickleball-craze/",
+      "score": 0
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "score": 12
+    },
+    {
+      "url": "https://www.bayawancity.gov.ph/experiences/experience.php?page=2&year=2025",
+      "score": 2
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/negros-island-region/bacong/pickle-jungle",
+      "score": 9
+    },
+    {
+      "url": "https://bayawancity.gov.ph/",
+      "score": 0
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/Juanderlust.travel/posts/the-first-air-conditioned-pickleball-court-with-climate-control-in-valencia-negr/1448205840196934/",
+    "https://www.instagram.com/p/DQRERuzAUtc/",
+    "https://www.facebook.com/p/Dragonworx-Pickleball-Court-61585192290930/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.facebook.com/Juanderlust.travel/posts/pickle-8-open-play-looking-for-a-fun-and-affordable-way-to-stay-active-join-us-e/1354301056254080/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+    "https://www.facebook.com/eatstheweekend/videos/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1796713520885835/",
+    "https://www.facebook.com/aleksandrs.ustilovskis/videos/pickleball-vs-sex-which-is-the-better-workout-asking-our-group-here-in-dumaguete/1584029069534417/",
+    "https://www.facebook.com/p/Bayawan-City-Pickleball-Club-61581060465055/",
+    "https://www.instagram.com/p/DQRERuzAUtc/",
+    "https://www.facebook.com/p/Dragonworx-Pickleball-Court-61585192290930/",
+    "https://www.facebook.com/IbayawBayawanCity/posts/lets-have-another-look-to-the-newest-sports-facilities-in-bayawan-bayawan-tennis/1013453707470009/",
+    "https://www.facebook.com/coachpjovz/videos/the-side-courts-bayawan-project/1255032643184944/",
+    "https://www.facebook.com/sample.king.7/videos/%F0%9D%90%8D%F0%9D%90%9E%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AC%F0%9D%90%A9%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%93%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%9B%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-8-brand-new-pickleball-courtslocated-at-p/921569527713633/",
+    "https://www.facebook.com/Juanderlust.travel/posts/the-first-air-conditioned-pickleball-court-with-climate-control-in-valencia-negr/1448205840196934/",
+    "https://www.facebook.com/p/Bayawan-City-Pickleball-Club-61581060465055/",
+    "https://www.facebook.com/rotarycluboftolong/",
+    "https://www.facebook.com/IbayawBayawanCity/posts/lets-have-another-look-to-the-newest-sports-facilities-in-bayawan-bayawan-tennis/1013453707470009/",
+    "https://www.instagram.com/p/DU8NNcGoJv8/",
+    "https://www.facebook.com/groups/142896755886772/posts/3081616172014801/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4202737520014457/",
+    "https://www.instagram.com/reel/DOPy3h2EoUH/",
+    "https://www.facebook.com/rotaractcluboftolong/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4376361899318684/",
+    "https://www.facebook.com/p/Dragonworx-Pickleball-Court-61585192290930/",
+    "https://www.instagram.com/p/DQRERuzAUtc/",
+    "https://www.facebook.com/groups/505965599867393/posts/2399790183818249/",
+    "https://www.facebook.com/IbayawBayawanCity/posts/lets-have-another-look-to-the-newest-sports-facilities-in-bayawan-bayawan-tennis/1013453707470009/",
+    "https://www.facebook.com/coachpjovz/videos/the-side-courts-bayawan-project/1255032643184944/",
+    "https://www.facebook.com/Juanderlust.travel/videos/more-playing-lesser-waiting-pickleball-pickleballislife-pickleballlife/1637871654314978/",
+    "https://www.facebook.com/eatstheweekend/videos/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1796713520885835/",
+    "https://www.facebook.com/p/Bayawan-City-Pickleball-Club-61581060465055/",
+    "https://www.facebook.com/photo.php?fbid=122125413231035348&set=a.122101097019035348&id=61581060465055",
+    "https://www.facebook.com/photo.php?fbid=122121953475035348&set=a.122105337375035348&id=61581060465055",
+    "https://www.facebook.com/Juanderlust.travel/videos/more-playing-lesser-waiting-pickleball-pickleballislife-pickleballlife/1637871654314978/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/photo.php?fbid=122109039381035348&set=a.122105337375035348&id=61581060465055",
+    "https://www.facebook.com/photo.php?fbid=122105023539035348&set=a.122101097019035348&id=61581060465055",
+    "https://www.facebook.com/p/Bayawan-City-Pickleball-Club-61581060465055/",
+    "https://www.facebook.com/IbayawBayawanCity/posts/lets-have-another-look-to-the-newest-sports-facilities-in-bayawan-bayawan-tennis/1013453707470009/",
+    "https://www.instagram.com/p/DQRERuzAUtc/",
+    "https://www.facebook.com/p/Dragonworx-Pickleball-Court-61585192290930/",
+    "https://www.facebook.com/IbayawBayawanCity/videos/bayawan-city-norsu-sports-complex/824355464860400/",
+    "https://www.facebook.com/groups/505965599867393/posts/2399790183818249/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/groups/505965599867393/posts/2399790183818249/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4334845360137005/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1448756973511565/",
+    "https://www.facebook.com/Juanderlust.travel/videos/pickle-8-open-play-looking-for-a-fun-and-affordable-way-to-stay-active-join-us-e/2548694472173697/",
+    "https://www.facebook.com/sample.king.7/videos/%F0%9D%90%8D%F0%9D%90%9E%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AC%F0%9D%90%A9%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%93%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%9B%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-8-brand-new-pickleball-courtslocated-at-p/921569527713633/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1376390554081541/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/negros-oriental/bayawan-city-tulong/leads.urls.txt",
+  "statePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/negros-oriental/bayawan-city-tulong/leads.state.json",
+  "scrapeStatePath": "/home/raphaelm/kudoscourts/scripts/output/discovery/pickleball/negros-oriental/bayawan-city-tulong/scrape-state.json"
+}
