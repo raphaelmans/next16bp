@@ -37,26 +37,74 @@ The app intentionally uses two event-driven patterns:
 - Place-sport aggregate discovery availability still uses scoped invalidation/refetch.
 - Availability queries use focus/reconnect recovery as drift protection.
 
-## Operational Requirement
+## Operational Requirement — Checklist for New Realtime Tables
 
-Every table subscribed via Supabase Realtime depends on these environment-side requirements:
+Every table subscribed via Supabase Realtime must satisfy **all three** requirements below. Missing any one produces a silent failure (channel joins successfully, then a delayed `system` error rejects it).
 
-- the table must be present in the `supabase_realtime` publication
-- subscribing roles must have `SELECT` on the table
-- if the subscription uses a column filter (e.g. `reservation_id=eq.<id>`), the filter column must be in the WAL output — tables with `REPLICA IDENTITY DEFAULT` only expose PK columns; set `REPLICA IDENTITY FULL` when filtering on non-PK columns
+### 1. Publication Membership
 
-Without the `SELECT` grant, Supabase Realtime can accept `phx_join` and still emit a delayed `system` error like `invalid column for filter <column>`. The same error occurs when filtering on a column not present in the replica identity.
+The table must be in the `supabase_realtime` publication:
 
-The browser Supabase client connects with the publishable key, which maps to the `anon` role. Tables using column filters must grant `SELECT` to `anon` so the filter validation function (`realtime.subscription_check_filters`) can verify column access via `has_column_privilege`. Tables without filters (e.g. `user_notification`) only need `authenticated` since the filter validation loop is skipped.
+```sql
+ALTER PUBLICATION supabase_realtime ADD TABLE public.<table_name>;
+```
 
-Tables and required grants:
+### 2. SELECT Grants
 
-| Table | Roles | Publication + Grant migration |
-|---|---|---|
-| `public.availability_change_event` | `authenticated`, `anon` | `drizzle/0044_availability_change_event_realtime_grants.sql` |
-| `public.chat_message` | `authenticated` | (added manually to publication) |
-| `public.reservation_event` | `authenticated`, `anon` | `drizzle/0046_reservation_notification_realtime_grants.sql` |
-| `public.user_notification` | `authenticated` | `drizzle/0046_reservation_notification_realtime_grants.sql` |
+Subscribing roles must have `SELECT` on the table. The browser Supabase client connects with the publishable key, which maps to the **`anon`** role.
+
+- **Tables with column filters** (e.g. `reservation_id=eq.<id>`): must grant to `anon` because the filter validation trigger (`realtime.subscription_check_filters`) calls `has_column_privilege` for the JWT role, and the filter validation loop only executes when filters are present.
+- **Tables without filters** (e.g. `user_notification`): `authenticated` is sufficient since the filter validation loop is skipped entirely.
+
+```sql
+-- With filters: grant to both
+GRANT SELECT ON TABLE public.<table_name> TO authenticated, anon;
+-- Without filters: authenticated is enough
+GRANT SELECT ON TABLE public.<table_name> TO authenticated;
+```
+
+### 3. Replica Identity (for filtered subscriptions)
+
+If the subscription filters on a **non-PK column**, that column must be in the WAL output. `REPLICA IDENTITY DEFAULT` only includes PK columns. Set `FULL` when filtering on non-PK columns:
+
+```sql
+ALTER TABLE public.<table_name> REPLICA IDENTITY FULL;
+```
+
+### Failure Modes
+
+All three failures produce the same delayed `system` error pattern:
+
+```
+phx_join → phx_reply status: "ok" → system status: "error"
+"Unable to subscribe to changes... invalid column for filter <column>"
+```
+
+The `phx_reply: ok` is misleading — it only means the Phoenix channel accepted the join. The actual Postgres-level validation happens asynchronously. No JS error is thrown; the error only appears in WebSocket frames.
+
+### Diagnostic Query
+
+```sql
+-- Check publication membership
+SELECT tablename FROM pg_publication_tables WHERE pubname = 'supabase_realtime';
+
+-- Check grants for a specific table
+SELECT
+  has_table_privilege('anon', 'public.<table>', 'SELECT') as anon_select,
+  has_table_privilege('authenticated', 'public.<table>', 'SELECT') as auth_select;
+
+-- Check replica identity (d=default/PK, f=full, n=nothing, i=index)
+SELECT relreplident FROM pg_class WHERE relname = '<table>';
+```
+
+### Current Tables
+
+| Table | Roles | Replica Identity | Filter Column | Migration |
+|---|---|---|---|---|
+| `public.availability_change_event` | `authenticated`, `anon` | default (PK=`court_id`) | `court_id` | `drizzle/0044` |
+| `public.chat_message` | `authenticated` | default | (none) | manual |
+| `public.reservation_event` | `authenticated`, `anon` | **full** | `reservation_id` | `drizzle/0046` |
+| `public.user_notification` | `authenticated` | default | (none) | `drizzle/0046` |
 
 ## Current Limitation
 

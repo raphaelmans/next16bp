@@ -55,3 +55,31 @@ Reservation state fans out into many projections:
 
 Because of that, reservation realtime does not try to carry all derived state.
 It signals change, then the client invalidates only affected canonical keys.
+
+## Realtime Publication Setup
+
+The `reservation_event` table requires all three Supabase Realtime prerequisites (see `00-overview.md`):
+
+1. **Publication**: table must be in `supabase_realtime`
+2. **Grants**: `SELECT` to `authenticated` and `anon` (anon needed because the browser client connects with the publishable key and the subscription uses a column filter)
+3. **Replica identity**: `FULL` (the subscription filters on `reservation_id`, which is not the PK — PK is `id`)
+
+Migration: `drizzle/0046_reservation_notification_realtime_grants.sql`
+
+### Realtime Client
+
+- Client: `src/common/clients/reservation-realtime-client/index.ts`
+- Subscribes to `INSERT` on `public.reservation_event`
+- Filters by `reservation_id=eq.<id>` (single) or `reservation_id=in.(<ids>)` (group)
+- Uses `getSupabaseBrowserClient()` — no explicit auth token; inherits connection-level publishable key (`anon` role)
+
+### Notification Realtime
+
+The `user_notification` table is also subscribed via realtime:
+
+- Client: `src/common/clients/notification-realtime-client/index.ts`
+- Subscribes to `INSERT` on `public.user_notification` **without filters**
+- Client-side filters by `user_id` after receiving the event
+- Only needs `authenticated` grant (no filter validation occurs server-side)
+
+Migration: `drizzle/0046_reservation_notification_realtime_grants.sql`

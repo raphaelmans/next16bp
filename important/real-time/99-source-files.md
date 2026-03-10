@@ -12,6 +12,7 @@
 
 - `src/common/clients/reservation-realtime-client/index.ts`
 - `src/common/clients/availability-realtime-client/index.ts`
+- `src/common/clients/notification-realtime-client/index.ts`
 
 ## Discovery Consumers
 
