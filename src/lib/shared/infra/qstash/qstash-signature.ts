@@ -30,6 +30,7 @@ type VerifyQstashSignatureResult =
   | {
       ok: false;
       reason: string;
+      claimedUrl?: string;
     };
 
 function decodeBase64Url(segment: string): Buffer {
@@ -149,7 +150,11 @@ export function verifyQstashSignature(
 
     const claimsCheck = verifyJwtClaims(parsed.payload, input.body, input.url);
     if (!claimsCheck.ok) {
-      return { ok: false, reason: claimsCheck.reason };
+      return {
+        ok: false,
+        reason: claimsCheck.reason,
+        claimedUrl: parsed.payload.sub,
+      };
     }
 
     return { ok: true, payload: parsed.payload };

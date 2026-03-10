@@ -2,7 +2,10 @@ import { type NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { env } from "@/lib/env";
 import { dispatchNotificationDelivery } from "@/lib/modules/notification-delivery/http/dispatch-notification-delivery.handler";
-import { QstashNotificationDispatchTriggerQueue } from "@/lib/modules/notification-delivery/queues/qstash-notification-dispatch-trigger.queue";
+import {
+  QstashNotificationDispatchTriggerQueue,
+  resolveNotificationDispatchTriggerUrl,
+} from "@/lib/modules/notification-delivery/queues/qstash-notification-dispatch-trigger.queue";
 import { logger } from "@/lib/shared/infra/logger";
 import { verifyQstashSignature } from "@/lib/shared/infra/qstash/qstash-signature";
 
@@ -25,7 +28,8 @@ type DispatchResponseBody = {
 };
 
 function verifyQueueTriggerAuth(request: NextRequest, body: string) {
-  const expectedUrl = request.nextUrl.toString();
+  const expectedUrl =
+    resolveNotificationDispatchTriggerUrl() ?? request.nextUrl.toString();
   const signature = request.headers.get("upstash-signature");
 
   const verification = verifyQstashSignature({
@@ -82,6 +86,9 @@ function verifyQueueTriggerAuth(request: NextRequest, body: string) {
     {
       event: "notification_delivery.queue_trigger_auth_failed",
       reason: verification.reason,
+      expectedUrl,
+      claimedUrl: verification.claimedUrl ?? null,
+      requestUrl: request.nextUrl.toString(),
     },
     "QStash signature verification failed",
   );
