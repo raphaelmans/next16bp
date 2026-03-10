@@ -25,6 +25,7 @@ export * from "./court-hours-window";
 export * from "./court-price-override";
 export * from "./court-rate-rule";
 export * from "./court-submission";
+export * from "./developer-integration";
 // Enums (must be exported first as they are referenced by other schemas)
 export * from "./enums";
 // External open play

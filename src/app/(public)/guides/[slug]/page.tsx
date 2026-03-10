@@ -5,10 +5,12 @@ import Script from "next/script";
 import { appRoutes } from "@/common/app-routes";
 import { Container } from "@/components/layout/container";
 import { Badge } from "@/components/ui/badge";
+import { DeveloperGuideArticlePage } from "@/features/guides/components/developer-guide-article-page";
 import { OrgGuideArticlePage } from "@/features/guides/components/org-guide-article-page";
 import { PlayerBookingGuideArticlePage } from "@/features/guides/components/player-booking-guide-article-page";
 import type { GuideEntry } from "@/features/guides/content/guides";
 import {
+  DEVELOPER_GUIDE_SLUG,
   GUIDE_ENTRIES,
   getGuideBySlug,
   ORG_GUIDE_SLUG,
@@ -279,6 +281,15 @@ export default async function GuidePage({ params }: GuidePageProps) {
           guide,
           PlayerBookingGuideArticlePage,
         )}
+      />
+    );
+  }
+
+  if (slug === DEVELOPER_GUIDE_SLUG) {
+    return (
+      <InteractiveGuideWrapper
+        guide={guide}
+        article={buildInteractiveGuideChrome(guide, DeveloperGuideArticlePage)}
       />
     );
   }

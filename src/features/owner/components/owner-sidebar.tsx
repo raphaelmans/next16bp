@@ -7,6 +7,7 @@ import {
   ChevronDown,
   ChevronRight,
   ClipboardList,
+  Code2,
   LayoutDashboard,
   LayoutGrid,
   MapPinned,
@@ -107,6 +108,12 @@ const navItems = [
       type: "permission",
       permission: "reservation.guest_booking",
     } as PageAccessRule,
+  },
+  {
+    title: "Developers",
+    href: appRoutes.organization.developers,
+    icon: Code2,
+    accessRule: { type: "owner-or-manager" } as PageAccessRule,
   },
   {
     title: "Team",

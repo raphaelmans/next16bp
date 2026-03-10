@@ -24,6 +24,16 @@ export const RATE_LIMIT_TIERS: Record<string, RateLimitConfig> = {
     window: "1 m" as const,
     requireIpForAnonymous: true,
   },
+  /** Developer API reads */
+  developerRead: {
+    requests: 120,
+    window: "1 m" as const,
+  },
+  /** Developer API writes */
+  developerWrite: {
+    requests: 60,
+    window: "1 m" as const,
+  },
   /** Authentication endpoints - 10 req/min */
   auth: { requests: 60, window: "1 m" as const },
   /** Auth endpoints that can trigger outbound email - 5 req/5 min */

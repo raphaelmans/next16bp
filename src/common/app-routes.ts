@@ -151,6 +151,7 @@ export const appRoutes = {
     base: "/organization",
     options: { type: "organization" as const },
     bookings: "/organization/bookings",
+    developers: "/organization/developers",
     getStarted: "/organization/get-started",
     onboarding: "/organization/onboarding",
     verify: "/organization/verify",

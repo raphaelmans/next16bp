@@ -4,6 +4,11 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 - Mobile OpenAPI REST API guide: `docs/openapi-mobile/README.md`
 
+## API Note
+
+- `src/app/api/mobile/v1/**` is legacy transport and is being deprecated.
+- Browser-facing product features should prefer non-mobile route families and shared service adapters instead of adding new dependencies on `/api/mobile/v1/**`.
+
 ## Getting Started
 
 First, run the development server:

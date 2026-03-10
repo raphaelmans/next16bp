@@ -6,6 +6,22 @@ import {
 } from "@/lib/shared/infra/ratelimit";
 import { getClientIdentifier } from "./client-identifier";
 
+export type RateLimitMetadata = {
+  limit: number;
+  remaining: number;
+  reset: number;
+};
+
+export function createRateLimitHeaders(
+  metadata: RateLimitMetadata,
+): HeadersInit {
+  return {
+    "x-ratelimit-limit": String(metadata.limit),
+    "x-ratelimit-remaining": String(metadata.remaining),
+    "x-ratelimit-reset": String(metadata.reset),
+  };
+}
+
 export async function enforceRateLimit(args: {
   req: Request;
   tier: RateLimitTier;
@@ -37,8 +53,25 @@ export async function enforceRateLimit(args: {
   }
 
   if (result.success) {
-    return { ok: true as const };
+    return {
+      ok: true as const,
+      rateLimit: {
+        limit: result.limit,
+        remaining: result.remaining,
+        reset: result.reset,
+      },
+    };
   }
+
+  const rateLimit = {
+    limit: result.limit,
+    remaining: result.remaining,
+    reset: result.reset,
+  };
+  const retryAfterSeconds = Math.max(
+    0,
+    Math.ceil((result.reset - Date.now()) / 1000),
+  );
 
   return {
     ok: false as const,
@@ -48,7 +81,14 @@ export async function enforceRateLimit(args: {
         message: "Rate limit exceeded. Please try again later.",
         requestId: args.requestId,
       },
-      { status: 429 },
+      {
+        status: 429,
+        headers: {
+          ...createRateLimitHeaders(rateLimit),
+          "retry-after": String(retryAfterSeconds),
+        },
+      },
     ),
+    rateLimit,
   };
 }

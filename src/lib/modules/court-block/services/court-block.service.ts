@@ -43,6 +43,11 @@ export interface ICourtBlockService {
     userId: string,
     data: ListCourtBlocksDTO,
   ): Promise<CourtBlockRecord[]>;
+  createMaintenanceForOrganization(
+    organizationId: string,
+    data: CreateCourtBlockDTO,
+    ctx?: RequestContext,
+  ): Promise<CourtBlockRecord>;
   createMaintenance(
     userId: string,
     data: CreateCourtBlockDTO,
@@ -55,9 +60,19 @@ export interface ICourtBlockService {
     userId: string,
     data: UpdateCourtBlockRangeDTO,
   ): Promise<CourtBlockRecord>;
+  updateRangeForOrganization(
+    organizationId: string,
+    data: UpdateCourtBlockRangeDTO,
+    ctx?: RequestContext,
+  ): Promise<CourtBlockRecord>;
   cancelBlock(
     userId: string,
     data: CancelCourtBlockDTO,
+  ): Promise<CourtBlockRecord>;
+  cancelBlockForOrganization(
+    organizationId: string,
+    data: CancelCourtBlockDTO,
+    ctx?: RequestContext,
   ): Promise<CourtBlockRecord>;
 }
 
@@ -173,6 +188,68 @@ export class CourtBlockService implements ICourtBlockService {
 
       return created;
     });
+  }
+
+  async createMaintenanceForOrganization(
+    organizationId: string,
+    data: CreateCourtBlockDTO,
+    ctx?: RequestContext,
+  ): Promise<CourtBlockRecord> {
+    const run = async (requestCtx: RequestContext) => {
+      const { startTime, endTime } = this.parseRange(
+        data.startTime,
+        data.endTime,
+      );
+      const { court, place } = await this.verifyCourtOrganizationAccess(
+        organizationId,
+        data.courtId,
+        requestCtx,
+      );
+
+      await this.assertNoOverlaps(court.id, startTime, endTime, requestCtx);
+
+      const created = await this.courtBlockRepository.create(
+        {
+          courtId: court.id,
+          startTime,
+          endTime,
+          reason: this.normalizeReason(data.reason),
+          type: "MAINTENANCE",
+          totalPriceCents: 0,
+          currency: "PHP",
+          isActive: true,
+        },
+        requestCtx,
+      );
+
+      logger.info(
+        {
+          event: "court_block.created",
+          organizationId,
+          courtId: court.id,
+          blockId: created.id,
+          type: "MAINTENANCE",
+          startTime: created.startTime.toISOString(),
+          endTime: created.endTime.toISOString(),
+        },
+        "Court maintenance block created",
+      );
+
+      await this.emitCourtBlockBooked(
+        created,
+        { court, place },
+        "court_block.created",
+        requestCtx,
+      );
+
+      return created;
+    };
+
+    if (ctx) {
+      return run(ctx);
+    }
+
+    return this.transactionManager.run(async (tx) => run({ tx }));
   }
 
   async createWalkIn(
@@ -318,6 +395,85 @@ export class CourtBlockService implements ICourtBlockService {
     });
   }
 
+  async updateRangeForOrganization(
+    organizationId: string,
+    data: UpdateCourtBlockRangeDTO,
+    ctx?: RequestContext,
+  ): Promise<CourtBlockRecord> {
+    const run = async (requestCtx: RequestContext) => {
+      const block = await this.courtBlockRepository.findById(
+        data.blockId,
+        requestCtx,
+      );
+      if (!block || !block.isActive) {
+        throw new CourtBlockNotFoundError(data.blockId);
+      }
+
+      const { startTime, endTime, durationMinutes } = this.parseRange(
+        data.startTime,
+        data.endTime,
+      );
+
+      const { court, place } = await this.verifyCourtOrganizationAccess(
+        organizationId,
+        block.courtId,
+        requestCtx,
+      );
+
+      await this.assertNoOverlaps(court.id, startTime, endTime, requestCtx, {
+        excludeBlockId: block.id,
+      });
+
+      let totalPriceCents = block.totalPriceCents;
+      let currency = block.currency;
+
+      if (block.type === "WALK_IN") {
+        const pricing = await this.computeWalkInPricing(
+          court.id,
+          startTime,
+          durationMinutes,
+          place.timeZone,
+          requestCtx,
+        );
+        totalPriceCents = pricing.totalPriceCents;
+        currency = pricing.currency;
+      }
+
+      await this.emitCourtBlockReleased(
+        block,
+        { court, place },
+        "court_block.updated",
+        requestCtx,
+      );
+
+      const updated = await this.courtBlockRepository.update(
+        block.id,
+        {
+          startTime,
+          endTime,
+          totalPriceCents,
+          currency,
+        },
+        requestCtx,
+      );
+
+      await this.emitCourtBlockBooked(
+        updated,
+        { court, place },
+        "court_block.updated",
+        requestCtx,
+      );
+
+      return updated;
+    };
+
+    if (ctx) {
+      return run(ctx);
+    }
+
+    return this.transactionManager.run(async (tx) => run({ tx }));
+  }
+
   async cancelBlock(
     userId: string,
     data: CancelCourtBlockDTO,
@@ -366,6 +522,76 @@ export class CourtBlockService implements ICourtBlockService {
 
       return updated;
     });
+  }
+
+  async cancelBlockForOrganization(
+    organizationId: string,
+    data: CancelCourtBlockDTO,
+    ctx?: RequestContext,
+  ): Promise<CourtBlockRecord> {
+    const run = async (requestCtx: RequestContext) => {
+      const block = await this.courtBlockRepository.findById(
+        data.blockId,
+        requestCtx,
+      );
+      if (!block) {
+        throw new CourtBlockNotFoundError(data.blockId);
+      }
+
+      await this.verifyCourtOrganizationAccess(
+        organizationId,
+        block.courtId,
+        requestCtx,
+      );
+
+      if (!block.isActive) {
+        return block;
+      }
+
+      const updated = await this.courtBlockRepository.update(
+        block.id,
+        { isActive: false, cancelledAt: new Date() },
+        requestCtx,
+      );
+
+      logger.info(
+        {
+          event: "court_block.cancelled",
+          organizationId,
+          courtId: block.courtId,
+          blockId: block.id,
+          type: block.type,
+        },
+        "Court block cancelled",
+      );
+
+      const court = await this.courtRepository.findById(
+        block.courtId,
+        requestCtx,
+      );
+      if (court?.placeId) {
+        const place = await this.placeRepository.findById(
+          court.placeId,
+          requestCtx,
+        );
+        if (place) {
+          await this.emitCourtBlockReleased(
+            block,
+            { court, place },
+            "court_block.cancelled",
+            requestCtx,
+          );
+        }
+      }
+
+      return updated;
+    };
+
+    if (ctx) {
+      return run(ctx);
+    }
+
+    return this.transactionManager.run(async (tx) => run({ tx }));
   }
 
   private normalizeReason(reason?: string): string | null {
@@ -435,6 +661,32 @@ export class CourtBlockService implements ICourtBlockService {
       "place.manage",
       ctx,
     );
+
+    return { court, place };
+  }
+
+  private async verifyCourtOrganizationAccess(
+    organizationId: string,
+    courtId: string,
+    ctx?: RequestContext,
+  ): Promise<{ court: CourtRecord; place: PlaceRecord }> {
+    const court = await this.courtRepository.findById(courtId, ctx);
+    if (!court) {
+      throw new CourtNotFoundError(courtId);
+    }
+
+    if (!court.placeId) {
+      throw new NotCourtOwnerError();
+    }
+
+    const place = await this.placeRepository.findById(court.placeId, ctx);
+    if (!place) {
+      throw new PlaceNotFoundError(court.placeId);
+    }
+
+    if (!place.organizationId || place.organizationId !== organizationId) {
+      throw new NotCourtOwnerError();
+    }
 
     return { court, place };
   }

@@ -19,7 +19,7 @@ export type GuideEntry = {
   slug: string;
   title: string;
   description: string;
-  audience: "players" | "owners";
+  audience: "players" | "owners" | "developers";
   heroEyebrow: string;
   queryCluster: string;
   publishedAt: string;
@@ -34,6 +34,8 @@ export const ORG_GUIDE_SLUG =
   "how-to-set-up-your-sports-venue-organization-on-kudoscourts";
 export const PLAYER_BOOKING_GUIDE_SLUG =
   "how-to-book-a-sports-court-on-kudoscourts";
+export const DEVELOPER_GUIDE_SLUG =
+  "how-to-connect-your-venue-system-to-the-kudoscourts-developer-api";
 
 const GUIDE_PUBLISHED_AT = "2026-03-08";
 
@@ -401,6 +403,93 @@ export const GUIDE_ENTRIES: GuideEntry[] = [
       {
         label: "My Reservations",
         href: appRoutes.reservations.base,
+      },
+      {
+        label: "More guides",
+        href: appRoutes.guides.base,
+      },
+    ],
+  },
+  {
+    slug: DEVELOPER_GUIDE_SLUG,
+    title: "How To Connect Your Venue System To The KudosCourts Developer API",
+    description:
+      "A developer integration guide for venue operators who already run their own system and want to connect it to the KudosCourts developer API safely.",
+    audience: "developers",
+    heroEyebrow: "Developer Guide",
+    queryCluster:
+      "how to connect your venue system to the kudoscourts developer api",
+    publishedAt: GUIDE_PUBLISHED_AT,
+    updatedAt: GUIDE_PUBLISHED_AT,
+    intro:
+      "To connect an existing venue system to the KudosCourts developer API, create one integration, issue a scoped key, map external court IDs to live inventory, run the server-side precheck, then validate a live availability read before handing snippets and the OpenAPI contract to the engineering team.",
+    sections: [
+      {
+        title: "Create one named integration first",
+        paragraphs: [
+          "Start with a dedicated integration for the external platform or environment you are connecting. That keeps keys, mappings, and readiness checks isolated instead of mixing multiple systems together.",
+          "A clear integration boundary also makes the handoff easier because operators and developers can talk about one concrete connection instead of a vague shared setup.",
+        ],
+      },
+      {
+        title: "Issue a scoped key and capture the one-time secret",
+        paragraphs: [
+          "Generate the smallest key you need for the onboarding phase. If the external team only needs reads first, begin with availability.read and add write access later.",
+          "Capture the secret immediately in the external team's secret manager because the dashboard only reveals it once.",
+        ],
+      },
+      {
+        title: "Map external court IDs to live inventory",
+        paragraphs: [
+          "The integration only becomes useful once each external court identifier points to a real court in the organization dashboard. That mapping is what lets live reads and writes resolve safely into the platform's booking model.",
+          "Start with one mapped court, confirm the flow works, then expand to the rest of the venue inventory.",
+        ],
+      },
+      {
+        title: "Run precheck and a live sample read",
+        paragraphs: [
+          "The precheck verifies integration status, key health, required scope, mapping existence, and a live availability read through the same server-side flow the product trusts for onboarding.",
+          "Once that passes, use the guided console to inspect one real response payload and confirm the request shape before the external team writes code against it.",
+        ],
+      },
+      {
+        title: "Hand off snippets and the OpenAPI contract",
+        paragraphs: [
+          "Use the generated snippets as the practical starting point for the first request, then include the OpenAPI document for the complete contract surface.",
+          "This combination gives external developers both speed and accuracy: quick copy-ready examples plus the full machine-readable API definition.",
+        ],
+      },
+    ],
+    faqs: [
+      {
+        question: "Why create one integration per external platform?",
+        answer:
+          "It keeps keys, court mappings, and readiness checks isolated so handoff and troubleshooting stay manageable.",
+      },
+      {
+        question: "Does the dashboard execute live write calls?",
+        answer:
+          "No. In v1 the dashboard only runs a safe live availability read. Write examples are provided as copy-ready snippets for server-side implementation.",
+      },
+      {
+        question: "Why is the precheck important before handoff?",
+        answer:
+          "It catches the common launch blockers first: inactive integrations, invalid keys, missing read scope, missing mappings, and failed live sample reads.",
+      },
+      {
+        question: "What should I give the external engineering team?",
+        answer:
+          "Give them the generated snippet for the first request, the selected external court ID, the one-time secret you stored securely, and the OpenAPI document for the full contract.",
+      },
+    ],
+    relatedLinks: [
+      {
+        label: "Developer OpenAPI spec",
+        href: "/api/developer/v1/openapi.json",
+      },
+      {
+        label: "Owner get started",
+        href: appRoutes.ownersGetStarted.base,
       },
       {
         label: "More guides",

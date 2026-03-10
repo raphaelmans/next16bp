@@ -22,15 +22,24 @@ export type ClientIdentifier = {
   source: "ip" | "fallback";
 };
 
-export function getClientIdentifier(req: Request): ClientIdentifier {
+export function getClientIp(req: Request): string | null {
   for (const header of FORWARDED_HEADERS) {
     const ip = normalizeIp(req.headers.get(header));
     if (ip) {
-      return {
-        value: `ip:${ip}`,
-        source: "ip",
-      };
+      return ip;
     }
+  }
+
+  return null;
+}
+
+export function getClientIdentifier(req: Request): ClientIdentifier {
+  const ip = getClientIp(req);
+  if (ip) {
+    return {
+      value: `ip:${ip}`,
+      source: "ip",
+    };
   }
 
   return {

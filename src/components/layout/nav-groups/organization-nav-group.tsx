@@ -6,6 +6,7 @@ import {
   ChevronDown,
   ChevronRight,
   ClipboardList,
+  Code2,
   LayoutDashboard,
   MapPinned,
   Settings,
@@ -85,6 +86,12 @@ const bookingsNavItems = [
 ];
 
 const organizationNavItems = [
+  {
+    title: "Developers",
+    href: appRoutes.organization.developers,
+    icon: Code2,
+    accessRule: { type: "owner-or-manager" } as PageAccessRule,
+  },
   {
     title: "Team",
     href: appRoutes.organization.team,
