@@ -1,0 +1,121 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Santa Catalina",
+    "citySlug": "santa-catalina",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:29:39.111Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Santa Catalina",
+    "pickleball court Santa Catalina Negros Oriental",
+    "Santa Catalina pickleball",
+    "courts in Santa Catalina Negros Oriental pickleball",
+    "sports center Santa Catalina Negros Oriental pickleball",
+    "pickleball club Santa Catalina Negros Oriental",
+    "pickleball reservations Santa Catalina Negros Oriental",
+    "host-map:cebupickleballcourts.com:Santa Catalina",
+    "host-map:dumapickleball.com:Santa Catalina",
+    "site:cebupickleballcourts.com Santa Catalina Negros Oriental pickleball",
+    "site:dumapickleball.com Santa Catalina Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+    "https://www.lamudi.com.ph/buy/negros-oriental/santa-catalina-1/under-7500000/",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://playtimescheduler.com/region/dumaguete-visayas",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://www.catalinaislandgolfcourse.com/pickleball-tennis",
+    "https://reclub.co/m/HNIXKW",
+    "https://reclub.co/clubs/@reservepb"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://dumaguetecity.gov.ph/2024/11/21/4-pcs-pickleball-net-w-stand/",
+      "score": 13
+    },
+    {
+      "url": "https://dumaguetecity.gov.ph/2024/11/21/4-pcs-pickleball-net-w-stand/",
+      "score": 13
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://dumaguetecity.gov.ph/2025/05/23/%F0%9D%90%80%F0%9D%90%91%F0%9D%90%84-%F0%9D%90%98%F0%9D%90%8E%F0%9D%90%94-%F0%9D%90%91%F0%9D%90%84%F0%9D%90%80%F0%9D%90%83%F0%9D%90%98-%F0%9D%90%93%F0%9D%90%8E-%F0%9D%90%92%F0%9D%90%87%F0%9D%90%8E/",
+      "score": 5
+    },
+    {
+      "url": "https://metropost-online.com/negors-growing-pickleball-craze/",
+      "score": 0
+    },
+    {
+      "url": "https://dumaguetecity.gov.ph/2024/11/21/4-pcs-pickleball-net-w-stand/",
+      "score": 13
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/100095313803284",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.instagram.com/p/DU7Wv68lOFZ/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.instagram.com/p/DRUo9BIE5Sz/",
+    "https://www.facebook.com/p/Picklerz-Place-100095313803284/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.instagram.com/p/DU7Wv68lOFZ/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/groups/2391758907631348/posts/3350199168453979/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.instagram.com/p/DVTd3qgmBqi/",
+    "https://www.facebook.com/61585354065212/",
+    "https://www.facebook.com/p/Picklerz-Place-100095313803284/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.instagram.com/p/DVCkYKWEx0n/",
+    "https://www.facebook.com/ozoamira20/videos/warmup-with-me/1197644872579442/",
+    "https://www.facebook.com/61585354065212/videos/scpc-at-picklerz-place-/2340933859666635/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4366550500299824/",
+    "https://www.instagram.com/reel/DAHx-41PbGG/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366871145033482/",
+    "https://www.instagram.com/p/DVXf5XymNJA/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.facebook.com/photo.php?fbid=1139699494932789&set=a.373534101549336&id=100066782463839",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.instagram.com/p/DVkpNuIDwaN/",
+    "https://www.facebook.com/BalitaKaronNegros/videos/the-pickle-ball-craze-in-dumaguete/1221838909652685/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.instagram.com/p/DVgGb0CiR_w/",
+    "https://www.facebook.com/neil.rio/posts/fks-gymnasium-now-open-experience-sibulans-newest-covered-pickleball-courts-4pm1/10235913994006886/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.instagram.com/p/DU7Wv68lOFZ/",
+    "https://www.facebook.com/100095313803284",
+    "https://www.instagram.com/p/DU7Wv68lOFZ/",
+    "https://www.facebook.com/61585354065212/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/61585354065212/videos/scpc-at-picklerz-place-/2340933859666635/",
+    "https://www.instagram.com/p/DVTd3qgmBqi/",
+    "https://www.facebook.com/welmar.taala/posts/905311752247865/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1360033452383918/",
+    "https://www.facebook.com/100095313803284",
+    "https://www.facebook.com/psalms.23.1.to.6/posts/dumaguete-city-bayawan-and-santa-catalina-negros-orientalthe-viral-luxury-pickle/1585384096031921/",
+    "https://www.instagram.com/p/DRUo9BIE5Sz/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/dennis.sales.9/videos/%EF%B8%8Fwatch-out%EF%B8%8Fpickleball-court-mahimutang-sa-barangay-poblacion-lungsod-sa-santa-ca/1404666047873664/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.facebook.com/psalms.23.1.to.6/videos/dumaguete-city-bayawan-and-santa-catalina-negros-orientalthe-viral-luxury-pickle/879822957740112/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/santa-catalina/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/santa-catalina/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/santa-catalina/scrape-state.json"
+}

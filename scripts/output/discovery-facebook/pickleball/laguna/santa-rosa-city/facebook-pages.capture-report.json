@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "laguna",
+    "citySlug": "santa-rosa-city",
+    "provinceName": "Laguna",
+    "cityName": "Santa Rosa City"
+  },
+  "generatedAt": "2026-03-10T08:35:38.213Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 0,
+  "skipCount": 3,
+  "csvRowCount": 1,
+  "failures": []
+}

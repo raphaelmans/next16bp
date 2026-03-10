@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "bacong",
+    "provinceName": "Negros Oriental",
+    "cityName": "Bacong"
+  },
+  "generatedAt": "2026-03-10T08:37:49.017Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bacong/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bacong/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bacong/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bacong/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 2,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 0,
+  "skipCount": 1,
+  "csvRowCount": 1,
+  "failures": []
+}

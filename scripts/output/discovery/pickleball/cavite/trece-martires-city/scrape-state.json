@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T08:20:01.887Z",
+  "updatedAt": "2026-03-10T08:20:45.797Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "lastDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:20:01.887Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "warriors pickleball club|trece martires city|cavite",
+      "lastRowName": "Warriors Pickleball Club"
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "lastDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:20:01.887Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite": {
+      "canonicalUrl": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite",
+      "latestUrl": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite",
+      "firstDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "lastDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:20:01.887Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "lastDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:20:01.887Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/LC6Y3V": {
+      "canonicalUrl": "https://reclub.co/m/LC6Y3V",
+      "latestUrl": "https://reclub.co/m/LC6Y3V",
+      "firstDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "lastDiscoveredAt": "2026-03-10T08:20:01.887Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:20:01.887Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "warriors pickleball club|trece martires city|cavite": {
+      "rowKey": "warriors pickleball club|trece martires city|cavite",
+      "name": "Warriors Pickleball Club",
+      "city": "TRECE MARTIRES CITY",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "firstSeenAt": "2026-03-10T08:20:01.887Z",
+      "lastSeenAt": "2026-03-10T08:20:01.887Z"
+    }
+  }
+}

@@ -1,0 +1,155 @@
+{
+  "generatedAt": "2026-03-10T11:38:05.428Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 12,
+  "candidateUrlsCount": 11,
+  "candidateUrlsSelectedForRunCount": 11,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://reclub.co/ko/communities/negros-oriental-philippines-428",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+    "https://www.rotarydistrict3860.org/clubs/rc-tolong/",
+    "https://app.court-access.com/",
+    "https://www.sparrk.ph/explore/pickleball",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao",
+    "https://reclub.co/m/N6QSY9",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf"
+  ],
+  "candidateUrls": [
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://reclub.co/ko/communities/negros-oriental-philippines-428",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+    "https://www.rotarydistrict3860.org/clubs/rc-tolong/",
+    "https://app.court-access.com/",
+    "https://www.sparrk.ph/explore/pickleball",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao",
+    "https://reclub.co/m/N6QSY9"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://reclub.co/ko/communities/negros-oriental-philippines-428",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+    "https://www.rotarydistrict3860.org/clubs/rc-tolong/",
+    "https://app.court-access.com/",
+    "https://www.sparrk.ph/explore/pickleball",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao",
+    "https://reclub.co/m/N6QSY9"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Dr Pickle Pickleball Court",
+        "address": "Dumaguete City, Negros Island Region, Philippines",
+        "city": "DUMAGUETE CITY",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court"
+    },
+    {
+      "row": {
+        "name": "Slv Courts",
+        "address": "Dumaguete City, Negros Island Region, Philippines",
+        "city": "DUMAGUETE CITY",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts"
+    },
+    {
+      "row": {
+        "name": "Dauin Sport Park",
+        "address": "Dauin, Negros Island Region, Philippines",
+        "city": "DAUIN",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park"
+    },
+    {
+      "row": {
+        "name": "Pickleball Community Mangnao",
+        "address": "Dumaguete City, Negros Island Region, Philippines",
+        "city": "DUMAGUETE CITY",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 4,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 4,
+    "pendingMigrationRows": 4,
+    "dbCoverageEnabled": false
+  }
+}

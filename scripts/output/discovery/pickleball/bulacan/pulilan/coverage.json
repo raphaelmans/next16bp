@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T09:02:42.547Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 1,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 2,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T09:02:42.547Z",
+      "lastSeenAt": "2026-03-10T09:02:42.547Z"
+    },
+    {
+      "rowKey": "sm city baliwag|baliuag|bulacan",
+      "name": "Sm City Baliwag",
+      "city": "BALIUAG",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "firstSeenAt": "2026-03-10T09:02:42.547Z",
+      "lastSeenAt": "2026-03-10T09:02:42.547Z"
+    }
+  ]
+}

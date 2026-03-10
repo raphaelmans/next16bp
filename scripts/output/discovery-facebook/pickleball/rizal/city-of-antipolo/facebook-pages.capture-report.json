@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "rizal",
+    "citySlug": "city-of-antipolo",
+    "provinceName": "Rizal",
+    "cityName": "City of Antipolo"
+  },
+  "generatedAt": "2026-03-10T11:16:48.280Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 2,
+  "skipCount": 2,
+  "csvRowCount": 0,
+  "failures": []
+}

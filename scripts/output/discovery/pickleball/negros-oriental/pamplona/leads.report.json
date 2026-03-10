@@ -1,0 +1,115 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Pamplona",
+    "citySlug": "pamplona",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:19:03.841Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Pamplona",
+    "pickleball court Pamplona Negros Oriental",
+    "Pamplona pickleball",
+    "courts in Pamplona Negros Oriental pickleball",
+    "sports center Pamplona Negros Oriental pickleball",
+    "pickleball club Pamplona Negros Oriental",
+    "pickleball reservations Pamplona Negros Oriental",
+    "host-map:cebupickleballcourts.com:Pamplona",
+    "host-map:dumapickleball.com:Pamplona",
+    "site:cebupickleballcourts.com Pamplona Negros Oriental pickleball",
+    "site:dumapickleball.com Pamplona Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://app.court-access.com/",
+    "https://m.facebook.com/61557985336286/photos/122208530108266177/",
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.philmech.gov.ph/resources/pdf/transparency/PMR/2024/PHILMECH-%20Submission%20of%20FY%202024%202nd%20Sem%20PMR%20for%20Alternative%20Methods%20of%20Procurement_with%20esign.pdf",
+      "score": 0
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=HVUvNTAdFUY",
+      "score": 5
+    },
+    {
+      "url": "https://www.camarinessur.gov.ph/news/384",
+      "score": 9
+    },
+    {
+      "url": "https://reclub.co/m/P746KH",
+      "score": 6
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "score": 9
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+    "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+    "https://www.instagram.com/p/DP2gGJokiow/",
+    "https://www.facebook.com/BrigadaNewsDumaguete/videos/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%99%F0%9D%97%98%F0%9D%97%A9%F0%9D%97%98%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%94-%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%A2%F0%9D%97%A6-%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9Fmismong-si-negros-oriental-governor-chaco-sag/1631128511669528/",
+    "https://www.facebook.com/61575752114633/posts/new-venue-alert-calling-all-players-in-pamplona-we-are-thrilled-to-announce-that/122156488376858403/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/K5NewsFMBCD/videos/watch-governor-sagarbarria-nakuhaan-sa-video-nga-naga-enjoy-sang-hampang-nga-pic/2973959772799547/",
+    "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321988256188438/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+    "https://www.instagram.com/p/DP2gGJokiow/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1323939595993304/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4166071563681053/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1438080034579259/",
+    "https://www.facebook.com/BrigadaNewsDumaguete/videos/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%99%F0%9D%97%98%F0%9D%97%A9%F0%9D%97%98%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%94-%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%A2%F0%9D%97%A6-%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9Fmismong-si-negros-oriental-governor-chaco-sag/1631128511669528/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321988256188438/",
+    "https://www.facebook.com/61579678411420/posts/casa-lucio-pickleball-courts-your-best-choice-for-some-dinks-and-greenscheck-out/122134937756989280/",
+    "https://www.instagram.com/p/DP2gGJokiow/",
+    "https://www.facebook.com/61575752114633/posts/new-venue-alert-calling-all-players-in-pamplona-we-are-thrilled-to-announce-that/122156488376858403/",
+    "https://www.facebook.com/BrigadaNewsDumaguete/videos/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%99%F0%9D%97%98%F0%9D%97%A9%F0%9D%97%98%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%94-%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%A2%F0%9D%97%A6-%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9Fmismong-si-negros-oriental-governor-chaco-sag/1631128511669528/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4107790656175811/",
+    "https://www.facebook.com/p/Grove-Street-Pickle-61581769087863/",
+    "https://www.instagram.com/p/DPIYee3Ca4e/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321988256188438/",
+    "https://www.facebook.com/jomar.quisel.1/videos/mayor-nikko-ramirez-pamplona-pickle-ball-tournament-/873118922102417/",
+    "https://www.facebook.com/PamplonaNegOrTourism/posts/1230569749260595/",
+    "https://www.facebook.com/BrigadaNewsDumaguete/videos/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%99%F0%9D%97%98%F0%9D%97%A9%F0%9D%97%98%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%94-%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%A2%F0%9D%97%A6-%F0%9D%97%A2%F0%9D%97%A5%F0%9D%97%9C%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9Fmismong-si-negros-oriental-governor-chaco-sag/1631128511669528/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+    "https://www.instagram.com/p/DP2gGJokiow/",
+    "https://www.facebook.com/photo.php?fbid=122188422206266177&id=61557985336286&set=a.122119924400266177",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/K5NewsFMBCD/videos/watch-governor-sagarbarria-nakuhaan-sa-video-nga-naga-enjoy-sang-hampang-nga-pic/2973959772799547/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+    "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1410822870638309/",
+    "https://www.facebook.com/61557985336286/photos/122188422206266177/",
+    "https://www.facebook.com/QueKaloyOfficial/posts/add-this-to-your-negros-bucket-list-%EF%B8%8Flocated-at-sta-agueda-pamplona-negros-orien/1499632465499530/",
+    "https://www.instagram.com/p/DPAwBx2k-uq/",
+    "https://www.facebook.com/QueKaloyOfficial/videos/sta-agueda-river-in-pamplona-negros-oriental-que-kaloy/1386298959374258/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/zitromotovlog/videos/calm-downhill-ride/822545464154751/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/61575752114633/posts/new-venue-alert-calling-all-players-in-pamplona-we-are-thrilled-to-announce-that/122156488376858403/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1410822870638309/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.facebook.com/61581769087863/posts/-grove-street-pickle-is-officially-on-the-map-away-from-the-traffic-framed-by-ma/122098776051058969/",
+    "https://www.instagram.com/p/DVIxqqnkRRh/",
+    "https://www.facebook.com/p/Court-Access-61575752114633/",
+    "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/pamplona/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/pamplona/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/pamplona/scrape-state.json"
+}

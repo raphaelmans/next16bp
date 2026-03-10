@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T08:21:37.871Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 10,
+  "scrapedUrls": 1,
+  "noDataUrls": 8,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "zamboanguita beach court|zamboanguita|negros oriental",
+      "name": "Zamboanguita Beach Court",
+      "city": "ZAMBOANGUITA",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita/zamboanguita-beach-court",
+      "firstSeenAt": "2026-03-10T08:21:37.871Z",
+      "lastSeenAt": "2026-03-10T08:21:37.871Z"
+    }
+  ]
+}

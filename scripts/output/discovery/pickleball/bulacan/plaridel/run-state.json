@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:plaridel",
+  "createdAt": "2026-03-10T09:00:35.215Z",
+  "updatedAt": "2026-03-10T09:01:51.404Z",
+  "scope": {
+    "provinceSlug": "bulacan",
+    "citySlug": "plaridel",
+    "provinceName": "Bulacan",
+    "cityName": "Plaridel",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:00:35.231Z",
+      "finishedAt": "2026-03-10T09:00:58.807Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:00:58.810Z",
+      "finishedAt": "2026-03-10T09:01:23.763Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:01:23.764Z",
+      "finishedAt": "2026-03-10T09:01:50.934Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T09:01:51.401Z",
+      "finishedAt": "2026-03-10T09:01:51.404Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for plaridel, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T09:01:51.404Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for plaridel"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T09:01:51.404Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

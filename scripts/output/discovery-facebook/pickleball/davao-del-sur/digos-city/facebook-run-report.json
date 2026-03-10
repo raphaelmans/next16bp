@@ -37,48 +37,46 @@
       "notes": null
     },
     "facebookDiscovery": {
-      "status": "failed",
-      "startedAt": "2026-03-10T05:45:04.545Z",
-      "finishedAt": "2026-03-10T05:45:14.653Z",
-      "lastError": "fetch failed",
-      "notes": null
+      "status": "completed",
+      "startedAt": "2026-03-10T11:11:16.727Z",
+      "finishedAt": "2026-03-10T11:11:23.109Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
     },
     "facebookCapture": {
-      "status": "pending",
-      "startedAt": null,
-      "finishedAt": null,
+      "status": "completed",
+      "startedAt": "2026-03-10T11:11:23.110Z",
+      "finishedAt": "2026-03-10T11:12:18.058Z",
       "lastError": null,
-      "notes": null
+      "notes": "runner executed facebook capture"
     },
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:04.545Z",
+      "finishedAt": "2026-03-10T11:12:18.059Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:04.545Z",
+      "finishedAt": "2026-03-10T11:12:18.059Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:04.545Z",
+      "finishedAt": "2026-03-10T11:12:18.059Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:04.545Z",
+      "finishedAt": "2026-03-10T11:12:18.059Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }
-  },
-  "failedStage": "facebookDiscovery",
-  "error": "fetch failed"
+  }
 }

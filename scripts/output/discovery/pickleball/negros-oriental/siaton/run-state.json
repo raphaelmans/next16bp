@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:siaton",
+  "createdAt": "2026-03-10T12:28:40.367Z",
+  "updatedAt": "2026-03-10T12:29:35.310Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "siaton",
+    "provinceName": "Negros Oriental",
+    "cityName": "Siaton",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:28:40.369Z",
+      "finishedAt": "2026-03-10T12:29:14.460Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:29:14.460Z",
+      "finishedAt": "2026-03-10T12:29:32.285Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:29:32.285Z",
+      "finishedAt": "2026-03-10T12:29:35.309Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:29:35.310Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:29:35.310Z",
+      "lastError": null,
+      "notes": "no approved rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:29:35.310Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

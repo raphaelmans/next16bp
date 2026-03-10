@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cebu",
+    "citySlug": "naga-city",
+    "provinceName": "Cebu",
+    "cityName": "Naga City"
+  },
+  "generatedAt": "2026-03-10T08:28:41.517Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 10,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 10,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 9,
+  "csvRowCount": 0,
+  "failures": []
+}

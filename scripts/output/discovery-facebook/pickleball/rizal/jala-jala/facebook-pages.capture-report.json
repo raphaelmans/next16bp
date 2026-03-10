@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "rizal",
+    "citySlug": "jala-jala",
+    "provinceName": "Rizal",
+    "cityName": "Jala-Jala"
+  },
+  "generatedAt": "2026-03-10T12:34:13.910Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 3,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 2,
+  "csvRowCount": 0,
+  "failures": []
+}

@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:pateros",
+  "createdAt": "2026-03-10T11:27:40.880Z",
+  "updatedAt": "2026-03-10T11:28:07.246Z",
+  "queries": [
+    "pickleball courts in Metro Manila Pateros",
+    "pickleball court Pateros Metro Manila",
+    "Pateros pickleball",
+    "courts in Pateros Metro Manila pickleball",
+    "sports center Pateros Metro Manila pickleball",
+    "pickleball club Pateros Metro Manila",
+    "pickleball reservations Pateros Metro Manila",
+    "host-map:cebupickleballcourts.com:Pateros",
+    "host-map:dumapickleball.com:Pateros",
+    "site:cebupickleballcourts.com Pateros Metro Manila pickleball",
+    "site:dumapickleball.com Pateros Metro Manila pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@pateros-pickle-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@pateros-pickle-club",
+      "latestUrl": "https://reclub.co/clubs/@pateros-pickle-club",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "pickleball reservations Pateros Metro Manila",
+      "title": "Pateros Pickle Club",
+      "snippet": "Join our vibrant community of pickleball enthusiasts in Pateros! Our club is dedicated to providing a fun and welcoming environment for players of all skill ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Pateros%2C+Metro+Manila": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Pateros%2C+Metro+Manila",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Pateros%2C+Metro+Manila",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "pickleball reservations Pateros Metro Manila",
+      "title": "Top 10 Best Badminton Near Pateros, Metro Manila - With Real Reviews",
+      "snippet": "Price of court rental at Dumlao is 900/hour. The courts can also be used for ... They cater pickleball, basketball, badminton reservation and also they ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/metro-manila": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/metro-manila",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/metro-manila",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "pickleball reservations Pateros Metro Manila",
+      "title": "Pickleball Courts in Metro Manila",
+      "snippet": "Discover all pickleball courts in Metro Manila and find the ones closest to you! We have the most comprehensive list of indoor and outdoor pickleball ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pateros.com/business_detail_T2_R36.php": {
+      "canonicalUrl": "https://pateros.com/business_detail_T2_R36.php",
+      "latestUrl": "https://pateros.com/business_detail_T2_R36.php",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "Pateros pickleball",
+      "title": "Tennis Courts",
+      "snippet": "Tennis Courts have three courts, one striped as a pickleball court, restrooms, picnic pavilion and river access to the Methow.",
+      "domain": "pateros.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pateros.com/business_detail_T2_R45.php": {
+      "canonicalUrl": "https://pateros.com/business_detail_T2_R45.php",
+      "latestUrl": "https://pateros.com/business_detail_T2_R45.php",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "Pateros pickleball",
+      "title": "Tennis Court Renovation",
+      "snippet": "The tennis/pickleball courts are a popular facility for the greater Pateros area and a substantial renovation is needed to keep the facility in operation.",
+      "domain": "pateros.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://venyu.ph/venues?sport=Community+center": {
+      "canonicalUrl": "https://venyu.ph/venues?sport=Community+center",
+      "latestUrl": "https://www.venyu.ph/venues?sport=Community%20center",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "Pateros pickleball",
+      "title": "Venues",
+      "snippet": "Venyu PH connects you with the perfect venues across the Philippines. Find and book courts, fields, and studios with ease. Made with by the Venyu PH team. For ...",
+      "domain": "venyu.ph",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "Pateros pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "courts in Pateros Metro Manila pickleball",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Outdoor Courts. Invitation only. Mark Casal. 0917-570-2991 markcasal2004@yahoo.com. Manila Pickleball Club. Dakota Playground, Quirino, Malate.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "lastDiscoveredAt": "2026-03-10T11:27:40.896Z",
+      "sourceQuery": "sports center Pateros Metro Manila pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "Discover specialized clinics for your favorite sports at Milo Best. Enhance your abilities and excel in your chosen discipline. Enroll today!",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

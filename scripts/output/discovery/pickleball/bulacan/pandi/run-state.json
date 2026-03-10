@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:pandi",
+  "createdAt": "2026-03-10T12:23:30.350Z",
+  "updatedAt": "2026-03-10T12:24:25.429Z",
+  "scope": {
+    "provinceSlug": "bulacan",
+    "citySlug": "pandi",
+    "provinceName": "Bulacan",
+    "cityName": "Pandi",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:23:30.353Z",
+      "finishedAt": "2026-03-10T12:23:58.808Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:23:58.808Z",
+      "finishedAt": "2026-03-10T12:24:19.375Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:24:19.375Z",
+      "finishedAt": "2026-03-10T12:24:24.753Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T12:24:25.427Z",
+      "finishedAt": "2026-03-10T12:24:25.429Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for pandi, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:24:25.429Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for pandi"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:24:25.429Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

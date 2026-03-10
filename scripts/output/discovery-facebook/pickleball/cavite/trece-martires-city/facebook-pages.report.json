@@ -1,0 +1,221 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Trece Martires City",
+    "citySlug": "trece-martires-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:06:57.542Z",
+  "queries": [
+    "site:facebook.com pickleball Trece Martires City Cavite",
+    "site:facebook.com \"Trece Martires City\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Trece Martires City\" \"pickleball club\"",
+    "site:facebook.com \"Trece Martires City\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4176040779350798/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/maplegrovebymegaworldofficial/posts/the-comeback-weve-all-been-waiting-for-pickle-grove-is-back-again-and-the-energy/1510613727732901/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/SMCityTreceMartires/posts/60-courts-sm-supermalls-is-officially-the-home-of-pickleball-ph-subscribe-to-sm-/1336503251849848/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1056110395850831/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DentacarePhilippines/posts/live-now-the-grand-opening-of-the-pickle-yard-conference-league-pycl-witness-his/1269454135288419/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/smcityrosario/posts/-calling-all-pickleball-enthusiasts-ready-to-level-up-your-game-and-experience-t/1090081299833103/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/603466333706824/posts/1916669662386478/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4312997958988412/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DentacarePhilippines/posts/live-now-the-grand-opening-of-the-pickle-yard-conference-league-pycl-witness-his/1269454135288419/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/445591386817706/posts/1747269549983210/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/603466333706824/posts/1916669662386478/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376689205952620/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1056110395850831/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/Godshandiworkprintees/posts/client-approved-design-warriors-pickleball-club-trece-martires-city-cavitewarrio/1309493304527547/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/maplegrovebymegaworldofficial/posts/the-comeback-weve-all-been-waiting-for-pickle-grove-is-back-again-and-the-energy/1510613727732901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1300909531370915/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Godshandiworkprintees/posts/client-approved-design-warriors-pickleball-club-trece-martires-city-cavitewarrio/1309493304527547/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1056110395850831/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4379625428992331/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/pretchiegold.bulado/posts/first-time-joining-an-invitational-pickleball-tournament-and-proud-to-bring-home/10162955815947013/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1649603038719831/posts/2708513316162126/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DailyGuardianPH/posts/pickleballs-remarkable-surge-in-popularity-in-the-philippines-reaches-a-mileston/1335903741899739/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4312997958988412/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1245755880219614/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100067855643062/posts/found-this-set-hiding-in-my-camera-rollproof-that-good-games-make-great-memories/1245258707745972/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367490763539131/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/443492200020531/posts/1605490000487406/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1056110395850831/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/SMCityTreceMartires/posts/hello-summer-%EF%B8%8Ftime-to-turn-up-the-heat-and-bring-your-a-game-at-sm-city-trece-ma/1119465610220281/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335624760059065/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/SMCityTreceMartires/posts/-make-your-summer-count-at-sm-active-hub-sm-city-trece-martires-turn-up-the-ener/1123546889812153/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/PhilippineSTAR/posts/players-make-the-most-of-the-newly-introduced-pickleball-courts-on-sunday-at-a-m/1114754510688427/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4111324592489084/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/coneconesportscenter/posts/-ready-set-play-smash-it-out-on-our-badminton-courts-or-test-your-reflexes-at-ta/1274396891364954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/291627186910184/posts/779481371458094/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/trece-martires-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/trece-martires-city/facebook-pages.state.json"
+}

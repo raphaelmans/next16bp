@@ -1,0 +1,56 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "porac",
+    "provinceName": "Pampanga",
+    "cityName": "Porac"
+  },
+  "generatedAt": "2026-03-10T12:14:22.800Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/porac/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/porac/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/porac/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/porac/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 8,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 0,
+  "failedCount": 8,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": [
+    {
+      "url": "https://www.facebook.com/pampangapickleballcommunity/",
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-porac goto https://www.facebook.com/pampangapickleballcommunity/\n"
+    },
+    {
+      "url": "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/balemiguel/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/106032865733102/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/pickleballworldpam/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/745567121984101/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    },
+    {
+      "url": "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com"
+    }
+  ]
+}

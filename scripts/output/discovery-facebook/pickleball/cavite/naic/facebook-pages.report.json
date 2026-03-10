@@ -1,0 +1,208 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Naic",
+    "citySlug": "naic",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:19:31.923Z",
+  "queries": [
+    "site:facebook.com pickleball Naic Cavite",
+    "site:facebook.com \"Naic\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Naic\" \"pickleball club\"",
+    "site:facebook.com \"Naic\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Cavite-Paddlers-Club-61576700491707/",
+    "https://www.facebook.com/juanvetnaic/",
+    "https://www.facebook.com/p/Naic-Pickleball-61584695845942/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61576700491707/videos/naic-stadium-court-for-pickleball-event-pickleball-naiccavite-naic-highlight/1882771582487906/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/photos/d41d8cd9/1234985808746007/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/open-play-schedule-february-24-2026-3pm-9pmcome-play-connect-and-improve-your-ga/1230004325910822/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/61576700491707/videos/pickleball-highlight-naiccavite-pickleball-highlightseveryone/1065309098263909/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128368960784647/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1213790487532206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1918471052101373/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1429118622142067/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61576700491707/videos/naic-stadium-court-for-pickleball-event-pickleball-naiccavite-naic-highlight/1882771582487906/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/photos/d41d8cd9/1234985808746007/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1213790487532206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128368960784647/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471173984344468/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/stadiumshoppingstrip/posts/pickleball-sa-stadiumsimula-june-10-hanggang-june-28-makikisaya-ang-naic-pickleb/1263019839167670/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4320235841597957/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1918471052101373/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1429118622142067/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/751213444147778/posts/960768563192264/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/751213444147778/posts/845930568009398/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362153804072827/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4059996940955183/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/4383505411932786/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61576700491707/videos/naic-stadium-court-for-pickleball-event-pickleball-naiccavite-naic-highlight/1882771582487906/",
+      "score": 17
+    },
+    {
+      "url": "https://m.facebook.com/100084413034961/posts/you-could-be-like-all-the-cool-kids-/665320382958390/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/PickleNova/videos/2064169977413942/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2470600306636233/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471173984344468/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1365476091929536/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4059996940955183/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/770189423315522/posts/2776705875997190/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377283079226566/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4293577824263759/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1429118622142067/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/irene018/photos/d41d8cd9/27482297798023598/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1372614754549003/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/233740010507864/posts/1856493071565875/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/naic/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/naic/facebook-pages.state.json"
+}

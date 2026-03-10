@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:17:28.948Z",
+  "updatedAt": "2026-03-10T11:17:57.208Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@batangas-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@batangas-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@batangas-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "nawa wellness|calatagan|batangas",
+      "lastRowName": "Nawa Wellness"
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://pickleballhub-vigor.com/": {
+      "canonicalUrl": "https://pickleballhub-vigor.com/",
+      "latestUrl": "https://pickleballhub-vigor.com/",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://www.sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:28.948Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:17:28.948Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "nawa wellness|calatagan|batangas": {
+      "rowKey": "nawa wellness|calatagan|batangas",
+      "name": "Nawa Wellness",
+      "city": "CALATAGAN",
+      "province": "BATANGAS",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "firstSeenAt": "2026-03-10T11:17:28.948Z",
+      "lastSeenAt": "2026-03-10T11:17:28.948Z"
+    },
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:17:28.948Z",
+      "lastSeenAt": "2026-03-10T11:17:28.948Z"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:kawit",
+  "createdAt": "2026-03-10T11:15:45.889Z",
+  "updatedAt": "2026-03-10T11:18:21.436Z",
+  "urls": {
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T11:16:02.039Z",
+      "lastCapturedAt": "2026-03-10T11:16:02.039Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Dink Lab"
+    },
+    "https://facebook.com/61576669311409?locale=vi_VN": {
+      "canonicalUrl": "https://facebook.com/61576669311409?locale=vi_VN",
+      "latestUrl": "https://www.facebook.com/61576669311409/?locale=vi_VN",
+      "firstCapturedAt": "2026-03-10T11:16:52.006Z",
+      "lastCapturedAt": "2026-03-10T11:16:52.006Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Dink Lab"
+    },
+    "https://facebook.com/61576669311409?locale=hy_AM": {
+      "canonicalUrl": "https://facebook.com/61576669311409?locale=hy_AM",
+      "latestUrl": "https://www.facebook.com/61576669311409/?locale=hy_AM",
+      "firstCapturedAt": "2026-03-10T11:17:15.531Z",
+      "lastCapturedAt": "2026-03-10T11:17:15.531Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Dink Lab"
+    },
+    "https://facebook.com/61576669311409?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61576669311409?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61576669311409/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T11:17:39.763Z",
+      "lastCapturedAt": "2026-03-10T11:17:39.763Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Dink Lab"
+    },
+    "https://facebook.com/picklebanjclub": {
+      "canonicalUrl": "https://facebook.com/picklebanjclub",
+      "latestUrl": "https://www.facebook.com/picklebanjclub/",
+      "firstCapturedAt": "2026-03-10T11:18:02.137Z",
+      "lastCapturedAt": "2026-03-10T11:18:02.137Z",
+      "status": "captured",
+      "title": "PickleBanj Club | Kawit | Facebook",
+      "venueName": "PickleBanj Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

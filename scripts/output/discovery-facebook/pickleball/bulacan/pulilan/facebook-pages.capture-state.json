@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:pulilan",
+  "createdAt": "2026-03-10T11:05:21.933Z",
+  "updatedAt": "2026-03-10T11:05:49.736Z",
+  "urls": {
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T11:05:28.333Z",
+      "lastCapturedAt": "2026-03-10T11:05:28.333Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

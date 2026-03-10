@@ -1,0 +1,90 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:cainta:facebook",
+  "createdAt": "2026-03-10T08:57:08.643Z",
+  "updatedAt": "2026-03-10T09:00:53.155Z",
+  "scope": {
+    "provinceSlug": "rizal",
+    "citySlug": "cainta",
+    "provinceName": "Rizal",
+    "cityName": "Cainta",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "7a1c3e3b-b671-4b50-8f32-4343ccaca557",
+    "d24c2178-118c-46e9-be83-261bb29e6d91",
+    "fccabbb0-ad8f-4042-bbec-57f301c4da5d"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T08:57:08.643Z",
+      "finishedAt": "2026-03-10T08:57:16.349Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T08:57:16.350Z",
+      "finishedAt": "2026-03-10T08:58:57.544Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T08:58:57.549Z",
+      "finishedAt": "2026-03-10T08:59:24.161Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T08:59:24.839Z",
+      "finishedAt": "2026-03-10T09:00:31.866Z",
+      "lastError": null,
+      "notes": "processed 3 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T09:00:31.998Z",
+      "lastError": null,
+      "notes": "verified 3 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:00:32.002Z",
+      "finishedAt": "2026-03-10T09:00:53.155Z",
+      "lastError": null,
+      "notes": "backfilled 3 facebook place ids"
+    }
+  }
+}

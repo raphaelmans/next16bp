@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Santa Barbara",
+    "citySlug": "santa-barbara",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:31:38.613Z",
+  "queries": [
+    "site:facebook.com pickleball Santa Barbara Iloilo",
+    "site:facebook.com \"Santa Barbara\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Santa Barbara\" \"pickleball club\"",
+    "site:facebook.com \"Santa Barbara\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/santabarbarapickleballclub/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373972126224328/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471360010992532/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1432220181573182/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329715090650032/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/100094679055786/posts/749913334841295/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1427031310951241/posts/4334297986891211/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100094679055786/posts/749913334841295/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61587595370515/videos/pickeball-in-santa-barbara-iloilo/949425457749505/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/august-27-2025-iloilo-pickleball-proudly-presents-the-north-grove-pickleball-her/813825901807481/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1318788549583013/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1317486336379901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/518809147358007/posts/787107527194833/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2129796374041755/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2420362151651841/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2343756992645691/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2551151031906285/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2103108883377171/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2109335816087811/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2662386750782712/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2653640548323999/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2343756992645691/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2571127213242000/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2681431952211525/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2125268577827868/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/518809147358007/posts/796020296303556/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2542651909422864/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2201638213524237/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/santabarbarapickleball/posts/2249125088775549/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/santa-barbara/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/santa-barbara/facebook-pages.state.json"
+}

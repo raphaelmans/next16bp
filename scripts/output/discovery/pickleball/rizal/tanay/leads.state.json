@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:tanay",
+  "createdAt": "2026-03-10T08:15:02.303Z",
+  "updatedAt": "2026-03-10T08:15:25.078Z",
+  "queries": [
+    "pickleball courts in Rizal Tanay",
+    "pickleball court Tanay Rizal",
+    "Tanay pickleball",
+    "courts in Tanay Rizal pickleball",
+    "sports center Tanay Rizal pickleball",
+    "pickleball club Tanay Rizal",
+    "pickleball reservations Tanay Rizal",
+    "host-map:cebupickleballcourts.com:Tanay",
+    "host-map:dumapickleball.com:Tanay",
+    "site:cebupickleballcourts.com Tanay Rizal pickleball",
+    "site:dumapickleball.com Tanay Rizal pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "sourceQuery": "pickleball reservations Tanay Rizal",
+      "title": "Sampaloc Tanay Pickleball Club",
+      "snippet": "Can you reserve a pickleball court at Sampaloc Tanay Pickleball Club? We're not sure if reservations are available or required at Sampaloc Tanay Pickleball Club ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 17,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "sourceQuery": "pickleball reservations Tanay Rizal",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "davadillar@gmail.com. Sampaloc Tanay Pickleball Club. Barangay Gym. Tanay. Rizal. 2. Covered Courts. Sat/Sun, 1p-4p. Free. James Umali. 0928-725 ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals",
+      "firstDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "sourceQuery": "pickleball reservations Tanay Rizal",
+      "title": "Vacation Rentals and Pickleball Stays in Tanay, PH",
+      "snippet": "Enjoy top amenities such as top-notch pickleball courts or nearby facilities, indoor and outdoor swimming pools, Wi-Fi, hot tubs, and self-catering options.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://tobys.com/blogs/news/toby-s-youth-sports-foundation-brings-grassroots-sports-clinics-to-tanay?srsltid=AfmBOordG3hSa5BsemQ_sNJhF50Px8Qf6Q7pXXW5o1w6tYOY4gr1qmNf": {
+      "canonicalUrl": "https://tobys.com/blogs/news/toby-s-youth-sports-foundation-brings-grassroots-sports-clinics-to-tanay?srsltid=AfmBOordG3hSa5BsemQ_sNJhF50Px8Qf6Q7pXXW5o1w6tYOY4gr1qmNf",
+      "latestUrl": "https://www.tobys.com/blogs/news/toby-s-youth-sports-foundation-brings-grassroots-sports-clinics-to-tanay?srsltid=AfmBOordG3hSa5BsemQ_sNJhF50Px8Qf6Q7pXXW5o1w6tYOY4gr1qmNf",
+      "firstDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:02.307Z",
+      "sourceQuery": "sports center Tanay Rizal pickleball",
+      "title": "Toby's Youth Sports Foundation Brings Grassroots Sports Clinics to ...",
+      "snippet": "Toby's Sports executives and professional pickleball coach Mark Casal provided sports items to the children of Cayumbay, Rizal. Tanay ...",
+      "domain": "tobys.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

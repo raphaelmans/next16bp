@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "iloilo",
+    "citySlug": "zarraga",
+    "provinceName": "Iloilo",
+    "cityName": "Zarraga"
+  },
+  "generatedAt": "2026-03-10T11:37:23.045Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 3,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 3,
+  "csvRowCount": 0,
+  "failures": []
+}

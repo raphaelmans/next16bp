@@ -1,0 +1,109 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "hagonoy",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Hagonoy"
+  },
+  "generatedAt": "2026-03-10T11:29:26.020Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=1902707000616564&set=a.106462233574392&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1902707000616564&set=a.106462233574392&type=3",
+      "capturedAt": "2026-03-10T11:28:51.815Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/photo.php?fbid=1902707000616564&set=a.106462233574392&type=3",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nMichael E. Lape\nJanuary 23\n \n·\n GET READY FOR A SPECIAL PICKLEBALL EVENT! \n\nThe Digos Metro Lions Club (DMLC), MJF, in partnership with Pickleball Point Sports Center proudly presents:\n\n“PLAY, SERVE, GIVE: A Lions Pickleball Charity Cup”\nA tournament that’s more than just a game.\nPlay. Give. Inspire.\nJoin us as we rally for a cause that truly matters—bringing together passionate pickleball players and community supporters to raise funds for the service pillars of DMLC:\n\n Hunger Relief\n\n Vi… See more\n— with Aida Sordilla and \n12 others\n.\nAll reactions:\n5\n1\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D1902707000616564%26set%3Da.106462233574392%26type%3D3",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/?__tn__=*F",
+          "https://www.facebook.com/digosbigT?__tn__=%3C%3C*F",
+          "https://www.facebook.com/digosbigT?__tn__=-UC*F",
+          "https://www.facebook.com/digosbigT/posts/pfbid08D8afsb7783xs37MrBknHJprRggvypv8SWk61V9QX582nwABLGdZGrUuqkWXJdtZl?__tn__=%2CO*F",
+          "https://www.facebook.com/aida.sordilla?__tn__=-]C*F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "This is a Facebook event post announcing a charity pickleball tournament by Digos Metro Lions Club in partnership with Pickleball Point Sports Center, but the page content does not provide a physical venue name/address in Hagonoy, Davao Del Sur. It lacks usable location or contact details and points to Digos (a different city).",
+        "name": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "Post text: \"GET READY FOR A SPECIAL PICKLEBALL EVENT!\"",
+          "Post text: \"The Digos Metro Lions Club (DMLC), MJF, in partnership with Pickleball Point Sports Center proudly presents:\"",
+          "Page/post author: Michael E. Lape (January 23)",
+          "Outbound link on page: https://www.facebook.com/digosbigT (indicates Digos, not Hagonoy)"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/story.php/?story_fbid=122107467242625991&id=61568779744215",
+      "canonicalUrl": "https://facebook.com/story.php?id=61568779744215&story_fbid=122107467242625991",
+      "capturedAt": "2026-03-10T11:29:09.630Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/story.php/?story_fbid=122107467242625991&id=61568779744215",
+        "title": "Every pickleball club would... - Pickleball Media Philippines | Facebook",
+        "bodyText": "Log In\nForgot Account?\nPickleball Media Philippines's Post\nPickleball Media Philippines\nNovember 28, 2024\n \n·\nEvery pickleball club would benefit from having a resident \"rules expert\". This is one way to do it. Let me share with you my experience in attending this Officiating Clinic and at the end of the video, I will give you 4 tips on how to improve your chances on passing it. #pickleball\n0:00 / 5:29\nAll reactions:\n40\n5 comments\n22 shares\nLike\nComment\nMost relevant﻿\nGigi Saldana Maceda\nThank you for this Monching PBMedia - you’re one awesome Content Creator!\n1y\n3\nFranz Domingo\nNice Monching Romano \n. Laro tayo gusto ko matuto nyan. \n23w\nJenny Bonnevie Bautista\ngo monching!!\n1y\nMonching PBMedia\nJenny Bonnevie Bautista kailan tayo mag re-take? Sure pasado na yan. Di ba Gigi?\n1y\nGigi Saldana Maceda\nSaana naman Monching PBMedia \n1y",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fstory.php%2F%3Fstory_fbid%3D122107467242625991%26id%3D61568779744215",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/people/Pickleball-Media-Philippines/61568779744215/?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=%3C%3C%2CP-R",
+          "https://www.facebook.com/people/Pickleball-Media-Philippines/61568779744215/?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=-UC%2CP-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=%2CO%2CP-R",
+          "https://www.facebook.com/hashtag/pickleball?__eep__=6&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=*NK-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=%2B%3FFH-R",
+          "https://www.facebook.com/monching.pbp?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?comment_id=1123214796091169&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/franz.domingo?comment_id=Y29tbWVudDoxMjIxMDc0NjcyNDI2MjU5OTFfMTEzOTY3MTc4MDgyNjIwOQ%3D%3D&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/franz.domingo?comment_id=Y29tbWVudDoxMjIxMDc0NjcyNDI2MjU5OTFfMTEzOTY3MTc4MDgyNjIwOQ%3D%3D&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?comment_id=1139671780826209&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?comment_id=1054650073063619&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/monching.pbp?comment_id=Y29tbWVudDoxMjIxMDc0NjcyNDI2MjU5OTFfNTEwMTQyNDc1MzcwNTU3&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/monching.pbp?comment_id=Y29tbWVudDoxMjIxMDc0NjcyNDI2MjU5OTFfNTEwMTQyNDc1MzcwNTU3&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?comment_id=1054650073063619&reply_comment_id=510142475370557&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/monching.pbp?__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R",
+          "https://www.facebook.com/61568779744215/videos/1296751801241929/?comment_id=1054650073063619&reply_comment_id=539380779083595&__cft__[0]=AZZOoHDQewR_BoJom6Ij3tZ1xk7u6e9LXCwDUaMRYfqgvLwi31PldM65W8Gq32ESF7GaDbEY0As9rOtpt1SH7erTE-8Dfg9m1u36vzhZErqs5_MjzItzQOCIp8baJhcvIOvr5hBAJJnI4dXDHVAJyMb-350-MvWRllfOZMBGxIhXfwq7LKVuolwiHe5uVZatGMM&__tn__=R]-R"
+        ],
+        "ogTitle": "Pickleball Media Philippines",
+        "ogDescription": "Every pickleball club would benefit from having a resident \"rules expert\". This is one way to do it. Let me share with you my experience in attending this Officiating Clinic and at the end of the..."
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "This Facebook page is a media/content page (Pickleball Media Philippines) with a post/video; it does not describe or provide a usable physical location/address in Hagonoy, Davao Del Sur or any venue details. Not a physical pickleball venue/club.",
+        "name": "Pickleball Media Philippines",
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "Page name/title: \"Pickleball Media Philippines\"",
+          "Post text: \"Every pickleball club would benefit from having a resident \\\"rules expert\\\". This is one way to do it. Let me share with you my experience in attending this Officiating Clinic...\" (November 28, 2024)",
+          "No address, city, province, phone, email, Instagram, website, amenities, or court count are present in the provided page content."
+        ]
+      },
+      "error": null
+    }
+  ]
+}

@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:pamplona",
+  "createdAt": "2026-03-10T11:19:03.839Z",
+  "updatedAt": "2026-03-10T11:19:29.812Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Pamplona",
+    "pickleball court Pamplona Negros Oriental",
+    "Pamplona pickleball",
+    "courts in Pamplona Negros Oriental pickleball",
+    "sports center Pamplona Negros Oriental pickleball",
+    "pickleball club Pamplona Negros Oriental",
+    "pickleball reservations Pamplona Negros Oriental",
+    "host-map:cebupickleballcourts.com:Pamplona",
+    "host-map:dumapickleball.com:Pamplona",
+    "site:cebupickleballcourts.com Pamplona Negros Oriental pickleball",
+    "site:dumapickleball.com Pamplona Negros Oriental pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "pickleball reservations Pamplona Negros Oriental",
+      "title": "Play Pickleball at Dauin Sport Park: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Dauin Sport Park! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "courts in Pamplona Negros Oriental pickleball",
+      "title": "Dr. Pickle Pickleball Court",
+      "snippet": "There is 1 outdoor hard court. This is a dedicated court with a permanent net and lines. The court is free. Players have access to lights. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://philmech.gov.ph/resources/pdf/transparency/PMR/2024/PHILMECH-%20Submission%20of%20FY%202024%202nd%20Sem%20PMR%20for%20Alternative%20Methods%20of%20Procurement_with%20esign.pdf": {
+      "canonicalUrl": "https://philmech.gov.ph/resources/pdf/transparency/PMR/2024/PHILMECH-%20Submission%20of%20FY%202024%202nd%20Sem%20PMR%20for%20Alternative%20Methods%20of%20Procurement_with%20esign.pdf",
+      "latestUrl": "https://www.philmech.gov.ph/resources/pdf/transparency/PMR/2024/PHILMECH-%20Submission%20of%20FY%202024%202nd%20Sem%20PMR%20for%20Alternative%20Methods%20of%20Procurement_with%20esign.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "courts in Pamplona Negros Oriental pickleball",
+      "title": "Procurement Monitoring Report as of December 31, 2024",
+      "snippet": "COMPLETED PROCUREMENT ACTIVITIES. 24-06-E-373 Food for the conduct of Technical Review Workshop for FY 2025 on July 8-10, 2024 at PHilMech.",
+      "domain": "philmech.gov.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "pickleball reservations Pamplona Negros Oriental",
+      "title": "Sports Facility Booking: Court Access",
+      "snippet": "Baseline Pickle Hub Davao · Burn Room Pickleball Indoor Dumaguete · Burn Room Pickleball Outdoor Dumaguete · Casa Lucio Pamplona · Dad's Pickleball Club Dumaguete.",
+      "domain": "app.court-access.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=HVUvNTAdFUY": {
+      "canonicalUrl": "https://youtube.com/watch?v=HVUvNTAdFUY",
+      "latestUrl": "https://www.youtube.com/watch?v=HVUvNTAdFUY",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "Pamplona pickleball",
+      "title": "Pamplona Pickleball Tournament - Beginners Game 1",
+      "snippet": "Pamplona Pickleball Tournament - Beginners Game 3. Hogan de Jesus · 12 views ; Kitchen Paddles 2 vs Chill Pickleball Club | DUPR 11 Battle for Bronze | Paloo Trio ...",
+      "domain": "youtube.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://camarinessur.gov.ph/news/384": {
+      "canonicalUrl": "https://camarinessur.gov.ph/news/384",
+      "latestUrl": "https://www.camarinessur.gov.ph/news/384",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "Pamplona pickleball",
+      "title": "Food Assistance Brought to Barangay Veneracion, Pamplona",
+      "snippet": "In our joint visit to the banwaan of Pamplona, we were also going to Barangay Veneracion to provide food assistance ... A premium pickleball court, built for...",
+      "domain": "camarinessur.gov.ph",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/P746KH": {
+      "canonicalUrl": "https://reclub.co/m/P746KH",
+      "latestUrl": "https://reclub.co/m/P746KH",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "Pamplona pickleball",
+      "title": "Open play with Vole",
+      "snippet": "Join us this Friday, March 6, 2026 for another exciting night of rallies, competition, and good vibes as Mighty George Pickleball teams up with Vole Pickleball!",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.facebook.com/61557985336286/photos/122208530108266177": {
+      "canonicalUrl": "https://m.facebook.com/61557985336286/photos/122208530108266177",
+      "latestUrl": "https://m.facebook.com/61557985336286/photos/122208530108266177/",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "pickleball club Pamplona Negros Oriental",
+      "title": "Negros Oriental Pickleball Club",
+      "snippet": "An Open Letter to Our Pickleball Community and Tournament Organizers This past weekend, we gathered in Pamplona, Negros Oriental for the 1st Mayor Nikko ...",
+      "domain": "m.facebook.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:03.841Z",
+      "sourceQuery": "pickleball club Pamplona Negros Oriental",
+      "title": "Negros Oriental, Philippines",
+      "snippet": "The Soft Serve Cafe and Courts Dauin · Reserve Pickleball Center · Frnds Pickleball · United Picklers Club · Casual DUPR · NO PERMANENT COURT.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

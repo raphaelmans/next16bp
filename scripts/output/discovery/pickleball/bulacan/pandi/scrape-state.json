@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T12:23:58.809Z",
+  "updatedAt": "2026-03-10T12:24:19.375Z",
+  "urls": {
+    "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio": {
+      "canonicalUrl": "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio",
+      "latestUrl": "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio",
+      "latestUrl": "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL": {
+      "canonicalUrl": "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL",
+      "latestUrl": "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022": {
+      "canonicalUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "latestUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-luzon/pandi": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-luzon/pandi",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/pandi",
+      "firstDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "lastDiscoveredAt": "2026-03-10T12:23:58.809Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:23:58.809Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T12:23:58.809Z",
+      "lastSeenAt": "2026-03-10T12:23:58.809Z"
+    }
+  }
+}

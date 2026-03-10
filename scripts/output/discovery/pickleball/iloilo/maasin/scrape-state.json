@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:44:03.235Z",
+  "updatedAt": "2026-03-10T11:44:33.099Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@maasin-city-picklers": {
+      "canonicalUrl": "https://reclub.co/clubs/@maasin-city-picklers",
+      "latestUrl": "https://reclub.co/clubs/@maasin-city-picklers",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@maasin-city-picklers-2": {
+      "canonicalUrl": "https://reclub.co/clubs/@maasin-city-picklers-2",
+      "latestUrl": "https://reclub.co/clubs/@maasin-city-picklers-2",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/eastern-visayas/maasin-city/maasin-cathedral": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/eastern-visayas/maasin-city/maasin-cathedral",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/eastern-visayas/maasin-city/maasin-cathedral",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://paddleco.rezerv.co/home": {
+      "canonicalUrl": "https://paddleco.rezerv.co/home",
+      "latestUrl": "https://paddleco.rezerv.co/home",
+      "firstDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "lastDiscoveredAt": "2026-03-10T11:44:03.235Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:44:03.235Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:44:03.235Z",
+      "lastSeenAt": "2026-03-10T11:44:03.235Z"
+    }
+  }
+}

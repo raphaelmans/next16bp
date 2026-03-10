@@ -1,0 +1,223 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:35:13.884Z",
+  "updatedAt": "2026-03-10T11:36:21.014Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Dr Pickle Pickleball Court"
+    },
+    "https://playtimescheduler.com/region/dumaguete-visayas": {
+      "canonicalUrl": "https://playtimescheduler.com/region/dumaguete-visayas",
+      "latestUrl": "https://playtimescheduler.com/region/dumaguete-visayas",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/VPT03S": {
+      "canonicalUrl": "https://reclub.co/m/VPT03S",
+      "latestUrl": "https://reclub.co/m/VPT03S",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city": {
+      "canonicalUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "latestUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "slv courts|dumaguete city|negros oriental",
+      "lastRowName": "Slv Courts"
+    },
+    "https://www.pickletrip.com/all/mexico/tamaulipas/valle-hermoso/discount-rentals": {
+      "canonicalUrl": "https://www.pickletrip.com/all/mexico/tamaulipas/valle-hermoso/discount-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/mexico/tamaulipas/valle-hermoso/discount-rentals",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "zero zero two pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Zero Zero Two Pickleball Court"
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "rally alley pickleball courts|dumaguete city|negros oriental",
+      "lastRowName": "Rally Alley Pickleball Courts"
+    },
+    "https://www.pickleheads.com/courts/ph/eastern-visayas/hilongos/bmvl-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/hilongos/bmvl-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/hilongos/bmvl-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bmvl sports center|hilongos|leyte",
+      "lastRowName": "Bmvl Sports Center"
+    },
+    "https://reclub.co/m/N6QSY9": {
+      "canonicalUrl": "https://reclub.co/m/N6QSY9",
+      "latestUrl": "https://reclub.co/m/N6QSY9",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickleballhub-vigor.com/": {
+      "canonicalUrl": "https://pickleballhub-vigor.com/",
+      "latestUrl": "https://pickleballhub-vigor.com/",
+      "firstDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "lastDiscoveredAt": "2026-03-10T11:35:13.883Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:35:13.883Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "dr pickle pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    "slv courts|dumaguete city|negros oriental": {
+      "rowKey": "slv courts|dumaguete city|negros oriental",
+      "name": "Slv Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    "zero zero two pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "zero zero two pickleball court|dumaguete city|negros oriental",
+      "name": "Zero Zero Two Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    "rally alley pickleball courts|dumaguete city|negros oriental": {
+      "rowKey": "rally alley pickleball courts|dumaguete city|negros oriental",
+      "name": "Rally Alley Pickleball Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    "bmvl sports center|hilongos|leyte": {
+      "rowKey": "bmvl sports center|hilongos|leyte",
+      "name": "Bmvl Sports Center",
+      "city": "HILONGOS",
+      "province": "LEYTE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/hilongos/bmvl-sports-center",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    }
+  }
+}

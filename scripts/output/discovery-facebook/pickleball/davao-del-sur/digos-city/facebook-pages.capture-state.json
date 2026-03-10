@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:digos-city",
+  "createdAt": "2026-03-10T11:11:23.115Z",
+  "updatedAt": "2026-03-10T11:12:18.055Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+      "firstCapturedAt": "2026-03-10T11:11:28.181Z",
+      "lastCapturedAt": "2026-03-10T11:11:28.181Z",
+      "status": "captured",
+      "title": "Pickleball Point Sports Center | Facebook",
+      "venueName": "Pickleball Point Sports Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397": {
+      "canonicalUrl": "https://facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397",
+      "latestUrl": "https://www.facebook.com/p/Digos-Prime-Pickleball-Club-61575625378397/",
+      "firstCapturedAt": "2026-03-10T11:11:50.674Z",
+      "lastCapturedAt": "2026-03-10T11:11:50.674Z",
+      "status": "captured",
+      "title": "Digos Prime Pickleball Club | Facebook",
+      "venueName": "Digos Prime Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

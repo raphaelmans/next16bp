@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T12:21:13.895Z",
+  "updatedAt": "2026-03-10T12:21:41.264Z",
+  "urls": {
+    "https://reclub.co/m/ZZLBJF": {
+      "canonicalUrl": "https://reclub.co/m/ZZLBJF",
+      "latestUrl": "https://reclub.co/m/ZZLBJF",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://reclub.co/clubs/@calumpit-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@calumpit-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@calumpit-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@makers-pickle-club-by-avmake": {
+      "canonicalUrl": "https://reclub.co/clubs/@makers-pickle-club-by-avmake",
+      "latestUrl": "https://reclub.co/clubs/@makers-pickle-club-by-avmake",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=fitness&find_loc=Calumpit%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=fitness&find_loc=Calumpit%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=fitness&find_loc=Calumpit%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/CSKDY2": {
+      "canonicalUrl": "https://reclub.co/m/CSKDY2",
+      "latestUrl": "https://reclub.co/m/CSKDY2",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-luzon": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-luzon",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon",
+      "firstDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "lastDiscoveredAt": "2026-03-10T12:21:13.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:21:13.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T12:21:13.895Z",
+      "lastSeenAt": "2026-03-10T12:21:13.895Z"
+    }
+  }
+}

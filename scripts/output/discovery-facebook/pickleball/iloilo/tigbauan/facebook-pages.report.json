@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Tigbauan",
+    "citySlug": "tigbauan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:34:45.898Z",
+  "queries": [
+    "site:facebook.com pickleball Tigbauan Iloilo",
+    "site:facebook.com \"Tigbauan\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Tigbauan\" \"pickleball club\"",
+    "site:facebook.com \"Tigbauan\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/andrei.pantin/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1427031310951241/posts/4334297986891211/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61575536924307/posts/breakingburn-room-pickleball-will-re-open-courts-3pm-today-burn-room-pickleball-/122144837516851230/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/217289926189999/posts/1581049246480720/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/129576955639576/posts/1212955933968334/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/739980363345415/posts/1844457342897706/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4182026775418865/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/666836848260792/posts/1427153118895824/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1427031310951241/posts/4334297986891211/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575536924307/posts/breakingburn-room-pickleball-will-re-open-courts-3pm-today-burn-room-pickleball-/122144837516851230/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/217289926189999/posts/1581049246480720/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4182026775418865/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/666836848260792/posts/1427153118895824/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/burnroomph/posts/burn-room-pickleballs-soft-opening-update-below-httpswwwfacebookcomsharep1a1mxrh/122215373924263866/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/508133573600523/posts/1581941729553030/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4182026775418865/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/24238046319119473/posts/27272884648968943/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/andrei.pantin/posts/from-open-play-to-over-play-/3489095227925159/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/779097299812828/posts/1091295325259689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/24238046319119473/posts/27272461259011282/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4047483595539851/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/24238046319119473/posts/27275789815345093/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1235019449941525/posts/26430238229992966/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/burnroomph/posts/burn-room-pickleballs-soft-opening-update-below-httpswwwfacebookcomsharep1a1mxrh/122215373924263866/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1455335142853748/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4047483595539851/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/24238046319119473/posts/27272884648968943/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1816495898955982/posts/1938278030111101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/644365755632170/posts/25506595475649187/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1816495898955982/posts/1936504136955157/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/24238046319119473/posts/27240822172175191/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/tigbauan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/tigbauan/facebook-pages.state.json"
+}

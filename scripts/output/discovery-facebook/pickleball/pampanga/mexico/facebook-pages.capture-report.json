@@ -1,0 +1,32 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "mexico",
+    "provinceName": "Pampanga",
+    "cityName": "Mexico"
+  },
+  "generatedAt": "2026-03-10T11:49:33.546Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 8,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 6,
+  "failedCount": 2,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 5,
+  "csvRowCount": 0,
+  "failures": [
+    {
+      "url": "https://www.facebook.com/745567121984101/",
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-mexico goto https://www.facebook.com/745567121984101/\nBrowser is already in use for /Users/raphaelm/Library/Caches/ms-playwright/daemon/5c6def17a8ee0073/ud-fbcap-pampanga-mexico-chrome, use --isolated to run multiple instances of the same browser\n"
+    },
+    {
+      "url": "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/",
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-mexico goto https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/\nBrowser is already in use for /Users/raphaelm/Library/Caches/ms-playwright/daemon/5c6def17a8ee0073/ud-fbcap-pampanga-mexico-chrome, use --isolated to run multiple instances of the same browser\n"
+    }
+  ]
+}

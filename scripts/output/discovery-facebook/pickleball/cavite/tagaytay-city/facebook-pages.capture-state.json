@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:tagaytay-city",
+  "createdAt": "2026-03-10T08:21:03.329Z",
+  "updatedAt": "2026-03-10T08:22:03.690Z",
+  "urls": {
+    "https://facebook.com/61577967106162": {
+      "canonicalUrl": "https://facebook.com/61577967106162",
+      "latestUrl": "https://www.facebook.com/61577967106162/",
+      "firstCapturedAt": "2026-03-10T08:21:07.661Z",
+      "lastCapturedAt": "2026-03-10T08:21:07.661Z",
+      "status": "captured",
+      "title": "Smash Pickleball Ph | Facebook",
+      "venueName": "Smash Pickleball Ph",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61580019630608": {
+      "canonicalUrl": "https://facebook.com/61580019630608",
+      "latestUrl": "https://www.facebook.com/61580019630608/",
+      "firstCapturedAt": "2026-03-10T08:21:26.068Z",
+      "lastCapturedAt": "2026-03-10T08:21:26.068Z",
+      "status": "captured",
+      "title": "Smash Pickleball Ph. | Tagaytay City | Facebook",
+      "venueName": "Smash Pickleball Ph.",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T08:21:45.562Z",
+      "lastCapturedAt": "2026-03-10T08:21:45.562Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

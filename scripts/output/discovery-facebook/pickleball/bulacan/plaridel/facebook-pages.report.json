@@ -1,0 +1,221 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Plaridel",
+    "citySlug": "plaridel",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:04:32.003Z",
+  "queries": [
+    "site:facebook.com pickleball Plaridel Bulacan",
+    "site:facebook.com \"Plaridel\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Plaridel\" \"pickleball club\"",
+    "site:facebook.com \"Plaridel\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/818044151260033/posts/865478049849976/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4051369125151298/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349953428626198/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360711004217107/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348250645463143/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4198793937075482/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351113765176831/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1966332193981925/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1962204777728000/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/818044151260033/posts/865478049849976/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4051369125151298/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349953428626198/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360711004217107/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348250645463143/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4198793937075482/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1962204777728000/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351113765176831/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1966332193981925/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1358551455962480/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1408633087620983/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/plaridel-pickleball-club-pickleball-community-pickleball-games-play-pickleball-p/1358552552629037/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1407855707698721/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360711004217107/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1395995275551431/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1391616262655999/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1358545419296417/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/plaridel-pickleball-club-pickleball-community-pickleball-games-play-pickleball-p/1358552552629037/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/818044151260033/posts/865478049849976/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1407855707698721/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4051369125151298/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348250645463143/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360711004217107/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1358545385963087/posts/1395995275551431/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4198793937075482/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1962204777728000/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/plaridel/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/plaridel/facebook-pages.state.json"
+}

@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:baliuag",
+  "createdAt": "2026-03-10T11:29:12.266Z",
+  "updatedAt": "2026-03-10T11:30:07.034Z",
+  "urls": {
+    "https://facebook.com/prinkle.ph": {
+      "canonicalUrl": "https://facebook.com/prinkle.ph",
+      "latestUrl": "https://www.facebook.com/prinkle.ph/",
+      "firstCapturedAt": "2026-03-10T11:29:15.542Z",
+      "lastCapturedAt": "2026-03-10T11:29:15.542Z",
+      "status": "captured",
+      "title": "Prinkle | Bulacan | Facebook",
+      "venueName": "Prinkle",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Baliwag-Paddle-Crew-61573805423513": {
+      "canonicalUrl": "https://facebook.com/p/Baliwag-Paddle-Crew-61573805423513",
+      "latestUrl": "https://www.facebook.com/p/Baliwag-Paddle-Crew-61573805423513/",
+      "firstCapturedAt": "2026-03-10T11:29:34.379Z",
+      "lastCapturedAt": "2026-03-10T11:29:34.379Z",
+      "status": "captured",
+      "title": "Baliwag Paddle Crew | Baliuag | Facebook",
+      "venueName": "Baliwag Paddle Crew",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T11:29:52.393Z",
+      "lastCapturedAt": "2026-03-10T11:29:52.393Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

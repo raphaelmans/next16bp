@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:tigbauan",
+  "createdAt": "2026-03-10T08:26:58.377Z",
+  "updatedAt": "2026-03-10T08:27:20.651Z",
+  "queries": [
+    "pickleball courts in Iloilo Tigbauan",
+    "pickleball court Tigbauan Iloilo",
+    "Tigbauan pickleball",
+    "courts in Tigbauan Iloilo pickleball",
+    "sports center Tigbauan Iloilo pickleball",
+    "pickleball club Tigbauan Iloilo",
+    "pickleball reservations Tigbauan Iloilo",
+    "host-map:cebupickleballcourts.com:Tigbauan",
+    "host-map:dumapickleball.com:Tigbauan",
+    "site:cebupickleballcourts.com Tigbauan Iloilo pickleball",
+    "site:dumapickleball.com Tigbauan Iloilo pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball reservations Tigbauan Iloilo",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball club Tigbauan Iloilo",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=G0CBDCin81E": {
+      "canonicalUrl": "https://youtube.com/watch?v=G0CBDCin81E",
+      "latestUrl": "https://www.youtube.com/watch?v=G0CBDCin81E",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball court Tigbauan Iloilo",
+      "title": "ILOILO PICKLEBALL DOUBLES OPEN",
+      "snippet": "ILOILO PICKLEBALL DOUBLES OPEN 1st Iloilo Pickleball Doubles Open CPU Gymnasium.",
+      "domain": "youtube.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/robinson-jaro-3rd-floor-car-park": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/robinson-jaro-3rd-floor-car-park",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/robinson-jaro-3rd-floor-car-park",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball courts in Iloilo Tigbauan",
+      "title": "Play Pickleball at Robinson Jaro 3rd Floor Car Park: Court Information",
+      "snippet": "There are 4 indoor hard and concrete courts. Tape lines have been laid, and portable nets are available. Players have access to food, lights, restrooms, water, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://picklehub.ph/clubs": {
+      "canonicalUrl": "https://picklehub.ph/clubs",
+      "latestUrl": "https://picklehub.ph/clubs",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "Tigbauan pickleball",
+      "title": "Pickleball Courts & Clubs",
+      "snippet": "Book premium pickleball courts instantly with PickleHub. Seamless bookings, QR check-in, and real-time availability at top clubs. Your game, your court, ...",
+      "domain": "picklehub.ph",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "Tigbauan pickleball",
+      "title": "Member Clubs",
+      "snippet": "Pickleball is about making friends and enjoying sport. Below is a list of Philippine pickleball member clubs that we work with, recognize and support.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/north-grove": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/north-grove",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/north-grove",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "courts in Tigbauan Iloilo pickleball",
+      "title": "Play Pickleball at North Grove: Court Information",
+      "snippet": "There are 6 indoor concrete courts. The lines are permanent, and portable nets are available. A one-time fee is required to play. You can reserve the courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "sports center Tigbauan Iloilo pickleball",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "The courts are free. You can reserve the courts. Players have access to restrooms, water, lights, trainers or lessons, and wheelchair accessibility. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/WFK36C": {
+      "canonicalUrl": "https://reclub.co/m/WFK36C",
+      "latestUrl": "https://reclub.co/m/WFK36C",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball reservations Tigbauan Iloilo",
+      "title": "Racquet Monkeys ILO Pickleball Wednesdays at Athlete's Point",
+      "snippet": "Please reserve your slots and pay via Gcash ahead of time to 09176348699 Upload your receipt in the Payments Tab of the scheduled meet. Hosted ...",
+      "domain": "reclub.co",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball reservations Tigbauan Iloilo",
+      "title": "Philippines - Book pickleball court near you",
+      "snippet": "Try the fast-growing sport of pickleball near you. Book a court now on Sparrk and enjoy a fun, active game with friends.",
+      "domain": "sparrk.ph",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://ticketwaveph.com/pages/pickleball-courts": {
+      "canonicalUrl": "https://ticketwaveph.com/pages/pickleball-courts",
+      "latestUrl": "https://ticketwaveph.com/pages/pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:58.383Z",
+      "sourceQuery": "pickleball reservations Tigbauan Iloilo",
+      "title": "Pickleball Courts",
+      "snippet": "Our courts are available for flexible hourly rentals, ideal for singles or doubles matches. Reserve multiple hours if you want to maximize your playtime.",
+      "domain": "ticketwaveph.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

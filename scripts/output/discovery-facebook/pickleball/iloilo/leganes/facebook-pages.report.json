@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Leganes",
+    "citySlug": "leganes",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:28:49.628Z",
+  "queries": [
+    "site:facebook.com pickleball Leganes Iloilo",
+    "site:facebook.com \"Leganes\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Leganes\" \"pickleball club\"",
+    "site:facebook.com \"Leganes\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1465978771530656/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/106042382760390/pickleball-equipment/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/742053023243856/posts/2110614176387727/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/NorthGroveIloilo/posts/%F0%9D%90%88%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9E-%F0%9D%90%B2%F0%9D%90%A8%F0%9D%90%AE-%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%9A%F0%9D%90%9D%F0%9D%90%B2-unleash-your-inner-hero-at-the-north-grove-pickleball-heroe/122249508686231146/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/picklepointiloilo/videos/-live-now-at-picklepoint-iloilo-novice-night-is-ongoing-at-court-5-court-6come-w/3036409233211657/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/groups/217289926189999/posts/1581049246480720/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/CentralPhilippineUniversity.CPU/posts/dinagyang-pickleball-cup-2026final-entriesthank-you-players-for-joiningplease-fi/940556105297793/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1429766607233379/posts/3008485036028187/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1465978771530656/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/106042382760390/pickleball-equipment/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/NorthGroveIloilo/posts/%F0%9D%90%88%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9E-%F0%9D%90%B2%F0%9D%90%A8%F0%9D%90%AE-%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%9A%F0%9D%90%9D%F0%9D%90%B2-unleash-your-inner-hero-at-the-north-grove-pickleball-heroe/122249508686231146/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/742053023243856/posts/2110614176387727/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/CentralPhilippineUniversity.CPU/posts/dinagyang-pickleball-cup-2026final-entriesthank-you-players-for-joiningplease-fi/940556105297793/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/217289926189999/posts/1581049246480720/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1429766607233379/posts/3008485036028187/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/228872707285748/posts/2695404940632500/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/louisvillecityfc/posts/letting-the-city-know-a-little-bit-about-cd-legan%C3%A9s-catch-los-pepineros-or-the-c/1290741006392435/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/OfficialPPATour/posts/match-of-the-week-so-far-2-katetfahey-5-leajansen_pb/1252873040307712/?locale=es_LA",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/CentralPhilippineUniversity.CPU/posts/dinagyang-pickleball-cup-2026final-entriesthank-you-players-for-joiningplease-fi/940556105297793/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/713822175800480/posts/2280551355794213/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/bsbpickleballclub/posts/not-just-a-match-but-a-date-with-passion-___________%F0%9D%90%81%F0%9D%90%92%F0%9D%90%81-%F0%9D%90%82%F0%9D%90%8B%F0%9D%90%94%F0%9D%90%81-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-x-%F0%9D%97%99%F0%9D%97%95%F0%9D%98%89%F0%9D%98%A6%F0%9D%98%B5%F0%9D%98%B5/901183335622957/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ShakeysPH/posts/you-asked-we-listened-%EF%B8%8F-pitch-a-pal-just-got-even-better-were-now-opening-the-ev/1385993150223639/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1195512361910633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/thekitchenPB/posts/1994989277682108/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/NorthGroveIloilo/posts/%F0%9D%90%88%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9E-%F0%9D%90%B2%F0%9D%90%A8%F0%9D%90%AE-%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%9A%F0%9D%90%9D%F0%9D%90%B2-unleash-your-inner-hero-at-the-north-grove-pickleball-heroe/122249508686231146/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/509172723776652/posts/1394083711952211/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/509172723776652/posts/1393131038714145/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1260457395727311/posts/1436645794775136/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/playablancalanzarote/posts/10162561768004329/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/742053023243856/posts/2110614176387727/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1210343320202985/posts/1473295100574471/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/789908834478207/posts/3653253231477072/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/271962067206528/posts/1549804886088900/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/642404516813970/posts/1574757373578675/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/leganes/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/leganes/facebook-pages.state.json"
+}

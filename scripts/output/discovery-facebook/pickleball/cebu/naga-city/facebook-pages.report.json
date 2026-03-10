@@ -1,0 +1,190 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Naga City",
+    "citySlug": "naga-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:25:08.346Z",
+  "queries": [
+    "site:facebook.com pickleball Naga City Cebu",
+    "site:facebook.com \"Naga City\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Naga City\" \"pickleball club\"",
+    "site:facebook.com \"Naga City\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/CON-Pickleball-Club-61560469654419/",
+    "https://www.facebook.com/p/Cartel-Pickleball-61573464745524/",
+    "https://www.facebook.com/nagacitypickleballclub/",
+    "https://www.facebook.com/p/Mag22-Pickleball-Club-61586875379205/",
+    "https://www.facebook.com/p/HEA-Pickleball-Court-61571774062153/",
+    "https://www.facebook.com/100084378955405/?locale=hy_AM",
+    "https://www.facebook.com/61567306075454/?locale=fa_IR",
+    "https://www.facebook.com/cebupickleball/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/RobNagaOfficial/posts/blessed-and-ready-the-pickleball-court-at-robinsons-naga-is-officially-blessedre/1277259571106825/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/ctunagaextension/posts/game-on-pickleballers-get-ready-to-serve-and-smash-our-pickleball-game-will-be-h/1368991615246752/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/1632540994166370/posts/2094828004604331/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1363283721309355/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3962142370740641/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/VistaMallNaga/posts/your-next-favorite-game-awaits-pickleball-free-play-is-here-at-vistamallnaga/1217050423798320/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/61560469654419/posts/evening-games-at-the-city-of-naga-pickleball-court-players-and-spectators-gather/122182725458348988/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/RobNagaOfficial/posts/blessed-and-ready-the-pickleball-court-at-robinsons-naga-is-officially-blessedre/1277259571106825/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/soletrendOnline/posts/wow-another-pickleball-court-open-in-naga-city-camsur-looking-forward-to-play-fo/1434038935401583/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/remy.salares/videos/playing-pickleball-in-naga-city-cebupickleball/876460698485595/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1151345152994021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986593222802549/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1522093708622684/posts/1743405303158189/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/remy.salares/videos/playing-pickleball-in-naga-city/854976790561836/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3797283597226520/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nagacitypickleballclub/posts/122144869232986633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61567306075454/posts/welcome-to-the-pickle-yard-ph-naga-city-pickleball-club-/122191668404576869/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2649594205403508/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nagacitypickleballclub/photos/d41d8cd9/122144869232986633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nagacitypickleballclub/posts/truly-inspiring-and-breaking-barriers-for-our-community-philip-olivan/122142484154986633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ollacyoy/posts/i-celebrated-my-pickle-chill-post-birthday-celebration-with-my-pickleball-friend/26295329950072082/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/nagacitypickleballclub/posts/a-huge-appreciation-to-our-members-who-participated-in-the-recently-concluded-al/122142187898986633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nagacitypickleballclub/posts/thank-you-for-hosting-and-happiest-birthday-ms-joy-/122142438206986633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100084378955405/posts/game-elevatedthe-1st-rooftop-pickleball-court-in-the-region-is-now-openthursday-/920459460776677/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/soletrendOnline/posts/wow-another-pickleball-court-open-in-naga-city-camsur-looking-forward-to-play-fo/1434038935401583/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/provinceofcamsur/posts/new-court-new-favorite-sport-ready-to-try-pickleball-play-it-now-at-the-newest-c/1346285790862913/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1151345152994021/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/6884756171617464/posts/25311106751889126/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thecourtbybalara/photos/d41d8cd9/964043739302872/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/quisina-pickleball-cebu/1316219467005579/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/keetapublications/posts/kitchenline-pickleball-is-where-pickleball-gets-real-cebus-first-usapa-standard-/1409760644496898/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132038270417716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/seasidehavencebu/posts/our-pickleball-court-is-now-officially-open-to-rent-for-only-p150hour-open-9am-1/1076455260844722/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4122919991329544/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/naga-city/facebook-pages.state.json"
+}

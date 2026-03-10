@@ -1,0 +1,207 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Jala-Jala",
+    "citySlug": "jala-jala",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:32:47.006Z",
+  "queries": [
+    "site:facebook.com pickleball Jala-Jala Rizal",
+    "site:facebook.com \"Jala-Jala\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Jala-Jala\" \"pickleball club\"",
+    "site:facebook.com \"Jala-Jala\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/photo.php?fbid=916659527969438&set=a.193605140274884&id=100088761978232",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/theprep2023/mentions/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/pickleball-the-prep/843029458713721/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/pickleball-kids-playground-area/869378842745449/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/videos/fun-day-at-the-prep/1207974938198413/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/videos/pickleball-kids-playground-area/901863669457555/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/%F0%9D%90%86%F0%9D%90%91%F0%9D%90%8E%F0%9D%90%94%F0%9D%90%8F-%F0%9D%9F%90%F0%9D%91%BE%F0%9D%92%89%F0%9D%92%86%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%95%F0%9D%92%8A%F0%9D%92%8E%F0%9D%92%86-%F0%9D%92%94%F0%9D%92%8D%F0%9D%92%90%F0%9D%92%98%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%8F%F0%9D%92%85-%F0%9D%92%8E%F0%9D%92%90%F0%9D%92%8E%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%88%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%8D%F0%9D%92%9A-%F0%9D%92%91%F0%9D%92%93%F0%9D%92%86%F0%9D%92%91%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86%F0%9D%92%85%F0%9D%98%9B%F0%9D%98%B6%F0%9D%98%A4%F0%9D%98%AC%F0%9D%98%A6%F0%9D%98%A5-%F0%9D%98%B8%F0%9D%98%AA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA%F0%9D%98%AF-%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%A6-%F0%9D%98%B2%F0%9D%98%B6%F0%9D%98%AA%F0%9D%98%A6%F0%9D%98%B5-%F0%9D%98%A3/865384826478184/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/videos/916088270792979/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/pickleball-the-prep/843029458713721/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/pickleball-kids-playground-area/869378842745449/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/group-4looking-for-a-relaxing-place-where-you-can-unwind-play-and-reset-your-min/865388863144447/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/%F0%9D%90%86%F0%9D%90%91%F0%9D%90%8E%F0%9D%90%94%F0%9D%90%8F-%F0%9D%9F%90%F0%9D%91%BE%F0%9D%92%89%F0%9D%92%86%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%95%F0%9D%92%8A%F0%9D%92%8E%F0%9D%92%86-%F0%9D%92%94%F0%9D%92%8D%F0%9D%92%90%F0%9D%92%98%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%8F%F0%9D%92%85-%F0%9D%92%8E%F0%9D%92%90%F0%9D%92%8E%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%88%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%8D%F0%9D%92%9A-%F0%9D%92%91%F0%9D%92%93%F0%9D%92%86%F0%9D%92%91%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86%F0%9D%92%85%F0%9D%98%9B%F0%9D%98%B6%F0%9D%98%A4%F0%9D%98%AC%F0%9D%98%A6%F0%9D%98%A5-%F0%9D%98%B8%F0%9D%98%AA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA%F0%9D%98%AF-%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%A6-%F0%9D%98%B2%F0%9D%98%B6%F0%9D%98%AA%F0%9D%98%A6%F0%9D%98%B5-%F0%9D%98%A3/865384826478184/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/taguigcity/posts/look-residents-enjoy-the-rizal-community-complex-and-covered-courtsa-go-to-spot-/1124739896359046/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/antipolonews/posts/2356088228209614/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/nestled-in-the-heart-of-barangay-pagkalinawan-in-the-municipality-of-jala-jala-a/721392487544086/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/474636087314475/posts/1667672728010799/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/photos/group-4looking-for-a-relaxing-place-where-you-can-unwind-play-and-reset-your-min/865388779811122/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/%F0%9D%90%86%F0%9D%90%91%F0%9D%90%8E%F0%9D%90%94%F0%9D%90%8F-%F0%9D%9F%90%F0%9D%91%BE%F0%9D%92%89%F0%9D%92%86%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%95%F0%9D%92%8A%F0%9D%92%8E%F0%9D%92%86-%F0%9D%92%94%F0%9D%92%8D%F0%9D%92%90%F0%9D%92%98%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%8F%F0%9D%92%85-%F0%9D%92%8E%F0%9D%92%90%F0%9D%92%8E%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%88%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%8D%F0%9D%92%9A-%F0%9D%92%91%F0%9D%92%93%F0%9D%92%86%F0%9D%92%91%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86%F0%9D%92%85%F0%9D%98%9B%F0%9D%98%B6%F0%9D%98%A4%F0%9D%98%AC%F0%9D%98%A6%F0%9D%98%A5-%F0%9D%98%B8%F0%9D%98%AA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA%F0%9D%98%AF-%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%A6-%F0%9D%98%B2%F0%9D%98%B6%F0%9D%98%AA%F0%9D%98%A6%F0%9D%98%B5-%F0%9D%98%A3/865384826478184/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/a-place-made-for-togetherness-tucked-within-the-greenery-of-jala-jala-rizal-the-/862746463408687/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/posts/group-4looking-for-a-relaxing-place-where-you-can-unwind-play-and-reset-your-min/865388863144447/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4164945743793635/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/241455502718865/posts/2784120335119023/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1086568571360919/posts/34133143742943309/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2071059573145825/posts/4129763020608793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/560556290345714/posts/740976858970322/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1180574462908114/posts/1523093915322832/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/mentions/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/photos/group-4looking-for-a-relaxing-place-where-you-can-unwind-play-and-reset-your-min/865388779811122/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4164945743793635/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/theprep2023/photos/%F0%9D%90%86%F0%9D%90%91%F0%9D%90%8E%F0%9D%90%94%F0%9D%90%8F-%F0%9D%9F%90%F0%9D%91%BE%F0%9D%92%89%F0%9D%92%86%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%95%F0%9D%92%8A%F0%9D%92%8E%F0%9D%92%86-%F0%9D%92%94%F0%9D%92%8D%F0%9D%92%90%F0%9D%92%98%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%8F%F0%9D%92%85-%F0%9D%92%8E%F0%9D%92%90%F0%9D%92%8E%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%88%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%8D%F0%9D%92%9A-%F0%9D%92%91%F0%9D%92%93%F0%9D%92%86%F0%9D%92%91%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86%F0%9D%92%85%F0%9D%98%9B%F0%9D%98%B6%F0%9D%98%A4%F0%9D%98%AC%F0%9D%98%A6%F0%9D%98%A5-%F0%9D%98%B8%F0%9D%98%AA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA%F0%9D%98%AF-%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%A6-%F0%9D%98%B2%F0%9D%98%B6%F0%9D%98%AA%F0%9D%98%A6%F0%9D%98%B5-%F0%9D%98%A3/865384673144866/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1181865959017314/posts/2184394262097807/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/474636087314475/posts/1667672728010799/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/taguigcity/posts/look-residents-enjoy-the-rizal-community-complex-and-covered-courtsa-go-to-spot-/1124739896359046/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3144352269184943/posts/4448257418794415/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/antipolonews/posts/2356088228209614/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/jala-jala/facebook-pages.state.json"
+}

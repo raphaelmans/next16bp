@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-10T08:30:07.222Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 3,
+  "noDataUrls": 2,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "upv miagao pickleball courts|miagao|iloilo",
+      "name": "Upv Miagao Pickleball Courts",
+      "city": "MIAGAO",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+      "firstSeenAt": "2026-03-10T08:30:07.222Z",
+      "lastSeenAt": "2026-03-10T08:30:07.222Z"
+    },
+    {
+      "rowKey": "university of the philippines visayas|miagao|iloilo",
+      "name": "University Of The Philippines Visayas",
+      "city": "MIAGAO",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+      "firstSeenAt": "2026-03-10T08:30:07.222Z",
+      "lastSeenAt": "2026-03-10T08:30:07.222Z"
+    },
+    {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T08:30:07.222Z",
+      "lastSeenAt": "2026-03-10T08:30:07.222Z"
+    }
+  ]
+}

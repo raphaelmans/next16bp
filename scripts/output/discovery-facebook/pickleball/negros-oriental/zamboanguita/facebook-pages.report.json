@@ -1,0 +1,205 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Zamboanguita",
+    "citySlug": "zamboanguita",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:43:34.027Z",
+  "queries": [
+    "site:facebook.com pickleball Zamboanguita Negros Oriental",
+    "site:facebook.com \"Zamboanguita\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Zamboanguita\" \"pickleball club\"",
+    "site:facebook.com \"Zamboanguita\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Negros-Island-Pickleball-Association-NIPA-100089723640330/",
+    "https://www.facebook.com/p/Zamboanguita-Pickleball-Club-61575756851634/",
+    "https://www.facebook.com/photo.php?fbid=122173451450858561&set=a.122104508894858561&type=3",
+    "https://www.facebook.com/973878632464215",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445509190503010/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1453813073005955/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1444455473941715/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/935201305968005/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CampTamBaybay/posts/midweek-pickleball-playavailable-slots5pm-to-7pm7pm-to-9pm9pm-to-11pmphp-190-per/1406127858193601/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1400632484990681/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1381193383601258/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1446843880369541/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445509190503010/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1446843880369541/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1444455473941715/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/posts/%EF%B8%8F-official-announcement-%EF%B8%8Fwere-thrilled-to-announce-our-1st-zamboanguita-pickleba/122109047570858561/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/CampTamBaybay/posts/midweek-pickleball-playavailable-slots5pm-to-7pm7pm-to-9pm9pm-to-11pmphp-190-per/1406127858193601/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1407199271000669/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/935201305968005/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1436934418027154/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575752114633/posts/new-court-partner-alertwere-pumped-to-announce-our-latest-founding-court-partner/122124516998858403/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/posts/%F0%9D%97%AD%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%AF%F0%9D%97%BC%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B4%F0%9D%98%82%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%AE-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%B9%F0%9D%98%82%F0%9D%97%AF-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%97%BB%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%9B%F0%9D%97%B6%F0%9D%97%B4%F0%9D%97%B5%F0%9D%97%B9%F0%9D%97%B6%F0%9D%97%B4%F0%9D%97%B5%F0%9D%98%81%F0%9D%98%80our-club-proudly-represented-i/122173454030858561/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1370722957981634/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/posts/122151173528858561/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445509190503010/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1381193383601258/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/photos/d41d8cd9/122111400326858561/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575756851634/photos/122139109532858561/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1255205512866713/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1445509190503010/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1453813073005955/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1400309865022943/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575752114633/posts/new-court-partner-alertwere-pumped-to-announce-our-latest-founding-court-partner/122124516998858403/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1348444453542818/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1401082418279021/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/887040877450715/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3849148468706699/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/zamboanguita/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/zamboanguita/facebook-pages.state.json"
+}

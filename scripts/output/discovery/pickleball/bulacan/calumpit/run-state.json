@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:calumpit",
+  "createdAt": "2026-03-10T12:20:42.696Z",
+  "updatedAt": "2026-03-10T12:21:45.931Z",
+  "scope": {
+    "provinceSlug": "bulacan",
+    "citySlug": "calumpit",
+    "provinceName": "Bulacan",
+    "cityName": "Calumpit",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:20:42.698Z",
+      "finishedAt": "2026-03-10T12:21:13.894Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:21:13.894Z",
+      "finishedAt": "2026-03-10T12:21:41.265Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:21:41.265Z",
+      "finishedAt": "2026-03-10T12:21:45.265Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T12:21:45.929Z",
+      "finishedAt": "2026-03-10T12:21:45.931Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for calumpit, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:21:45.931Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for calumpit"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:21:45.931Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

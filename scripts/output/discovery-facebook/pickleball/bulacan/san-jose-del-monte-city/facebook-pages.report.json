@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "San Jose Del Monte City",
+    "citySlug": "san-jose-del-monte-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:13:05.395Z",
+  "queries": [
+    "site:facebook.com pickleball San Jose Del Monte City Bulacan",
+    "site:facebook.com \"San Jose Del Monte City\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"San Jose Del Monte City\" \"pickleball club\"",
+    "site:facebook.com \"San Jose Del Monte City\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/SJDMPickleball/",
+    "https://www.facebook.com/photo.php?fbid=122143784762978524&set=a.122098327628978524&type=3",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360412014247006/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4211265395828336/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579355731336/posts/-2026-pickleball-intensive-%F0%9D%90%81%F0%9D%90%80%F0%9D%90%93%F0%9D%90%82%F0%9D%90%87-%F0%9D%9F%93-powered-by-%F0%9D%90%92%F0%9D%90%89%F0%9D%90%83%F0%9D%90%8C-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B-were-growing-/122143311038978524/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4187127364908806/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/275021100470831/posts/1557605002212428/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/dinkzone/posts/the-dink-zone-smash-fest-tournament-is-here-time-to-rally-dink-and-smash-your-wa/122151102446950520/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61579355731336/posts/-2026-pickleball-intensive-%F0%9D%90%81%F0%9D%90%80%F0%9D%90%93%F0%9D%90%82%F0%9D%90%87-%F0%9D%9F%93-powered-by-%F0%9D%90%92%F0%9D%90%89%F0%9D%90%83%F0%9D%90%8C-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B-were-growing-/122143311038978524/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579355731336/photos/d41d8cd9/122143311008978524/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4360412014247006/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4211265395828336/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61567383417002/posts/eat-drink-sleep-play-repeat-looking-for-a-fun-way-to-stay-active-and-meet-new-fr/122198938640579447/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4267322160222659/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135435700077973/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61573914584169/posts/122172662816797152/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4187127364908806/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579355731336/posts/-2026-pickleball-intensive-%F0%9D%90%81%F0%9D%90%80%F0%9D%90%93%F0%9D%90%82%F0%9D%90%87-%F0%9D%9F%93-powered-by-%F0%9D%90%92%F0%9D%90%89%F0%9D%90%83%F0%9D%90%8C-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A5%F0%9D%90%AE%F0%9D%90%9B-were-growing-/122143311038978524/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579355731336/photos/d41d8cd9/122143311008978524/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4211265395828336/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4267322160222659/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4159562514331958/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/262523432178256/posts/1450055276758393/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4187127364908806/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135435700077973/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4187127364908806/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4159562514331958/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61583386394705/posts/our-pickleball-court-is-ready-for-you-available-slots-are-openbook-now-and-bring/122122110057112879/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4211265395828336/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4099898010298409/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4198793937075482/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61583386394705/posts/21926thank-you-for-renting-tapdink-pickleball-court-we-do-hope-you-enjoyed-your-/122122990785112879/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61583386394705/photos/d41d8cd9/122122875375112879/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/san-jose-del-monte-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/san-jose-del-monte-city/facebook-pages.state.json"
+}

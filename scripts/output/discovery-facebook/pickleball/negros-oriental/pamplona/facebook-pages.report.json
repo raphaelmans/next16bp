@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Pamplona",
+    "citySlug": "pamplona",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:41:51.825Z",
+  "queries": [
+    "site:facebook.com pickleball Pamplona Negros Oriental",
+    "site:facebook.com \"Pamplona\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Pamplona\" \"pickleball club\"",
+    "site:facebook.com \"Pamplona\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61579678411420/posts/casa-lucio-pickleball-courts-your-best-choice-for-some-dinks-and-greenscheck-out/122134937756989280/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/cherrylyn.a.dy/videos/new-sport-pickleball-pamplonanegrosoriental-fyp/25792276813807081/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1410822870638309/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1415891763464753/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1376390554081541/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1410822870638309/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61557985336286/photos/122188422206266177/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1454615699592359/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1415891763464753/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/7171219316258752/posts/25455186890768716/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1415891763464753/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61577778688473/posts/vamos-pamplona-pickleball-tournament-huge-congratulations-to-joshua-bartoces-and/122131381712925956/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/787519454069525/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575752114633/posts/new-venue-alert-calling-all-players-in-pamplona-we-are-thrilled-to-announce-that/122156488376858403/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1798763664072113/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3890530704568475/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3849148468706699/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1321988256188438/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1415891763464753/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1234219874965277/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/teamhukad/posts/look-governor-chaco-sagarbarria-was-recently-seen-playing-pickleball-a-sport-tha/896012513183915/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ninamae.canolas/posts/hello-everyone-basin-layhan-mo-ug-yuta-pamplona-area-for-residential-or-pwedi-pi/25395959123359332/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1287587572961840/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1334252278295369/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/DUMAGUETENOS/posts/brader-dumaguete-city-pickleball-courtsunofficial-list-as-of-oct-10-2025feel-fre/1139526688272308/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3849148468706699/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/pamplona/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/pamplona/facebook-pages.state.json"
+}

@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cavite",
+    "citySlug": "kawit",
+    "provinceName": "Cavite",
+    "cityName": "Kawit"
+  },
+  "generatedAt": "2026-03-10T11:18:21.421Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 5,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 5,
+  "failedCount": 0,
+  "readyCount": 4,
+  "reviewCount": 1,
+  "skipCount": 0,
+  "csvRowCount": 1,
+  "failures": []
+}

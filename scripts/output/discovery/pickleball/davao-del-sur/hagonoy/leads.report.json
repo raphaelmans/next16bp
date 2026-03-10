@@ -1,0 +1,127 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Hagonoy",
+    "citySlug": "hagonoy",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:11:14.057Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Hagonoy",
+    "pickleball court Hagonoy Davao Del Sur",
+    "Hagonoy pickleball",
+    "courts in Hagonoy Davao Del Sur pickleball",
+    "sports center Hagonoy Davao Del Sur pickleball",
+    "pickleball club Hagonoy Davao Del Sur",
+    "pickleball reservations Hagonoy Davao Del Sur",
+    "host-map:cebupickleballcourts.com:Hagonoy",
+    "host-map:dumapickleball.com:Hagonoy",
+    "site:cebupickleballcourts.com Hagonoy Davao Del Sur pickleball",
+    "site:dumapickleball.com Hagonoy Davao Del Sur pickleball"
+  ],
+  "emittedUrls": [
+    "https://southsidedavao.com/",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+    "https://reclub.co/clubs/@pickleplay",
+    "https://app.court-access.com/",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://m.yelp.com/search?find_desc=Badminton&find_loc=Hagonoy%2C+Bulacan",
+      "score": 5
+    },
+    {
+      "url": "https://www.threads.com/@afreahr/post/DVnozyED0ml/san-ba-meron-eyelash-ext-na-walk-in-around-hagonoy-or-signal-taguig",
+      "score": 12
+    },
+    {
+      "url": "https://app.utrsports.net/profiles/4369787",
+      "score": 11
+    },
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 5
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=VKqVPPh6i8g",
+      "score": -4
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fWE-bfeMP1s",
+      "score": 1
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fWE-bfeMP1s",
+      "score": 1
+    },
+    {
+      "url": "https://jfmdevelopmentcorp.com/pickleball/",
+      "score": 6
+    },
+    {
+      "url": "https://reclub.co/m/BWVLVT",
+      "score": 2
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/groups/kidapawanupdates/posts/2415497578861256/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+    "https://www.facebook.com/ftc.love/videos/crisron-pickleball-courts-davao-city/717887407598953/",
+    "https://www.facebook.com/paddleupdavao/videos/%F0%9D%97%9A%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2-%F0%9D%97%BC%F0%9D%97%BB-%F0%9D%97%97%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%AE%F0%9D%97%BCpaddle-up-is-here-to-serve-the-citys-newest-pickleball-courtopening/1312800950350521/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4287039534917588/",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.instagram.com/p/C1eOBGUpo6v/",
+    "https://www.facebook.com/dylan.house.92167/posts/my-first-pickleball-tournament-pampanga-pickleball-center-ppl-philippine-pickleb/1627618894939886/",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+    "https://www.facebook.com/ftc.love/videos/crisron-pickleball-courts-davao-city/717887407598953/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7579894817249873159",
+    "https://www.facebook.com/groups/2723933654561525/posts/4030170017271209/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3725645091057038/",
+    "https://www.instagram.com/p/DSm_TX0ktPj/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4308848639403344/",
+    "https://www.facebook.com/MakataCup/posts/%F0%9D%99%8F%F0%9D%99%80%F0%9D%98%BC%F0%9D%99%88-%F0%9D%99%83%F0%9D%98%BC%F0%9D%99%82%F0%9D%99%8A%F0%9D%99%89%F0%9D%99%8A%F0%9D%99%94-presenting-the-official-lineup-submitted-by-team-hagonoy-for-valida/1374421408032171/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4355002854787922/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/dylan.house.92167/posts/my-first-pickleball-tournament-pampanga-pickleball-center-ppl-philippine-pickleb/1627618894939886/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.facebook.com/ftc.love/videos/crisron-pickleball-courts-davao-city/717887407598953/",
+    "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+    "https://www.instagram.com/p/C1eOBGUpo6v/",
+    "https://www.facebook.com/groups/500616635082157/posts/1035323078278174/",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.instagram.com/reel/DTSK2QAEnhE/",
+    "https://www.instagram.com/p/DJZBdE3P4Ni/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4329736917314516/",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7582039112362806535?lang=en",
+    "https://www.facebook.com/PickleballPhilippines/videos/davao-pickleball-without-borders/3397470457166331/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/dylan.house.92167/posts/my-first-pickleball-tournament-pampanga-pickleball-center-ppl-philippine-pickleb/1627618894939886/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/rogin.econar/posts/new-hobby-newbiepaddle-up-davao-pickeball-courtfyp-pickleball/26005743819017574/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7579894817249873159",
+    "https://www.facebook.com/groups/2723933654561525/posts/4329736917314516/",
+    "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+    "https://www.instagram.com/p/DSB_EC_DT65/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7581064679057837320",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/paddleupdavao/",
+    "https://www.instagram.com/p/DS49erQErKj/",
+    "https://www.facebook.com/p/0-0-2-Pickleball-Underground-61583113882504/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7580758561391660296"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/hagonoy/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/hagonoy/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/hagonoy/scrape-state.json"
+}

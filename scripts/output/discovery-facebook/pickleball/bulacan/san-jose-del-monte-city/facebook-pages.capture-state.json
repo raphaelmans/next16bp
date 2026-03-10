@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:san-jose-del-monte-city",
+  "createdAt": "2026-03-10T08:13:14.045Z",
+  "updatedAt": "2026-03-10T08:14:39.847Z",
+  "urls": {
+    "https://facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336": {
+      "canonicalUrl": "https://facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336",
+      "latestUrl": "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+      "firstCapturedAt": "2026-03-10T08:13:18.179Z",
+      "lastCapturedAt": "2026-03-10T08:13:18.179Z",
+      "status": "captured",
+      "title": "City Of SJDM Pickleball Club | San Jose del Monte | Facebook",
+      "venueName": "City Of SJDM Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/SJDMPickleball": {
+      "canonicalUrl": "https://facebook.com/SJDMPickleball",
+      "latestUrl": "https://www.facebook.com/SJDMPickleball/",
+      "firstCapturedAt": "2026-03-10T08:13:36.037Z",
+      "lastCapturedAt": "2026-03-10T08:13:36.037Z",
+      "status": "captured",
+      "title": "Dink Dynasty Pickleball Club - San Jose del Monte City, Bulacan | San Jose del Monte | Facebook",
+      "venueName": "Dink Dynasty Pickleball Club - San Jose del Monte City, Bulacan",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=122143784762978524&set=a.122098327628978524&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=122143784762978524&set=a.122098327628978524&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=122143784762978524&set=a.122098327628978524&type=3",
+      "firstCapturedAt": "2026-03-10T08:13:57.732Z",
+      "lastCapturedAt": "2026-03-10T08:13:57.732Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "City Of SJDM Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T08:14:16.290Z",
+      "lastCapturedAt": "2026-03-10T08:14:16.290Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

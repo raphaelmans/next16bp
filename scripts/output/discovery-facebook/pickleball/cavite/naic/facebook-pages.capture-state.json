@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:naic",
+  "createdAt": "2026-03-10T11:19:39.283Z",
+  "updatedAt": "2026-03-10T11:20:54.768Z",
+  "urls": {
+    "https://facebook.com/p/Cavite-Paddlers-Club-61576700491707": {
+      "canonicalUrl": "https://facebook.com/p/Cavite-Paddlers-Club-61576700491707",
+      "latestUrl": "https://www.facebook.com/p/Cavite-Paddlers-Club-61576700491707/",
+      "firstCapturedAt": "2026-03-10T11:19:42.066Z",
+      "lastCapturedAt": "2026-03-10T11:19:42.066Z",
+      "status": "captured",
+      "title": "Cavite Paddlers Club | Naic | Facebook",
+      "venueName": "Cavite Paddlers Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/juanvetnaic": {
+      "canonicalUrl": "https://facebook.com/juanvetnaic",
+      "latestUrl": "https://www.facebook.com/juanvetnaic/",
+      "firstCapturedAt": "2026-03-10T11:19:56.074Z",
+      "lastCapturedAt": "2026-03-10T11:19:56.074Z",
+      "status": "captured",
+      "title": "Drop & Drive Pickleball Camp | General Trias | Facebook",
+      "venueName": "Drop & Drive Pickleball Camp",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Naic-Pickleball-61584695845942": {
+      "canonicalUrl": "https://facebook.com/p/Naic-Pickleball-61584695845942",
+      "latestUrl": "https://www.facebook.com/p/Naic-Pickleball-61584695845942/",
+      "firstCapturedAt": "2026-03-10T11:20:17.209Z",
+      "lastCapturedAt": "2026-03-10T11:20:17.209Z",
+      "status": "captured",
+      "title": "Naic Pickleball | Naic | Facebook",
+      "venueName": "Naic Pickleball",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T11:20:37.484Z",
+      "lastCapturedAt": "2026-03-10T11:20:37.484Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

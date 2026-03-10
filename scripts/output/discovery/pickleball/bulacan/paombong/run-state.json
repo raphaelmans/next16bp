@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:paombong",
+  "createdAt": "2026-03-10T12:24:27.371Z",
+  "updatedAt": "2026-03-10T12:25:46.333Z",
+  "scope": {
+    "provinceSlug": "bulacan",
+    "citySlug": "paombong",
+    "provinceName": "Bulacan",
+    "cityName": "Paombong",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:24:27.376Z",
+      "finishedAt": "2026-03-10T12:24:56.724Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:24:56.724Z",
+      "finishedAt": "2026-03-10T12:25:42.190Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T12:25:42.191Z",
+      "finishedAt": "2026-03-10T12:25:45.647Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T12:25:46.330Z",
+      "finishedAt": "2026-03-10T12:25:46.333Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for paombong, skipped 2"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:25:46.333Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for paombong"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T12:25:46.333Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

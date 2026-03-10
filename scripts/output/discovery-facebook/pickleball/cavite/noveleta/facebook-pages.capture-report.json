@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cavite",
+    "citySlug": "noveleta",
+    "provinceName": "Cavite",
+    "cityName": "Noveleta"
+  },
+  "generatedAt": "2026-03-10T11:25:12.974Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 7,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 7,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 5,
+  "skipCount": 2,
+  "csvRowCount": 0,
+  "failures": []
+}

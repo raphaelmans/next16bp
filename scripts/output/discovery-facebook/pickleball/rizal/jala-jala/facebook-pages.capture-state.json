@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:jala-jala",
+  "createdAt": "2026-03-10T12:33:00.728Z",
+  "updatedAt": "2026-03-10T12:34:13.915Z",
+  "urls": {
+    "https://facebook.com/theprep2023": {
+      "canonicalUrl": "https://facebook.com/theprep2023",
+      "latestUrl": "https://www.facebook.com/theprep2023/",
+      "firstCapturedAt": "2026-03-10T12:33:02.124Z",
+      "lastCapturedAt": "2026-03-10T12:33:02.124Z",
+      "status": "captured",
+      "title": "The PREP | Jalajala | Facebook",
+      "venueName": "The PREP",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=916659527969438&id=100088761978232&set=a.193605140274884": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=916659527969438&id=100088761978232&set=a.193605140274884",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=916659527969438&set=a.193605140274884&id=100088761978232",
+      "firstCapturedAt": "2026-03-10T12:33:35.160Z",
+      "lastCapturedAt": "2026-03-10T12:33:35.160Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "The Forest Villas by Lily",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T12:33:55.754Z",
+      "lastCapturedAt": "2026-03-10T12:33:55.754Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

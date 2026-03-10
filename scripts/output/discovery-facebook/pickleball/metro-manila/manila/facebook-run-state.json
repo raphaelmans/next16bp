@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:manila:facebook",
   "createdAt": "2026-03-10T06:04:03.212Z",
-  "updatedAt": "2026-03-10T06:05:32.017Z",
+  "updatedAt": "2026-03-10T11:40:31.741Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "manila",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T06:05:32.017Z",
+      "finishedAt": "2026-03-10T11:40:31.741Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T06:05:32.017Z",
+      "finishedAt": "2026-03-10T11:40:31.741Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T06:05:32.017Z",
+      "finishedAt": "2026-03-10T11:40:31.741Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T06:05:32.017Z",
+      "finishedAt": "2026-03-10T11:40:31.741Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

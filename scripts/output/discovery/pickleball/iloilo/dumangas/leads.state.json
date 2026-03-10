@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:dumangas",
+  "createdAt": "2026-03-10T11:17:01.198Z",
+  "updatedAt": "2026-03-10T11:17:28.946Z",
+  "queries": [
+    "pickleball courts in Iloilo Dumangas",
+    "pickleball court Dumangas Iloilo",
+    "Dumangas pickleball",
+    "courts in Dumangas Iloilo pickleball",
+    "sports center Dumangas Iloilo pickleball",
+    "pickleball club Dumangas Iloilo",
+    "pickleball reservations Dumangas Iloilo",
+    "host-map:cebupickleballcourts.com:Dumangas",
+    "host-map:dumapickleball.com:Dumangas",
+    "site:cebupickleballcourts.com Dumangas Iloilo pickleball",
+    "site:dumapickleball.com Dumangas Iloilo pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball reservations Dumangas Iloilo",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball club Dumangas Iloilo",
+      "title": "ILOILO PICKLEBALL",
+      "snippet": "Iloilo's First and Premier Pickleball Community established on April 2023. Annual Membership: 500. Quarterly Dues: 300. You can avail of Senior Citizen, PWD, ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball reservations Dumangas Iloilo",
+      "title": "PLACES TO PLAY, 01.20.24.xlsx",
+      "snippet": "CPU Gymnasium (Iloilo Pickleball). Lopez Jaena Street, Jaro. Iloilo. W Visayas. 2. Indoor Court. Call for schedule. Donation. Jec Dan Borlado.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@batangas-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@batangas-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@batangas-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "Dumangas pickleball",
+      "title": "Batangas Pickleball Club",
+      "snippet": "242 activities. Batangueños who are addicted to Pickleball! You're welcome to join our open plays. Organized By. Trizha Joaquin. Nicolette Dimayuga.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "Dumangas pickleball",
+      "title": "Play Pickleball at Nawa Wellness: Court Information",
+      "snippet": "Come play pickleball at Nawa Wellness in Calatagan, Calabarzon! There are 2 outdoor hard courts. These are dedicated courts with permanent lines and nets.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=rMYB4gAGg0M": {
+      "canonicalUrl": "https://youtube.com/watch?v=rMYB4gAGg0M",
+      "latestUrl": "https://www.youtube.com/watch?v=rMYB4gAGg0M",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "Dumangas pickleball",
+      "title": "Ultimate Pickleball Fun and Relaxation at Batangas Resort",
+      "snippet": "Nestled amidst the breathtaking beauty of Batangas, Palm Beach Resort is the ultimate getaway for relaxation and pickleball enthusiasts in ...",
+      "domain": "youtube.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "sports center Dumangas Iloilo pickleball",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "The courts are free. You can reserve the courts. Players have access to restrooms, water, lights, trainers or lessons, and wheelchair accessibility. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=G0CBDCin81E": {
+      "canonicalUrl": "https://youtube.com/watch?v=G0CBDCin81E",
+      "latestUrl": "https://www.youtube.com/watch?v=G0CBDCin81E",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "sports center Dumangas Iloilo pickleball",
+      "title": "ILOILO PICKLEBALL DOUBLES OPEN",
+      "snippet": "Go to channel Pickle Techie · 24/7 PICKLEBALL! Matina Town Square Facility Tour & Community Secrets | Pickle Techie. Pickle Techie•5.9K views.",
+      "domain": "youtube.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballhub-vigor.com/": {
+      "canonicalUrl": "https://pickleballhub-vigor.com/",
+      "latestUrl": "https://pickleballhub-vigor.com/",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball reservations Dumangas Iloilo",
+      "title": "Pickleball Hub @ Tiendesitas",
+      "snippet": "Time, Court Rentals, Coaching. Court 8, Court 9, Court 10, Court 11. 8:00 AM, OPEN, OPEN, 18:00 AM - 10:00 AM RESERVED PAID Boyet Peña, OPEN.",
+      "domain": "pickleballhub-vigor.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/RUFSDG": {
+      "canonicalUrl": "https://reclub.co/m/RUFSDG",
+      "latestUrl": "https://reclub.co/m/RUFSDG",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball reservations Dumangas Iloilo",
+      "title": "Racquet Monkeys ILO Pickleball Night!",
+      "snippet": "Looking for Pickleball meets in Iloilo City, Philippines? Check out ... Please reserve your slots and pay via Gcash ahead of time to 09176348699.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "lastDiscoveredAt": "2026-03-10T11:17:01.205Z",
+      "sourceQuery": "pickleball reservations Dumangas Iloilo",
+      "title": "Philippines - Book pickleball court near you",
+      "snippet": "Try the fast-growing sport of pickleball near you. Book a court now on Sparrk and enjoy a fun, active game with friends.",
+      "domain": "sparrk.ph",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

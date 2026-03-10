@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T11:14:27.491Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 6,
+  "scrapedUrls": 2,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "robinson jaro 3rd floor car park|iloilo city|iloilo",
+      "name": "Robinson Jaro 3rd Floor Car Park",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/robinson-jaro-3rd-floor-car-park",
+      "firstSeenAt": "2026-03-10T11:14:27.491Z",
+      "lastSeenAt": "2026-03-10T11:14:27.491Z"
+    },
+    {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:14:27.491Z",
+      "lastSeenAt": "2026-03-10T11:14:27.491Z"
+    }
+  ]
+}

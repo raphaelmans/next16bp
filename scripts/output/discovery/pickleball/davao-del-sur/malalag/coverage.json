@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T12:27:23.656Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 2,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "flores village pickleball|davao city|davao del sur",
+      "name": "Flores Village Pickleball",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "firstSeenAt": "2026-03-10T12:27:23.656Z",
+      "lastSeenAt": "2026-03-10T12:27:23.656Z"
+    },
+    {
+      "rowKey": "pickletown|davao city|davao del sur",
+      "name": "Pickletown",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstSeenAt": "2026-03-10T12:27:23.656Z",
+      "lastSeenAt": "2026-03-10T12:27:23.656Z"
+    }
+  ]
+}

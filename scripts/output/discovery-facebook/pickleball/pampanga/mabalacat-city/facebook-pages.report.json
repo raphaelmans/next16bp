@@ -1,0 +1,162 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Mabalacat City",
+    "citySlug": "mabalacat-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:42:13.743Z",
+  "queries": [
+    "site:facebook.com pickleball Mabalacat City Pampanga",
+    "site:facebook.com \"Mabalacat City\" \"Pampanga\" \"pickleball\"",
+    "site:facebook.com \"Mabalacat City\" \"pickleball club\"",
+    "site:facebook.com \"Mabalacat City\" \"pickleball court\"",
+    "site:facebook.com \"Pampanga\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/Scorpiondinksmashpickleballclub/",
+    "https://www.facebook.com/people/The-Pickle-Cave/100063907351899/",
+    "https://www.facebook.com/p/Prestige-Pickleball-Club-61559018774735/",
+    "https://www.facebook.com/745567121984101/",
+    "https://www.facebook.com/841733645699565",
+    "https://www.facebook.com/pampangapickleballcommunity/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4052477051707172/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/pampangapickleballcommunity/photos/pickleball-clubs-in-pampangalooking-to-take-your-pickleball-experience-to-the-ne/122123450643060591/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61582890415117/posts/if-youre-from-mabalacat-and-nearby-areas-check-this-new-court-about-to-open-soon/122113335453096347/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361511160803758/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1582373298891306/posts/2408016706326957/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MabalacatPampanga/posts/outdoor-pickle-ball-debuts-at-sm-city-telabastagana-fresh-active-lifestyle-momen/781705421143373/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/100063907351899/posts/opening-soon-the-pickle-cavewhere-the-game-goes-deeperthe-pickle-cave-is-more-th/1363427159130850/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363447437276797/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/909382929620346/posts/2053193698572591/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100063907351899/posts/thank-you-for-visiting-the-the-pickle-cave-and-joining-good-game-pickleball-club/1402858208521078/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MabalacatPampanga/posts/outdoor-pickle-ball-debuts-at-sm-city-telabastagana-fresh-active-lifestyle-momen/781705421143373/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342969209324620/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/281360938092149/posts/892626223632281/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100063907351899/posts/thank-you-for-visiting-the-the-pickle-cave-and-joining-good-game-pickleball-club/1402858208521078/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/pampanganewsnow/posts/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A0-%F0%9D%97%A7%F0%9D%97%98%F0%9D%97%9F%F0%9D%97%94%F0%9D%97%95%F0%9D%97%94%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9A%F0%9D%97%94%F0%9D%97%A1the-first-ever-pickleball-outdoor-court-in-pampanga/1279451007532425/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4116818195273057/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1639362612916995/posts/2989669427886300/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/MabalacatPampanga/posts/outdoor-pickle-ball-debuts-at-sm-city-telabastagana-fresh-active-lifestyle-momen/781705421143373/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/angelo2518/videos/new-court-alert-%EF%B8%8Fthe-pickle-cavesapang-biabas-mabalacat-city-pampangathank-you-s/2041776933270936/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100063907351899/posts/opening-soon-the-pickle-cavewhere-the-game-goes-deeperthe-pickle-cave-is-more-th/1363427159130850/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/pampanganewsnow/posts/%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A0-%F0%9D%97%A7%F0%9D%97%98%F0%9D%97%9F%F0%9D%97%94%F0%9D%97%95%F0%9D%97%94%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%94%F0%9D%97%9A%F0%9D%97%94%F0%9D%97%A1the-first-ever-pickleball-outdoor-court-in-pampanga/1279451007532425/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4116818195273057/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363447437276797/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sspampanga/posts/the-sm-city-telebastagan-opened-its-pickleball-court-on-thursdayleading-the-cere/1270261168449851/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1582373298891306/posts/2330134954115133/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MabalacatPampanga/posts/sm-supermalls-unveils-sm-active-hub-as-the-countrys-largest-sports-experience44-/628502963130287/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4297207483900793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/chezkadennise/videos/newly-opened-pickleball-court-in-pampanga-kingscourt-pickleball-probably-the-bes/804352612637429/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mabalacat-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mabalacat-city/facebook-pages.state.json"
+}

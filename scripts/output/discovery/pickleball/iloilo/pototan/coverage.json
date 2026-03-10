@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T09:16:13.092Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 1,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "pototan pickleball club|pototan|iloilo",
+      "name": "Pototan Pickleball Club",
+      "city": "POTOTAN",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/pototan/pototan-pickleball-club",
+      "firstSeenAt": "2026-03-10T09:16:13.092Z",
+      "lastSeenAt": "2026-03-10T09:16:13.092Z"
+    }
+  ]
+}

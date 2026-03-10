@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:laguna:santa-rosa-city:facebook",
   "createdAt": "2026-03-10T05:56:58.317Z",
-  "updatedAt": "2026-03-10T05:57:08.499Z",
+  "updatedAt": "2026-03-10T11:40:31.727Z",
   "scope": {
     "provinceSlug": "laguna",
     "citySlug": "santa-rosa-city",
@@ -41,46 +41,46 @@
       "notes": null
     },
     "facebookDiscovery": {
-      "status": "failed",
-      "startedAt": "2026-03-10T05:56:58.318Z",
-      "finishedAt": "2026-03-10T05:57:08.499Z",
-      "lastError": "fetch failed",
-      "notes": null
+      "status": "completed",
+      "startedAt": "2026-03-10T08:34:04.207Z",
+      "finishedAt": "2026-03-10T08:34:11.854Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
     },
     "facebookCapture": {
-      "status": "pending",
-      "startedAt": null,
-      "finishedAt": null,
+      "status": "completed",
+      "startedAt": "2026-03-10T08:34:11.854Z",
+      "finishedAt": "2026-03-10T08:35:38.378Z",
       "lastError": null,
-      "notes": null
+      "notes": "runner executed facebook capture"
     },
     "facebookDuplicatePreflight": {
-      "status": "skipped",
-      "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.317Z",
+      "status": "completed",
+      "startedAt": "2026-03-10T08:35:38.413Z",
+      "finishedAt": "2026-03-10T08:36:06.174Z",
       "lastError": null,
-      "notes": "facebook capture CSV has no data rows"
+      "notes": "runner executed facebook duplicate preflight"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.317Z",
+      "finishedAt": "2026-03-10T08:36:13.776Z",
       "lastError": null,
-      "notes": "facebook capture CSV has no data rows"
+      "notes": "no approved facebook rows after duplicate preflight"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.318Z",
+      "finishedAt": "2026-03-10T08:36:13.804Z",
       "lastError": null,
-      "notes": "facebook capture CSV has no data rows"
+      "notes": "no approved facebook rows after duplicate preflight"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.318Z",
+      "finishedAt": "2026-03-10T08:36:13.804Z",
       "lastError": null,
-      "notes": "facebook capture CSV has no data rows"
+      "notes": "no imported place ids"
     }
   }
 }

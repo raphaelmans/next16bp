@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:davao-del-sur:davao-city:facebook",
   "createdAt": "2026-03-09T17:14:43.672Z",
-  "updatedAt": "2026-03-10T05:45:04.543Z",
+  "updatedAt": "2026-03-10T11:30:10.299Z",
   "scope": {
     "provinceSlug": "davao-del-sur",
     "citySlug": "davao-city",
@@ -82,7 +82,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:04.543Z",
+      "finishedAt": "2026-03-10T11:30:10.299Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

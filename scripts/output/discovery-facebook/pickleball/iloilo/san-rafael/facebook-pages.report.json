@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "San Rafael",
+    "citySlug": "san-rafael",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:33:47.353Z",
+  "queries": [
+    "site:facebook.com pickleball San Rafael Iloilo",
+    "site:facebook.com \"San Rafael\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"San Rafael\" \"pickleball club\"",
+    "site:facebook.com \"San Rafael\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375924602695747/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466758738119326/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1448170219978178/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4217249391896603/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1463147415147125/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1654650158132061/posts/4239342906329427/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363658703922337/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3943694292585449/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1420556899406177/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375924602695747/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1448170219978178/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1463147415147125/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/june-13-2025-we-checked-and-played-at-the-newest-pickleball-point-in-town-it-is/1260786042049931/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/babe.formula/posts/-picklebabe-with-women-for-womenin-celebration-of-womens-month-join-us-for-a-wom/910151268441488/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1458374122291121/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1472019260926607/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1420556899406177/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3943694292585449/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1374269747368226/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1621972735032235/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/bayareapickleball/posts/24463006816673901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4378828655738675/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/walnutcreekpickleballclub/posts/1094685009079350/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/pickleballorganized/posts/were-thrilled-to-announce-the-upcoming-launch-of-a-new-indoor-pickleball-club-in/937172922585592/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1759675651261942/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/9377249089013158/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1946747732554732/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/264778931874057/posts/939741234377820/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1621972735032235/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375924602695747/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1946747732554732/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3843945679226978/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4378828655738675/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/895889550973894/posts/1393464107883100/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4100842556870621/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3090438067662174/posts/24157060810573260/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/walnutcreekpickleballclub/posts/1094685009079350/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/san-rafael/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/san-rafael/facebook-pages.state.json"
+}

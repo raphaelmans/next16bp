@@ -1,0 +1,208 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Tanay",
+    "citySlug": "tanay",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:36:29.533Z",
+  "queries": [
+    "site:facebook.com pickleball Tanay Rizal",
+    "site:facebook.com \"Tanay\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Tanay\" \"pickleball club\"",
+    "site:facebook.com \"Tanay\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/people/Tanay-Pickleball-Community/61582576906071/",
+    "https://www.facebook.com/p/Sampaloc-Tanay-Pickleball-Club-100086063918995/",
+    "https://www.facebook.com/100086063918995/?locale=fo_FO",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/DUMAGUETENOS/posts/pickleball-court-offered-as-one-of-the-activities-of-a-resort-in-tanay-rizal-350/1224026093155700/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4307302389557969/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/videos/4379169842350133/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/photos/d41d8cd9/122120451465085896/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342145656073642/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/993155732146298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/DUMAGUETENOS/posts/pickleball-court-offered-as-one-of-the-activities-of-a-resort-in-tanay-rizal-350/1224026093155700/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4307302389557969/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342145656073642/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/videos/4379169842350133/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/993155732146298/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/seoulstayph/posts/hidden-in-the-trees-ready-for-the-rally-pickleball-hits-different-at-seoul-stay-/1230079392553719/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/673179457241491/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/photos/d41d8cd9/122120451465085896/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/videos/4379169842350133/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100086063918995/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/videos/future-pro-in-the-making-pickleballph-pickleballtanay/2396089464241653/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/posts/122111974269085896/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/photos/third-times-the-charm-our-community-is-growing-and-we-want-you-to-be-a-part-of-i/122119567461085896/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DUMAGUETENOS/posts/pickleball-court-offered-as-one-of-the-activities-of-a-resort-in-tanay-rizal-350/1224026093155700/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/SekritongTanjayanon/posts/newly-opened-rally-ranch-pickleball-game-on-tanjayanons-experience-the-newest-an/1526384616162832/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4342145656073642/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4307302389557969/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/BakasyunanResortTanay/videos/pickleball-court-now-available-at-bakasyunan-resort-and-conference-center-tanay-/1804364723775219/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/993155732146298/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345335255754682/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/tanay/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/tanay/facebook-pages.state.json"
+}

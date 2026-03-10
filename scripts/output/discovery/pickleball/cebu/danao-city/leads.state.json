@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:danao-city",
+  "createdAt": "2026-03-10T08:32:00.919Z",
+  "updatedAt": "2026-03-10T08:32:43.478Z",
+  "queries": [
+    "pickleball courts in Cebu Danao City",
+    "pickleball court Danao City Cebu",
+    "Danao City pickleball",
+    "courts in Danao City Cebu pickleball",
+    "sports center Danao City Cebu pickleball",
+    "pickleball club Danao City Cebu",
+    "pickleball reservations Danao City Cebu",
+    "host-map:cebupickleballcourts.com:Danao City",
+    "host-map:cebupickleballcourts.com:Danao",
+    "host-map:dumapickleball.com:Danao City",
+    "host-map:dumapickleball.com:Danao",
+    "site:cebupickleballcourts.com Danao City Cebu pickleball",
+    "site:dumapickleball.com Danao City Cebu pickleball"
+  ],
+  "urls": {
+    "https://ctu.edu.ph/danao/2023/09/25/ctu-danao-hosts-the-first-ever-national-pickleball-tournament": {
+      "canonicalUrl": "https://ctu.edu.ph/danao/2023/09/25/ctu-danao-hosts-the-first-ever-national-pickleball-tournament",
+      "latestUrl": "https://www.ctu.edu.ph/danao/2023/09/25/ctu-danao-hosts-the-first-ever-national-pickleball-tournament/",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "pickleball club Danao City Cebu",
+      "title": "CTU Danao hosts the first ever national pickleball tournament",
+      "snippet": "The CTU Danao Campus was filled with excitement as it proudly hosted the First National Pickleball Tournament. The highly anticipated event, ...",
+      "domain": "ctu.edu.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.com/danao-bohol-philippines/stays": {
+      "canonicalUrl": "https://airbnb.com/danao-bohol-philippines/stays",
+      "latestUrl": "https://www.airbnb.com/danao-bohol-philippines/stays",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "pickleball court Danao City Cebu",
+      "title": "Danao, Philippines Vacation Rentals (4.8 out of 5)",
+      "snippet": "Play pickleball or basketball on our court. Indulge in in-home spa treatments, or head out for adventures arranged by your personal concierge. Come home to ...",
+      "domain": "airbnb.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@republic-danao-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@republic-danao-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@republic-danao-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "pickleball club Danao City Cebu",
+      "title": "Republic Danao Pickleball Club",
+      "snippet": "Republic Danao Pickleball Club. Cebu · Pickleball · Join Club. 10 members ·. 3 activities. Pickleball Club in Danao City, Cebu. Organized By. Mika.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/shorts/ST_983jApz8": {
+      "canonicalUrl": "https://youtube.com/shorts/ST_983jApz8",
+      "latestUrl": "https://www.youtube.com/shorts/ST_983jApz8",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "Danao City pickleball",
+      "title": "SK Poblacion Pickleball Tournament at Danao City Civic Center #shorts",
+      "snippet": "SK Poblacion Pickleball Tournament at Danao City Civic Center #SKPoblacion #DanaoCity #DanaoCivicCenter #PickleballTournamentPH ...",
+      "domain": "youtube.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.youtube.com/source/ST_983jApz8/shorts?bp=8gVCCjYSJwoLU1RfOTgzakFwejgSC1NUXzk4M2pBcHo4GgtTVF85ODNqQXB6OBoLU1RfOTgzakFwejgo3a-73IuSiqIK": {
+      "canonicalUrl": "https://m.youtube.com/source/ST_983jApz8/shorts?bp=8gVCCjYSJwoLU1RfOTgzakFwejgSC1NUXzk4M2pBcHo4GgtTVF85ODNqQXB6OBoLU1RfOTgzakFwejgo3a-73IuSiqIK",
+      "latestUrl": "https://m.youtube.com/source/ST_983jApz8/shorts?bp=8gVCCjYSJwoLU1RfOTgzakFwejgSC1NUXzk4M2pBcHo4GgtTVF85ODNqQXB6OBoLU1RfOTgzakFwejgo3a-73IuSiqIK",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "Danao City pickleball",
+      "title": "SK Poblacion Pickleball Tournament at Danao City Civic Center ...",
+      "snippet": "Learn more. Home. Shorts. Library. Go to video. SK Poblacion Pickleball Tournament at Danao City Civic Center #shorts. Go to channel. @homesearchpartner.",
+      "domain": "m.youtube.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage": {
+      "canonicalUrl": "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage",
+      "latestUrl": "https://mb.com.ph/2026/03/10/pickleball-comes-full-circle-in-cebu-as-rising-stars-seek-asia-stage",
+      "firstDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "lastDiscoveredAt": "2026-03-10T08:32:00.927Z",
+      "sourceQuery": "courts in Danao City Cebu pickleball",
+      "title": "Pickleball comes full circle in Cebu as Rising Stars seek Asia stage",
+      "snippet": "Pickleball returns to its Philippine roots starting today (Wednesday) as the Kosmas Pickle Fest 2026 fires off at the Net and Paddle courts ...",
+      "domain": "mb.com.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

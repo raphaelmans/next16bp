@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:angono",
+  "createdAt": "2026-03-10T08:53:07.402Z",
+  "updatedAt": "2026-03-10T08:54:40.719Z",
+  "urls": {
+    "https://facebook.com/p/Angono-Pickleball-Club-61563066493804": {
+      "canonicalUrl": "https://facebook.com/p/Angono-Pickleball-Club-61563066493804",
+      "latestUrl": "https://www.facebook.com/p/Angono-Pickleball-Club-61563066493804/",
+      "firstCapturedAt": "2026-03-10T08:53:13.583Z",
+      "lastCapturedAt": "2026-03-10T08:53:13.583Z",
+      "status": "captured",
+      "title": "Angono Pickleball Club | Angono | Facebook",
+      "venueName": "Angono Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/The-Pickler-Pod/100064005824821": {
+      "canonicalUrl": "https://facebook.com/people/The-Pickler-Pod/100064005824821",
+      "latestUrl": "https://www.facebook.com/people/The-Pickler-Pod/100064005824821/",
+      "firstCapturedAt": "2026-03-10T08:53:29.379Z",
+      "lastCapturedAt": "2026-03-10T08:53:29.379Z",
+      "status": "captured",
+      "title": "The Pickler Pod | Angono | Facebook",
+      "venueName": "The Pickler Pod",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickler Pod"
+    },
+    "https://facebook.com/dinksmashph": {
+      "canonicalUrl": "https://facebook.com/dinksmashph",
+      "latestUrl": "https://www.facebook.com/dinksmashph/",
+      "firstCapturedAt": "2026-03-10T08:53:48.869Z",
+      "lastCapturedAt": "2026-03-10T08:53:48.869Z",
+      "status": "captured",
+      "title": "Dink & Smash | Angono | Facebook",
+      "venueName": "Dink & Smash",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/100064005824821?locale=pa_IN": {
+      "canonicalUrl": "https://facebook.com/100064005824821?locale=pa_IN",
+      "latestUrl": "https://www.facebook.com/100064005824821/?locale=pa_IN",
+      "firstCapturedAt": "2026-03-10T08:54:04.985Z",
+      "lastCapturedAt": "2026-03-10T08:54:04.985Z",
+      "status": "captured",
+      "title": "The Pickler Pod | Angono | Facebook",
+      "venueName": "The Pickler Pod",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickler Pod"
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T08:54:22.067Z",
+      "lastCapturedAt": "2026-03-10T08:54:22.067Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:39:53.867Z",
+  "updatedAt": "2026-03-10T11:40:57.850Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:39:53.867Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:39:53.867Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://reclub.co/zh-hant/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:39:53.867Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/": {
+      "canonicalUrl": "https://picklehub.ph/",
+      "latestUrl": "https://picklehub.ph/",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:39:53.867Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "lastDiscoveredAt": "2026-03-10T11:39:53.867Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:39:53.867Z",
+      "lastSeenAt": "2026-03-10T11:39:53.867Z"
+    }
+  }
+}

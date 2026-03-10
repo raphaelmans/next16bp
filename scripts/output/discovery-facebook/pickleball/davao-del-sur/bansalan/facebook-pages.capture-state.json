@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:bansalan",
+  "createdAt": "2026-03-10T11:25:21.974Z",
+  "updatedAt": "2026-03-10T11:27:14.099Z",
+  "urls": {
+    "https://facebook.com/p/The-Pickle-Bay-Bansalan-61582499198894": {
+      "canonicalUrl": "https://facebook.com/p/The-Pickle-Bay-Bansalan-61582499198894",
+      "latestUrl": "https://www.facebook.com/p/The-Pickle-Bay-Bansalan-61582499198894/",
+      "firstCapturedAt": "2026-03-10T11:25:26.289Z",
+      "lastCapturedAt": "2026-03-10T11:25:26.289Z",
+      "status": "captured",
+      "title": "The Pickle Bay - Bansalan | Bansalan | Facebook",
+      "venueName": "The Pickle Bay - Bansalan",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Bay - Bansalan"
+    },
+    "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+      "firstCapturedAt": "2026-03-10T11:25:51.731Z",
+      "lastCapturedAt": "2026-03-10T11:25:51.731Z",
+      "status": "captured",
+      "title": "Pickleball Point Sports Center | Facebook",
+      "venueName": "Pickleball Point Sports Center",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61582499198894?locale=pa_IN": {
+      "canonicalUrl": "https://facebook.com/61582499198894?locale=pa_IN",
+      "latestUrl": "https://www.facebook.com/61582499198894/?locale=pa_IN",
+      "firstCapturedAt": "2026-03-10T11:26:12.542Z",
+      "lastCapturedAt": "2026-03-10T11:26:12.542Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Command failed: playwright-cli -s=fbcap-davao-del-sur-bansalan goto https://www.facebook.com/61582499198894/?locale=pa_IN\n",
+      "outputRowName": null
+    }
+  }
+}

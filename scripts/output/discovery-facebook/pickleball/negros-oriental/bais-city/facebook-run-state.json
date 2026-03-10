@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:bais-city:facebook",
+  "createdAt": "2026-03-10T11:38:36.730Z",
+  "updatedAt": "2026-03-10T11:42:23.208Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "bais-city",
+    "provinceName": "Negros Oriental",
+    "cityName": "Bais City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "4976935c-99f2-4a56-aa1c-35fed3595963"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T11:38:36.731Z",
+      "finishedAt": "2026-03-10T11:38:45.258Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T11:38:45.258Z",
+      "finishedAt": "2026-03-10T11:40:19.601Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T11:40:19.602Z",
+      "finishedAt": "2026-03-10T11:41:46.511Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T11:41:46.640Z",
+      "lastError": null,
+      "notes": "all approved facebook rows already present in DB"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T11:41:46.640Z",
+      "lastError": null,
+      "notes": "all approved facebook rows verified in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T11:41:46.763Z",
+      "finishedAt": "2026-03-10T11:42:23.208Z",
+      "lastError": null,
+      "notes": "backfilled 1 facebook place ids"
+    }
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Bais City",
+    "citySlug": "bais-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:38:36.733Z",
+  "queries": [
+    "site:facebook.com pickleball Bais City Negros Oriental",
+    "site:facebook.com \"Bais City\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Bais City\" \"pickleball club\"",
+    "site:facebook.com \"Bais City\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61574632889822/",
+    "https://www.facebook.com/bones9503/?locale=en_GB",
+    "https://www.facebook.com/p/Hustlers-Billiard-Hall-and-Pickleball-61561346903913/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/618164321886171/posts/2771584346544147/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/732422450816367/posts/1983827299009203/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/634578855494544/posts/1223117166640707/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/louis.diago.2025/posts/%EF%B8%8Fedl-pickleball-court-is-now-open-%EF%B8%8Fdetails-below-loc-bais-city-negros-oriental/122161997438585006/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MAZUdesigns/posts/monistine-friends-pickleball-showdowncourtyard-phbarangay-talungonbais-city-negr/1409778804495267/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1438061654581097/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1455317096188886/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61574632889822/posts/game-on-courtyard-pickleball-is-now-ready-heres-how-to-find-us-2mins-from-bais-c/122135116268821096/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/732422450816367/posts/1983827299009203/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/618164321886171/posts/2771584346544147/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/louis.diago.2025/posts/%EF%B8%8Fedl-pickleball-court-is-now-open-%EF%B8%8Fdetails-below-loc-bais-city-negros-oriental/122161997438585006/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MAZUdesigns/posts/monistine-friends-pickleball-showdowncourtyard-phbarangay-talungonbais-city-negr/1409778804495267/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/634578855494544/posts/1223117166640707/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1438061654581097/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1455317096188886/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61574632889822/posts/game-on-courtyard-pickleball-is-now-ready-heres-how-to-find-us-2mins-from-bais-c/122135116268821096/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/1bais/posts/bais-city-pickleball-club-and-onebais-youth-organization-deliveredthe-people-of-/1144494744562837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/BaisPIO/posts/mayor-luigi-go%C3%B1i-hudyaka-pickleball-tournament-2025-a-resounding-successthe-mayo/1295064539296366/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/MAZUdesigns/posts/monistine-friends-pickleball-showdowncourtyard-phbarangay-talungonbais-city-negr/1409778804495267/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/Johnviolin23/posts/edna-lhuillier-pickle-ball-court-bais-cityhappy-sunday-everyone-/25749518281315599/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/kirkmoves/videos/iba-ka-talaga-rovic-pickleball/1558251411918151/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/BaisPIO/posts/-mayor-luigi-marcel-t-go%C3%B1i-hudyaka-pickleball-tournament-2025get-ready-for-a-sma/1289079709894849/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61554351957944/posts/in-celebration-of-bais-citys-57th-charter-day-anniversary-and-fiesta-celebration/122238984782145065/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kirkmoves/videos/dinkn-dos-bais-city/2782517655447541/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1500620410263596/posts/4408561612802780/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/maryjane.casile/videos/the-wait-is-almost-over-hustler-pickleball-will-soon-to-reopen-its-doors-to-the-/1207920824837554/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/732422450816367/posts/1983827299009203/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61561346903913/videos/the-wait-is-almost-over-hustler-pickleball-will-soon-to-reopen-its-doors-to-the-/813957748419121/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/louis.diago.2025/posts/%EF%B8%8Fedl-pickleball-court-is-now-open-%EF%B8%8Fdetails-below-loc-bais-city-negros-oriental/122161997438585006/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/Johnviolin23/posts/edna-lhuillier-pickle-ball-court-bais-cityhappy-sunday-everyone-/25749518281315599/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1025169441244338/posts/2357398508021418/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366871145033482/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bais-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/bais-city/facebook-pages.state.json"
+}

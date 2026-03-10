@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:bulacan:bocaue:facebook",
   "createdAt": "2026-03-10T07:08:15.047Z",
-  "updatedAt": "2026-03-10T07:12:12.944Z",
+  "updatedAt": "2026-03-10T11:30:07.287Z",
   "scope": {
     "provinceSlug": "bulacan",
     "citySlug": "bocaue",
@@ -80,9 +80,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T07:11:41.576Z",
-      "finishedAt": "2026-03-10T07:12:12.944Z",
+      "finishedAt": "2026-03-10T11:30:07.287Z",
       "lastError": null,
-      "notes": "backfilled 1 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

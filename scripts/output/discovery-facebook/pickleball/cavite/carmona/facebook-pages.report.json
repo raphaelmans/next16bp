@@ -1,0 +1,205 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Carmona",
+    "citySlug": "carmona",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:14:40.795Z",
+  "queries": [
+    "site:facebook.com pickleball Carmona Cavite",
+    "site:facebook.com \"Carmona\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Carmona\" \"pickleball club\"",
+    "site:facebook.com \"Carmona\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/badpickleph/",
+    "https://www.facebook.com/badpickleph/?locale=af_ZA",
+    "https://www.facebook.com/badpickleph/?locale=km_KH",
+    "https://www.facebook.com/badpickleph/?locale=sk_SK",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376226652665542/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/your-new-pickleball-home-court-is-opening-soon-at-carmona-cavite-tell-your-frien/927277080024816/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/800526551891997/posts/1206663441278304/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3760209927447945/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/posts/-cavite-welcome-to-your-new-home-of-pickleballone-of-the-biggest-pickleball-cour/122110863321236247/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4169083346713208/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100064661856288/videos/pickleball-mode-on-fast-rallies-good-sweat-and-even-better-company-staying-activ/1287234406556672/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/southsidepickleball/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/407801690155473/posts/1979922826276677/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376226652665542/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/your-new-pickleball-home-court-is-opening-soon-at-carmona-cavite-tell-your-frien/927277080024816/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3760209927447945/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/800526551891997/posts/1206663441278304/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/posts/-cavite-welcome-to-your-new-home-of-pickleballone-of-the-biggest-pickleball-cour/122110863321236247/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364181500536724/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2088354565243537/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/100064661856288/videos/pickleball-mode-on-fast-rallies-good-sweat-and-even-better-company-staying-activ/1287234406556672/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/long-queues-at-open-play-with-7-bigger-than-your-standard-courts-not-around-here/1282829167320112/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376226652665542/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/your-new-pickleball-home-court-is-opening-soon-at-carmona-cavite-tell-your-frien/927277080024816/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3760209927447945/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/625598881852482/posts/1654901215588905/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3742506935884911/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/long-queues-at-open-play-with-7-bigger-than-your-standard-courts-not-around-here/1282829167320112/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/926533164438042/posts/2396522027439141/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3725350250933913/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/carmonasmartcity/posts/3741373075998297/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/long-queues-at-open-play-with-7-bigger-than-your-standard-courts-not-around-here/1458980268930719/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376226652665542/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/577032017540610/posts/673856651191479/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4307688716186003/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/579725330264640/posts/1467968988106932/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/577032017540610/posts/668357068408104/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4202523003369242/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/badpickleph/videos/long-queues-at-open-play-with-7-bigger-than-your-standard-courts-not-around-here/1282829167320112/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/carmona/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/carmona/facebook-pages.state.json"
+}

@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:noveleta",
+  "createdAt": "2026-03-10T11:22:53.981Z",
+  "updatedAt": "2026-03-10T11:25:12.984Z",
+  "urls": {
+    "https://facebook.com/ThePickleGroundPH": {
+      "canonicalUrl": "https://facebook.com/ThePickleGroundPH",
+      "latestUrl": "https://www.facebook.com/ThePickleGroundPH/",
+      "firstCapturedAt": "2026-03-10T11:22:58.143Z",
+      "lastCapturedAt": "2026-03-10T11:22:58.143Z",
+      "status": "captured",
+      "title": "The PickleGround PH | Noveleta | Facebook",
+      "venueName": "The PickleGround PH",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/swinglanecavite": {
+      "canonicalUrl": "https://facebook.com/swinglanecavite",
+      "latestUrl": "https://www.facebook.com/swinglanecavite/",
+      "firstCapturedAt": "2026-03-10T11:23:15.318Z",
+      "lastCapturedAt": "2026-03-10T11:23:15.318Z",
+      "status": "captured",
+      "title": "Swing Lane Cavite | Noveleta | Facebook",
+      "venueName": "Swing Lane Cavite",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/244535675957771": {
+      "canonicalUrl": "https://facebook.com/244535675957771",
+      "latestUrl": "https://www.facebook.com/244535675957771/",
+      "firstCapturedAt": "2026-03-10T11:23:30.607Z",
+      "lastCapturedAt": "2026-03-10T11:23:30.607Z",
+      "status": "captured",
+      "title": "The PickleGround PH | Noveleta | Facebook",
+      "venueName": "The PickleGround PH",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/ThePickleGroundPH?locale=fi_FI": {
+      "canonicalUrl": "https://facebook.com/ThePickleGroundPH?locale=fi_FI",
+      "latestUrl": "https://www.facebook.com/ThePickleGroundPH?locale=fi_FI",
+      "firstCapturedAt": "2026-03-10T11:23:48.264Z",
+      "lastCapturedAt": "2026-03-10T11:23:48.264Z",
+      "status": "captured",
+      "title": "The PickleGround PH | Noveleta | Facebook",
+      "venueName": "The PickleGround PH",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/ThePickleGroundPH?locale=ku_TR": {
+      "canonicalUrl": "https://facebook.com/ThePickleGroundPH?locale=ku_TR",
+      "latestUrl": "https://www.facebook.com/ThePickleGroundPH?locale=ku_TR",
+      "firstCapturedAt": "2026-03-10T11:24:12.055Z",
+      "lastCapturedAt": "2026-03-10T11:24:12.055Z",
+      "status": "captured",
+      "title": "The PickleGround PH | Noveleta | Facebook",
+      "venueName": "The PickleGround PH",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Sideout-The-Pickleball-Court-61580047635090": {
+      "canonicalUrl": "https://facebook.com/p/Sideout-The-Pickleball-Court-61580047635090",
+      "latestUrl": "https://www.facebook.com/p/Sideout-The-Pickleball-Court-61580047635090/",
+      "firstCapturedAt": "2026-03-10T11:24:31.663Z",
+      "lastCapturedAt": "2026-03-10T11:24:31.663Z",
+      "status": "captured",
+      "title": "Sideout: The Pickleball Court | Tuy | Facebook",
+      "venueName": "Sideout: The Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T11:24:48.431Z",
+      "lastCapturedAt": "2026-03-10T11:24:48.431Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

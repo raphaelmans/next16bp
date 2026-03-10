@@ -1,0 +1,202 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Pililla",
+    "citySlug": "pililla",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:34:17.084Z",
+  "queries": [
+    "site:facebook.com pickleball Pililla Rizal",
+    "site:facebook.com \"Pililla\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Pililla\" \"pickleball club\"",
+    "site:facebook.com \"Pililla\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.facebook.com/61582404705045/?locale=zh_CN",
+    "https://www.facebook.com/61582404705045/?locale=ka_GE",
+    "https://www.facebook.com/p/Sereno-Verde-Escape-61573739049494/",
+    "https://www.facebook.com/61582404705045/?locale=en_GB",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61573739049494/posts/friendly-competition-or-just-for-funour-pickleball-court-is-ready-for-you-sereno/122164488074791301/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61573739049494/posts/stay-active-and-have-fun-with-a-round-of-pickleball-at-sereno-verde-escape-where/122155338404791301/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/61582404705045/albums/122100414675080156/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4225826261038916/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1075733387221865/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61573739049494/posts/friendly-competition-or-just-for-funour-pickleball-court-is-ready-for-you-sereno/122164488074791301/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61582404705045/albums/122100414675080156/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4219062141715328/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1075733387221865/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4225826261038916/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/443603540438096/posts/945200820278363/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/572029691048676/posts/1231960138388958/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582404705045/posts/pickleball-in-urs-pililla/122108824329080156/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1075733387221865/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/443603540438096/posts/945200820278363/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582576906071/posts/first-time-playing-pickleball-ganun-po-talaga-pambihira-talaga-pickleballph/122116918917085896/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/936252210249994/posts/1766387553903118/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4219062141715328/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/themillspickleball/posts/1433506717848412/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/234776864229244/posts/1424446058595646/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sally.senora/videos/preparation-is-the-mother-of-safety/2519358678467377/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61573739049494/posts/friendly-competition-or-just-for-funour-pickleball-court-is-ready-for-you-sereno/122164488074791301/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/555881214564493/posts/977154495770494/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4219062141715328/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/362182288480113/posts/1391976382167360/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4225826261038916/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1075733387221865/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1069011141506172/posts/1190719186002033/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/572029691048676/posts/1231960138388958/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/OneAyala/posts/come-one-come-all-lets-play-pickleball-this-january-at-one-ayala-paddles-balls-a/345144994945540/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/pililla/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/pililla/facebook-pages.state.json"
+}

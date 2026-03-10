@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:teresa",
+  "createdAt": "2026-03-10T08:12:43.745Z",
+  "updatedAt": "2026-03-10T08:13:11.284Z",
+  "queries": [
+    "pickleball courts in Rizal Teresa",
+    "pickleball court Teresa Rizal",
+    "Teresa pickleball",
+    "courts in Teresa Rizal pickleball",
+    "sports center Teresa Rizal pickleball",
+    "pickleball club Teresa Rizal",
+    "pickleball reservations Teresa Rizal",
+    "host-map:cebupickleballcourts.com:Teresa",
+    "host-map:dumapickleball.com:Teresa",
+    "site:cebupickleballcourts.com Teresa Rizal pickleball",
+    "site:dumapickleball.com Teresa Rizal pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "pickleball reservations Teresa Rizal",
+      "title": "Play Pickleball at Quest Adventure Camp: Court Information",
+      "snippet": "Quest Adventure Camp is a place to play pickleball in Teresa, Calabarzon. There are 6 hard and acrylic courts. 3 are indoors and 3 are outdoors.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://questadventure.ph/pickleball": {
+      "canonicalUrl": "https://questadventure.ph/pickleball",
+      "latestUrl": "https://www.questadventure.ph/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "pickleball reservations Teresa Rizal",
+      "title": "Pickleball Courts",
+      "snippet": "Quest Adventure Camp's pickleball courts are cushioned and USAP standard. 3 Indoor courts and 3 outdoor courts for tournaments, sports fest and club events.",
+      "domain": "questadventure.ph",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@questpickleballclub": {
+      "canonicalUrl": "https://reclub.co/clubs/@questpickleballclub",
+      "latestUrl": "https://reclub.co/clubs/@questpickleballclub",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "pickleball club Teresa Rizal",
+      "title": "Quest Pickleball Club",
+      "snippet": "Located inside Quest Adventure Camp, Dalig, Antipolo-Teresa, Rizal 3 Indoor Courts - Cushioned, USAP standard 3 Outdoor Courts - Cushioned,.",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://questadventure.ph/questsports": {
+      "canonicalUrl": "https://questadventure.ph/questsports",
+      "latestUrl": "https://www.questadventure.ph/questsports/",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "pickleball reservations Teresa Rizal",
+      "title": "Quest Sports - Pickleball Tournament",
+      "snippet": "Quest Sports OPEN SERIES is a nationwide, multi-leg pickleball circuit designed to elevate competition, foster community, and crown champions across Luzon.",
+      "domain": "questadventure.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://st-teresa.com/activity-center/activities/401-pickleball": {
+      "canonicalUrl": "https://st-teresa.com/activity-center/activities/401-pickleball",
+      "latestUrl": "https://www.st-teresa.com/activity-center/activities/401-pickleball",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "Teresa pickleball",
+      "title": "Pickleball",
+      "snippet": "Learn Pickleball! Four-week introductory class for new players. Covers: Rules, essential drills, and basic strategies to reach a playable level.",
+      "domain": "st-teresa.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://sureshotpickleball.com/coachteresa": {
+      "canonicalUrl": "https://sureshotpickleball.com/coachteresa",
+      "latestUrl": "https://sureshotpickleball.com/coachteresa/",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "Teresa pickleball",
+      "title": "Pickleball Lessons with Coach Teresa!",
+      "snippet": "Teresa Huelskoetter is a PPR Certified Pickleball Instructor who has been playing pickleball for 5 years. She enjoys teaching beginner and intermediate ...",
+      "domain": "sureshotpickleball.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://suncoastpickleball.com/bio-teresa-tarn": {
+      "canonicalUrl": "https://suncoastpickleball.com/bio-teresa-tarn",
+      "latestUrl": "https://suncoastpickleball.com/bio-teresa-tarn/",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "Teresa pickleball",
+      "title": "Bio - Teresa Tarn",
+      "snippet": "As a former teacher, coach, and athlete, Teresa brings a special skill set to deliver her instruction. She demonstrates her passion and knowledge of pickleball ...",
+      "domain": "suncoastpickleball.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.com/players/teresa-chow": {
+      "canonicalUrl": "https://pickleball.com/players/teresa-chow",
+      "latestUrl": "https://pickleball.com/players/teresa-chow",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "Teresa pickleball",
+      "title": "Teresa Chow",
+      "snippet": "Teresa Chow is not registered for any upcoming tournaments. Join the fastest growing pickleball community. Discover the scale of our growing community of ...",
+      "domain": "pickleball.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://linkedin.com/posts/teresalow_marketingstrategy-pickleballlessons-strategicthinking-activity-7303072056055656449-oaiL": {
+      "canonicalUrl": "https://linkedin.com/posts/teresalow_marketingstrategy-pickleballlessons-strategicthinking-activity-7303072056055656449-oaiL",
+      "latestUrl": "https://www.linkedin.com/posts/teresalow_marketingstrategy-pickleballlessons-strategicthinking-activity-7303072056055656449-oaiL",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "Teresa pickleball",
+      "title": "What Pickleball Taught Me About Marketing | Teresa Low",
+      "snippet": "1. Position is everything. In pickleball and marketing, where you place yourself determines whether you're playing offense or constantly ...",
+      "domain": "linkedin.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballhub-vigor.com/": {
+      "canonicalUrl": "https://pickleballhub-vigor.com/",
+      "latestUrl": "https://pickleballhub-vigor.com/",
+      "firstDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "lastDiscoveredAt": "2026-03-10T08:12:43.746Z",
+      "sourceQuery": "pickleball reservations Teresa Rizal",
+      "title": "Pickleball Hub @ Tiendesitas",
+      "snippet": "Time, Court Rentals, Coaching. Court 8, Court 9, Court 10, Court 11. 8:00 AM, OPEN, OPEN, 18:00 AM - 10:00 AM RESERVED PAID Boyet Peña, OPEN.",
+      "domain": "pickleballhub-vigor.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

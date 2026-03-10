@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:cardona",
+  "createdAt": "2026-03-10T12:32:25.262Z",
+  "updatedAt": "2026-03-10T12:32:43.902Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T12:32:26.833Z",
+      "lastCapturedAt": "2026-03-10T12:32:26.833Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

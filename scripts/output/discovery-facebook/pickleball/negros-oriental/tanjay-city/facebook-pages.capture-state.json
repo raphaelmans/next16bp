@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:tanjay-city",
+  "createdAt": "2026-03-10T11:44:57.946Z",
+  "updatedAt": "2026-03-10T11:45:54.561Z",
+  "urls": {
+    "https://facebook.com/p/A1-PickleBall-61577049044392": {
+      "canonicalUrl": "https://facebook.com/p/A1-PickleBall-61577049044392",
+      "latestUrl": "https://www.facebook.com/p/A1-PickleBall-61577049044392/",
+      "firstCapturedAt": "2026-03-10T11:44:59.776Z",
+      "lastCapturedAt": "2026-03-10T11:44:59.776Z",
+      "status": "captured",
+      "title": "A1 PickleBall | Tanjay | Facebook",
+      "venueName": "A1 PickleBall",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "A1 PickleBall"
+    },
+    "https://facebook.com/61577049044392?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61577049044392?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61577049044392/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T11:45:10.094Z",
+      "lastCapturedAt": "2026-03-10T11:45:10.094Z",
+      "status": "captured",
+      "title": "A1 PickleBall | Tanjay | Facebook",
+      "venueName": "A1 PickleBall",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "A1 PickleBall"
+    },
+    "https://facebook.com/61579317400529": {
+      "canonicalUrl": "https://facebook.com/61579317400529",
+      "latestUrl": "https://www.facebook.com/61579317400529/",
+      "firstCapturedAt": "2026-03-10T11:45:24.256Z",
+      "lastCapturedAt": "2026-03-10T11:45:24.256Z",
+      "status": "captured",
+      "title": "Maralag Pickleball Court | Tanjay | Facebook",
+      "venueName": "Maralag Pickleball Court",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T11:45:34.525Z",
+      "lastCapturedAt": "2026-03-10T11:45:34.525Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

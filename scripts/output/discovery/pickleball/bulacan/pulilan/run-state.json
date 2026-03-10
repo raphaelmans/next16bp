@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:pulilan",
+  "createdAt": "2026-03-10T09:02:18.102Z",
+  "updatedAt": "2026-03-10T09:03:35.062Z",
+  "scope": {
+    "provinceSlug": "bulacan",
+    "citySlug": "pulilan",
+    "provinceName": "Bulacan",
+    "cityName": "Pulilan",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:02:18.104Z",
+      "finishedAt": "2026-03-10T09:02:42.545Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:02:42.546Z",
+      "finishedAt": "2026-03-10T09:03:08.678Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T09:03:08.680Z",
+      "finishedAt": "2026-03-10T09:03:34.551Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T09:03:35.044Z",
+      "finishedAt": "2026-03-10T09:03:35.062Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for pulilan, skipped 2"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T09:03:35.062Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for pulilan"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T09:03:35.062Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:maasin",
+  "createdAt": "2026-03-10T12:26:06.304Z",
+  "updatedAt": "2026-03-10T12:27:59.859Z",
+  "urls": {
+    "https://facebook.com/p/Maasin-City-Picklers-61568541294410": {
+      "canonicalUrl": "https://facebook.com/p/Maasin-City-Picklers-61568541294410",
+      "latestUrl": "https://www.facebook.com/p/Maasin-City-Picklers-61568541294410/",
+      "firstCapturedAt": "2026-03-10T12:26:08.693Z",
+      "lastCapturedAt": "2026-03-10T12:26:08.693Z",
+      "status": "captured",
+      "title": "Maasin City Picklers | Facebook",
+      "venueName": "Maasin City Picklers",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=26550943994509686&set=a.569834386380669&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=26550943994509686&set=a.569834386380669&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=26550943994509686&set=a.569834386380669&type=3",
+      "firstCapturedAt": "2026-03-10T12:26:32.146Z",
+      "lastCapturedAt": "2026-03-10T12:26:32.146Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "bag-o pickleball court",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstCapturedAt": "2026-03-10T12:26:56.703Z",
+      "lastCapturedAt": "2026-03-10T12:26:56.703Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstCapturedAt": "2026-03-10T12:27:18.828Z",
+      "lastCapturedAt": "2026-03-10T12:27:18.828Z",
+      "status": "captured",
+      "title": "PicklePoint Iloilo | Iloilo City | Facebook",
+      "venueName": "PicklePoint Iloilo",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/107869635741474": {
+      "canonicalUrl": "https://facebook.com/107869635741474",
+      "latestUrl": "https://www.facebook.com/107869635741474/",
+      "firstCapturedAt": "2026-03-10T12:27:38.602Z",
+      "lastCapturedAt": "2026-03-10T12:27:38.602Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

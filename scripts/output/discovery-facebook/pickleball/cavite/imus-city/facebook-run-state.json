@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cavite:imus-city:facebook",
   "createdAt": "2026-03-10T03:46:01.052Z",
-  "updatedAt": "2026-03-10T07:00:48.667Z",
+  "updatedAt": "2026-03-10T11:30:08.781Z",
   "scope": {
     "provinceSlug": "cavite",
     "citySlug": "imus-city",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T03:48:20.931Z",
-      "finishedAt": "2026-03-10T07:00:48.666Z",
+      "finishedAt": "2026-03-10T11:30:08.781Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

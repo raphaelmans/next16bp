@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:taytay",
+  "createdAt": "2026-03-10T11:17:09.604Z",
+  "updatedAt": "2026-03-10T11:17:44.783Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T11:17:15.878Z",
+      "lastCapturedAt": "2026-03-10T11:17:15.878Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc. (Pedci)",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

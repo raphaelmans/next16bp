@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "San Jose",
+    "citySlug": "san-jose",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:43:50.667Z",
+  "queries": [
+    "site:facebook.com pickleball San Jose Negros Oriental",
+    "site:facebook.com \"San Jose\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"San Jose\" \"pickleball club\"",
+    "site:facebook.com \"San Jose\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/sanjosepickleballclub/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1448789273508335/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/almystery2017/posts/a-mountain-resort-with-pickleball-area-in-san-jose-neg-or-%EF%B8%8F-arias-residencenaiba/1178125041136107/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1402045601516036/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1401082418279021/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1438189884568274/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1380630140324249/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1376798857374044/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1394485895605340/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/almystery2017/posts/a-mountain-resort-with-pickleball-area-in-san-jose-neg-or-%EF%B8%8F-arias-residencenaiba/1178125041136107/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1402045601516036/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1380389983681598/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1378712207182709/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1398093475244582/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1401082418279021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1370646611322602/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449093110144618/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/sanjosepickleballclub/",
+      "score": 13
+    },
+    {
+      "url": "https://gl-es.facebook.com/groups/373818990008506/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/871387380648520/posts/1557010765419508/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/bayareapickleball/posts/26351774761130421/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/816207932719001/posts/1547946279545159/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/127573880603797/posts/25524141027187066/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sanjosepickleballclub/albums/122128925402224048/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/816207932719001/posts/1599017387771381/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1284268005387702/posts/2268794223601737/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/676877807871735/posts/1065324182360427/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/bayareapickleball/posts/26351774761130421/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/871387380648520/posts/1557010765419508/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/sjsportsandplay/posts/24491554347147374/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/item/840041724885371/",
+      "score": 13
+    },
+    {
+      "url": "https://gl-es.facebook.com/groups/373818990008506/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/676877807871735/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/676877807871735/posts/809036454655869/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/3007710015967129/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/676877807871735/posts/1097395662486612/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/san-jose/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/san-jose/facebook-pages.state.json"
+}

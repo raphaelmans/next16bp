@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T09:04:26.217Z",
+  "updatedAt": "2026-03-10T09:04:47.254Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sampaloc tanay pickleball club|tanay|rizal",
+      "lastRowName": "Sampaloc Tanay Pickleball Club"
+    },
+    "https://www.yelp.com/search?find_desc=Badminton&find_loc=Baras%2C+Rizal": {
+      "canonicalUrl": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Baras%2C+Rizal",
+      "latestUrl": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Baras%2C+Rizal",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://athletecentral.fit/": {
+      "canonicalUrl": "https://athletecentral.fit/",
+      "latestUrl": "https://athletecentral.fit/",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://playtimescheduler.com/region/cainta-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/GGZPAE": {
+      "canonicalUrl": "https://reclub.co/m/GGZPAE",
+      "latestUrl": "https://reclub.co/m/GGZPAE",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://www.sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "lastDiscoveredAt": "2026-03-10T09:04:26.217Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:04:26.217Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "sampaloc tanay pickleball club|tanay|rizal": {
+      "rowKey": "sampaloc tanay pickleball club|tanay|rizal",
+      "name": "Sampaloc Tanay Pickleball Club",
+      "city": "TANAY",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "firstSeenAt": "2026-03-10T09:04:26.217Z",
+      "lastSeenAt": "2026-03-10T09:04:26.217Z"
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:iloilo:santa-barbara:facebook",
   "createdAt": "2026-03-10T05:45:25.713Z",
-  "updatedAt": "2026-03-10T05:45:36.271Z",
+  "updatedAt": "2026-03-10T11:35:19.369Z",
   "scope": {
     "provinceSlug": "iloilo",
     "citySlug": "santa-barbara",
@@ -41,44 +41,44 @@
       "notes": null
     },
     "facebookDiscovery": {
-      "status": "failed",
-      "startedAt": "2026-03-10T05:45:25.721Z",
-      "finishedAt": "2026-03-10T05:45:36.271Z",
-      "lastError": "fetch failed",
-      "notes": null
+      "status": "completed",
+      "startedAt": "2026-03-10T08:31:38.576Z",
+      "finishedAt": "2026-03-10T08:31:50.452Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
     },
     "facebookCapture": {
-      "status": "pending",
-      "startedAt": null,
-      "finishedAt": null,
+      "status": "completed",
+      "startedAt": "2026-03-10T08:31:50.460Z",
+      "finishedAt": "2026-03-10T08:33:06.777Z",
       "lastError": null,
-      "notes": null
+      "notes": "runner executed facebook capture"
     },
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:25.714Z",
+      "finishedAt": "2026-03-10T11:35:19.369Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:25.714Z",
+      "finishedAt": "2026-03-10T11:35:19.369Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:25.714Z",
+      "finishedAt": "2026-03-10T11:35:19.369Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:45:25.714Z",
+      "finishedAt": "2026-03-10T11:35:19.369Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

@@ -1,0 +1,193 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Oton",
+    "citySlug": "oton",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:29:51.664Z",
+  "queries": [
+    "site:facebook.com pickleball Oton Iloilo",
+    "site:facebook.com \"Oton\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Oton\" \"pickleball club\"",
+    "site:facebook.com \"Oton\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.facebook.com/839828229212240",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/soldelite/photos/attention-pickleball-enthusiastpickleball-has-been-a-popular-sport-lately-being-/909636414774800/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466579331470600/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/videos/what-an-amazing-day-of-pickleball-at-clavels-pickleball-court-in-oton-we-had-a-b/1152213192879652/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/836094510284706/posts/2037017243525754/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/soldelite/posts/attention-pickleball-enthusiastpickleball-has-been-a-popular-sport-lately-being-/909636434774798/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/padibeachoton/posts/where-the-beach-meets-the-gameenjoy-pickleball-and-beach-volleyball-just-steps-f/1416857400453031/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/point-tally-update1st-paraw-regatta-pickleball-tournament-february-28-march-1-20/1055486424308093/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466579331470600/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/836094510284706/posts/2037017243525754/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/videos/what-an-amazing-day-of-pickleball-at-clavels-pickleball-court-in-oton-we-had-a-b/1152213192879652/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/soldelite/photos/attention-pickleball-enthusiastpickleball-has-been-a-popular-sport-lately-being-/909636414774800/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/point-tally-update1st-paraw-regatta-pickleball-tournament-february-28-march-1-20/1055486424308093/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1427031310951241/posts/4334297986891211/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/videos/what-an-amazing-day-of-pickleball-at-clavels-pickleball-court-in-oton-we-had-a-b/1152213192879652/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373972126224328/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/kablessings/posts/meet-the-35-under-mythical-five-ritcher-santillan-oton-double-8-franc-steven-ton/1315791040595901/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/padibeachoton/posts/where-the-beach-meets-the-gameenjoy-pickleball-and-beach-volleyball-just-steps-f/1416857400453031/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1056434127546656/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374256069529267/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/renziflores/posts/8ac3d62b/10162083214926231/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/videos/what-an-amazing-day-of-pickleball-at-clavels-pickleball-court-in-oton-we-had-a-b/1152213192879652/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1158533115608558/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1458374122291121/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3983149978639880/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466332724828594/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2022101424954484/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/oton/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/oton/facebook-pages.state.json"
+}

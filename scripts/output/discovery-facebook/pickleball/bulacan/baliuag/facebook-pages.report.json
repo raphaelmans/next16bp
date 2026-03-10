@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Baliuag",
+    "citySlug": "baliuag",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:29:04.668Z",
+  "queries": [
+    "site:facebook.com pickleball Baliuag Bulacan",
+    "site:facebook.com \"Baliuag\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Baliuag\" \"pickleball club\"",
+    "site:facebook.com \"Baliuag\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/prinkle.ph/",
+    "https://www.facebook.com/p/Baliwag-Paddle-Crew-61573805423513/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4062080267413517/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3802971889991024/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1284020633059805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/pickleball-at-sm-city-baliwag-by-jeck-tolentinopickleball-smcitybaliwag-baliuag-/1217205996572356/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1469693364492530/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376675549287319/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1120547312740472/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/pickleball-at-sm-city-baliwag-by-jeck-tolentinopickleball-smcitybaliwag-baliuag-/1217205996572356/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4062080267413517/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3843945679226978/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100083213558347/posts/-are-you-ready-xtreme-fam-pickleball-is-now-at-xtreme-gym-world-baliuag-bring-yo/790784720371973/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4298621163759425/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2512669152429348/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351113765176831/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4165906380364238/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4255461454742063/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/pickleball-at-sm-city-baliwag-by-jeck-tolentinopickleball-smcitybaliwag-baliuag-/1217205996572356/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4062080267413517/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4145824562372420/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3843945679226978/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4255461454742063/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2677992812558619/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/babydelpacheco/photos/d41d8cd9/25231651326453898/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4326071004347774/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4062080267413517/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3843945679226978/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/4164464496901426/posts/26718011784453376/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/579535776841631/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4255461454742063/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4145824562372420/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4304780659810142/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2677992812558619/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2664785267217735/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/baliuag/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/baliuag/facebook-pages.state.json"
+}

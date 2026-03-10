@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T08:21:37.871Z",
+  "updatedAt": "2026-03-10T08:22:01.240Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita/zamboanguita-beach-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita/zamboanguita-beach-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita/zamboanguita-beach-court",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "zamboanguita beach court|zamboanguita|negros oriental",
+      "lastRowName": "Zamboanguita Beach Court"
+    },
+    "https://playtimescheduler.com/region/dumaguete-visayas": {
+      "canonicalUrl": "https://playtimescheduler.com/region/dumaguete-visayas",
+      "latestUrl": "https://playtimescheduler.com/region/dumaguete-visayas",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-visayas/zamboanguita": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-visayas/zamboanguita",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-visayas/zamboanguita",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@zamboanguita-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@zamboanguita-pickleball-club",
+      "latestUrl": "https://reclub.co/ko/clubs/@zamboanguita-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/th/clubs/@zamboanguita-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@zamboanguita-pickleball-club",
+      "latestUrl": "https://reclub.co/th/clubs/@zamboanguita-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@zamboanguita-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@zamboanguita-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@zamboanguita-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "lastDiscoveredAt": "2026-03-10T08:21:37.871Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:21:37.871Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "zamboanguita beach court|zamboanguita|negros oriental": {
+      "rowKey": "zamboanguita beach court|zamboanguita|negros oriental",
+      "name": "Zamboanguita Beach Court",
+      "city": "ZAMBOANGUITA",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/zamboanguita/zamboanguita-beach-court",
+      "firstSeenAt": "2026-03-10T08:21:37.871Z",
+      "lastSeenAt": "2026-03-10T08:21:37.871Z"
+    }
+  }
+}

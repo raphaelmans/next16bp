@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:santa-barbara",
+  "createdAt": "2026-03-10T08:31:50.522Z",
+  "updatedAt": "2026-03-10T08:33:06.775Z",
+  "urls": {
+    "https://facebook.com/santabarbarapickleballclub": {
+      "canonicalUrl": "https://facebook.com/santabarbarapickleballclub",
+      "latestUrl": "https://www.facebook.com/santabarbarapickleballclub/",
+      "firstCapturedAt": "2026-03-10T08:31:58.126Z",
+      "lastCapturedAt": "2026-03-10T08:31:58.126Z",
+      "status": "captured",
+      "title": "Santa Barbara Pickleball Club | Santa Barbara CA | Facebook",
+      "venueName": "Santa Barbara Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstCapturedAt": "2026-03-10T08:32:21.912Z",
+      "lastCapturedAt": "2026-03-10T08:32:21.912Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstCapturedAt": "2026-03-10T08:32:35.993Z",
+      "lastCapturedAt": "2026-03-10T08:32:35.993Z",
+      "status": "captured",
+      "title": "PicklePoint Iloilo | Iloilo City | Facebook",
+      "venueName": "PicklePoint Iloilo",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/107869635741474": {
+      "canonicalUrl": "https://facebook.com/107869635741474",
+      "latestUrl": "https://www.facebook.com/107869635741474/",
+      "firstCapturedAt": "2026-03-10T08:32:48.485Z",
+      "lastCapturedAt": "2026-03-10T08:32:48.485Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

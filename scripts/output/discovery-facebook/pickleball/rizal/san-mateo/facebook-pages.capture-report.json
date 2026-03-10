@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "rizal",
+    "citySlug": "san-mateo",
+    "provinceName": "Rizal",
+    "cityName": "San Mateo"
+  },
+  "generatedAt": "2026-03-10T11:18:56.778Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 2,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 2,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": []
+}

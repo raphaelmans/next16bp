@@ -1,0 +1,171 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "vallehermoso",
+    "provinceName": "Negros Oriental",
+    "cityName": "Vallehermoso"
+  },
+  "generatedAt": "2026-03-10T12:31:41.539Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/jannvivien.caballes/",
+      "canonicalUrl": "https://facebook.com/jannvivien.caballes",
+      "capturedAt": "2026-03-10T12:30:53.466Z",
+      "payload": {
+        "pageUrl": "https://web.facebook.com/jannvivien.caballes/?_rdc=1&_rdr#",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nThis content isn't available right now\nWhen this happens, it's usually because the owner only shared it with a small group of people, changed who can see it or it's been deleted.\nGo to Feed\nGo back\nVisit Help Center",
+        "links": [
+          "https://web.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fweb.facebook.com%2Fjannvivien.caballes%2F%3F_rdc%3D1%26_rdr%23",
+          "https://web.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://web.facebook.com/",
+          "https://web.facebook.com/help"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "The Facebook page content is not available and contains no information indicating a physical pickleball venue or any usable location within Vallehermoso, Negros Oriental. No address, contact details, or venue evidence are present.",
+        "name": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "URL: https://web.facebook.com/jannvivien.caballes/?_rdc=1&_rdr#",
+          "Visible body text: \"This content isn't available right now\"",
+          "Visible body text: \"When this happens, it's usually because the owner only shared it with a small group of people, changed who can see it or it's been deleted.\"",
+          "OG title: (empty)",
+          "OG description: (empty)"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=1988861305376400&set=a.751483585780851&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1988861305376400&set=a.751483585780851&type=3",
+      "capturedAt": "2026-03-10T12:31:06.976Z",
+      "payload": {
+        "pageUrl": "https://web.facebook.com/photo.php?fbid=1988861305376400&set=a.751483585780851&type=3&_rdc=1&_rdr#",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nRey Jay Jacosalem\nFebruary 14 at 2:24 PM\n \n·\nVallehermoso\n \n·\nThank you Lord for the opportunity.\nVallehermoso Assessment Driving NC II...\n— at St. Isidore The Farmer Parish - Vallehermoso.\nAll reactions:\n17\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://web.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fweb.facebook.com%2Fphoto.php%3Ffbid%3D1988861305376400%26set%3Da.751483585780851%26type%3D3%26_rdc%3D1%26_rdr%23",
+          "https://web.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://web.facebook.com/?__tn__=*F",
+          "https://web.facebook.com/reyjay.escarpe.5?__tn__=%3C%3C*F",
+          "https://web.facebook.com/reyjay.escarpe.5?__tn__=-UC*F",
+          "https://web.facebook.com/reyjay.escarpe.5/posts/pfbid0tpkpH7vDjWq9ndcTqqNp6qEqLhm2EvuUZti4d1GgefusrtjDnn1pbP5DV6pFKnNDl?__tn__=%2CO*F",
+          "https://web.facebook.com/pages/Vallehermoso-Negros-Oriental-Philippines/111990888824711?__tn__=*F",
+          "https://web.facebook.com/SanIsidroVallehermoso?__tn__=-]C*F",
+          "https://web.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "This Facebook post is a personal post mentioning Vallehermoso and St. Isidore The Farmer Parish but does not represent a pickleball venue/club and contains no usable venue address, contact details, or amenities. Not enough evidence to create a venue row.",
+        "name": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": true,
+        "evidence": [
+          "Post text: 'Vallehermoso · Thank you Lord for the opportunity. Vallehermoso Assessment Driving NC II... — at St. Isidore The Farmer Parish - Vallehermoso.'",
+          "Page type: personal Facebook post by Rey Jay Jacosalem (no venue details, contacts, or address provided)"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "capturedAt": "2026-03-10T12:31:22.463Z",
+      "payload": {
+        "pageUrl": "https://web.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/?_rdc=1&_rdr#",
+        "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+        "bodyText": "Log In\nForgot Account?\nNegros Oriental Pickleball Club \n1.1K followers • 30 following\nMore\nPosts\nAbout\nReels\nPhotos\nIntro\nNegros Oriental Pickleball Club is a non-partisan, non-business and non-profit organization that was established in the year 2024.\nPage · Sports team · Sports Club · Advertising/Marketing\n90-A Dr. E Miciano Road, Barangay Taclobo, Dumaguete City, Philippines\n0999 193 8616\njufredjsillero@su.edu.ph\nAlways open\nNot yet rated (0 Reviews)﻿\nPhotos\nSee all photos\nPrivacy\n \n · Terms\n \n · Advertising\n \n · Ad Choices \n \n · Cookies\n \n · More\nNegros Oriental Pickleball Club\nDecember 5, 2025\n \n·\nAttention: To ALL pickleball enthusiast residing sa Barangay Pulantubig, this your time to shine\n (Please see post below by Kap.Ramil Cornelia)\nRamil Cornelia\nDecember 4, 2025\n \n·\nMga Pulantubig Pickle Ballers hapak nata!Let's enjoy and have fun smashing, dinking and driving! Register nata. … See more\nAll reactions:\n2\nLike\nComment\nSee more from Negros Oriental Pickleball Club | Dumaguete City\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://web.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fweb.facebook.com%2Fp%2FNegros-Oriental-Pickleball-Club-61557985336286%2F%3F_rdc%3D1%26_rdr%23",
+          "https://web.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://web.facebook.com/photo/?fbid=122168111606266177&set=a.122111502662266177",
+          "https://web.facebook.com/photo/?fbid=122152463174266177&set=a.122111497370266177&__tn__=%3C",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=followers",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=following",
+          "https://web.facebook.com/profile.php?id=61557985336286",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=about",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=reels_tab",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=photos",
+          "https://web.facebook.com/people/Negros-Oriental-Pickleball-Club/61557985336286/",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=reviews",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=photos",
+          "https://web.facebook.com/profile.php?id=61557985336286&sk=photos",
+          "https://web.facebook.com/photo/?fbid=122208530744266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530684266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530660266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530630266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530108266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530036266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530024266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208530000266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/photo/?fbid=122208529832266177&set=pb.61557985336286.-2207520000",
+          "https://web.facebook.com/privacy/policy/?entry_point=comet_dropdown",
+          "https://web.facebook.com/policies?ref=pf",
+          "https://web.facebook.com/business/",
+          "https://web.facebook.com/help/568137493302217",
+          "https://web.facebook.com/policies/cookies/",
+          "https://web.facebook.com/people/Negros-Oriental-Pickleball-Club/61557985336286/?__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=%3C%3C%2CP-R",
+          "https://web.facebook.com/people/Negros-Oriental-Pickleball-Club/61557985336286/?__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=-UC%2CP-R",
+          "https://web.facebook.com/permalink.php?story_fbid=pfbid02ZEKDLwFHgshAkuPfLZrVAGqeQddTYAUDBkPJZVDo1iy5cXJYyTW18B7CP7fhXX9nl&id=61557985336286&__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=%2CO%2CP-R",
+          "https://web.facebook.com/photo/?fbid=32810818675199752&set=a.644029942305376&__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=EH-y-R",
+          "https://web.facebook.com/corneliaramil?__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=%3C%3C%2CP-y-R",
+          "https://web.facebook.com/corneliaramil?__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=-UC%2CP-y-R",
+          "https://web.facebook.com/corneliaramil/posts/pfbid09NqoSmAUY671r6jMEvPcZhbxqZfCvyrXndjT8mV5EjdJQJsbUhcQH3ocHrAkjJAVl?__cft__[0]=AZbd31ySF0UgcS5Ck3W_u8K0vbROJD5bmzTcoc6_yCPBgelMnj9v23Yylon5W3qaU38U2YhmounCe7x2Iey1FcJ1UnmPiKDU_9QIL3rO4S9cV-bCEMOyjLjXJ36n8wb6IsOfEPrwYxPL0TUFngIMIdOzBq3KhWeNk1q_OfiaC8QcAPetqbHB-yrzeN14vZE-TftoHQMDmnmbXbYPL_ar47MRiJeTpulHEOincqdPKvfLzQ&__tn__=%2CO%2CP-y-R",
+          "https://web.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "Negros Oriental Pickleball Club | Dumaguete City ",
+        "ogDescription": "Negros Oriental Pickleball Club, Dumaguete City. 1,137 likes · 1 talking about this. Negros Oriental Pickleball Club is a non-partisan, non-business and non-profit organization that was established..."
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "Page is a pickleball club with a physical address and contact details, but the address is in Dumaguete City (90-A Dr. E Miciano Road, Barangay Taclobo, Dumaguete City), which is outside the requested city (Vallehermoso). Per rules, mark as skip when not within scope.",
+        "name": "Negros Oriental Pickleball Club",
+        "address": "90-A Dr. E Miciano Road, Barangay Taclobo, Dumaguete City, Philippines",
+        "phone": "0999 193 8616",
+        "email": "jufredjsillero@su.edu.ph",
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": true,
+        "isWithinScope": false,
+        "evidence": [
+          "Negros Oriental Pickleball Club is a non-partisan, non-business and non-profit organization that was established in the year 2024.",
+          "90-A Dr. E Miciano Road, Barangay Taclobo, Dumaguete City, Philippines",
+          "0999 193 8616",
+          "jufredjsillero@su.edu.ph",
+          "Page · Sports team · Sports Club · Advertising/Marketing",
+          "Page title: Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+          "OG title: Negros Oriental Pickleball Club | Dumaguete City"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

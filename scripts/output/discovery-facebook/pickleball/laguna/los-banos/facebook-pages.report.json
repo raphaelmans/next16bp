@@ -1,0 +1,179 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "Los Baños",
+    "citySlug": "los-banos",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:37:23.304Z",
+  "queries": [
+    "site:facebook.com pickleball Los Baños Laguna",
+    "site:facebook.com \"Los Baños\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"Los Baños\" \"pickleball club\"",
+    "site:facebook.com \"Los Baños\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/uplbpickleballclub/",
+    "https://www.facebook.com/aceanderesort/",
+    "https://www.facebook.com/UPLBPC/",
+    "https://www.facebook.com/p/Los-Banos-Pickleball-100057436578439/",
+    "https://www.facebook.com/photo.php?fbid=1156739986250543&set=a.314488107142406&id=100057436578439",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462119118583288/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pilacommunity/posts/1588282032274694/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367907466830794/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4227818714173004/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462119118583288/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/pilacommunity/posts/1588282032274694/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367907466830794/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3806520566302823/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/LBCenttroMall/posts/goodnews-los-ba%C3%B1os-the-biggest-pickleball-arena-in-town-is-coming-soon-watch-out/1348368160635243/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462119118583288/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1163443868450816/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3806520566302823/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/LBCenttroMall/posts/goodnews-los-ba%C3%B1os-the-biggest-pickleball-arena-in-town-is-coming-soon-watch-out/1348368160635243/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/1522093708622684/posts/1662862997879087/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4227818714173004/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462119118583288/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4337721533182721/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4343981965890011/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1268560213299452/posts/3352679121554207/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1048306873297850/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/los-banos/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/los-banos/facebook-pages.state.json"
+}

@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-10T09:14:30.909Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 3,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "dauin sport park|dauin|negros oriental",
+      "name": "Dauin Sport Park",
+      "city": "DAUIN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstSeenAt": "2026-03-10T09:14:30.909Z",
+      "lastSeenAt": "2026-03-10T09:14:30.909Z"
+    },
+    {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T09:14:30.909Z",
+      "lastSeenAt": "2026-03-10T09:14:30.909Z"
+    },
+    {
+      "rowKey": "pickleball community mangnao|dumaguete city|negros oriental",
+      "name": "Pickleball Community Mangnao",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/pickleball-community-mangnao",
+      "firstSeenAt": "2026-03-10T09:14:30.909Z",
+      "lastSeenAt": "2026-03-10T09:14:30.909Z"
+    }
+  ]
+}

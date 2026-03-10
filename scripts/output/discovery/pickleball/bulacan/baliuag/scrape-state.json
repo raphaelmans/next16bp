@@ -1,0 +1,139 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:30:20.168Z",
+  "updatedAt": "2026-03-10T11:30:58.051Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sm city baliwag|baliuag|bulacan",
+      "lastRowName": "Sm City Baliwag"
+    },
+    "https://reclub.co/ko/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/ko/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "http://reclub.co/clubs/@baliwag-paddle-crew": {
+      "canonicalUrl": "http://reclub.co/clubs/@baliwag-paddle-crew",
+      "latestUrl": "http://reclub.co/clubs/@baliwag-paddle-crew",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ja/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/ja/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/ja/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518": {
+      "canonicalUrl": "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "latestUrl": "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "firstDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "lastDiscoveredAt": "2026-03-10T11:30:20.168Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:30:20.168Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "sm city baliwag|baliuag|bulacan": {
+      "rowKey": "sm city baliwag|baliuag|bulacan",
+      "name": "Sm City Baliwag",
+      "city": "BALIUAG",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "firstSeenAt": "2026-03-10T11:30:20.168Z",
+      "lastSeenAt": "2026-03-10T11:30:20.168Z"
+    }
+  }
+}

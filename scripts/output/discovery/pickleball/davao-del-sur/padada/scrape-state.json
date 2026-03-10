@@ -1,0 +1,148 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T12:26:22.743Z",
+  "updatedAt": "2026-03-10T12:26:44.015Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/clubs": {
+      "canonicalUrl": "https://picklehub.ph/clubs",
+      "latestUrl": "https://picklehub.ph/clubs",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "flores village pickleball|davao city|davao del sur",
+      "lastRowName": "Flores Village Pickleball"
+    },
+    "https://picklehub.ph/paddleup?tab=home": {
+      "canonicalUrl": "https://picklehub.ph/paddleup?tab=home",
+      "latestUrl": "https://picklehub.ph/paddleup?tab=home",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pickletown|davao city|davao del sur",
+      "lastRowName": "Pickletown"
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://jfmdevelopmentcorp.com/mtspickleball": {
+      "canonicalUrl": "https://jfmdevelopmentcorp.com/mtspickleball",
+      "latestUrl": "https://jfmdevelopmentcorp.com/mtspickleball/",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickletown.skedda.com/": {
+      "canonicalUrl": "https://pickletown.skedda.com/",
+      "latestUrl": "https://pickletown.skedda.com/",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@southside-davao": {
+      "canonicalUrl": "https://reclub.co/clubs/@southside-davao",
+      "latestUrl": "https://reclub.co/clubs/@southside-davao",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://southsidedavao.com/": {
+      "canonicalUrl": "https://southsidedavao.com/",
+      "latestUrl": "https://southsidedavao.com/",
+      "firstDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "lastDiscoveredAt": "2026-03-10T12:26:22.743Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:26:22.743Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "flores village pickleball|davao city|davao del sur": {
+      "rowKey": "flores village pickleball|davao city|davao del sur",
+      "name": "Flores Village Pickleball",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+      "firstSeenAt": "2026-03-10T12:26:22.743Z",
+      "lastSeenAt": "2026-03-10T12:26:22.743Z"
+    },
+    "pickletown|davao city|davao del sur": {
+      "rowKey": "pickletown|davao city|davao del sur",
+      "name": "Pickletown",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstSeenAt": "2026-03-10T12:26:22.743Z",
+      "lastSeenAt": "2026-03-10T12:26:22.743Z"
+    }
+  }
+}

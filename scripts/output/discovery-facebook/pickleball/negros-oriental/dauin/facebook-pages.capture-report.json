@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "dauin",
+    "provinceName": "Negros Oriental",
+    "cityName": "Dauin"
+  },
+  "generatedAt": "2026-03-10T08:41:02.282Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 5,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 5,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 3,
+  "skipCount": 1,
+  "csvRowCount": 1,
+  "failures": []
+}

@@ -1,0 +1,181 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Angono",
+    "citySlug": "angono",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:52:58.053Z",
+  "queries": [
+    "site:facebook.com pickleball Angono Rizal",
+    "site:facebook.com \"Angono\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Angono\" \"pickleball club\"",
+    "site:facebook.com \"Angono\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Angono-Pickleball-Club-61563066493804/",
+    "https://www.facebook.com/people/The-Pickler-Pod/100064005824821/",
+    "https://www.facebook.com/dinksmashph/",
+    "https://www.facebook.com/100064005824821/?locale=pa_IN",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1016698736472021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/posts/2062883750946736/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61563066493804/posts/the-pickler-pod-is-here-the-newest-pickleball-court-in-town-and-so-are-our-dupr-/122175639674435549/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369622066659334/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3894920030796209/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1016698736472021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374748962813311/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4063179173970293/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/posts/2062883750946736/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3894920030796209/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1016698736472021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3839769389644607/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61563066493804/posts/the-pickler-pod-is-here-the-newest-pickleball-court-in-town-and-so-are-our-dupr-/122175639674435549/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61563066493804/videos/apc-elite-nets/1953681231849590/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374748962813311/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/posts/2062883750946736/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367791583509049/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/posts/2062883750946736/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4314044542217087/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1096345225160681/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61563066493804/posts/the-pickler-pod-is-here-the-newest-pickleball-court-in-town-and-so-are-our-dupr-/122175639674435549/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1016698736472021/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367791583509049/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374748962813311/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/angonotourism/posts/soon-to-openpickleball-2nd-floor-of-milk-brew-soon-opening-soon-at-milk-and-brew/1153171010177809/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/angono/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/angono/facebook-pages.state.json"
+}

@@ -1,0 +1,214 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Tanza",
+    "citySlug": "tanza",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:05:51.181Z",
+  "queries": [
+    "site:facebook.com pickleball Tanza Cavite",
+    "site:facebook.com \"Tanza\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Tanza\" \"pickleball club\"",
+    "site:facebook.com \"Tanza\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Tanza-Picklers-Club-61575278097696/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4181058872182322/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3122841134449933/posts/26072679485706106/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231237430497799/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4253682671586608/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4334600156828192/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1933798477235297/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4300640600224148/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/smcityrosario/posts/-calling-all-pickleball-enthusiasts-ready-to-level-up-your-game-and-experience-t/1084519130389320/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4181058872182322/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3122841134449933/posts/26072679485706106/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/793985278066143/posts/2299878687476787/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231237430497799/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1933798477235297/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4253682671586608/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4334600156828192/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4300640600224148/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1933798477235297/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4181058872182322/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231237430497799/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1815617299053416/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4253682671586608/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4176040779350798/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4191155487839327/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcityrosario/posts/-calling-all-pickleball-enthusiasts-ready-to-level-up-your-game-and-experience-t/1084519130389320/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4181058872182322/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1933798477235297/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4231237430497799/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4334600156828192/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4176040779350798/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4253682671586608/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1815617299053416/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcityrosario/posts/-calling-all-pickleball-enthusiasts-ready-to-level-up-your-game-and-experience-t/1084519130389320/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/361389792385800/posts/1425158812675554/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 17
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/tanza/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/tanza/facebook-pages.state.json"
+}

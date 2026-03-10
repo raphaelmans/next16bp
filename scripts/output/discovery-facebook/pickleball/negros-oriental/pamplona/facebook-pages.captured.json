@@ -1,0 +1,53 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "negros-oriental",
+    "citySlug": "pamplona",
+    "provinceName": "Negros Oriental",
+    "cityName": "Pamplona"
+  },
+  "generatedAt": "2026-03-10T11:43:50.657Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3",
+      "capturedAt": "2026-03-10T11:42:25.158Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 162.159.140.245:443, 172.66.0.243:443, timeout: 10000ms)"
+    },
+    {
+      "url": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "capturedAt": "2026-03-10T11:43:07.293Z",
+      "payload": {
+        "pageUrl": "about:blank",
+        "title": "",
+        "bodyText": "",
+        "links": [],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "No page content, contact details, or location provided in the input. Cannot verify a physical pickleball venue in Pamplona, Negros Oriental from the given data.",
+        "name": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "No visible page content provided",
+          "No outbound links or contact details present"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

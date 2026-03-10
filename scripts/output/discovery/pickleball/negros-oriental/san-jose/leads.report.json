@@ -1,0 +1,122 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "San Jose",
+    "citySlug": "san-jose",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:25:45.705Z",
+  "queries": [
+    "pickleball courts in Negros Oriental San Jose",
+    "pickleball court San Jose Negros Oriental",
+    "San Jose pickleball",
+    "courts in San Jose Negros Oriental pickleball",
+    "sports center San Jose Negros Oriental pickleball",
+    "pickleball club San Jose Negros Oriental",
+    "pickleball reservations San Jose Negros Oriental",
+    "host-map:cebupickleballcourts.com:San Jose",
+    "host-map:dumapickleball.com:San Jose",
+    "site:cebupickleballcourts.com San Jose Negros Oriental pickleball",
+    "site:dumapickleball.com San Jose Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://sanjosepickleballclub.org/places-to-play/",
+    "https://thehubpickleball.com/",
+    "https://sanjosepickleballclub.org/",
+    "https://www.pickleheads.com/courts/us/california/san-jose",
+    "https://courtschedulepro.com/",
+    "https://reclub.co/clubs/@reservepb"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "score": 11
+    },
+    {
+      "url": "https://m.yelp.com/search?find_desc=Pickleball&find_loc=San+Jose%2C+CA",
+      "score": 11
+    },
+    {
+      "url": "https://www.zogsports.com/sj/pickleball/",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.norsu.edu.ph/posts/News",
+      "score": 6
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "score": 9
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.instagram.com/p/DU-dSClEYRU/",
+    "https://www.facebook.com/almystery2017/posts/a-mountain-resort-with-pickleball-area-in-san-jose-neg-or-%EF%B8%8F-arias-residencenaiba/1178125041136107/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.instagram.com/reel/DU1yGo7jyjz/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.instagram.com/p/DVm66wdCbFm/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1365902728463657/",
+    "https://www.instagram.com/reel/DUcHLT5DdOR/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.instagram.com/p/DVm66wdCbFm/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1365902728463657/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/groups/1205096034544328/posts/1423794552674474/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.instagram.com/p/DU-dSClEYRU/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366318345088762/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1290409106013020/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.instagram.com/p/DRg8Nb-Dq5g/",
+    "https://www.instagram.com/p/DVm66wdCbFm/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1365902728463657/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3915007385454140/",
+    "https://www.facebook.com/groups/sanjosepickleballclub/",
+    "https://www.instagram.com/sanjosepickleballclub/?hl=en",
+    "https://www.reddit.com/r/SanJose/comments/1nks6ft/pickleball_courts/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3740726742882206/",
+    "https://www.instagram.com/p/DVm66wdCbFm/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/events/dumaguete-city-negros-oriental/%F0%9D%90%8F%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%A7%F0%9D%90%8E%F0%9D%90%AE%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%8E%F0%9D%90%A9%F0%9D%90%9E%F0%9D%90%A7-%F0%9D%9F%90%F0%9D%9F%8E%F0%9D%9F%90%F0%9D%9F%94/917043087520915/",
+    "https://www.instagram.com/p/DVi1OIqE2Mp/",
+    "https://www.facebook.com/dumaventureph/posts/pickleball-is-in-dumaguetefun-easy-and-perfect-for-chill-bonding-with-your-barka/1187570663387410/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366871145033482/",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+    "https://www.instagram.com/p/DVm66wdCbFm/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.instagram.com/p/DRjIZ4DCUA8/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1365902728463657/",
+    "https://www.instagram.com/reel/DRTN98oDRBg/",
+    "https://www.facebook.com/K5NewsFMBCD/videos/watch-governor-sagarbarria-nakuhaan-sa-video-nga-naga-enjoy-sang-hampang-nga-pic/2973959772799547/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1343006964086567/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.instagram.com/p/DU-dSClEYRU/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366318345088762/",
+    "https://www.instagram.com/p/DVm66wdCbFm/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/san-jose/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/san-jose/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/san-jose/scrape-state.json"
+}

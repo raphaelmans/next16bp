@@ -1,0 +1,121 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Jala-Jala",
+    "citySlug": "jala-jala",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:33:36.308Z",
+  "queries": [
+    "pickleball courts in Rizal Jala-Jala",
+    "pickleball court Jala-Jala Rizal",
+    "Jala-Jala pickleball",
+    "courts in Jala-Jala Rizal pickleball",
+    "sports center Jala-Jala Rizal pickleball",
+    "pickleball club Jala-Jala Rizal",
+    "pickleball reservations Jala-Jala Rizal",
+    "host-map:cebupickleballcourts.com:Jala-Jala",
+    "host-map:dumapickleball.com:Jala-Jala",
+    "site:cebupickleballcourts.com Jala-Jala Rizal pickleball",
+    "site:dumapickleball.com Jala-Jala Rizal pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.airbnb.com/rooms/16933937",
+    "https://www.khelomore.com/sports-venues/bengaluru/jala-hobli/sports/tennis",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://m.yelp.com/search?find_desc=Fitness+%26+Instruction&find_loc=Jala-jala%2C+RIZ",
+    "https://www.sparrk.ph/explore/pickleball"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.airbnb.com/jala-jala-philippines/stays",
+      "score": 11
+    },
+    {
+      "url": "https://pickleball.com/players/jala-gilliam/tournaments",
+      "score": 5
+    },
+    {
+      "url": "https://m.yelp.com/search?find_desc=Fitness+%26+Instruction&find_loc=Jala-jala%2C+RIZ",
+      "score": 5
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "score": 11
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/taguigcity/posts/look-residents-enjoy-the-rizal-community-complex-and-covered-courtsa-go-to-spot-/1124739896359046/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.instagram.com/reel/DAnm-f5Bdds/",
+    "https://www.facebook.com/badriderph/videos/paraiso-ng-bayan-ng-rizal-jala-jala-mabitac-loop-badriderph/1240409717454341/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.instagram.com/reel/DTHLZ1DAQC6/",
+    "https://www.instagram.com/reel/DQ6NSeFEitK/",
+    "https://www.tiktok.com/@sparklegmaartistcenter/video/7591701187129265416",
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.instagram.com/reel/DQ6NSeFEitK/",
+    "https://www.facebook.com/badriderph/videos/paraiso-ng-bayan-ng-rizal-jala-jala-mabitac-loop-badriderph/1240409717454341/",
+    "https://www.instagram.com/lilyvacationfarmhouse/",
+    "https://www.instagram.com/reel/DHSal_MqBVv/",
+    "https://www.tiktok.com/@travelsbysharm/video/7571379270833016081",
+    "https://www.instagram.com/reel/DAnm-f5Bdds/",
+    "https://www.facebook.com/taguigcity/posts/look-residents-enjoy-the-rizal-community-complex-and-covered-courtsa-go-to-spot-/1124739896359046/",
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/p/Playhouse-Fitness-Center-61557131530729/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/travelsbysharm/videos/theforestvillasbylily-barangay-pagkalinawan-jalajala-rizal-modern-probinsya-over/1214938307188534/",
+    "https://www.tiktok.com/@travelsbysharm/video/7571379270833016081",
+    "https://www.facebook.com/groups/2647228635549066/posts/4374368706168375/",
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3837672146520998/",
+    "https://www.instagram.com/reel/DQ6NSeFEitK/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.instagram.com/reel/DAnm-f5Bdds/",
+    "https://www.facebook.com/AyalaMalls360/posts/4-picklemall-courts-4-times-the-fun-one-ayala-is-a-pickleball-lovers-heaven-with/725284612964940/",
+    "https://www.facebook.com/theprep2023/",
+    "https://www.facebook.com/theprep2023/videos/jalajala-paraiso-ng-rizaltara-na-sa-the-prep/1561009685142305/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/p/Playhouse-Fitness-Center-61557131530729/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.facebook.com/CongFidelNograles/videos/ground-breaking-ceremony-ng-jalajala-sports-complex/820640862024500/",
+    "https://www.instagram.com/athletecentralph/?hl=en",
+    "https://www.instagram.com/reel/DRt2YDNEvmb/?hl=en",
+    "https://www.facebook.com/theprep2023/videos/jalajala-paraiso-ng-rizaltara-na-sa-the-prep/1561009685142305/",
+    "https://www.facebook.com/theprep2023/posts/a-place-made-for-togetherness-tucked-within-the-greenery-of-jala-jala-rizal-the-/862746463408687/",
+    "https://www.instagram.com/p/DRkQ19oEkUO/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/theprep2023/photos/group-4looking-for-a-relaxing-place-where-you-can-unwind-play-and-reset-your-min/865388779811122/",
+    "https://www.facebook.com/theprep2023/posts/%F0%9D%90%86%F0%9D%90%91%F0%9D%90%8E%F0%9D%90%94%F0%9D%90%8F-%F0%9D%9F%90%F0%9D%91%BE%F0%9D%92%89%F0%9D%92%86%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%95%F0%9D%92%8A%F0%9D%92%8E%F0%9D%92%86-%F0%9D%92%94%F0%9D%92%8D%F0%9D%92%90%F0%9D%92%98%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%8F%F0%9D%92%85-%F0%9D%92%8E%F0%9D%92%90%F0%9D%92%8E%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%94-%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86-%F0%9D%92%88%F0%9D%92%86%F0%9D%92%8F%F0%9D%92%95%F0%9D%92%8D%F0%9D%92%9A-%F0%9D%92%91%F0%9D%92%93%F0%9D%92%86%F0%9D%92%91%F0%9D%92%82%F0%9D%92%93%F0%9D%92%86%F0%9D%92%85%F0%9D%98%9B%F0%9D%98%B6%F0%9D%98%A4%F0%9D%98%AC%F0%9D%98%A6%F0%9D%98%A5-%F0%9D%98%B8%F0%9D%98%AA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA%F0%9D%98%AF-%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%A6-%F0%9D%98%B2%F0%9D%98%B6%F0%9D%98%AA%F0%9D%98%A6%F0%9D%98%B5-%F0%9D%98%A3/865384826478184/",
+    "https://www.tiktok.com/@travelsbysharm/video/7571379270833016081",
+    "https://www.facebook.com/groups/antipolonews/posts/2356088228209614/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/groups/3144352269184943/posts/4448257418794415/",
+    "https://www.instagram.com/p/DUPBEt0k5_D/",
+    "https://www.instagram.com/reel/DAnm-f5Bdds/",
+    "https://www.instagram.com/reel/DQ6NSeFEitK/",
+    "https://www.facebook.com/theforestvillasbylily/",
+    "https://www.facebook.com/travelsbysharm/videos/theforestvillasbylily-barangay-pagkalinawan-jalajala-rizal-modern-probinsya-over/1214938307188534/",
+    "https://www.instagram.com/lilyvacationfarmhouse/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/jala-jala/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/jala-jala/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/jala-jala/scrape-state.json"
+}

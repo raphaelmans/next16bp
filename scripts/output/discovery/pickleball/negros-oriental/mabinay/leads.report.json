@@ -1,0 +1,110 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Mabinay",
+    "citySlug": "mabinay",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:30:43.626Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Mabinay",
+    "pickleball court Mabinay Negros Oriental",
+    "Mabinay pickleball",
+    "courts in Mabinay Negros Oriental pickleball",
+    "sports center Mabinay Negros Oriental pickleball",
+    "pickleball club Mabinay Negros Oriental",
+    "pickleball reservations Mabinay Negros Oriental",
+    "host-map:cebupickleballcourts.com:Mabinay",
+    "host-map:dumapickleball.com:Mabinay",
+    "site:cebupickleballcourts.com Mabinay Negros Oriental pickleball",
+    "site:dumapickleball.com Mabinay Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://playtimescheduler.com/region/dumaguete-visayas",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/mk-pickleball-court",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://app.court-access.com/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://app.utrsports.net/profiles/3560382",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.norsu.edu.ph/posts/News",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "score": 9
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.facebook.com/61580869872917/videos/-pickleball-day-mabinay-negros-oriental-open-daily-8am-12mn-message-us-to-book-y/722844524127895/",
+    "https://www.instagram.com/p/DRO6sggFKBB/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321986366188627/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/jaycyrusv/videos/before-and-after-video-pickle-house-in-bantayan-dumaguete-city-negros-oriental-%EF%B8%8F/890212400113700/",
+    "https://www.facebook.com/p/DoPickle-Court-61579959690581/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.instagram.com/p/DRmF2NEjKJ4/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321986366188627/",
+    "https://www.facebook.com/BalitaKaronNegros/videos/the-pickle-ball-craze-in-dumaguete/1221838909652685/",
+    "https://www.facebook.com/61580869872917/videos/-pickleball-day-mabinay-negros-oriental-open-daily-8am-12mn-message-us-to-book-y/722844524127895/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.facebook.com/groups/dumaguetepickleball/posts/see-you-at-the-court-mabinay-dinkers/843231675164969/",
+    "https://www.instagram.com/p/DRRfiAlDvpd/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321986366188627/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/zitromotovlog/videos/behind-the-kitchen-pickleball-court/5348928321917373/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4263515977269944/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/GovChaco/videos/after-rdc-session-held-in-mabinay-nakadalikyat-tag-pickle-with-mayor-djanggo-bm-/4352877871598193/",
+    "https://www.instagram.com/reel/DUm6XyriSVe/",
+    "https://www.instagram.com/reel/DVC2qJkD6aT/",
+    "https://www.facebook.com/coachpjovz/posts/mabinay/3451905894985351/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.facebook.com/61580869872917/videos/-pickleball-day-mabinay-negros-oriental-open-daily-8am-12mn-message-us-to-book-y/722844524127895/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.instagram.com/p/DRRfiAlDvpd/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321986366188627/",
+    "https://www.facebook.com/p/Mabinay-Pickleball-Club-61581694078627/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.instagram.com/p/DVBDXEgAdjI/",
+    "https://www.facebook.com/61581491813089/posts/nice-one-dink-n-drive-pickleball-club-/122121680985049727/",
+    "https://www.facebook.com/61557985336286/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1321986366188627/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/p/Homecourt-61580869872917/",
+    "https://www.facebook.com/photo.php?fbid=3451905588318715&set=a.189804881195485&id=100004979233657",
+    "https://www.facebook.com/groups/678214319621929/posts/2129103387866341/",
+    "https://www.instagram.com/p/DRRfiAlDvpd/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+    "https://www.facebook.com/61580869872917/videos/-pickleball-day-mabinay-negros-oriental-open-daily-8am-12mn-message-us-to-book-y/722844524127895/",
+    "https://www.instagram.com/p/DU7HcsElDp9/",
+    "https://www.facebook.com/mjremata.kilapkilap/videos/juliets-travellers-inn-salamat-kaau-maam-juliet-abrasaldo-ferrer-nice-jd-kaau-an/1427928981647797/",
+    "https://www.facebook.com/100078632302258/videos/bayawan-citys-best-halo-halo-is-now-available-in-14-areas-around-negros-oriental/662501253494834/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/mabinay/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/mabinay/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/mabinay/scrape-state.json"
+}

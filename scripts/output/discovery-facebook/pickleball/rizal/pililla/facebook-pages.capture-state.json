@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:pililla",
+  "createdAt": "2026-03-10T12:34:27.893Z",
+  "updatedAt": "2026-03-10T12:36:26.559Z",
+  "urls": {
+    "https://facebook.com/p/Rizal-Pickleball-Association-61582404705045": {
+      "canonicalUrl": "https://facebook.com/p/Rizal-Pickleball-Association-61582404705045",
+      "latestUrl": "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+      "firstCapturedAt": "2026-03-10T12:34:29.451Z",
+      "lastCapturedAt": "2026-03-10T12:34:29.451Z",
+      "status": "captured",
+      "title": "Rizal Pickleball Association | Pililla | Facebook",
+      "venueName": "Rizal Pickleball Association",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61582404705045?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61582404705045?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61582404705045/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T12:34:47.104Z",
+      "lastCapturedAt": "2026-03-10T12:34:47.104Z",
+      "status": "captured",
+      "title": "Rizal Pickleball Association | Pililla | Facebook",
+      "venueName": "Rizal Pickleball Association",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61582404705045?locale=ka_GE": {
+      "canonicalUrl": "https://facebook.com/61582404705045?locale=ka_GE",
+      "latestUrl": "https://www.facebook.com/61582404705045/?locale=ka_GE",
+      "firstCapturedAt": "2026-03-10T12:35:04.326Z",
+      "lastCapturedAt": "2026-03-10T12:35:04.326Z",
+      "status": "captured",
+      "title": "Rizal Pickleball Association | Pililla | Facebook",
+      "venueName": "Rizal Pickleball Association",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Sereno-Verde-Escape-61573739049494": {
+      "canonicalUrl": "https://facebook.com/p/Sereno-Verde-Escape-61573739049494",
+      "latestUrl": "https://www.facebook.com/p/Sereno-Verde-Escape-61573739049494/",
+      "firstCapturedAt": "2026-03-10T12:35:25.365Z",
+      "lastCapturedAt": "2026-03-10T12:35:25.365Z",
+      "status": "captured",
+      "title": "Sereno Verde Escape | Pililla | Facebook",
+      "venueName": "Sereno Verde Escape",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61582404705045?locale=en_GB": {
+      "canonicalUrl": "https://facebook.com/61582404705045?locale=en_GB",
+      "latestUrl": "https://www.facebook.com/61582404705045/?locale=en_GB",
+      "firstCapturedAt": "2026-03-10T12:35:51.483Z",
+      "lastCapturedAt": "2026-03-10T12:35:51.483Z",
+      "status": "captured",
+      "title": "Rizal Pickleball Association | Pililla | Facebook",
+      "venueName": "Rizal Pickleball Association",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T12:36:07.850Z",
+      "lastCapturedAt": "2026-03-10T12:36:07.850Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

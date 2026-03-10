@@ -1,0 +1,69 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:bansalan",
+  "createdAt": "2026-03-10T11:12:36.165Z",
+  "updatedAt": "2026-03-10T11:13:02.589Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Bansalan",
+    "pickleball court Bansalan Davao Del Sur",
+    "Bansalan pickleball",
+    "courts in Bansalan Davao Del Sur pickleball",
+    "sports center Bansalan Davao Del Sur pickleball",
+    "pickleball club Bansalan Davao Del Sur",
+    "pickleball reservations Bansalan Davao Del Sur",
+    "host-map:cebupickleballcourts.com:Bansalan",
+    "host-map:dumapickleball.com:Bansalan",
+    "site:cebupickleballcourts.com Bansalan Davao Del Sur pickleball",
+    "site:dumapickleball.com Bansalan Davao Del Sur pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/m/D6Y9JQ": {
+      "canonicalUrl": "https://reclub.co/m/D6Y9JQ",
+      "latestUrl": "https://reclub.co/m/D6Y9JQ",
+      "firstDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "lastDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "sourceQuery": "pickleball reservations Bansalan Davao Del Sur",
+      "title": "Pickleball Game Night in Bansalan!",
+      "snippet": "Open Play- at LSV Hotel, Bansalan, Davao Del Sur. Court Fee: P70 for non members of Bansalan Badminton Club, P40 for members paid to LSV ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/davao-region/davao-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/davao-region/davao-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "firstDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "lastDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "sourceQuery": "pickleball courts in Davao Del Sur Bansalan",
+      "title": "4 Most Popular Pickleball Courts in Davao City, Davao Region",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Davao City, Davao Region! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "lastDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "sourceQuery": "pickleball reservations Bansalan Davao Del Sur",
+      "title": "Sports Facility Booking: Court Access",
+      "snippet": "Ang Laro Mo, I-book Na! Browse facilities, check availability, and book your next game. 25 facilities found. Baseline Pickle Hub Davao. Davao City.",
+      "domain": "app.court-access.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletown.skedda.com/": {
+      "canonicalUrl": "https://pickletown.skedda.com/",
+      "latestUrl": "https://pickletown.skedda.com/",
+      "firstDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "lastDiscoveredAt": "2026-03-10T11:12:36.166Z",
+      "sourceQuery": "pickleball reservations Bansalan Davao Del Sur",
+      "title": "PickleTown Davao | Skedda: Booking System",
+      "snippet": "PickleTown Davao online booking system. Powered by skedda ... PickleBall Court 1. PickleBall Court 2. PickleBall Court 3. PickleBall Court 4.",
+      "domain": "pickletown.skedda.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

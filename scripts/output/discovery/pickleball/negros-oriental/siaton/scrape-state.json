@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T12:29:14.462Z",
+  "updatedAt": "2026-03-10T12:29:32.283Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Dr Pickle Pickleball Court"
+    },
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city": {
+      "canonicalUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "latestUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/36ALX3": {
+      "canonicalUrl": "https://reclub.co/m/36ALX3",
+      "latestUrl": "https://reclub.co/m/36ALX3",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dauin sport park|dauin|negros oriental",
+      "lastRowName": "Dauin Sport Park"
+    },
+    "https://dupr.events-ph.com/search?f%5B0%5D=location%3Adumaguete%2C+central+visayas%2C+ph": {
+      "canonicalUrl": "https://dupr.events-ph.com/search?f%5B0%5D=location%3Adumaguete%2C+central+visayas%2C+ph",
+      "latestUrl": "https://dupr.events-ph.com/search?f%5B0%5D=location%3Adumaguete%2C%20central%20visayas%2C%20ph",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@negros-oriental-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@negros-oriental-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@negros-oriental-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://dupr.events-ph.com/search": {
+      "canonicalUrl": "https://dupr.events-ph.com/search",
+      "latestUrl": "https://dupr.events-ph.com/search",
+      "firstDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "lastDiscoveredAt": "2026-03-10T12:29:14.462Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:29:14.462Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "dr pickle pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T12:29:14.462Z",
+      "lastSeenAt": "2026-03-10T12:29:14.462Z"
+    },
+    "dauin sport park|dauin|negros oriental": {
+      "rowKey": "dauin sport park|dauin|negros oriental",
+      "name": "Dauin Sport Park",
+      "city": "DAUIN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstSeenAt": "2026-03-10T12:29:14.462Z",
+      "lastSeenAt": "2026-03-10T12:29:14.462Z"
+    }
+  }
+}

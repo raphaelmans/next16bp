@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:bais-city",
+  "createdAt": "2026-03-10T11:38:45.260Z",
+  "updatedAt": "2026-03-10T11:40:19.600Z",
+  "urls": {
+    "https://facebook.com/61574632889822": {
+      "canonicalUrl": "https://facebook.com/61574632889822",
+      "latestUrl": "https://www.facebook.com/61574632889822/",
+      "firstCapturedAt": "2026-03-10T11:38:47.522Z",
+      "lastCapturedAt": "2026-03-10T11:38:47.522Z",
+      "status": "captured",
+      "title": "Courtyard Ph | Bais City | Facebook",
+      "venueName": "Courtyard Ph",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/bones9503?locale=en_GB": {
+      "canonicalUrl": "https://facebook.com/bones9503?locale=en_GB",
+      "latestUrl": "https://www.facebook.com/bones9503/?locale=en_GB",
+      "firstCapturedAt": "2026-03-10T11:39:06.489Z",
+      "lastCapturedAt": "2026-03-10T11:39:06.489Z",
+      "status": "captured",
+      "title": "𝚃𝚎𝚊𝚖 𝙱𝙾𝙽𝙴𝚂 | Bais City | Facebook",
+      "venueName": "Team BONES",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Hustlers-Billiard-Hall-and-Pickleball-61561346903913": {
+      "canonicalUrl": "https://facebook.com/p/Hustlers-Billiard-Hall-and-Pickleball-61561346903913",
+      "latestUrl": "https://www.facebook.com/p/Hustlers-Billiard-Hall-and-Pickleball-61561346903913/",
+      "firstCapturedAt": "2026-03-10T11:39:43.648Z",
+      "lastCapturedAt": "2026-03-10T11:39:43.648Z",
+      "status": "captured",
+      "title": "Hustler's Billiard Hall and Pickleball | Facebook",
+      "venueName": "Hustler's Billiard Hall and Pickleball",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Hustler's Billiard Hall and Pickleball"
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T11:39:59.389Z",
+      "lastCapturedAt": "2026-03-10T11:39:59.389Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

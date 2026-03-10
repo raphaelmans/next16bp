@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:san-mateo",
+  "createdAt": "2026-03-10T11:18:02.074Z",
+  "updatedAt": "2026-03-10T11:18:56.783Z",
+  "urls": {
+    "https://facebook.com/picklecamp.ph": {
+      "canonicalUrl": "https://facebook.com/picklecamp.ph",
+      "latestUrl": "https://www.facebook.com/picklecamp.ph/",
+      "firstCapturedAt": "2026-03-10T11:18:15.689Z",
+      "lastCapturedAt": "2026-03-10T11:18:15.689Z",
+      "status": "captured",
+      "title": "Pickle Camp | Facebook",
+      "venueName": "Pickle Camp",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T11:18:35.715Z",
+      "lastCapturedAt": "2026-03-10T11:18:35.715Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:danao-city",
+  "createdAt": "2026-03-10T11:07:46.668Z",
+  "updatedAt": "2026-03-10T11:11:16.425Z",
+  "urls": {
+    "https://facebook.com/p/Danao-Pickleball-Association-100091520719284": {
+      "canonicalUrl": "https://facebook.com/p/Danao-Pickleball-Association-100091520719284",
+      "latestUrl": "https://www.facebook.com/p/Danao-Pickleball-Association-100091520719284/",
+      "firstCapturedAt": "2026-03-10T11:07:49.305Z",
+      "lastCapturedAt": "2026-03-10T11:07:49.305Z",
+      "status": "captured",
+      "title": "Danao Pickleball Association | Danao City | Facebook",
+      "venueName": "Danao Pickleball Association",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Cartel-Pickleball-Team-61573464745524": {
+      "canonicalUrl": "https://facebook.com/p/Cartel-Pickleball-Team-61573464745524",
+      "latestUrl": "https://www.facebook.com/p/Cartel-Pickleball-Team-61573464745524/",
+      "firstCapturedAt": "2026-03-10T11:08:06.934Z",
+      "lastCapturedAt": "2026-03-10T11:08:06.934Z",
+      "status": "captured",
+      "title": "Cartel Pickleball Team | Facebook",
+      "venueName": "Cartel Pickleball Team",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1358565912978896&set=a.224970509671781&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1358565912978896&set=a.224970509671781&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1358565912978896&set=a.224970509671781&type=3",
+      "firstCapturedAt": "2026-03-10T11:08:33.892Z",
+      "lastCapturedAt": "2026-03-10T11:08:33.892Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Sk Poblacion",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/Danao-Pickleball-Club/61581846387433": {
+      "canonicalUrl": "https://facebook.com/people/Danao-Pickleball-Club/61581846387433",
+      "latestUrl": "https://www.facebook.com/people/Danao-Pickleball-Club/61581846387433/",
+      "firstCapturedAt": "2026-03-10T11:09:11.792Z",
+      "lastCapturedAt": "2026-03-10T11:09:11.792Z",
+      "status": "captured",
+      "title": "Danao Pickleball Club | Danao City | Facebook",
+      "venueName": "Danao Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-10T11:09:37.739Z",
+      "lastCapturedAt": "2026-03-10T11:09:37.739Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/matchpoint.cebu": {
+      "canonicalUrl": "https://facebook.com/matchpoint.cebu",
+      "latestUrl": "https://www.facebook.com/matchpoint.cebu/",
+      "firstCapturedAt": "2026-03-10T11:09:54.498Z",
+      "lastCapturedAt": "2026-03-10T11:09:54.498Z",
+      "status": "captured",
+      "title": "Match Point Badminton and Pickleball Court Cebu | Facebook",
+      "venueName": "Match Point Badminton and Pickleball Court Cebu",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389": {
+      "canonicalUrl": "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389",
+      "latestUrl": "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+      "firstCapturedAt": "2026-03-10T11:10:20.116Z",
+      "lastCapturedAt": "2026-03-10T11:10:20.116Z",
+      "status": "captured",
+      "title": "Linkers Pickleball Court | Cebu City | Facebook",
+      "venueName": "Linkers Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/HQ-Pickleball-61585259447279": {
+      "canonicalUrl": "https://facebook.com/p/HQ-Pickleball-61585259447279",
+      "latestUrl": "https://www.facebook.com/p/HQ-Pickleball-61585259447279/",
+      "firstCapturedAt": "2026-03-10T11:10:47.034Z",
+      "lastCapturedAt": "2026-03-10T11:10:47.034Z",
+      "status": "captured",
+      "title": "HQ Pickleball | Cebu City | Facebook",
+      "venueName": "HQ Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

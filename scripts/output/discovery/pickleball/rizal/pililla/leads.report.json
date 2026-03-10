@@ -1,0 +1,127 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Pililla",
+    "citySlug": "pililla",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:32:29.495Z",
+  "queries": [
+    "pickleball courts in Rizal Pililla",
+    "pickleball court Pililla Rizal",
+    "Pililla pickleball",
+    "courts in Pililla Rizal pickleball",
+    "sports center Pililla Rizal pickleball",
+    "pickleball club Pililla Rizal",
+    "pickleball reservations Pililla Rizal",
+    "host-map:cebupickleballcourts.com:Pililla",
+    "host-map:dumapickleball.com:Pililla",
+    "site:cebupickleballcourts.com Pililla Rizal pickleball",
+    "site:dumapickleball.com Pililla Rizal pickleball"
+  ],
+  "emittedUrls": [
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Pililla%2C+Rizal",
+    "https://www.airbnb.com/rooms/1491758183598216742",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_01.20.24.pdf",
+    "https://www.airbnb.gy/rooms/1491758183598216742",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://reclub.co/m/GGZPAE"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pusop.com/",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/m/QQZM2C",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "score": 11
+    },
+    {
+      "url": "https://www.pusop.com/Content/Broadcast/Watch/11246",
+      "score": 5
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "score": 5
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "score": 9
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.instagram.com/p/DT_ygYKDvXy/",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.instagram.com/reel/DTwczKTEpif/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.instagram.com/p/DIGVRh5BicW/",
+    "https://www.facebook.com/61573739049494/posts/friendly-competition-or-just-for-funour-pickleball-court-is-ready-for-you-sereno/122164488074791301/",
+    "https://www.facebook.com/roelandbruce3/videos/the-vision-the-struggles-the-outcome/4100132853649341/",
+    "https://www.instagram.com/p/DIGVRh5BicW/",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.instagram.com/reel/DTwczKTEpif/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.instagram.com/p/DT_ygYKDvXy/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/photo.php?fbid=122164488062791301&set=a.122120499956791301&type=3",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.instagram.com/p/DIGVRh5BicW/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+    "https://www.instagram.com/reel/DTwczKTEpif/",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.instagram.com/p/DT_ygYKDvXy/",
+    "https://www.facebook.com/61582404705045/posts/pickleball-in-urs-pililla/122108824329080156/",
+    "https://www.facebook.com/61568779744215/videos/biggest-pickleball-facility-in-the-philippines/1430619194871272/",
+    "https://www.instagram.com/reel/DTwczKTEpif/",
+    "https://www.facebook.com/61568779744215/videos/south-of-manila-pickleball-series/775623704981741/",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.facebook.com/VillarFoundation/posts/bukas-na-po-ang-ating-sports-hub-mayroong-pickle-ball-table-tennis-at-billiards-/1236530735180289/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.facebook.com/61579378730200/videos/open-play-everyday-here-at-the-pickleball-sports-center-from-3pm-11pm/1966858460708332/",
+    "https://www.instagram.com/p/DIS0093s4nO/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1127801735348363/",
+    "https://www.instagram.com/p/CJ0EBIWpf-H/",
+    "https://www.facebook.com/groups/1419035955126012/posts/2677006302662298/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.facebook.com/p/Rizal-Pickleball-Association-61582404705045/",
+    "https://www.instagram.com/p/DIGVRh5BicW/",
+    "https://www.instagram.com/reel/DTwczKTEpif/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4334845360137005/",
+    "https://www.facebook.com/groups/362182288480113/posts/1391976382167360/",
+    "https://www.instagram.com/reel/DQ6NSeFEitK/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/pililla/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/pililla/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/pililla/scrape-state.json"
+}

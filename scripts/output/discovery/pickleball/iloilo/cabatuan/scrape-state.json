@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:42:10.741Z",
+  "updatedAt": "2026-03-10T11:42:45.777Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://homecourtclub.com/": {
+      "canonicalUrl": "https://homecourtclub.com/",
+      "latestUrl": "https://homecourtclub.com/",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://punto.com.ph/serve-smash-repeat-pickleball-now-at-sm-city-cabanatuan": {
+      "canonicalUrl": "https://punto.com.ph/serve-smash-repeat-pickleball-now-at-sm-city-cabanatuan",
+      "latestUrl": "https://punto.com.ph/serve-smash-repeat-pickleball-now-at-sm-city-cabanatuan/",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "smash cab badminton and fitness|cabanatuan city|nueva ecija",
+      "lastRowName": "Smash Cab Badminton And Fitness"
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/explore/pickleball": {
+      "canonicalUrl": "https://www.sparrk.ph/explore/pickleball",
+      "latestUrl": "https://www.sparrk.ph/explore/pickleball",
+      "firstDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "lastDiscoveredAt": "2026-03-10T11:42:10.740Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:42:10.740Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:42:10.740Z",
+      "lastSeenAt": "2026-03-10T11:42:10.740Z"
+    },
+    "smash cab badminton and fitness|cabanatuan city|nueva ecija": {
+      "rowKey": "smash cab badminton and fitness|cabanatuan city|nueva ecija",
+      "name": "Smash Cab Badminton And Fitness",
+      "city": "CABANATUAN CITY",
+      "province": "NUEVA ECIJA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+      "firstSeenAt": "2026-03-10T11:42:10.740Z",
+      "lastSeenAt": "2026-03-10T11:42:10.740Z"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:davao-del-sur:santa-cruz",
+  "createdAt": "2026-03-10T11:30:10.303Z",
+  "updatedAt": "2026-03-10T11:30:38.597Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-Point-Sports-Center-61579378730200",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+      "firstCapturedAt": "2026-03-10T11:30:11.748Z",
+      "lastCapturedAt": "2026-03-10T11:30:11.748Z",
+      "status": "captured",
+      "title": "Pickleball Point Sports Center | Facebook",
+      "venueName": "Pickleball Point Sports Center",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/dearberna": {
+      "canonicalUrl": "https://facebook.com/dearberna",
+      "latestUrl": "https://www.facebook.com/dearberna/",
+      "firstCapturedAt": "2026-03-10T11:30:27.505Z",
+      "lastCapturedAt": "2026-03-10T11:30:27.505Z",
+      "status": "captured",
+      "title": null,
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

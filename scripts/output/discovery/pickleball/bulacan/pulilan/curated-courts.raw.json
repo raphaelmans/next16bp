@@ -1,0 +1,104 @@
+{
+  "generatedAt": "2026-03-10T09:02:42.547Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 9,
+  "candidateUrlsCount": 8,
+  "candidateUrlsSelectedForRunCount": 8,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://reclub.co/clubs/@zentropickleball",
+    "https://playtimescheduler.com/region/pulilan,_bulacan-luzon",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+    "https://reclub.co/clubs/@pulilan-pickleball-club",
+    "https://reclub.co/clubs/@pulilan-pickleball-community",
+    "https://www.smsupermalls.com/active-hub",
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Pulilan%2C+Bulacan"
+  ],
+  "candidateUrls": [
+    "https://reclub.co/clubs/@zentropickleball",
+    "https://playtimescheduler.com/region/pulilan,_bulacan-luzon",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+    "https://reclub.co/clubs/@pulilan-pickleball-club",
+    "https://reclub.co/clubs/@pulilan-pickleball-community",
+    "https://www.smsupermalls.com/active-hub",
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Pulilan%2C+Bulacan"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://reclub.co/clubs/@zentropickleball",
+    "https://playtimescheduler.com/region/pulilan,_bulacan-luzon",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+    "https://reclub.co/clubs/@pulilan-pickleball-club",
+    "https://reclub.co/clubs/@pulilan-pickleball-community",
+    "https://www.smsupermalls.com/active-hub",
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Pulilan%2C+Bulacan"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Bulacan Sports Complex",
+        "address": "Philippines, Philippines, Philippines",
+        "city": "BULACAN",
+        "province": "BULACAN",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex"
+    },
+    {
+      "row": {
+        "name": "Sm City Baliwag",
+        "address": "Philippines, Central Luzon, Philippines",
+        "city": "BALIUAG",
+        "province": "BULACAN",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 1,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 2,
+    "pendingMigrationRows": 2,
+    "dbCoverageEnabled": false
+  }
+}

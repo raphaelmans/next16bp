@@ -1,0 +1,47 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:cabuyao-city",
+  "createdAt": "2026-03-10T08:33:18.199Z",
+  "updatedAt": "2026-03-10T08:34:03.804Z",
+  "urls": {
+    "https://facebook.com/p/R1-Sports-PH-61558971715792": {
+      "canonicalUrl": "https://facebook.com/p/R1-Sports-PH-61558971715792",
+      "latestUrl": "https://www.facebook.com/p/R1-Sports-PH-61558971715792/",
+      "firstCapturedAt": "2026-03-10T08:33:21.161Z",
+      "lastCapturedAt": "2026-03-10T08:33:21.161Z",
+      "status": "captured",
+      "title": "R1 Sports PH | Cabuyao | Facebook",
+      "venueName": "R1 Sports PH",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T08:33:34.326Z",
+      "lastCapturedAt": "2026-03-10T08:33:34.326Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T08:33:52.571Z",
+      "lastCapturedAt": "2026-03-10T08:33:52.571Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

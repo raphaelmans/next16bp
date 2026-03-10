@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T08:26:03.898Z",
+  "updatedAt": "2026-03-10T08:26:22.540Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "rally alley pickleball courts|dumaguete city|negros oriental",
+      "lastRowName": "Rally Alley Pickleball Courts"
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Dr Pickle Pickleball Court"
+    },
+    "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city": {
+      "canonicalUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "latestUrl": "https://kudoscourts.ph/courts/locations/negros-oriental/dumaguete-city",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sanjosepickleballclub.org/places-to-play": {
+      "canonicalUrl": "https://sanjosepickleballclub.org/places-to-play",
+      "latestUrl": "https://sanjosepickleballclub.org/places-to-play/",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://thehubpickleball.com/": {
+      "canonicalUrl": "https://thehubpickleball.com/",
+      "latestUrl": "https://thehubpickleball.com/",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sanjosepickleballclub.org/": {
+      "canonicalUrl": "https://sanjosepickleballclub.org/",
+      "latestUrl": "https://sanjosepickleballclub.org/",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/us/california/san-jose": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/us/california/san-jose",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/san-jose",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://courtschedulepro.com/": {
+      "canonicalUrl": "https://courtschedulepro.com/",
+      "latestUrl": "https://courtschedulepro.com/",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@reservepb": {
+      "canonicalUrl": "https://reclub.co/clubs/@reservepb",
+      "latestUrl": "https://reclub.co/clubs/@reservepb",
+      "firstDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "lastDiscoveredAt": "2026-03-10T08:26:03.898Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:26:03.898Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "rally alley pickleball courts|dumaguete city|negros oriental": {
+      "rowKey": "rally alley pickleball courts|dumaguete city|negros oriental",
+      "name": "Rally Alley Pickleball Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "firstSeenAt": "2026-03-10T08:26:03.898Z",
+      "lastSeenAt": "2026-03-10T08:26:03.898Z"
+    },
+    "dr pickle pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T08:26:03.898Z",
+      "lastSeenAt": "2026-03-10T08:26:03.898Z"
+    }
+  }
+}

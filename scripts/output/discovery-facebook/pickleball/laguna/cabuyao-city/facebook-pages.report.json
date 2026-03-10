@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "Cabuyao City",
+    "citySlug": "cabuyao-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:33:06.801Z",
+  "queries": [
+    "site:facebook.com pickleball Cabuyao City Laguna",
+    "site:facebook.com \"Cabuyao City\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"Cabuyao City\" \"pickleball club\"",
+    "site:facebook.com \"Cabuyao City\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/R1-Sports-PH-61558971715792/",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361374580817416/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4157217474566462/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4358921247729416/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564650565076/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4163058797315663/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/346803372990254/posts/1610724539931458/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2119481338797526/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4255695768035309/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4375413206080220/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4393699814234903/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/BagongCabuyao/videos/pickleball-na-cabuye%C3%B1olaro-open-play-chill-sa-caf%C3%A9-at-takoyaki-after-game-lahat-/1206541625012121/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1618796038694873/posts/1793756401198835/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/485220520450958/posts/1159887342984269/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/302982397532970/posts/1678191766678686/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/171473618081804/posts/1362726395623181/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4258883951049824/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3622516864489250/posts/33782758724705000/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4393699814234903/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4191046797833540/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/302982397532970/posts/1678191766678686/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DepEdTayoCordillera/posts/%F0%9D%97%AC%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%B0%F0%9D%98%82%F0%9D%97%B2%F0%9D%97%B6%F0%9D%98%80%F0%9D%98%81%F0%9D%98%80-%F0%9D%97%B0%F0%9D%97%B9%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B5-%F0%9D%97%B6%F0%9D%97%BB-%F0%9D%9F%AE%F0%9D%9F%AC%F0%9D%9F%AE%F0%9D%9F%B2-%F0%9D%97%96%F0%9D%97%94%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%94-%F0%9D%9F%B4-%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%BE%F0%9D%98%82%F0%9D%97%AE%F0%9D%97%BF%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B3%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%AE%F0%9D%97%B9%F0%9D%98%80wayside-billiard-hall-in-p/1325162536307749/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/RobinsonsStaRosa/posts/play-now-at-robinsonsstarosas-pickleball-court-for-free-heres-how-to-playreserve/1139156808251586/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1055329495928921/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1452099699247041/posts/1476909146766096/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/100005076936065/photos/2202734593239084/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/2041322419221562/posts/26207721615488305/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3400575403547354/posts/4249043048700581/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/346803372990254/posts/1610724539931458/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/BagongCabuyao/posts/pickleball-na-cabuye%C3%B1olaro-open-play-chill-sa-caf%C3%A9-at-takoyaki-after-game-lahat-/892005457221473/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/302982397532970/posts/1678191766678686/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/849992743613602/posts/1305120998100772/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/edrene.cabrera/videos/lovin-playing-on-this-pickleball-court-pickleballislife-pickleballph-pickleballr/4402570666736600/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/RobinsonsStaRosa/posts/play-now-at-robinsonsstarosas-pickleball-court-for-free-heres-how-to-playreserve/1139156808251586/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/171473618081804/posts/1362726395623181/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3622516864489250/posts/33782758724705000/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/969965361070448/posts/2016576233076017/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/256032401271743/posts/2870163346525289/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/cabuyao-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/cabuyao-city/facebook-pages.state.json"
+}

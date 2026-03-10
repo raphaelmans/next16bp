@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T09:00:58.826Z",
+  "updatedAt": "2026-03-10T09:01:23.761Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T09:00:58.826Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:00:58.826Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:58.826Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:00:58.826Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T09:00:58.826Z",
+      "lastSeenAt": "2026-03-10T09:00:58.826Z"
+    }
+  }
+}

@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Bansalan",
+    "citySlug": "bansalan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:25:14.077Z",
+  "queries": [
+    "site:facebook.com pickleball Bansalan Davao Del Sur",
+    "site:facebook.com \"Bansalan\" \"Davao Del Sur\" \"pickleball\"",
+    "site:facebook.com \"Bansalan\" \"pickleball club\"",
+    "site:facebook.com \"Bansalan\" \"pickleball court\"",
+    "site:facebook.com \"Davao Del Sur\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/The-Pickle-Bay-Bansalan-61582499198894/",
+    "https://www.facebook.com/p/Pickleball-Point-Sports-Center-61579378730200/",
+    "https://www.facebook.com/61582499198894/?locale=pa_IN"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/the-pickle-bay-bansalan-is-officially-open-pickleball-pickleballcourt-bansalan-d/1236762308669377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2705537276475867/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/sportsflutennis/posts/4236255699923872/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/finally-save-the-date-the-pickle-bay-bansalan-pickleball-pickleballcourt-bansala/1443082400937933/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/photos/just-a-lovely-morning-to-all-goodmorningeveryone-inspired-the-pickle-bay-bansala/10235237423373770/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/shyren.bugak.ii/posts/announcement-please-take-note-for-the-new-playing-schedules-of-pickle-ball-and-b/927608106856431/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/are-you-ready-for-the-pickle-bay-pickle-glow-open-play-still-a-few-slots-availab/1218632940471336/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/232586655579902/posts/1372481731590383/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/posts/how-pickleball-started-in-bansalan-and-we-were-just-learning-the-game-still-lear/10235257253829519/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2705537276475867/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/the-pickle-bay-bansalan-is-officially-open-pickleball-pickleballcourt-bansalan-d/1236762308669377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball/774997418296190/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/shyren.bugak.ii/posts/announcement-please-take-note-for-the-new-playing-schedules-of-pickle-ball-and-b/927608106856431/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/232586655579902/posts/1372481731590383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61575625378397/videos/pickleball-lessons-with-coach-pat-bansalan-davao-del-sur-pickleball-pickleballga/1040022394218796/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/pickleball-is-not-just-hitting-balls-starting-them-young-to-build-muscle-memory-/34710598481919565/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61579378730200/photos/d41d8cd9/122150311280979291/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/digosbansalanpadadasulophagonoyjob/posts/25967661032928695/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleball.global/posts/2122750615227595/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2705537276475867/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball-training/2128118504680976/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/the-pickle-bay-bansalan-is-officially-open-pickleball-pickleballcourt-bansalan-d/1236762308669377/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/photos/how-pickleball-started-in-bansalan-and-we-were-just-learning-the-game-still-lear/10235257226668840/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball/774997418296190/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61575625378397/posts/my-bansalan-team-competing-in-a-mini-tourney-today-pickleball-point-sports-cente/122155509854854179/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleball.global/posts/2121489425353714/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball-game-night/3839939839641419/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2705537276475867/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/photos/game-night-at-the-first-ever-pickleball-court-in-bansalan-pickle-ballan-ni-juan-/10234896735656790/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleball.global/posts/2122750615227595/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/27610152248/posts/10163815980322249/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61582499198894/videos/the-pickle-bay-bansalan-is-officially-open-pickleball-pickleballcourt-bansalan-d/1236762308669377/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/when-you-get-to-hang-around-a-pickleball-court-pickleballcourt-pickleball-bansal/803942482720935/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball-training/2128118504680976/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/photos/its-a-process-pickleball-pickleballcourt-gratefuleveryday-bansalan-bansalandavao/10233796838760055/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/photos/how-pickleball-started-in-bansalan-and-we-were-just-learning-the-game-still-lear/10235257226668840/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ftc.love/videos/pickleball-game-night/3839939839641419/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61579378730200/photos/d41d8cd9/122150311280979291/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/DailyGuardianPH/posts/the-pickleball-champions-league-asia-rising-stars-u19-sectional-tournament-in-da/1344753064348140/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/LPUDavao/posts/new-game-new-vibe-new-lifestyle-pickleball-is-officially-here-to-upgrade-your-li/1231754955765261/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4292511924370349/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4113467152274828/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/pickleball-court-at-mts-is-now-open-and-available-beginning-august-23-2025-satur/1160503379442636/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186286041659605/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1069580638185751/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages.state.json"
+}

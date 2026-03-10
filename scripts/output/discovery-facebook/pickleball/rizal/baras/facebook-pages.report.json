@@ -1,0 +1,221 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Baras",
+    "citySlug": "baras",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:21:57.647Z",
+  "queries": [
+    "site:facebook.com pickleball Baras Rizal",
+    "site:facebook.com \"Baras\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Baras\" \"pickleball club\"",
+    "site:facebook.com \"Baras\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1016494133145791/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4039853652969512/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4112553625699514/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4027815020840042/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/taguigcity/posts/look-residents-of-barangay-rizal-spend-their-time-at-the-covered-courts-and-comm/1126284332871269/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214669568821252/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1369066508147279/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/1127947824027851/posts/3385933001562644/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381774455444095/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4027815020840042/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1016494133145791/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4039853652969512/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370766659878208/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4112553625699514/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214669568821252/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/taguigcity/posts/look-residents-of-barangay-rizal-spend-their-time-at-the-covered-courts-and-comm/1126284332871269/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4340442052910669/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4067545306867013/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1429135751917334/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1326989318521194/posts/1566014677951989/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleballrestigouche/posts/24058023417217341/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61579167914582/videos/-calling-all-pickleball-players-this-is-it-the-court-is-set-and-the-challenge-is/2136177607209002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1525222621557246/posts/1999875067425330/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1525222621557246/posts/2013364572743046/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/800919395296114/posts/1170001285054588/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/800919395296114/posts/919569386764447/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/haycia.kamil/videos/united-panay-pickleball-club/940112881919712/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/pickleballofputnamcounty/posts/4102311136668761/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1525222621557246/posts/1999875067425330/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/562171796115136/posts/869296718735974/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4027815020840042/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/EnglishMTL/posts/are-you-a-fan-of-pickleball-ortcanada-is-giving-away-6%EF%B8%8F%E2%83%A3-spots-for-emsb-high-sch/1238594524969949/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214669568821252/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3786117598343120/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3964638200491058/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4347068828914658/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1016494133145791/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4035206710100873/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/baras/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/baras/facebook-pages.state.json"
+}

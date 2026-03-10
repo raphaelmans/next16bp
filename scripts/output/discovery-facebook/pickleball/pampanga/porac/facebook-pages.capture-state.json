@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:porac",
+  "createdAt": "2026-03-10T11:49:32.371Z",
+  "updatedAt": "2026-03-10T12:14:22.801Z",
+  "urls": {
+    "https://facebook.com/pampangapickleballcommunity": {
+      "canonicalUrl": "https://facebook.com/pampangapickleballcommunity",
+      "latestUrl": "https://www.facebook.com/pampangapickleballcommunity/",
+      "firstCapturedAt": "2026-03-10T11:49:35.223Z",
+      "lastCapturedAt": "2026-03-10T11:49:35.223Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-porac goto https://www.facebook.com/pampangapickleballcommunity/\n",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/PCPH-Pampanga-61563494852035": {
+      "canonicalUrl": "https://facebook.com/p/PCPH-Pampanga-61563494852035",
+      "latestUrl": "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+      "firstCapturedAt": "2026-03-10T12:04:41.572Z",
+      "lastCapturedAt": "2026-03-10T12:04:41.572Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/balemiguel": {
+      "canonicalUrl": "https://facebook.com/balemiguel",
+      "latestUrl": "https://www.facebook.com/balemiguel/",
+      "firstCapturedAt": "2026-03-10T12:04:57.082Z",
+      "lastCapturedAt": "2026-03-10T12:04:57.082Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/106032865733102": {
+      "canonicalUrl": "https://facebook.com/106032865733102",
+      "latestUrl": "https://www.facebook.com/106032865733102/",
+      "firstCapturedAt": "2026-03-10T12:05:04.260Z",
+      "lastCapturedAt": "2026-03-10T12:05:04.260Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+      "firstCapturedAt": "2026-03-10T12:05:11.873Z",
+      "lastCapturedAt": "2026-03-10T12:05:11.873Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/pickleballworldpam": {
+      "canonicalUrl": "https://facebook.com/pickleballworldpam",
+      "latestUrl": "https://www.facebook.com/pickleballworldpam/",
+      "firstCapturedAt": "2026-03-10T12:05:24.455Z",
+      "lastCapturedAt": "2026-03-10T12:05:24.455Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/745567121984101": {
+      "canonicalUrl": "https://facebook.com/745567121984101",
+      "latestUrl": "https://www.facebook.com/745567121984101/",
+      "firstCapturedAt": "2026-03-10T12:14:08.315Z",
+      "lastCapturedAt": "2026-03-10T12:14:08.315Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/",
+      "firstCapturedAt": "2026-03-10T12:14:15.513Z",
+      "lastCapturedAt": "2026-03-10T12:14:15.513Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: getaddrinfo ENOTFOUND api.openai.com",
+      "outputRowName": null
+    }
+  }
+}

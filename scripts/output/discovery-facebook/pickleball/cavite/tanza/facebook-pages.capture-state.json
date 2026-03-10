@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:tanza",
+  "createdAt": "2026-03-10T11:06:00.125Z",
+  "updatedAt": "2026-03-10T11:06:57.530Z",
+  "urls": {
+    "https://facebook.com/p/Tanza-Picklers-Club-61575278097696": {
+      "canonicalUrl": "https://facebook.com/p/Tanza-Picklers-Club-61575278097696",
+      "latestUrl": "https://www.facebook.com/p/Tanza-Picklers-Club-61575278097696/",
+      "firstCapturedAt": "2026-03-10T11:06:02.487Z",
+      "lastCapturedAt": "2026-03-10T11:06:02.487Z",
+      "status": "captured",
+      "title": "Tanza Picklers Club | Facebook",
+      "venueName": "Tanza Picklers Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T11:06:31.129Z",
+      "lastCapturedAt": "2026-03-10T11:06:31.129Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

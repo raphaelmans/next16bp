@@ -1,16 +1,32 @@
 "use client";
 
+import { zodResolver } from "@hookform/resolvers/zod";
 import { format } from "date-fns";
-import { ArrowLeft, Clock } from "lucide-react";
-import Link from "next/link";
+import { Clock, RefreshCw } from "lucide-react";
 import * as React from "react";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 import { appRoutes } from "@/common/app-routes";
 import { formatCurrency } from "@/common/format";
+import { SETTINGS_SECTION_HASHES } from "@/common/section-hashes";
 import { toast } from "@/common/toast";
+import {
+  StandardFormInput,
+  StandardFormProvider,
+  StandardFormSelect,
+} from "@/components/form";
 import { AppShell } from "@/components/layout";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { PageHeader } from "@/components/ui/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
@@ -22,10 +38,14 @@ import {
 import { ConfirmDialog } from "@/features/owner/components/confirm-dialog";
 import { RejectModal } from "@/features/owner/components/reject-modal";
 import {
+  useModOwnerInvalidation,
   useModOwnerReservationRealtimeStream,
   useMutAcceptReservation,
+  useMutCancelReservation,
   useMutConfirmReservation,
+  useMutOwnerConfirmPaidOffline,
   useMutRejectReservation,
+  useQueryOrganizationPaymentMethods,
   useQueryOwnerOrganization,
   useQueryOwnerReservationEntity,
   useQueryOwnerReservationHistory,
@@ -89,24 +109,35 @@ type ReservationGroupDetailItem = {
   currency?: string | null;
 };
 
+const paidOfflineFormSchema = z.object({
+  paymentMethodId: z.string().min(1, "Payment method is required"),
+  paymentReference: z.string().min(1, "Reference is required").max(100),
+});
+
+type PaidOfflineFormValues = z.infer<typeof paidOfflineFormSchema>;
+
 export default function OwnerReservationDetailPage({
   reservationId,
 }: OwnerReservationDetailPageProps) {
   const { data: user } = useQueryAuthSession();
   const logoutMutation = useMutAuthLogout();
+  const { invalidateOwnerReservationsOverview } = useModOwnerInvalidation();
   const {
     organization,
     organizations,
     isLoading: orgLoading,
   } = useQueryOwnerOrganization();
 
-  const { data: reservation, isLoading } = useQueryOwnerReservationEntity(
+  const reservationQuery = useQueryOwnerReservationEntity(
     organization?.id ?? null,
     reservationId,
   );
+  const reservation = reservationQuery.data;
+  const isLoading = reservationQuery.isLoading;
 
-  const { data: history = [], isLoading: historyLoading } =
-    useQueryOwnerReservationHistory({ reservationId });
+  const historyQuery = useQueryOwnerReservationHistory({ reservationId });
+  const history = historyQuery.data ?? [];
+  const historyLoading = historyQuery.isLoading;
 
   useModOwnerReservationRealtimeStream({
     enabled: Boolean(organization?.id && reservationId),
@@ -127,13 +158,45 @@ export default function OwnerReservationDetailPage({
   );
   const acceptMutation = useMutAcceptReservation();
   const confirmMutation = useMutConfirmReservation();
+  const cancelMutation = useMutCancelReservation();
   const rejectMutation = useMutRejectReservation();
+  const confirmPaidOfflineMutation = useMutOwnerConfirmPaidOffline({
+    onSuccess: async (_data, variables) => {
+      await invalidateOwnerReservationsOverview({
+        reservationId:
+          typeof variables === "object" &&
+          variables !== null &&
+          "reservationId" in variables
+            ? String(variables.reservationId)
+            : undefined,
+      });
+    },
+  });
+  const { data: paymentMethodsData } = useQueryOrganizationPaymentMethods(
+    organization?.id,
+  );
+  const paymentMethods = paymentMethodsData?.methods ?? [];
+  const activePaymentMethods = paymentMethods.filter(
+    (method) => method.isActive,
+  );
+  const defaultPaymentMethod = activePaymentMethods.find(
+    (method) => method.isDefault,
+  );
 
   const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [paidOfflineOpen, setPaidOfflineOpen] = React.useState(false);
   const [rejectOpen, setRejectOpen] = React.useState(false);
   const [rejectMode, setRejectMode] = React.useState<"reject" | "cancel">(
     "reject",
   );
+  const paidOfflineForm = useForm<PaidOfflineFormValues>({
+    resolver: zodResolver(paidOfflineFormSchema),
+    defaultValues: {
+      paymentMethodId: "",
+      paymentReference: "",
+    },
+  });
 
   const handleLogout = async () => {
     await logoutMutation.mutateAsync();
@@ -145,8 +208,30 @@ export default function OwnerReservationDetailPage({
   const isCreated = reservation?.reservationStatus === "CREATED";
   const isAwaiting = reservation?.reservationStatus === "AWAITING_PAYMENT";
   const isMarked = reservation?.reservationStatus === "PAYMENT_MARKED_BY_USER";
+  const canMarkPaidOffline = Boolean(
+    isCreated && (reservation?.amountCents ?? 0) > 0,
+  );
   const confirmTitle = isCreated ? "Accept Reservation" : "Confirm Payment";
   const confirmLabel = isCreated ? "Accept" : "Confirm";
+  const isMutationPending =
+    acceptMutation.isPending ||
+    confirmMutation.isPending ||
+    cancelMutation.isPending ||
+    rejectMutation.isPending ||
+    confirmPaidOfflineMutation.isPending;
+
+  const handleRefresh = async () => {
+    setIsRefreshing(true);
+    try {
+      await Promise.all([
+        invalidateOwnerReservationsOverview({ reservationId }),
+        historyQuery.refetch(),
+        reservationGroupQuery.refetch(),
+      ]);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   const handleConfirmSubmit = () => {
     if (!reservation) return;
@@ -177,7 +262,9 @@ export default function OwnerReservationDetailPage({
 
   const handleRejectSubmit = (reason: string) => {
     if (!reservation) return;
-    rejectMutation.mutate(
+    const mutation = rejectMode === "cancel" ? cancelMutation : rejectMutation;
+
+    mutation.mutate(
       {
         reservationId: reservation.id,
         reason,
@@ -193,6 +280,35 @@ export default function OwnerReservationDetailPage({
         },
         onError: () => {
           toast.error("Failed to update reservation");
+        },
+      },
+    );
+  };
+
+  const handleOpenPaidOffline = () => {
+    paidOfflineForm.reset({
+      paymentMethodId: defaultPaymentMethod?.id ?? "",
+      paymentReference: "",
+    });
+    setPaidOfflineOpen(true);
+  };
+
+  const handlePaidOfflineSubmit = (values: PaidOfflineFormValues) => {
+    if (!reservation) return;
+
+    confirmPaidOfflineMutation.mutate(
+      {
+        reservationId: reservation.id,
+        paymentMethodId: values.paymentMethodId,
+        paymentReference: values.paymentReference,
+      },
+      {
+        onSuccess: () => {
+          toast.success("Reservation marked as paid and confirmed");
+          setPaidOfflineOpen(false);
+        },
+        onError: () => {
+          toast.error("Failed to mark reservation as paid and confirmed");
         },
       },
     );
@@ -311,14 +427,22 @@ export default function OwnerReservationDetailPage({
             },
             { label: "Details" },
           ]}
+          backHref={appRoutes.organization.reservationsActive}
+          backLabel="Back to Active Reservations"
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+            >
+              <RefreshCw
+                className={cn("mr-2 h-4 w-4", isRefreshing && "animate-spin")}
+              />
+              Refresh
+            </Button>
+          }
         />
-
-        <Button variant="ghost" size="sm" asChild className="-ml-2">
-          <Link href={appRoutes.organization.reservationsActive}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Active Reservations
-          </Link>
-        </Button>
 
         {isLoading && (
           <Card>
@@ -427,7 +551,7 @@ export default function OwnerReservationDetailPage({
                 </div>
 
                 {(isCreated || isAwaiting || isMarked) && (
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap items-center gap-2 pt-2">
                     {isAwaiting ? (
                       <Button
                         variant="outline"
@@ -436,6 +560,7 @@ export default function OwnerReservationDetailPage({
                           setRejectMode("cancel");
                           setRejectOpen(true);
                         }}
+                        disabled={isMutationPending}
                       >
                         Cancel Reservation
                       </Button>
@@ -445,9 +570,19 @@ export default function OwnerReservationDetailPage({
                           variant="outline"
                           className="text-primary hover:text-primary hover:bg-primary/10"
                           onClick={() => setConfirmOpen(true)}
+                          disabled={isMutationPending}
                         >
                           {isCreated ? "Accept Reservation" : "Confirm Payment"}
                         </Button>
+                        {canMarkPaidOffline ? (
+                          <Button
+                            variant="outline"
+                            onClick={handleOpenPaidOffline}
+                            disabled={isMutationPending}
+                          >
+                            Paid & Confirmed
+                          </Button>
+                        ) : null}
                         <Button
                           variant="outline"
                           className="text-destructive hover:text-destructive hover:bg-destructive/10"
@@ -455,6 +590,7 @@ export default function OwnerReservationDetailPage({
                             setRejectMode("reject");
                             setRejectOpen(true);
                           }}
+                          disabled={isMutationPending}
                         >
                           Reject Reservation
                         </Button>
@@ -596,16 +732,93 @@ export default function OwnerReservationDetailPage({
         open={confirmOpen}
         onOpenChange={setConfirmOpen}
         onConfirm={handleConfirmSubmit}
-        isLoading={confirmMutation.isPending || acceptMutation.isPending}
+        isLoading={acceptMutation.isPending || confirmMutation.isPending}
         title={confirmTitle}
         confirmLabel={confirmLabel}
       />
+
+      <Dialog open={paidOfflineOpen} onOpenChange={setPaidOfflineOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Mark as Paid & Confirmed</DialogTitle>
+            <DialogDescription>
+              Confirm that {reservation?.playerName} is paid and confirmed for{" "}
+              {reservation?.courtName}. This skips the regular payment flow.
+            </DialogDescription>
+          </DialogHeader>
+          {activePaymentMethods.length === 0 ? (
+            <div className="space-y-4">
+              <div className="rounded-lg border border-dashed bg-muted/30 p-4 text-center">
+                <p className="mb-3 text-sm text-muted-foreground">
+                  You need at least one active payment method to mark
+                  reservations as paid and confirmed.
+                </p>
+                <Button asChild>
+                  <a
+                    href={`${appRoutes.organization.settings}${SETTINGS_SECTION_HASHES.paymentMethods}`}
+                  >
+                    Set up payment methods
+                  </a>
+                </Button>
+              </div>
+              <DialogFooter>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setPaidOfflineOpen(false)}
+                >
+                  Cancel
+                </Button>
+              </DialogFooter>
+            </div>
+          ) : (
+            <StandardFormProvider
+              form={paidOfflineForm}
+              onSubmit={handlePaidOfflineSubmit}
+            >
+              <div className="space-y-4">
+                <StandardFormSelect<PaidOfflineFormValues>
+                  name="paymentMethodId"
+                  label="Payment method"
+                  placeholder="Select payment method"
+                  required
+                  options={activePaymentMethods.map((method) => ({
+                    value: method.id,
+                    label: `${method.provider} — ${method.accountName}${method.isDefault ? " (Default)" : ""}`,
+                  }))}
+                />
+                <StandardFormInput<PaidOfflineFormValues>
+                  name="paymentReference"
+                  label="Payment reference"
+                  placeholder="e.g. receipt number, GCash ref"
+                  required
+                />
+              </div>
+              <DialogFooter className="pt-4">
+                <Button
+                  type="button"
+                  variant="ghost"
+                  onClick={() => setPaidOfflineOpen(false)}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  disabled={confirmPaidOfflineMutation.isPending}
+                >
+                  Mark Paid & Confirmed
+                </Button>
+              </DialogFooter>
+            </StandardFormProvider>
+          )}
+        </DialogContent>
+      </Dialog>
 
       <RejectModal
         open={rejectOpen}
         onOpenChange={setRejectOpen}
         onReject={handleRejectSubmit}
-        isLoading={rejectMutation.isPending}
+        isLoading={rejectMutation.isPending || cancelMutation.isPending}
         title={
           rejectMode === "cancel" ? "Cancel Reservation" : "Reject Reservation"
         }

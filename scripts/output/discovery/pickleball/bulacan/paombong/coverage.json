@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T12:24:56.726Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 1
+  },
+  "discoveredUrls": 7,
+  "scrapedUrls": 2,
+  "noDataUrls": 3,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 2,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T12:24:56.726Z",
+      "lastSeenAt": "2026-03-10T12:24:56.726Z"
+    },
+    {
+      "rowKey": "jungle base fitness|san fernando|central luzon",
+      "name": "Jungle Base Fitness",
+      "city": "San Fernando",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstSeenAt": "2026-03-10T12:24:56.726Z",
+      "lastSeenAt": "2026-03-10T12:24:56.726Z"
+    }
+  ]
+}

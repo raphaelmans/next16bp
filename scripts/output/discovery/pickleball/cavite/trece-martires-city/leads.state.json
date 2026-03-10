@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:trece-martires-city",
+  "createdAt": "2026-03-10T08:19:22.195Z",
+  "updatedAt": "2026-03-10T08:20:01.882Z",
+  "queries": [
+    "pickleball courts in Cavite Trece Martires City",
+    "pickleball court Trece Martires City Cavite",
+    "Trece Martires City pickleball",
+    "courts in Trece Martires City Cavite pickleball",
+    "sports center Trece Martires City Cavite pickleball",
+    "pickleball club Trece Martires City Cavite",
+    "pickleball reservations Trece Martires City Cavite",
+    "host-map:cebupickleballcourts.com:Trece Martires City",
+    "host-map:cebupickleballcourts.com:Trece Martires",
+    "host-map:dumapickleball.com:Trece Martires City",
+    "host-map:dumapickleball.com:Trece Martires",
+    "site:cebupickleballcourts.com Trece Martires City Cavite pickleball",
+    "site:dumapickleball.com Trece Martires City Cavite pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "pickleball reservations Trece Martires City Cavite",
+      "title": "Play Pickleball at Warriors Pickleball Club: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Warriors Pickleball Club! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "pickleball reservations Trece Martires City Cavite",
+      "title": "Active Hub at SM",
+      "snippet": "SM City Trece Martires 2 Tables, April 21-May31. Summer Sports, SM City ... Pickleball, SM City Marikina Pickleball Courts | 3rd Level, April 13 | Mall Hours ...",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite": {
+      "canonicalUrl": "https://yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite",
+      "latestUrl": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "pickleball court Trece Martires City Cavite",
+      "title": "Top 10 Best Badminton Near Trece Martires City, Cavite",
+      "snippet": "Top 10 Best Badminton Near Trece Martires City, Cavite · 1. Playground Badminton Courts · 2. Power Smash · 3. CKSM Badminton Court · 4. Las Pinas Badminton Center.",
+      "domain": "yelp.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "pickleball club Trece Martires City Cavite",
+      "title": "Member Clubs",
+      "snippet": "Pickleball is about making friends and enjoying sport. Below is a list of Philippine pickleball member clubs that we work with, recognize and support.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "sports center Trece Martires City Cavite pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/LC6Y3V": {
+      "canonicalUrl": "https://reclub.co/m/LC6Y3V",
+      "latestUrl": "https://reclub.co/m/LC6Y3V",
+      "firstDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "lastDiscoveredAt": "2026-03-10T08:19:22.196Z",
+      "sourceQuery": "pickleball club Trece Martires City Cavite",
+      "title": "SAT OPEN PLAY | 6:00pm - 11:00pm | ALL LEVELS | 8 COURTS",
+      "snippet": "Looking for Pickleball meets in Cavite, Philippines? Check out this Reclub meet at 248 San Gregorio St hosted by Ruzzel and friends.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

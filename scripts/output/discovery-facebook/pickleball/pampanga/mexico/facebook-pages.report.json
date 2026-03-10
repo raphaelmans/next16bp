@@ -1,0 +1,196 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Mexico",
+    "citySlug": "mexico",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:46:41.027Z",
+  "queries": [
+    "site:facebook.com pickleball Mexico Pampanga",
+    "site:facebook.com \"Mexico\" \"Pampanga\" \"pickleball\"",
+    "site:facebook.com \"Mexico\" \"pickleball club\"",
+    "site:facebook.com \"Mexico\" \"pickleball court\"",
+    "site:facebook.com \"Pampanga\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/ThinkAndDink/",
+    "https://www.facebook.com/p/CABO-Pickleball-Club-100095642466719/",
+    "https://www.facebook.com/pampangapickleballcommunity/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/745567121984101/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266130997008442/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/ThinkAndDink/videos/btlc-gym-pickleball/1576886613015559/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/pampangapickleballcommunity/photos/pickleball-courts-in-pampangalooking-for-a-place-to-play-pickleballheres-a-list-/122125297131060591/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/GlobalPlazaSanSimon/videos/get-ready-san-simon-pickleball-is-coming-to-global-plaza-the-wait-is-almost-over/1280726033911722/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115660395388837/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4253213588300183/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThinkAndDink/about/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/mentions/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/GlobalPlazaMexico/photos/looking-for-a-space-for-your-pickleball-courtglobal-construct-city-is-ready-to-s/1429683632496367/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266130997008442/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/GlobalPlazaSanSimon/videos/get-ready-san-simon-pickleball-is-coming-to-global-plaza-the-wait-is-almost-over/1280726033911722/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115660395388837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ThinkAndDink/about/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/pampangapickleballcommunity/photos/pickleball-courts-in-pampangalooking-for-a-place-to-play-pickleballheres-a-list-/122125297131060591/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/GlobalPlazaMexico/photos/looking-for-a-space-for-your-pickleball-courtglobal-construct-city-is-ready-to-s/1429683632496367/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThinkAndDink/videos/btlc-gym-pickleball/1576886613015559/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2207475276189620/posts/4412873162316476/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/GlobalPlazaMexico/posts/looking-for-a-space-for-your-pickleball-courtglobal-construct-city-is-ready-to-s/1429683952496335/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/31768484786129602/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/pdcpickleball/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/posts/7199188420189338/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1120160085784817/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/346309517581933/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/SanCarlosPickleballAssociation/posts/8563810370332192/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/posts/9608371839270972/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/posts/25732290806452485/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/posts/25208614915486746/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1657943697556505/posts/31506976525559828/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1321896924603237/posts/6798465316946343/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/315147621275194/posts/680508681405751/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/158267650892127/posts/25271151512510394/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/4098848043497861/posts/25778485755107444/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/24652326437745508/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/25424983983813079/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1231290500312523/posts/8092741844167320/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/104345643645838/posts/2063317437748639/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4297207483900793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/chezkadennise/videos/newly-opened-pickleball-court-in-pampanga-kingscourt-pickleball-probably-the-bes/804352612637429/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/mexico/facebook-pages.state.json"
+}

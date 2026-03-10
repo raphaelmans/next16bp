@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "Santa Rosa City",
+    "citySlug": "santa-rosa-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:34:04.234Z",
+  "queries": [
+    "site:facebook.com pickleball Santa Rosa City Laguna",
+    "site:facebook.com \"Santa Rosa City\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"Santa Rosa City\" \"pickleball club\"",
+    "site:facebook.com \"Santa Rosa City\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/revelgrove/",
+    "https://www.facebook.com/photo.php?fbid=953488313859165&set=a.166477849226886&id=100075940147106",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1148751046586765/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4217313718556837/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fcoming-soon-in-sm-santa-rosa-juego-%EF%B8%8Fpickleball-gears-and-more-sa-santa-rosakitk/953488360525827/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/p/Pickle-Patio-61581391403483/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132376563717220/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1047387309630443/posts/1489972818705221/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4223082887979920/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61573274487514/posts/sm-sta-rosa-for-court-reservations-please-contact-us-at-09283495039come-play-and/122149374692775816/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4017625258525685/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fcoming-soon-in-sm-santa-rosa-juego-%EF%B8%8Fpickleball-gears-and-more-sa-santa-rosakitk/953488360525827/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/346803372990254/posts/1610724539931458/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1765271366889536/posts/25698238956499442/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1055329495928921/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/smgamepark/posts/sm-game-park-santa-rosa-is-now-officially-open-experience-next-level-fun-right-h/607378031805159/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/photos/d41d8cd9/950840690790594/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/936449423927052/posts/1848244816080837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fpickleball-court-along-santa-rosa-tagaytay-road%EF%B8%8Fkitkats-we-spotted-a-new-place-/823981466809851/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/pickleball-is-here-at-smcitysantarosa-come-check-out-our-brand-new-pickleball-co/1192780809545981/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fcoming-soon-in-sm-santa-rosa-juego-%EF%B8%8Fpickleball-gears-and-more-sa-santa-rosakitk/953488360525827/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/weekend-plans-make-your-move-and-try-pickleball-here-at-sm-city-santa-rosabeginn/1282694730554588/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/vistamall.sr/posts/pickleball-is-taking-over-vista-mall-sta-rosa-get-active-with-grabka-sports-use-/1065263169034585/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/game-on-at-sm-city-santa-rosa-as-the-first-ever-trio-challenge-pickleball-tourna/1231861805637881/?locale=nl_BE",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/vistamall.sr/posts/fathers-day-is-not-yet-overcelebrate-with-some-pickleball-fun-pickler-daddys-get/1085858046975097/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61581136812993/videos/%F0%9D%97%AC%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%85%F0%9D%98%81-%F0%9D%97%BF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9%F0%9D%98%86-%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%80-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-lets-play-pickleball-at-aa-dink-azone-dm-us-now-to-b/3835329500094513/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1055329495928921/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcityrosario/posts/this-week-was-packed-with-energy-passion-and-non-stop-action-at-the-sm-city-rosa/1153976400110259/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/pickleball-is-here-at-smcitysantarosa-come-check-out-our-brand-new-pickleball-co/1192780809545981/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fcoming-soon-in-sm-santa-rosa-juego-%EF%B8%8Fpickleball-gears-and-more-sa-santa-rosakitk/953488360525827/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1765271366889536/posts/25698238956499442/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/vistamall.sr/posts/pickleball-is-taking-over-vista-mall-sta-rosa-get-active-with-grabka-sports-use-/1065263169034585/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/posts/%EF%B8%8Fpickleball-court-along-santa-rosa-tagaytay-road%EF%B8%8Fkitkats-we-spotted-a-new-place-/823981466809851/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61581136812993/videos/%F0%9D%97%AC%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%85%F0%9D%98%81-%F0%9D%97%BF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9%F0%9D%98%86-%F0%9D%98%80%F0%9D%98%81%F0%9D%97%AE%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%80-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2-lets-play-pickleball-at-aa-dink-azone-dm-us-now-to-b/3835329500094513/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/empoweredconsumerismofficialpage/posts/bco-sta-rosa%F0%9D%97%9F%F0%9D%97%B6%F0%9D%97%B3%F0%9D%97%B2-%F0%9D%97%96%F0%9D%97%B5%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B4%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%A2%F0%9D%97%BD%F0%9D%97%BD%F0%9D%97%BC%F0%9D%97%BF%F0%9D%98%81%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A3%F0%9D%97%BF%F0%9D%97%B2%F0%9D%98%80%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81%F0%9D%97%AE%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%BC%F0%9D%97%BBspend-your-saturday-productive/1135609258602341/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/346803372990254/posts/1610724539931458/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/ready-set-goits-time-to-bring-out-your-a-game-because-sports-is-taking-over-this/1081755537315176/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/santa-rosa-city/facebook-pages.state.json"
+}

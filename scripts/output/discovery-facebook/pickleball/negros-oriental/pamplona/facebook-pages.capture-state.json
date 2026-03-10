@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:pamplona",
+  "createdAt": "2026-03-10T11:42:23.465Z",
+  "updatedAt": "2026-03-10T11:43:50.659Z",
+  "urls": {
+    "https://facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1225166389800931&set=a.164429319207982&type=3",
+      "firstCapturedAt": "2026-03-10T11:42:25.158Z",
+      "lastCapturedAt": "2026-03-10T11:42:25.158Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 162.159.140.245:443, 172.66.0.243:443, timeout: 10000ms)",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T11:43:07.293Z",
+      "lastCapturedAt": "2026-03-10T11:43:07.293Z",
+      "status": "captured",
+      "title": null,
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

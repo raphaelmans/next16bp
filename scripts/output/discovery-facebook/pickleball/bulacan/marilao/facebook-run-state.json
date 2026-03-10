@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:bulacan:marilao:facebook",
   "createdAt": "2026-03-10T06:51:34.096Z",
-  "updatedAt": "2026-03-10T07:00:43.846Z",
+  "updatedAt": "2026-03-10T11:30:07.537Z",
   "scope": {
     "provinceSlug": "bulacan",
     "citySlug": "marilao",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T07:00:43.846Z",
+      "finishedAt": "2026-03-10T11:30:07.537Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T07:00:43.846Z",
+      "finishedAt": "2026-03-10T11:30:07.537Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T07:00:43.846Z",
+      "finishedAt": "2026-03-10T11:30:07.537Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T07:00:43.846Z",
+      "finishedAt": "2026-03-10T11:30:07.537Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

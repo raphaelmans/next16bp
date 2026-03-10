@@ -1,0 +1,186 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Pototan",
+    "citySlug": "pototan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:14:40.895Z",
+  "queries": [
+    "site:facebook.com pickleball Pototan Iloilo",
+    "site:facebook.com \"Pototan\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Pototan\" \"pickleball club\"",
+    "site:facebook.com \"Pototan\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Pototan-Pickleball-Club-61566931812121/",
+    "https://www.facebook.com/unitedpanaypickleballclub/",
+    "https://www.facebook.com/61566931812121/?locale=zh_CN",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/popick-sunday-open-play/25965976669749459/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/war-is-not-the-answer-%EF%B8%8Fpickleball-is-%EF%B8%8Fpeace-be-with-you-%EF%B8%8F%EF%B8%8F%EF%B8%8Fpeacekleballpicklebal/1064514576738611/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/photos/pickleball-action-highlights-from-sundays-open-play-at-robinsons-jarowhat-a-fant/122112947774762578/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/our-earthquake-baller-basti/1738539356796346/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1065696386620430/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/picklepointiloilo/videos/pickleparty/1497460811728893/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1064514380071964/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4285713505050191/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/popick-sunday-open-play/25965976669749459/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/picklepointiloilo/photos/d41d8cd9/122162076770918972/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/war-is-not-the-answer-%EF%B8%8Fpickleball-is-%EF%B8%8Fpeace-be-with-you-%EF%B8%8F%EF%B8%8F%EF%B8%8Fpeacekleballpicklebal/1064514576738611/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1064514416738627/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1164661854995684/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/point-tally-update1st-paraw-regatta-pickleball-tournament-february-28-march-1-20/1055486424308093/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/unitedpanaypickleballclub/photos/pickleball-action-highlights-from-sundays-open-play-at-robinsons-jarowhat-a-fant/122112947774762578/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374256069529267/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/popick-sunday-open-play/25965976669749459/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/weplaypickleball/1501074758107837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/posts/122197699622564393/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/popick/903633128965565/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/our-earthquake-baller-basti/1738539356796346/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/61566931812121/photos/122164319240564393/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/videos/court-life-with-the-popicks/1109080951137067/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/posts/122197699622564393/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61566931812121/posts/wednesday-full-swing-a-great-day-of-open-play-and-skill-building-with-coach-roge/122206320428564393/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/juan.tandaya.5/posts/1st-mayors-cup-pototan-iwag-pickleball-tournamentpickleball-retiredandextremelyd/1348786013665941/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4026918087596402/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4302527010035507/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/donnabelle.mendoza.520/posts/4302456663323407/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/becomingfilipino/posts/mayor-beat-me-but-i-am-super-happy-to-have-experienced-this-legit-pickleball-cou/1433468881474500/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4173068759648000/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pototan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/pototan/facebook-pages.state.json"
+}

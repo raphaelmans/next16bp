@@ -1,0 +1,67 @@
+{
+  "generatedAt": "2026-03-10T11:35:13.883Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 5,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 14,
+  "scrapedUrls": 5,
+  "noDataUrls": 8,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 5,
+  "migratedRows": 0,
+  "pendingMigrationRows": 5,
+  "pending": [
+    {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    {
+      "rowKey": "slv courts|dumaguete city|negros oriental",
+      "name": "Slv Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/slv-courts",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    {
+      "rowKey": "zero zero two pickleball court|dumaguete city|negros oriental",
+      "name": "Zero Zero Two Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/zero-zero-two-pickleball-court",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    {
+      "rowKey": "rally alley pickleball courts|dumaguete city|negros oriental",
+      "name": "Rally Alley Pickleball Courts",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dumaguete-city/rally-alley-pickleball-courts",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    },
+    {
+      "rowKey": "bmvl sports center|hilongos|leyte",
+      "name": "Bmvl Sports Center",
+      "city": "HILONGOS",
+      "province": "LEYTE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/eastern-visayas/hilongos/bmvl-sports-center",
+      "firstSeenAt": "2026-03-10T11:35:13.883Z",
+      "lastSeenAt": "2026-03-10T11:35:13.883Z"
+    }
+  ]
+}

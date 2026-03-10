@@ -17,6 +17,7 @@ interface StatusBannerProps {
   cancellationReason?: string;
   className?: string;
   onMessageOwner?: (() => void) | undefined;
+  onPayNow?: (() => void) | undefined;
 }
 
 const CHAT_ENABLED_STATUSES: ReservationStatus[] = [
@@ -33,6 +34,7 @@ export function StatusBanner({
   cancellationReason,
   className,
   onMessageOwner,
+  onPayNow,
 }: StatusBannerProps) {
   const config = statusBannerConfig[status];
   const nowMs = useNowMs({ intervalMs: 30_000 });
@@ -82,9 +84,20 @@ export function StatusBanner({
               </Button>
             ) : null}
             {showPayButton ? (
-              <Button size="sm" asChild className="w-full sm:w-auto">
-                <Link href={playerActionPath}>Pay now to hold slot</Link>
-              </Button>
+              onPayNow ? (
+                <Button
+                  size="sm"
+                  type="button"
+                  className="w-full sm:w-auto"
+                  onClick={onPayNow}
+                >
+                  Pay now to hold slot
+                </Button>
+              ) : (
+                <Button size="sm" asChild className="w-full sm:w-auto">
+                  <Link href={playerActionPath}>Pay now to hold slot</Link>
+                </Button>
+              )
             ) : null}
           </div>
         ) : null}

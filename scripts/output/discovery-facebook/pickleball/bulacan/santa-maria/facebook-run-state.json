@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:bulacan:santa-maria:facebook",
   "createdAt": "2026-03-10T06:52:44.193Z",
-  "updatedAt": "2026-03-10T07:00:45.708Z",
+  "updatedAt": "2026-03-10T11:30:07.788Z",
   "scope": {
     "provinceSlug": "bulacan",
     "citySlug": "santa-maria",
@@ -80,7 +80,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T06:56:00.839Z",
-      "finishedAt": "2026-03-10T07:00:45.708Z",
+      "finishedAt": "2026-03-10T11:30:07.788Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

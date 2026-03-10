@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T08:15:25.082Z",
+  "updatedAt": "2026-03-10T08:15:52.816Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:15:25.081Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sampaloc tanay pickleball club|tanay|rizal",
+      "lastRowName": "Sampaloc Tanay Pickleball Club"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/calabarzon/tanay/vacation-rentals",
+      "firstDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "lastDiscoveredAt": "2026-03-10T08:15:25.081Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:15:25.081Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "sampaloc tanay pickleball club|tanay|rizal": {
+      "rowKey": "sampaloc tanay pickleball club|tanay|rizal",
+      "name": "Sampaloc Tanay Pickleball Club",
+      "city": "TANAY",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+      "firstSeenAt": "2026-03-10T08:15:25.081Z",
+      "lastSeenAt": "2026-03-10T08:15:25.081Z"
+    }
+  }
+}

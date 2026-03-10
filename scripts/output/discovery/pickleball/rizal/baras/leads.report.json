@@ -1,0 +1,130 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Baras",
+    "citySlug": "baras",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T09:04:03.660Z",
+  "queries": [
+    "pickleball courts in Rizal Baras",
+    "pickleball court Baras Rizal",
+    "Baras pickleball",
+    "courts in Baras Rizal pickleball",
+    "sports center Baras Rizal pickleball",
+    "pickleball club Baras Rizal",
+    "pickleball reservations Baras Rizal",
+    "host-map:cebupickleballcourts.com:Baras",
+    "host-map:dumapickleball.com:Baras",
+    "site:cebupickleballcourts.com Baras Rizal pickleball",
+    "site:dumapickleball.com Baras Rizal pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/tanay/sampaloc-tanay-pickleball-club",
+    "https://www.yelp.com/search?find_desc=Badminton&find_loc=Baras%2C+Rizal",
+    "https://athletecentral.fit/",
+    "https://playtimescheduler.com/region/cainta-luzon",
+    "https://reclub.co/m/GGZPAE",
+    "https://www.sparrk.ph/explore/pickleball"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "score": 11
+    },
+    {
+      "url": "https://m.facebook.com/taguigcity/posts/look-residents-of-barangay-rizal-spend-their-time-at-the-covered-courts-and-comm/1126284332871269/",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/",
+      "score": 6
+    },
+    {
+      "url": "https://www.threads.com/@northpol/post/DUfmM-6mMzd/pickleball-sunday",
+      "score": 13
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=D5uA3XmiiYs",
+      "score": 1
+    },
+    {
+      "url": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/",
+      "score": 4
+    },
+    {
+      "url": "https://www.yelp.com/search?find_desc=Badminton&find_loc=Baras%2C+Rizal",
+      "score": 6
+    },
+    {
+      "url": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "score": 11
+    },
+    {
+      "url": "https://www.valleverdecountryclub.com/",
+      "score": 1
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.facebook.com/taguigcity/posts/look-the-covered-courts-in-barangay-rizal-welcome-locals-for-sports-fitness-and-/1120437273455975/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.instagram.com/reel/DTHLZ1DAQC6/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.facebook.com/TOJEVentCenter/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.instagram.com/p/DU_iWA2gdRq/",
+    "https://www.facebook.com/taguigcity/posts/happening-now-rizal-community-complex-covered-courtthe-rizal-community-complex-i/1112325834267119/",
+    "https://www.facebook.com/taguigcity/posts/look-residents-of-barangay-rizal-spend-their-time-at-the-covered-courts-and-comm/1126284332871269/",
+    "https://www.tiktok.com/@shaneashley.r/video/7606965911899114759",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.instagram.com/reel/DTHLZ1DAQC6/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.instagram.com/reel/DRRbPJJEjrm/",
+    "https://www.facebook.com/taguigcity/posts/look-the-covered-courts-in-barangay-rizal-welcome-locals-for-sports-fitness-and-/1120437273455975/",
+    "https://www.facebook.com/taguigcity/posts/happening-now-rizal-community-complex-covered-courtthe-rizal-community-complex-i/1112325834267119/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/taclobantodayofficial/posts/serve-up-fun-and-build-lasting-memories-this-season-whether-youre-a-parent-and-c/714271194289366/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.facebook.com/TOJEVentCenter/",
+    "https://www.facebook.com/photo.php?fbid=122157986816820835&set=a.122103704432820835&id=61574625058902",
+    "https://www.instagram.com/p/DU_iWA2gdRq/",
+    "https://www.facebook.com/61568779744215/posts/game-on-bataanbravo-pickleball-is-now-open-at-vista-mall-bataan-experience-pickl/122162193896625991/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1302542654540936/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/taguigcity/posts/happening-now-rizal-community-complex-covered-courtthe-rizal-community-complex-i/1112325834267119/",
+    "https://www.facebook.com/athletecentralph/",
+    "https://www.instagram.com/athletecentralph/?hl=en",
+    "https://www.facebook.com/roelandbruce3/videos/the-vision-the-struggles-the-outcome/4100132853649341/",
+    "https://www.tiktok.com/@hungrybyaheros/video/7376998783022058758?lang=en",
+    "https://www.instagram.com/reel/DRt2YDNEvmb/?hl=en",
+    "https://www.facebook.com/groups/1347503615753311/posts/2288443324992664/",
+    "https://www.facebook.com/TOJEVentCenter/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3921815404773338/",
+    "https://www.instagram.com/reel/DRRbPJJEjrm/",
+    "https://www.facebook.com/taclobantodayofficial/posts/serve-up-fun-and-build-lasting-memories-this-season-whether-youre-a-parent-and-c/714271194289366/",
+    "https://www.facebook.com/groups/antipolonews/posts/2356088228209614/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+    "https://www.instagram.com/reel/DRRbPJJEjrm/",
+    "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+    "https://www.tiktok.com/@shaneashley.r/video/7606965911899114759",
+    "https://www.instagram.com/p/CWQ5d07hAtU/",
+    "https://www.facebook.com/cafelupeantipolo/videos/tara-pickleball/685091277986118/",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/baras/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/baras/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/baras/scrape-state.json"
+}

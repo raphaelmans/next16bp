@@ -1,0 +1,221 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Cardona",
+    "citySlug": "cardona",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:32:07.816Z",
+  "queries": [
+    "site:facebook.com pickleball Cardona Rizal",
+    "site:facebook.com \"Cardona\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"Cardona\" \"pickleball club\"",
+    "site:facebook.com \"Cardona\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2677006302662298/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/item/830546856452259/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364150250539849/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1098614441600426/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374205846200956/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362239747397566/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471173347677865/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1960302094584935/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214028602218682/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2738577259838535/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2677006302662298/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/item/830546856452259/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1098614441600426/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374205846200956/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364150250539849/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362239747397566/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1471173347677865/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214028602218682/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/item/1750935695494673/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/marketplace/item/1401500778255693/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/377751639504259/posts/1322961618316585/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/25831212186523588/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2677006302662298/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/cometopr/posts/1515133883378689/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Naturecoastpickleball/posts/congratulations-to-fernando-cardona-for-securing-2nd-place-in-both-mixed-doubles/122221143878067036/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/havingfuninwesternpuertorico/posts/10173613190370118/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1340630926008388/posts/33484743521170378/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2216003581963692/posts/4373723956191633/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4080988622189348/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/302886985915846/posts/606888742182334/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/562171796115136/posts/799343649064615/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/EDRPickleball/posts/6829196700467137/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/4623779861084230/posts/25496272496741662/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/doradobeach/posts/we-are-delighted-to-announce-the-opening-of-the-new-pickleball-courts-at-the-fit/1223849549781038/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/cometopr/posts/1515133883378689/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ArenalTennisPickleballShack/posts/we-are-excited-to-announce-a-new-5th-pickleball-court-has-been-added-come-check-/1282727190522307/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2677006302662298/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2216003581963692/posts/4373723956191633/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/DeckandDam/posts/our-padel-and-pickleball-courts-are-now-opengrab-a-friend-have-some-fun-and-enjo/1609604230098029/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/cometopr/posts/1229973105228103/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/cardona/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/cardona/facebook-pages.state.json"
+}

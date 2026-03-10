@@ -1,0 +1,109 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Miagao",
+    "citySlug": "miagao",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:29:43.862Z",
+  "queries": [
+    "pickleball courts in Iloilo Miagao",
+    "pickleball court Miagao Iloilo",
+    "Miagao pickleball",
+    "courts in Miagao Iloilo pickleball",
+    "sports center Miagao Iloilo pickleball",
+    "pickleball club Miagao Iloilo",
+    "pickleball reservations Miagao Iloilo",
+    "host-map:cebupickleballcourts.com:Miagao",
+    "host-map:dumapickleball.com:Miagao",
+    "site:cebupickleballcourts.com Miagao Iloilo pickleball",
+    "site:dumapickleball.com Miagao Iloilo pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+    "https://www.pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+      "score": 12
+    },
+    {
+      "url": "https://www.youtube.com/shorts/T_XiT9hztzQ",
+      "score": 4
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/m/RUFSDG",
+      "score": 12
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/iloilopickleball/posts/let-us-support-sinadya-pickleball-and-play-over-at-up-miag-ao-0-0-2-httpswwwface/611419682048105/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.facebook.com/flipsenina/videos/super-fun-sport-with-an-aesthetic-court-%EF%B8%8F-pickleball101-pickleballsunday-iloiloc/1782016846000174/",
+    "https://www.instagram.com/reel/DUL19I-FX8-/",
+    "https://www.facebook.com/f2ftti2020/posts/pickleball-mahimo-na-mahampang-sa-banwa-sang-miagaogin-anunsyo-ni-mayor-richard-/922214190534914/",
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/f2ftti2020/posts/pickleball-mahimo-na-mahampang-sa-banwa-sang-miagaogin-anunsyo-ni-mayor-richard-/922214190534914/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/flipsenina/videos/super-fun-sport-with-an-aesthetic-court-%EF%B8%8F-pickleball101-pickleballsunday-iloiloc/1782016846000174/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.facebook.com/photo.php?fbid=922220320534301&set=a.223455057077501&id=100082390245247",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/",
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/f2ftti2020/posts/pickleball-mahimo-na-mahampang-sa-banwa-sang-miagaogin-anunsyo-ni-mayor-richard-/922214190534914/",
+    "https://www.facebook.com/flipsenina/videos/super-fun-sport-with-an-aesthetic-court-%EF%B8%8F-pickleball101-pickleballsunday-iloiloc/1782016846000174/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.instagram.com/popular/pickleball-court-talisay/",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/iloilopickleball/posts/let-us-support-sinadya-pickleball-and-play-over-at-up-miag-ao-0-0-2-httpswwwface/611419682048105/",
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/kemmpatrick.jalandoni.3/videos/pikolbol/1499128994981753/",
+    "https://www.facebook.com/oh.yeah.man.2024/videos/pickle-ball-sa-miagao-peoples-center-miagao-pickleball-sports-exercise-happy/1408079883848065/",
+    "https://www.instagram.com/reel/DVIL0V7kaIb/",
+    "https://www.facebook.com/BMJoAnnGerminanda/posts/wow-miagaopickleball-na-kita-sa-miagao-atty-bm-rica-jane-l-garin-dr-janette-lore/887129890967457/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.instagram.com/reel/DUL19I-FX8-/",
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/f2ftti2020/posts/pickleball-mahimo-na-mahampang-sa-banwa-sang-miagaogin-anunsyo-ni-mayor-richard-/922214190534914/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.facebook.com/oh.yeah.man.2024/videos/pickle-ball-sa-miagao-peoples-center-miagao-pickleball-sports-exercise-happy/1408079883848065/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+    "https://www.instagram.com/p/DVD-At4kiT5/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/iloilopickleball/posts/let-us-support-sinadya-pickleball-and-play-over-at-up-miag-ao-0-0-2-httpswwwface/611419682048105/",
+    "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+    "https://www.facebook.com/upaailoilochapter/photos/advisory-the-sinadya-pickleball-club-would-like-to-inform-the-public-that-the-ve/632341662653664/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/wowmiagao/posts/miagao-peoples-center-miagao-basketball-court-as-of-april-24-2025-wowmiagao-miag/661966403276849/",
+    "https://www.instagram.com/reel/DUL19I-FX8-/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+    "https://www.facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1164661854995684/",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.instagram.com/popular/pickleball-court-talisay/",
+    "https://www.instagram.com/reel/DUnBbEUEWn_/",
+    "https://www.facebook.com/sample.king.7/videos/%F0%9D%90%8D%F0%9D%90%9E%F0%9D%90%B0-%F0%9D%90%A9%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%AC%F0%9D%90%A9%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%93%F0%9D%90%9A%F0%9D%90%A0%F0%9D%90%9B%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9A%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-8-brand-new-pickleball-courtslocated-at-p/921569527713633/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1370110374450830/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/miagao/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/miagao/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/miagao/scrape-state.json"
+}

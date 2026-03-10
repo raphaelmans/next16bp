@@ -1,0 +1,187 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:09:39.070Z",
+  "updatedAt": "2026-03-10T11:10:28.772Z",
+  "urls": {
+    "https://picklehub.ph/clubs": {
+      "canonicalUrl": "https://picklehub.ph/clubs",
+      "latestUrl": "https://picklehub.ph/clubs",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://jfmdevelopmentcorp.com/mtspickleball": {
+      "canonicalUrl": "https://jfmdevelopmentcorp.com/mtspickleball",
+      "latestUrl": "https://jfmdevelopmentcorp.com/mtspickleball/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.santacruzpickleball.com/": {
+      "canonicalUrl": "https://www.santacruzpickleball.com/",
+      "latestUrl": "https://www.santacruzpickleball.com/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/us/california/santa-cruz/brommer-park-santa-cruz": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/us/california/santa-cruz/brommer-park-santa-cruz",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/santa-cruz/brommer-park-santa-cruz",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Cruz%2C+CA": {
+      "canonicalUrl": "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Cruz%2C+CA",
+      "latestUrl": "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Cruz%2C+CA",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://swimply.com/explore/us-ca-santa-cruz/pickleball-club": {
+      "canonicalUrl": "https://swimply.com/explore/us-ca-santa-cruz/pickleball-club",
+      "latestUrl": "https://swimply.com/explore/us-ca-santa-cruz/pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.utrsports.net/clubs/1582424": {
+      "canonicalUrl": "https://app.utrsports.net/clubs/1582424",
+      "latestUrl": "https://app.utrsports.net/clubs/1582424?utm_source=direct&utm_medium=none",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pickletown|davao city|davao del sur",
+      "lastRowName": "Pickletown"
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@dcpci": {
+      "canonicalUrl": "https://reclub.co/clubs/@dcpci",
+      "latestUrl": "https://reclub.co/clubs/@dcpci",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.santacruzpickleball.com/membership": {
+      "canonicalUrl": "https://www.santacruzpickleball.com/membership",
+      "latestUrl": "https://www.santacruzpickleball.com/membership/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/": {
+      "canonicalUrl": "https://picklehub.ph/",
+      "latestUrl": "https://picklehub.ph/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickletown.skedda.com/": {
+      "canonicalUrl": "https://pickletown.skedda.com/",
+      "latestUrl": "https://pickletown.skedda.com/",
+      "firstDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "lastDiscoveredAt": "2026-03-10T11:09:39.069Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:09:39.069Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "pickletown|davao city|davao del sur": {
+      "rowKey": "pickletown|davao city|davao del sur",
+      "name": "Pickletown",
+      "city": "DAVAO CITY",
+      "province": "DAVAO DEL SUR",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+      "firstSeenAt": "2026-03-10T11:09:39.069Z",
+      "lastSeenAt": "2026-03-10T11:09:39.069Z"
+    }
+  }
+}

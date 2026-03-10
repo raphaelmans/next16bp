@@ -6,7 +6,7 @@ import { CheckCircle, MessageSquare, RefreshCw } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { parseAsStringLiteral, useQueryState } from "nuqs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
 import {
@@ -17,7 +17,6 @@ import {
 } from "@/common/format";
 import {
   getPlayerReservationDetailPath,
-  getPlayerReservationPaymentPath,
   PLAYER_RESERVATION_STEP_QUERY_PARAM,
   type PlayerReservationStep,
   playerReservationSteps,
@@ -87,6 +86,8 @@ export default function ReservationDetailPage({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isExpired, setIsExpired] = useState(false);
+  const paymentInfoSectionRef = useRef<HTMLDivElement | null>(null);
+  const shouldFocusPaymentInfoRef = useRef(false);
   const { invalidateReservationPage } = useModReservationInvalidation();
   const { warmupReservationPage } = useModReservationPageWarmup();
   const [stepParam, setStepParam] = useQueryState(
@@ -121,14 +122,11 @@ export default function ReservationDetailPage({
     RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
   );
 
-  const {
-    data: groupData,
-    isLoading: isLoadingLinkedDetail,
-    isFetching: isFetchingLinkedDetail,
-  } = useQueryReservationLinkedDetail(
-    reservationId,
-    RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
-  );
+  const { data: groupData, isLoading: isLoadingLinkedDetail } =
+    useQueryReservationLinkedDetail(
+      reservationId,
+      RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
+    );
   const realtimeReservationIds = [
     reservationId,
     ...(groupData?.items.map((item) => item.reservationId) ?? []),
@@ -214,6 +212,25 @@ export default function ReservationDetailPage({
     router.replace(getPlayerReservationDetailPath({ reservationId }));
   }, [canShowPaymentStep, requestedStep, reservation, reservationId, router]);
 
+  useEffect(() => {
+    if (activeStep !== "payment" || !shouldFocusPaymentInfoRef.current) {
+      return;
+    }
+
+    const paymentInfoNode = paymentInfoSectionRef.current;
+    if (!paymentInfoNode) {
+      return;
+    }
+
+    shouldFocusPaymentInfoRef.current = false;
+    window.requestAnimationFrame(() => {
+      paymentInfoNode.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    });
+  }, [activeStep]);
+
   const handleRefresh = async () => {
     if (!reservationId) return;
     setIsRefreshing(true);
@@ -245,6 +262,27 @@ export default function ReservationDetailPage({
 
   const handleGoToOverview = async () => {
     await setStepParam(null);
+  };
+
+  const scrollPaymentInfoIntoView = () => {
+    paymentInfoSectionRef.current?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
+  const handleGoToPaymentInfo = async () => {
+    if (!canShowPaymentStep) {
+      return;
+    }
+
+    if (activeStep === "payment") {
+      scrollPaymentInfoIntoView();
+      return;
+    }
+
+    shouldFocusPaymentInfoRef.current = true;
+    await setStepParam("payment");
   };
 
   const handleMarkPaid = async (values: PaymentProofFormValues) => {
@@ -469,7 +507,9 @@ export default function ReservationDetailPage({
     formSubmitting;
   const isPaymentPanelBusy =
     activeStep === "payment" &&
-    (isFetchingReservation || isFetchingLinkedDetail || isLoadingPaymentInfo);
+    Boolean(paymentInfoReservationId) &&
+    isLoadingPaymentInfo &&
+    !paymentInfo;
   const isSubmitDisabled =
     isPaymentSubmitting ||
     isPaymentPanelBusy ||
@@ -516,6 +556,9 @@ export default function ReservationDetailPage({
         expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
         onMessageOwner={handleOpenChatFromBanner}
+        onPayNow={
+          canShowPaymentStep ? () => void handleGoToPaymentInfo() : undefined
+        }
       />
 
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
@@ -577,22 +620,24 @@ export default function ReservationDetailPage({
                     </CardContent>
                   </Card>
 
-                  {isPaymentPanelBusy ? (
-                    <Card>
-                      <CardHeader>
-                        <Skeleton className="h-6 w-40" />
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <Skeleton className="h-14 w-full rounded-xl" />
-                        <Skeleton className="h-24 w-full rounded-xl" />
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <PaymentInfoCard
-                      paymentMethods={paymentInfo?.methods}
-                      expiresInMinutes={groupExpiresInMinutes}
-                    />
-                  )}
+                  <div ref={paymentInfoSectionRef}>
+                    {isPaymentPanelBusy ? (
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-6 w-40" />
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <Skeleton className="h-14 w-full rounded-xl" />
+                          <Skeleton className="h-24 w-full rounded-xl" />
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <PaymentInfoCard
+                        paymentMethods={paymentInfo?.methods}
+                        expiresInMinutes={groupExpiresInMinutes}
+                      />
+                    )}
+                  </div>
 
                   {isChatEnabledForReservationStatus ? (
                     <Button
@@ -657,22 +702,24 @@ export default function ReservationDetailPage({
                     </CardContent>
                   </Card>
 
-                  {isPaymentPanelBusy ? (
-                    <Card>
-                      <CardHeader>
-                        <Skeleton className="h-6 w-40" />
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <Skeleton className="h-14 w-full rounded-xl" />
-                        <Skeleton className="h-24 w-full rounded-xl" />
-                      </CardContent>
-                    </Card>
-                  ) : (
-                    <PaymentInfoCard
-                      paymentMethods={paymentInfo?.methods}
-                      expiresInMinutes={expiresInMinutes}
-                    />
-                  )}
+                  <div ref={paymentInfoSectionRef}>
+                    {isPaymentPanelBusy ? (
+                      <Card>
+                        <CardHeader>
+                          <Skeleton className="h-6 w-40" />
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <Skeleton className="h-14 w-full rounded-xl" />
+                          <Skeleton className="h-24 w-full rounded-xl" />
+                        </CardContent>
+                      </Card>
+                    ) : (
+                      <PaymentInfoCard
+                        paymentMethods={paymentInfo?.methods}
+                        expiresInMinutes={expiresInMinutes}
+                      />
+                    )}
+                  </div>
 
                   {isChatEnabledForReservationStatus ? (
                     <Button
@@ -890,12 +937,12 @@ export default function ReservationDetailPage({
                 </div>
                 {payableAwaitingItems.length > 0 && activeStep !== "payment" ? (
                   <div className="pt-2">
-                    <Button asChild className="w-full">
-                      <Link
-                        href={getPlayerReservationPaymentPath(reservation.id)}
-                      >
-                        Complete Payment
-                      </Link>
+                    <Button
+                      type="button"
+                      className="w-full"
+                      onClick={() => void handleGoToPaymentInfo()}
+                    >
+                      Complete Payment
                     </Button>
                   </div>
                 ) : null}

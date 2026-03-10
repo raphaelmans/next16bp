@@ -1,0 +1,28 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "davao-del-sur",
+    "citySlug": "bansalan",
+    "provinceName": "Davao Del Sur",
+    "cityName": "Bansalan"
+  },
+  "generatedAt": "2026-03-10T11:27:13.938Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/bansalan/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 3,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 1,
+  "readyCount": 1,
+  "reviewCount": 1,
+  "skipCount": 0,
+  "csvRowCount": 1,
+  "failures": [
+    {
+      "url": "https://www.facebook.com/61582499198894/?locale=pa_IN",
+      "error": "Command failed: playwright-cli -s=fbcap-davao-del-sur-bansalan goto https://www.facebook.com/61582499198894/?locale=pa_IN\n"
+    }
+  ]
+}

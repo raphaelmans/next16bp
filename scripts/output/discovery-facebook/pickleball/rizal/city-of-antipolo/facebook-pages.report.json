@@ -1,0 +1,204 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "City of Antipolo",
+    "citySlug": "city-of-antipolo",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T09:00:53.169Z",
+  "queries": [
+    "site:facebook.com pickleball City of Antipolo Rizal",
+    "site:facebook.com \"City of Antipolo\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"City of Antipolo\" \"pickleball club\"",
+    "site:facebook.com \"City of Antipolo\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Tru-Grit-Pickleball-Court-61580698541188/",
+    "https://www.facebook.com/p/Mission-Hills-Pickleball-Club-61552624460619/",
+    "https://www.facebook.com/photo.php?fbid=122187769316514888&set=a.122118218600514888&id=61565446663413",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/SMCenterAntipoloDowntown/posts/reserve-your-pickleball-court-at-sm-center-antipolo-downtownbe-here-to-play-the-/1143567467987483/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345916032363271/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/vistamallantipolo/posts/happening-now-at-tru-grit-pickleball-courtantipolo-quad-club-meet-pickleball-cla/1309125084589827/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/cafelupeantipolo/posts/pickleball-court-check-11pm-come-play-with-us-we-are-open-247-message-us-for-inq/1238336968320785/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/homeserviceVET/posts/%F0%9D%90%80%F0%9D%90%8D%F0%9D%90%93%F0%9D%90%88%F0%9D%90%8F%F0%9D%90%8E%F0%9D%90%8B%F0%9D%90%8E-%F0%9D%90%91%F0%9D%90%88%F0%9D%90%99%F0%9D%90%80%F0%9D%90%8B%EF%B8%8Fmarch-8-2026sunday-200-pmpickleball-courts-nspc-mabolo-st-nayong-/1292768899572477/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/KTFgymAntipolo/posts/pickleball-is-finally-here-starting-may-13-enjoy-open-play-with-our-introductory/1193410929467021/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1522093708622684/posts/1893968721435179/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4325355221086019/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4203514206603455/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1454935479301652/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/cafekohii/posts/kohii-will-be-at-the-tru-grit-pickleball-court-opening-tournament-on-february-28/926822869872904/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/397075297009336/posts/26217471431209702/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/667825301525924/posts/1483185856656527/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/antipolonews/posts/2368524860299284/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sdoantipolocity/posts/atm-big-wins-bigger-rewards-the-ynares-event-center-came-alive-as-governor-nina-/799446475695142/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/antipolonews/posts/2365834500568320/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/birdwatchphilippinescommunity/posts/1809647046344307/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/antipolonews/posts/2370144303470673/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4203514206603455/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61585224245163/posts/friday-night-pickleball-kabayanriyadhpickleball-riyadhpinoypickleballers-kabayan/1619851759197776/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/sdoantipolocity/posts/atm-big-wins-bigger-rewards-the-ynares-event-center-came-alive-as-governor-nina-/799446475695142/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1311359263436797/posts/1552484802657574/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/AntipoloSTAR/posts/antipolo-news-congratulations-to-the-samahang-kapitanes-at-kapitanas-2025-for-th/1169023475238277/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/sumulonglorenzolj/posts/ball-is-life-after-2-years-of-pandemic-the-antipolo-brothers-basketball-league-a/168886572363158/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/kiwanisbulletin/posts/1280868609610160/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/StPaulCollegePasig/posts/three-cheers-for-our-paulinian-gymnasts-our-spcp-student-gymnasts-bagged-several/6003361566358904/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4203514206603455/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/cafekohii/posts/kohii-will-be-at-the-tru-grit-pickleball-court-opening-tournament-on-february-28/926822869872904/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/667825301525924/posts/1479091270399319/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cafekohii/photos/d41d8cd9/902454245643100/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/287236445334691/posts/1894152524643067/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/cafekohii/photos/for-those-of-you-who-would-like-to-open-your-own-cafe-but-dont-know-where-to-sta/230068989548299/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1857510737601496/posts/26677500358509190/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/dianenachor/posts/direct-listingoverlooking-resort-for-sale%EF%B8%8F%EF%B8%8Fantipolo-city-330-sqm-lot-area-36-sqm/25432152743042070/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/look-%F0%9D%97%A3%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%BA%F0%9D%97%B2-%F0%9D%97%97%F0%9D%97%BC%F0%9D%97%B0%F0%9D%98%81%F0%9D%97%BC%F0%9D%97%BF%F0%9D%98%80-%F0%9D%97%A0%F0%9D%97%B2%F0%9D%97%B1%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%AE%F0%9D%97%B9-%F0%9D%97%96%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%BF-is-a-3-cluster-of-5-storey-buildings-which-wil/481933601261170/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/city-of-antipolo/facebook-pages.state.json"
+}

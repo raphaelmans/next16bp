@@ -1,0 +1,214 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "San Mateo",
+    "citySlug": "san-mateo",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:17:52.534Z",
+  "queries": [
+    "site:facebook.com pickleball San Mateo Rizal",
+    "site:facebook.com \"San Mateo\" \"Rizal\" \"pickleball\"",
+    "site:facebook.com \"San Mateo\" \"pickleball club\"",
+    "site:facebook.com \"San Mateo\" \"pickleball court\"",
+    "site:facebook.com \"Rizal\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/picklecamp.ph/",
+    "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4379631945658346/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192622531025956/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4249966571937131/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4372843949670479/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/863311458464060/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4379631945658346/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192622531025956/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4249966571937131/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1465700648225135/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4234365273497261/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4112913582309098/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376192559335618/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4249966571937131/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1333960971690777/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1173224611097748/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1377281974025343/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4250518411881947/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1262315195522022/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1263609945392547/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4234365273497261/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4353761228245418/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4254614508139004/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/smpickleballclub/posts/1149300423490167/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/jhoanneRND/videos/new-pickleball-court/721864867529817/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/656458258104568/posts/1921844124899302/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/3559632374303891/posts/4211646902435765/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitysanmateoofficial/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/969225928738661/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4379631945658346/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/videos/pickleball-at-the-historic-rizal-memorial-coliseum/26190323750593862/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186439914977551/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/questsportsph/posts/-rizal-open-2025-tentative-schedule-pickleball-enthusiasts-the-countdown-has-beg/122129734484607965/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370884646533076/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115961058692104/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549955215572928/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3835157076772505/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/SparkleGMAArtistCenter/posts/bruce-roeland-launches-biggest-pickleball-hub-in-rizalbruce-roeland-is-leveling-/1365130772324749/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555407930473/mentions/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/rizal/san-mateo/facebook-pages.state.json"
+}

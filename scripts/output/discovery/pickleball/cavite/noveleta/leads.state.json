@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:noveleta",
+  "createdAt": "2026-03-10T11:07:59.425Z",
+  "updatedAt": "2026-03-10T11:08:37.348Z",
+  "queries": [
+    "pickleball courts in Cavite Noveleta",
+    "pickleball court Noveleta Cavite",
+    "Noveleta pickleball",
+    "courts in Noveleta Cavite pickleball",
+    "sports center Noveleta Cavite pickleball",
+    "pickleball club Noveleta Cavite",
+    "pickleball reservations Noveleta Cavite",
+    "host-map:cebupickleballcourts.com:Noveleta",
+    "host-map:dumapickleball.com:Noveleta",
+    "site:cebupickleballcourts.com Noveleta Cavite pickleball",
+    "site:dumapickleball.com Noveleta Cavite pickleball",
+    "site:pickleheads.com pickleball Noveleta Cavite",
+    "site:playtimescheduler.com pickleball Noveleta Cavite",
+    "site:app.court-access.com pickleball Noveleta Cavite",
+    "dink Noveleta pickleball"
+  ],
+  "urls": {
+    "https://youtube.com/shorts/ypO0IrYFsHE": {
+      "canonicalUrl": "https://youtube.com/shorts/ypO0IrYFsHE",
+      "latestUrl": "https://www.youtube.com/shorts/ypO0IrYFsHE",
+      "firstDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "lastDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "sourceQuery": "Noveleta pickleball",
+      "title": "THE PICKLEGROUND PH | NOVELETA 🇵🇭 CAVITE",
+      "snippet": "Nestled along the EPZA Diversion Road in Noveleta, Cavite, The PickleGround PH stands as a new playground for the country's fastest-growing ...",
+      "domain": "youtube.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballtournaments.com/tournaments/philippines-the-dink-minor-league-pickleball-tournament-1-milp": {
+      "canonicalUrl": "https://pickleballtournaments.com/tournaments/philippines-the-dink-minor-league-pickleball-tournament-1-milp",
+      "latestUrl": "https://pickleballtournaments.com/tournaments/philippines-the-dink-minor-league-pickleball-tournament-1-milp",
+      "firstDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "lastDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "sourceQuery": "dink Noveleta pickleball",
+      "title": "Philippines The Dink Minor League Pickleball Tournament #1 (MiLP)",
+      "snippet": "Venue Details. The PickleGround PH. CVHQ+V29, EPZA Diversion Rd Noveleta, Cavite, 4104. Philippines. Get Directions. Parking Information. Parking Fee: No Fee.",
+      "domain": "pickleballtournaments.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://dinkandshot.com/": {
+      "canonicalUrl": "https://dinkandshot.com/",
+      "latestUrl": "https://dinkandshot.com/",
+      "firstDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "lastDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "sourceQuery": "dink Noveleta pickleball",
+      "title": "Dink & Shot | Scheduling and Booking Website",
+      "snippet": "10:00 AM - 10:00 PM. Dink & Shot. Welcome to Dink & Shot, Marikina pickleball facility, where passion for activity and community spirit come alive! Our ...",
+      "domain": "dinkandshot.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-tournament-1": {
+      "canonicalUrl": "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-tournament-1",
+      "latestUrl": "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-tournament-1/",
+      "firstDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "lastDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "sourceQuery": "dink Noveleta pickleball",
+      "title": "PHILIPPINES The Dink Minor League Pickleball – Inaugural Tournament",
+      "snippet": "Address. The PickleGround PH. EPZA Diversion Rd, Noveleta, Cavite. Directions. Events. Format: The Dink Minor League Pickleball. Price: $33.00 / Player (must ...",
+      "domain": "swishtournaments.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit": {
+      "canonicalUrl": "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "firstDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "lastDiscoveredAt": "2026-03-10T11:07:59.426Z",
+      "sourceQuery": "dink Noveleta pickleball",
+      "title": "The Dink Lab Robertson Plaza Kawit - Pickleball",
+      "snippet": "24/7 Pickleball in Kawit, Cavite! Get ready to dink, drive, and dominate anytime, day or night! The Dink Lab is your nonstop court for fun rallies and ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

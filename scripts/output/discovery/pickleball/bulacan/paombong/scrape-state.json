@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T12:24:56.726Z",
+  "updatedAt": "2026-03-10T12:25:42.189Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:24:56.726Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@the-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "latestUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:24:56.726Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.terracourts.com/": {
+      "canonicalUrl": "https://www.terracourts.com/",
+      "latestUrl": "https://www.terracourts.com/",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:24:56.726Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T12:24:56.726Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "jungle base fitness|san fernando|central luzon",
+      "lastRowName": "Jungle Base Fitness"
+    },
+    "http://reclub.co/communities/bulacan-philippines-555": {
+      "canonicalUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "latestUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T12:24:56.726Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:56.726Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T12:24:56.726Z",
+      "lastSeenAt": "2026-03-10T12:24:56.726Z"
+    },
+    "jungle base fitness|san fernando|central luzon": {
+      "rowKey": "jungle base fitness|san fernando|central luzon",
+      "name": "Jungle Base Fitness",
+      "city": "San Fernando",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstSeenAt": "2026-03-10T12:24:56.726Z",
+      "lastSeenAt": "2026-03-10T12:24:56.726Z"
+    }
+  }
+}

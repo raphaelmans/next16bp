@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:batangas:batangas-city:facebook",
   "createdAt": "2026-03-10T06:25:08.610Z",
-  "updatedAt": "2026-03-10T07:08:14.806Z",
+  "updatedAt": "2026-03-10T11:29:04.400Z",
   "scope": {
     "provinceSlug": "batangas",
     "citySlug": "batangas-city",
@@ -81,7 +81,7 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T06:28:38.409Z",
-      "finishedAt": "2026-03-10T07:08:14.806Z",
+      "finishedAt": "2026-03-10T11:29:04.400Z",
       "lastError": null,
       "notes": "all imported facebook rows already have embeddings"
     }

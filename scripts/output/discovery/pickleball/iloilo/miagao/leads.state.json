@@ -1,0 +1,117 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:miagao",
+  "createdAt": "2026-03-10T08:29:43.846Z",
+  "updatedAt": "2026-03-10T08:30:07.202Z",
+  "queries": [
+    "pickleball courts in Iloilo Miagao",
+    "pickleball court Miagao Iloilo",
+    "Miagao pickleball",
+    "courts in Miagao Iloilo pickleball",
+    "sports center Miagao Iloilo pickleball",
+    "pickleball club Miagao Iloilo",
+    "pickleball reservations Miagao Iloilo",
+    "host-map:cebupickleballcourts.com:Miagao",
+    "host-map:dumapickleball.com:Miagao",
+    "site:cebupickleballcourts.com Miagao Iloilo pickleball",
+    "site:dumapickleball.com Miagao Iloilo pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "pickleball reservations Miagao Iloilo",
+      "title": "UPV Miagao Pickleball Courts",
+      "snippet": "Can you reserve a pickleball court at UPV Miagao Pickleball Courts? We're not sure if reservations are available or required at UPV Miagao Pickleball Courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/western-visayas/miagao/family-rentals": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "pickleball reservations Miagao Iloilo",
+      "title": "Miagao, PH Family Vacation Rentals",
+      "snippet": "We offer a variety of affordable pickleball-friendly accommodations including vacation rentals, resorts, and hotels with private courts on-site or nearby.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "pickleball courts in Iloilo Miagao",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "pickleball reservations Miagao Iloilo",
+      "title": "Play Pickleball at University of the Philippines Visayas",
+      "snippet": "University of the Philippines Visayas is one of the most popular places to play pickleball in Miagao, Western Visayas. There are 3 hard courts.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/shorts/T_XiT9hztzQ": {
+      "canonicalUrl": "https://youtube.com/shorts/T_XiT9hztzQ",
+      "latestUrl": "https://www.youtube.com/shorts/T_XiT9hztzQ",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "Miagao pickleball",
+      "title": "Pickle ball sa Miagao People's Center. #shorts #pickleball #sports #exercise",
+      "snippet": "Pickle ball sa Miagao People's Center. #shorts #pickleball #sports #exercise. 2. Dislike.",
+      "domain": "youtube.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "sports center Miagao Iloilo pickleball",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "The courts are free. You can reserve the courts. Players have access to restrooms, water, lights, trainers or lessons, and wheelchair accessibility. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "sports center Miagao Iloilo pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/RUFSDG": {
+      "canonicalUrl": "https://reclub.co/m/RUFSDG",
+      "latestUrl": "https://reclub.co/m/RUFSDG",
+      "firstDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "lastDiscoveredAt": "2026-03-10T08:29:43.862Z",
+      "sourceQuery": "pickleball reservations Miagao Iloilo",
+      "title": "Racquet Monkeys ILO Pickleball Night!",
+      "snippet": "Looking for Pickleball meets in Iloilo City, Philippines? Check out ... Please reserve your slots and pay via Gcash ahead of time to 09176348699.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:rodriguez-montalban",
+  "createdAt": "2026-03-10T11:19:12.873Z",
+  "updatedAt": "2026-03-10T11:21:22.062Z",
+  "urls": {
+    "https://facebook.com/people/Pickleball-Mania-Montalban/61584050525455": {
+      "canonicalUrl": "https://facebook.com/people/Pickleball-Mania-Montalban/61584050525455",
+      "latestUrl": "https://www.facebook.com/people/Pickleball-Mania-Montalban/61584050525455/",
+      "firstCapturedAt": "2026-03-10T11:19:16.965Z",
+      "lastCapturedAt": "2026-03-10T11:19:16.965Z",
+      "status": "captured",
+      "title": "Pickleball Mania - Montalban | Rodriguez | Facebook",
+      "venueName": "Pickleball Mania - Montalban",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61585422807721": {
+      "canonicalUrl": "https://facebook.com/61585422807721",
+      "latestUrl": "https://www.facebook.com/61585422807721/",
+      "firstCapturedAt": "2026-03-10T11:20:01.258Z",
+      "lastCapturedAt": "2026-03-10T11:20:01.258Z",
+      "status": "captured",
+      "title": "Vensand Pickleball Hub | Rodriguez | Facebook",
+      "venueName": "Vensand Pickleball Hub",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/MontalbanPickleballClub": {
+      "canonicalUrl": "https://facebook.com/MontalbanPickleballClub",
+      "latestUrl": "https://www.facebook.com/MontalbanPickleballClub/",
+      "firstCapturedAt": "2026-03-10T11:20:25.847Z",
+      "lastCapturedAt": "2026-03-10T11:20:25.847Z",
+      "status": "captured",
+      "title": "Montalban Pickleball Club | Facebook",
+      "venueName": "Montalban Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61585422807721?locale=nl_BE": {
+      "canonicalUrl": "https://facebook.com/61585422807721?locale=nl_BE",
+      "latestUrl": "https://www.facebook.com/61585422807721/?locale=nl_BE",
+      "firstCapturedAt": "2026-03-10T11:20:47.295Z",
+      "lastCapturedAt": "2026-03-10T11:20:47.295Z",
+      "status": "captured",
+      "title": "Vensand Pickleball Hub | Rodriguez | Facebook",
+      "venueName": "Vensand Pickleball Hub",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T11:21:03.301Z",
+      "lastCapturedAt": "2026-03-10T11:21:03.301Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

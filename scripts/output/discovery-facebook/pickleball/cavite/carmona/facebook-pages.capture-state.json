@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:carmona",
+  "createdAt": "2026-03-10T08:14:47.605Z",
+  "updatedAt": "2026-03-10T08:16:34.777Z",
+  "urls": {
+    "https://facebook.com/badpickleph": {
+      "canonicalUrl": "https://facebook.com/badpickleph",
+      "latestUrl": "https://www.facebook.com/badpickleph/",
+      "firstCapturedAt": "2026-03-10T08:14:50.440Z",
+      "lastCapturedAt": "2026-03-10T08:14:50.440Z",
+      "status": "captured",
+      "title": "BAD Pickle Southwoods | Cavite | Facebook",
+      "venueName": "BAD Pickle Southwoods",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/badpickleph?locale=af_ZA": {
+      "canonicalUrl": "https://facebook.com/badpickleph?locale=af_ZA",
+      "latestUrl": "https://www.facebook.com/badpickleph/?locale=af_ZA",
+      "firstCapturedAt": "2026-03-10T08:15:11.961Z",
+      "lastCapturedAt": "2026-03-10T08:15:11.961Z",
+      "status": "captured",
+      "title": "BAD Pickle Southwoods | Cavite | Facebook",
+      "venueName": "BAD Pickle Southwoods",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/badpickleph?locale=km_KH": {
+      "canonicalUrl": "https://facebook.com/badpickleph?locale=km_KH",
+      "latestUrl": "https://www.facebook.com/badpickleph/?locale=km_KH",
+      "firstCapturedAt": "2026-03-10T08:15:29.732Z",
+      "lastCapturedAt": "2026-03-10T08:15:29.732Z",
+      "status": "captured",
+      "title": "BAD Pickle Southwoods | Cavite | Facebook",
+      "venueName": "BAD Pickle Southwoods",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/badpickleph?locale=sk_SK": {
+      "canonicalUrl": "https://facebook.com/badpickleph?locale=sk_SK",
+      "latestUrl": "https://www.facebook.com/badpickleph/?locale=sk_SK",
+      "firstCapturedAt": "2026-03-10T08:15:49.755Z",
+      "lastCapturedAt": "2026-03-10T08:15:49.755Z",
+      "status": "captured",
+      "title": "BAD Pickle Southwoods | Cavite | Facebook",
+      "venueName": "BAD Pickle Southwoods",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T08:16:09.417Z",
+      "lastCapturedAt": "2026-03-10T08:16:09.417Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

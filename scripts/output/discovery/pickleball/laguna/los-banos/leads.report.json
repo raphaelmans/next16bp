@@ -1,0 +1,139 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "Los Baños",
+    "citySlug": "los-banos",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:04:26.883Z",
+  "queries": [
+    "pickleball courts in Laguna Los Baños",
+    "pickleball court Los Baños Laguna",
+    "Los Baños pickleball",
+    "courts in Los Baños Laguna pickleball",
+    "sports center Los Baños Laguna pickleball",
+    "pickleball club Los Baños Laguna",
+    "pickleball reservations Los Baños Laguna",
+    "host-map:cebupickleballcourts.com:Los Baños",
+    "host-map:dumapickleball.com:Los Baños",
+    "site:cebupickleballcourts.com Los Baños Laguna pickleball",
+    "site:dumapickleball.com Los Baños Laguna pickleball"
+  ],
+  "emittedUrls": [
+    "https://losbanos.org/wp-content/uploads/2023/01/City-Council-Pickleball-Presentation-Jan-2023_compressed-1.pdf",
+    "https://ticketwaveph.com/pages/pickleball-courts",
+    "https://www.pickleheads.com/courts/us/california/los-banos/los-banos-community-center",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://uplbosa.org/orgs/uplbpc",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://ticketwaveph.com/products/a-team-pickleball-lab"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballnewsasia.com/play-pickleball-in-these-courts-in-the-philippines/",
+      "score": -1
+    },
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballnewsasia.com/play-pickleball-in-these-courts-in-the-philippines/",
+      "score": -1
+    },
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballnewsasia.com/play-pickleball-in-these-courts-in-the-philippines/",
+      "score": -1
+    },
+    {
+      "url": "https://www.losbanospickleball.net/",
+      "score": 6
+    },
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "http://losbanos.org/wp-content/uploads/2026/02/Pickleball-Flyer.pdf",
+      "score": 5
+    },
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "https://pickleballnewsasia.com/play-pickleball-in-these-courts-in-the-philippines/",
+      "score": 2
+    },
+    {
+      "url": "https://reclub.co/m/Z3PQ9U",
+      "score": 14
+    },
+    {
+      "url": "http://losbanos.org/wp-content/uploads/2019/01/Open-Gym-Pickleball.pdf",
+      "score": 5
+    },
+    {
+      "url": "https://ticketwaveph.com/products/a-team-pickleball-lab",
+      "score": 10
+    },
+    {
+      "url": "https://reclub.co/m/JAC3N4",
+      "score": 14
+    },
+    {
+      "url": "http://losbanos.org/wp-content/uploads/2019/01/Open-Gym-Pickleball.pdf",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/aceanderesort/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.facebook.com/aceanderesort/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3806520566302823/",
+    "https://www.facebook.com/aceanderesort/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.facebook.com/PickleballPhilippines/posts/look-ace-e-resort-pickleball-courtsblock-5-lot-8victoria-street-springdale-garde/1079177843708506/",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+    "https://www.facebook.com/uplbpickleballclub/",
+    "https://www.facebook.com/LBCenttroMall/posts/goodnews-los-ba%C3%B1os-the-biggest-pickleball-arena-in-town-is-coming-soon-watch-out/1348368160635243/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.instagram.com/reel/DJfkj1PStMG/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1048306873297850/",
+    "https://www.facebook.com/UPLBPC/",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.facebook.com/LBCenttroMall/posts/goodnews-los-ba%C3%B1os-the-biggest-pickleball-arena-in-town-is-coming-soon-watch-out/1348368160635243/",
+    "https://www.facebook.com/uplbpickleballclub/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1353626222765912/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.facebook.com/UPLBPC/",
+    "https://www.instagram.com/p/C9H5pc8AvqW/",
+    "https://www.facebook.com/groups/1522093708622684/posts/1662862997879087/",
+    "https://www.facebook.com/PickleballPhilippines/posts/look-ace-e-resort-pickleball-courtsblock-5-lot-8victoria-street-springdale-garde/1079177843708506/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1456347505827116/",
+    "https://www.instagram.com/aceanderesort/?hl=en",
+    "https://www.facebook.com/aceanderesort/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/los-banos/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/los-banos/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/los-banos/scrape-state.json"
+}

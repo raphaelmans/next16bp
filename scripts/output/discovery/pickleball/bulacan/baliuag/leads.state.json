@@ -1,0 +1,153 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:baliuag",
+  "createdAt": "2026-03-10T11:28:43.887Z",
+  "updatedAt": "2026-03-10T11:30:20.167Z",
+  "queries": [
+    "pickleball courts in Bulacan Baliuag",
+    "pickleball court Baliuag Bulacan",
+    "Baliuag pickleball",
+    "courts in Baliuag Bulacan pickleball",
+    "sports center Baliuag Bulacan pickleball",
+    "pickleball club Baliuag Bulacan",
+    "pickleball reservations Baliuag Bulacan",
+    "host-map:cebupickleballcourts.com:Baliuag",
+    "host-map:dumapickleball.com:Baliuag",
+    "site:cebupickleballcourts.com Baliuag Bulacan pickleball",
+    "site:dumapickleball.com Baliuag Bulacan pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/sm-city-baliwag",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "pickleball reservations Baliuag Bulacan",
+      "title": "Play Pickleball at SM City Baliwag: Court Information",
+      "snippet": "Can you reserve a pickleball court at SM City Baliwag? We're not sure if reservations are available or required at SM City Baliwag. If you have more ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ko/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/ko/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "pickleball reservations Baliuag Bulacan",
+      "title": "ZENtro Pickleball",
+      "snippet": "10 minutes from McDonald's Pulilan (Baliuag Bypass) 15 minutes ... Experience the ultimate pickleball destination in Bulacan! A premier venue ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "courts in Baliuag Bulacan pickleball",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Bulacan Sports Complex. MacArthur Highway, Malolos. Bulacan. NCR. 2. Outdoor Courts. Daily, 6a-10a p30/player. Melody Garcia. 0917-561-8016.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-luzon": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "sports center Baliuag Bulacan pickleball",
+      "title": "Pickleball Courts in Central Luzon",
+      "snippet": "Discover all pickleball courts in Central Luzon and find the ones closest to you! We have the most comprehensive list of indoor and outdoor pickleball ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "http://reclub.co/clubs/@baliwag-paddle-crew": {
+      "canonicalUrl": "http://reclub.co/clubs/@baliwag-paddle-crew",
+      "latestUrl": "http://reclub.co/clubs/@baliwag-paddle-crew",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "Baliuag pickleball",
+      "title": "Baliwag Paddle Crew",
+      "snippet": "202 members ·. 40 activities. The first and duly recognized pickleball club in Baliwag City. Organized By. North. Niko Castro.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "sports center Baliuag Bulacan pickleball",
+      "title": "Member Clubs",
+      "snippet": "Pickleball is about making friends and enjoying sport. Below is a list of Philippine pickleball member clubs that we work with, recognize and support.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Baliuag%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "courts in Baliuag Bulacan pickleball",
+      "title": "THE BEST 10 BADMINTON in BALIWAG, BULACAN, PHILIPPINES",
+      "snippet": "Top 10 Best Badminton Near Baliwag, Bulacan - With Real Reviews · 1. Power Smash · 2. Philam Life Village Park · 3. CKSM Badminton Court · 4. Playground Badminton ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=sports_clubs&find_loc=Baliuag%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "sports center Baliuag Bulacan pickleball",
+      "title": "THE BEST 10 SPORTS CLUBS in BALIWAG, BULACAN, PHILIPPINES",
+      "snippet": "Moro Lorenzo Sports Center - Sports Clubs near me - Baliwag, Bulacan. 10 ... They cater pickleball, basketball, badminton reservation and also they have ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://tobys.com/pages/find-store?srsltid=AfmBOopN3g61pW4tyKJtWhhzTOfDjYmABB39UfkDc8mTz93K_oEBxzE7": {
+      "canonicalUrl": "https://tobys.com/pages/find-store?srsltid=AfmBOopN3g61pW4tyKJtWhhzTOfDjYmABB39UfkDc8mTz93K_oEBxzE7",
+      "latestUrl": "https://www.tobys.com/pages/find-store?srsltid=AfmBOopN3g61pW4tyKJtWhhzTOfDjYmABB39UfkDc8mTz93K_oEBxzE7",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "pickleball reservations Baliuag Bulacan",
+      "title": "Find a Store",
+      "snippet": "... Bulacan, 3019 Store Hours: 10:00AM - 9:00PM. Toby's Sports - SM Baliuag. Landline: (044) 792-1433 Address: GROUND LEVEL, DRT Highway, Baliwag, Bulacan, 3006",
+      "domain": "tobys.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ja/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/ja/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/ja/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "sports center Baliuag Bulacan pickleball",
+      "title": "ZENtro Pickleball",
+      "snippet": "Experience the ultimate pickleball destination in Bulacan! A premier venue designed for both competitive and recreational play, Pickleball Arena brings the ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518": {
+      "canonicalUrl": "https://studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "latestUrl": "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "firstDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "lastDiscoveredAt": "2026-03-10T11:28:43.892Z",
+      "sourceQuery": "sports center Baliuag Bulacan pickleball",
+      "title": "Initial Research on Pickleball: Sports Complex vs. Sports Club",
+      "snippet": "PHILIPPINE PICKLEBALL FEDERATION Baliwag Pickleball Club — Baliwag, Bulacan. PHILIPPINE PICKLEBALL FEDERATION Camalig Pickleball Club — Meycauayan ...",
+      "domain": "studocu.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

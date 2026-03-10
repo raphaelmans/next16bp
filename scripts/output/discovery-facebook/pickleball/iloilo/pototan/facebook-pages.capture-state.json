@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:pototan",
+  "createdAt": "2026-03-10T11:32:18.993Z",
+  "updatedAt": "2026-03-10T11:33:49.930Z",
+  "urls": {
+    "https://facebook.com/p/Pototan-Pickleball-Club-61566931812121": {
+      "canonicalUrl": "https://facebook.com/p/Pototan-Pickleball-Club-61566931812121",
+      "latestUrl": "https://www.facebook.com/p/Pototan-Pickleball-Club-61566931812121/",
+      "firstCapturedAt": "2026-03-10T11:32:20.485Z",
+      "lastCapturedAt": "2026-03-10T11:32:20.485Z",
+      "status": "captured",
+      "title": "Pototan Pickleball Club | Pototan | Facebook",
+      "venueName": "Pototan Pickleball Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pototan Pickleball Club"
+    },
+    "https://facebook.com/unitedpanaypickleballclub": {
+      "canonicalUrl": "https://facebook.com/unitedpanaypickleballclub",
+      "latestUrl": "https://www.facebook.com/unitedpanaypickleballclub/",
+      "firstCapturedAt": "2026-03-10T11:32:32.428Z",
+      "lastCapturedAt": "2026-03-10T11:32:32.428Z",
+      "status": "captured",
+      "title": "United Panay Pickleball Club UPPC | Facebook",
+      "venueName": "United Panay Pickleball Club UPPC",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61566931812121?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61566931812121?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61566931812121/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T11:32:51.814Z",
+      "lastCapturedAt": "2026-03-10T11:32:51.814Z",
+      "status": "captured",
+      "title": "Pototan Pickleball Club | Pototan | Facebook",
+      "venueName": "Pototan Pickleball Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pototan Pickleball Club"
+    },
+    "https://facebook.com/iloilopickleball": {
+      "canonicalUrl": "https://facebook.com/iloilopickleball",
+      "latestUrl": "https://www.facebook.com/iloilopickleball/",
+      "firstCapturedAt": "2026-03-10T11:33:05.461Z",
+      "lastCapturedAt": "2026-03-10T11:33:05.461Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/picklepointiloilo": {
+      "canonicalUrl": "https://facebook.com/picklepointiloilo",
+      "latestUrl": "https://www.facebook.com/picklepointiloilo/",
+      "firstCapturedAt": "2026-03-10T11:33:21.087Z",
+      "lastCapturedAt": "2026-03-10T11:33:21.087Z",
+      "status": "captured",
+      "title": null,
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/107869635741474": {
+      "canonicalUrl": "https://facebook.com/107869635741474",
+      "latestUrl": "https://www.facebook.com/107869635741474/",
+      "firstCapturedAt": "2026-03-10T11:33:31.971Z",
+      "lastCapturedAt": "2026-03-10T11:33:31.971Z",
+      "status": "captured",
+      "title": "Iloilo Pickleball | Iloilo City | Facebook",
+      "venueName": "Iloilo Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

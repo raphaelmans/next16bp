@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:cainta",
+  "createdAt": "2026-03-10T08:57:16.368Z",
+  "updatedAt": "2026-03-10T08:58:57.543Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T08:57:18.805Z",
+      "lastCapturedAt": "2026-03-10T08:57:18.805Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pickleball East Dinkers Club Inc."
+    },
+    "https://facebook.com/PEDCIOffical": {
+      "canonicalUrl": "https://facebook.com/PEDCIOffical",
+      "latestUrl": "https://www.facebook.com/PEDCIOffical/",
+      "firstCapturedAt": "2026-03-10T08:57:48.732Z",
+      "lastCapturedAt": "2026-03-10T08:57:48.732Z",
+      "status": "captured",
+      "title": "PEDCI Village East Cainta Rizal | Cainta | Facebook",
+      "venueName": "PEDCI Village East Cainta Rizal",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "PEDCI Village East Cainta Rizal"
+    },
+    "https://facebook.com/61552150163845?locale=lv_LV": {
+      "canonicalUrl": "https://facebook.com/61552150163845?locale=lv_LV",
+      "latestUrl": "https://www.facebook.com/61552150163845/?locale=lv_LV",
+      "firstCapturedAt": "2026-03-10T08:58:05.089Z",
+      "lastCapturedAt": "2026-03-10T08:58:05.089Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pickleball East Dinkers Club Inc."
+    },
+    "https://facebook.com/61552150163845?locale=es_ES": {
+      "canonicalUrl": "https://facebook.com/61552150163845?locale=es_ES",
+      "latestUrl": "https://www.facebook.com/61552150163845/?locale=es_ES",
+      "firstCapturedAt": "2026-03-10T08:58:18.303Z",
+      "lastCapturedAt": "2026-03-10T08:58:18.303Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Pickleball East Dinkers Club Inc."
+    },
+    "https://facebook.com/astrapickleball": {
+      "canonicalUrl": "https://facebook.com/astrapickleball",
+      "latestUrl": "https://www.facebook.com/astrapickleball",
+      "firstCapturedAt": "2026-03-10T08:58:42.313Z",
+      "lastCapturedAt": "2026-03-10T08:58:42.313Z",
+      "status": "captured",
+      "title": "Astra Pickleball Center | Cainta | Facebook",
+      "venueName": "Astra Pickleball Center",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Astra Pickleball Center"
+    }
+  }
+}

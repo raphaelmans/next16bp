@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cebu:liloan:facebook",
   "createdAt": "2026-03-10T03:52:47.214Z",
-  "updatedAt": "2026-03-10T05:43:07.119Z",
+  "updatedAt": "2026-03-10T11:30:09.802Z",
   "scope": {
     "provinceSlug": "cebu",
     "citySlug": "liloan",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:43:07.119Z",
+      "finishedAt": "2026-03-10T11:30:09.802Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:43:07.119Z",
+      "finishedAt": "2026-03-10T11:30:09.802Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:43:07.119Z",
+      "finishedAt": "2026-03-10T11:30:09.802Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:43:07.119Z",
+      "finishedAt": "2026-03-10T11:30:09.802Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

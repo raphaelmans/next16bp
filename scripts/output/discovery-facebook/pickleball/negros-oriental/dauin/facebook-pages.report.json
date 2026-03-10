@@ -1,0 +1,205 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Dauin",
+    "citySlug": "dauin",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:39:34.953Z",
+  "queries": [
+    "site:facebook.com pickleball Dauin Negros Oriental",
+    "site:facebook.com \"Dauin\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Dauin\" \"pickleball club\"",
+    "site:facebook.com \"Dauin\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/people/PalmPaddle/61578609654921/",
+    "https://www.facebook.com/p/The-Soft-Serve-61569156955704/",
+    "https://www.facebook.com/people/Dauin-Pickleball-Club/61578316713158/",
+    "https://www.facebook.com/61569156955704/?locale=ar_AR",
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Juanderlust.travel/posts/the-newest-pickleball-court-in-dauin-the-soft-serve-the-haven-for-pickleball-ent/1256775659339954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1430206945366568/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1447796920274237/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/928788753275927/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/936305735857562/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1406260454427884/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1422361926151070/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/Juanderlust.travel/posts/the-newest-pickleball-court-in-dauin-the-soft-serve-the-haven-for-pickleball-ent/1256775659339954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1447796920274237/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1422361926151070/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1366873121699951/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1377533257300604/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1441570724230190/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1392978644132611/posts/the-newest-pickleball-court-in-dauin/9612237195540007/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1410822870638309/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61578316713158/posts/-its-time-to-serve-strike-and-show-updauin-pickleball-club-launches-hapak-gaw-ou/122137788482943890/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61578316713158/posts/dauin-pickleball-club-christmas-party-2025-what-a-wonderful-way-to-end-the-year-/122143962800943890/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/632482034086299/posts/1569213807079779/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1432867481767181/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/936305735857562/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Juanderlust.travel/posts/the-newest-pickleball-court-in-dauin-the-soft-serve-the-haven-for-pickleball-ent/1256775659339954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1362882528765677/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61578906676209/posts/whether-youre-team-control-or-team-power-the-squad-is-officially-100-sypik-thank/122146665710963555/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/eatstheweekend/posts/a-must-visit-caf%C3%A9-and-pickleball-court-in-dauin-the-soft-serve-offers-three-tour/1223134613154315/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Juanderlust.travel/posts/the-newest-pickleball-court-in-dauin-the-soft-serve-the-haven-for-pickleball-ent/1256775659339954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/632482034086299/posts/1569213807079779/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1392978644132611/posts/9612237195540007/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61575431567803/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/dauin.negor.tourism/posts/newly-opened-the-soft-serve-cafe-pickleball-court-in-barangay-lipayo-dauin-negro/122214434390237144/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/Ricky.Fuentes.Adling/videos/the-soft-server-pickle-court-dauin/1650556162792122/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Juanderlust.travel/posts/200hr-exclusive-here-at-juan-pickleball-new-court-%EF%B8%8F09352390610tugawe-dauin-pickl/1437358087948376/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/936305735857562/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/dauin/facebook-pages.state.json"
+}

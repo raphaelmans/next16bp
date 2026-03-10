@@ -1,0 +1,119 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Cabatuan",
+    "citySlug": "cabatuan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:41:28.115Z",
+  "queries": [
+    "pickleball courts in Iloilo Cabatuan",
+    "pickleball court Cabatuan Iloilo",
+    "Cabatuan pickleball",
+    "courts in Cabatuan Iloilo pickleball",
+    "sports center Cabatuan Iloilo pickleball",
+    "pickleball club Cabatuan Iloilo",
+    "pickleball reservations Cabatuan Iloilo",
+    "host-map:cebupickleballcourts.com:Cabatuan",
+    "host-map:dumapickleball.com:Cabatuan",
+    "site:cebupickleballcourts.com Cabatuan Iloilo pickleball",
+    "site:dumapickleball.com Cabatuan Iloilo pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://reclub.co/clubs/@iloilo-pickleball",
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city",
+    "https://homecourtclub.com/",
+    "https://punto.com.ph/serve-smash-repeat-pickleball-now-at-sm-city-cabanatuan/",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+    "https://www.pickleheads.com/courts/ph/central-luzon/cabanatuan-city/smash-cab-badminton-and-fitness",
+    "https://www.smsupermalls.com/active-hub",
+    "https://www.sparrk.ph/explore/pickleball"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://www.pickleheads.com/groups/cabsy-pickleball-club-cabanatuan-city-pickleball-club",
+      "score": 5
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=G0CBDCin81E",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleheads.com/groups/cabsy-pickleball-club-cabanatuan-city-pickleball-club",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/HomeCourtClub/",
+    "https://www.facebook.com/products.balaytablea/posts/we-are-here-to-supply-you-with-flavanolsatriaayalamalls-cabatuaniloilo-produktod/918776796933162/",
+    "https://www.facebook.com/primesportsfloors/posts/home-court-sports-center-cabatuan-isabelahardcourt-acrylic-pickleball-courtsdm-u/122244549212165075/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/picklepoint-iloilo-iloilos-ultimate-pickleball-destinationpicklepoint-iloilo-at-/927918120136581/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.instagram.com/reel/DViurThD-7B/",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.facebook.com/products.balaytablea/posts/we-are-here-to-supply-you-with-flavanolsatriaayalamalls-cabatuaniloilo-produktod/918776796933162/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/picklepoint-iloilo-iloilos-ultimate-pickleball-destinationpicklepoint-iloilo-at-/927918120136581/",
+    "https://www.instagram.com/reel/DMSbxF6TFtH/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.reddit.com/r/Iloilo/comments/1lg3ta3/pickleball_court_and_equipment/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.facebook.com/products.balaytablea/posts/we-are-here-to-supply-you-with-flavanolsatriaayalamalls-cabatuaniloilo-produktod/918776796933162/",
+    "https://www.facebook.com/HomeCourtClub/",
+    "https://www.facebook.com/groups/1114710849537434/posts/1649114756097038/",
+    "https://www.reddit.com/r/Iloilo/comments/1lg3ta3/pickleball_court_and_equipment/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/picklepoint-iloilo-iloilos-ultimate-pickleball-destinationpicklepoint-iloilo-at-/927918120136581/",
+    "https://www.facebook.com/primesportsfloors/posts/home-court-sports-center-cabatuan-isabelahardcourt-acrylic-pickleball-courtsdm-u/122244549212165075/",
+    "https://www.facebook.com/HomeCourtClub/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1034671707994700/",
+    "https://www.instagram.com/reel/DNcFM9eh1bd/",
+    "https://www.facebook.com/SMCityCabanatuanOfficial/videos/lets-hit-the-court-picklers-the-pickleball-courts-here-at-sm-city-cabanatuan-are/2312094112640857/",
+    "https://www.facebook.com/ne.tv48/videos/pickleball-courts-binuksan-na-sa-sm-cuty-cabanatuan/1320301492888348/",
+    "https://www.facebook.com/primesportsfloors/posts/home-court-sports-center-cabatuan-isabelahardcourt-acrylic-pickleball-courtsdm-u/122244549212165075/",
+    "https://www.facebook.com/primesportsfloors/posts/home-court-sports-center-cabatuan-isabelahardcourt-acrylic-pickleball-courtsdm-u/122244549212165075/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/picklepoint-iloilo-iloilos-ultimate-pickleball-destinationpicklepoint-iloilo-at-/927918120136581/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.instagram.com/p/DMyth1ByOn4/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/groups/cabsypickleballclub/",
+    "https://www.facebook.com/groups/475322191759618/posts/869788458979654/",
+    "https://www.facebook.com/p/Kalamandinkers-Pickleball-Club-61575680713832/",
+    "https://www.tiktok.com/@mypinaylife/video/7507233034949709099",
+    "https://www.facebook.com/WhereInNuevaEcija/posts/serve-smash-repeat-pickleball-now-at-sm-city-cabanatuan-officialpickleball-has-f/1319864070152130/",
+    "https://www.tiktok.com/@mypinaylife/video/7527910566703254839",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+    "https://www.facebook.com/groups/1114710849537434/posts/1649114756097038/",
+    "https://www.facebook.com/groups/218692212833785/posts/1421182745918053/",
+    "https://www.facebook.com/groups/739980363345415/posts/1832187997457974/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.instagram.com/p/DPtl0EUEfvU/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/posts/picklepoint-iloilo-iloilos-ultimate-pickleball-destinationpicklepoint-iloilo-at-/927918120136581/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/cabatuan/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/cabatuan/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/cabatuan/scrape-state.json"
+}

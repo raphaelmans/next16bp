@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:paombong",
+  "createdAt": "2026-03-10T12:24:27.380Z",
+  "updatedAt": "2026-03-10T12:24:56.724Z",
+  "queries": [
+    "pickleball courts in Bulacan Paombong",
+    "pickleball court Paombong Bulacan",
+    "Paombong pickleball",
+    "courts in Paombong Bulacan pickleball",
+    "sports center Paombong Bulacan pickleball",
+    "pickleball club Paombong Bulacan",
+    "pickleball reservations Paombong Bulacan",
+    "host-map:cebupickleballcourts.com:Paombong",
+    "host-map:dumapickleball.com:Paombong",
+    "site:cebupickleballcourts.com Paombong Bulacan pickleball",
+    "site:dumapickleball.com Paombong Bulacan pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "pickleball reservations Paombong Bulacan",
+      "title": "Play Pickleball at Bulacan Sports Complex: Court Information",
+      "snippet": "We're not sure if reservations are available or required at Bulacan Sports Complex. If you have more information about reservations here, please suggest ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "courts in Paombong Bulacan pickleball",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Bulacan Sports Complex. MacArthur Highway, Malolos. Bulacan. NCR ... UP Los Banos Pickleball Club. University Gym and/or Baker Hall Courts.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@the-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "latestUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "pickleball courts in Bulacan Paombong",
+      "title": "The Pickleball Center @ Santa Maria Bulacan",
+      "snippet": "The Pickleball Center @ Santa Maria Bulacan ... Beginner-friendly court for all ages. Schedule to be announced soon! Organized By. Crisanto Perez.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/F5VOJH": {
+      "canonicalUrl": "https://reclub.co/m/F5VOJH",
+      "latestUrl": "https://reclub.co/m/F5VOJH",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "pickleball court Paombong Bulacan",
+      "title": "play all tuesday",
+      "snippet": "PLAY ALL TUESDAY! The Pickleball Center – New Location (Former SMAX Shopping Center, Sta. Maria, Bulacan) 9:00 AM – 9:00 PM P150.00 per person",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "sports center Paombong Bulacan pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://terracourts.com/": {
+      "canonicalUrl": "https://terracourts.com/",
+      "latestUrl": "https://www.terracourts.com/",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "Paombong pickleball",
+      "title": "Terra Courts",
+      "snippet": "Learn the basics of pickleball in a fun and easy way! We offer a 1-hour beginner tutorial (per person, per hour) where we'll guide you through the rules, ...",
+      "domain": "terracourts.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "Paombong pickleball",
+      "title": "Play Pickleball at Jungle Base Fitness: Court Information",
+      "snippet": "There are 4 indoor hard courts. The lines are permanent, and portable nets are available. A one-time fee is required to play. Show more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living": {
+      "canonicalUrl": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living",
+      "latestUrl": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "Paombong pickleball",
+      "title": "By Popular Demand, Philippine Malls Add Pickleball Courts for Active & ...",
+      "snippet": "The first pickleball club in the Philippines was established in 2017, grew to four in 2019 but was stifled by the COVID-19 pandemic. Many of ...",
+      "domain": "globalpickleballfederation.org",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "http://reclub.co/communities/bulacan-philippines-555": {
+      "canonicalUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "latestUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "pickleball club Paombong Bulacan",
+      "title": "Bulacan, Philippines",
+      "snippet": "The Pickleball Center @ Santa Maria Bulacan · THE PUB - Paddle Up Bulacan · MetroGate Pickleball Club · Bound Through Play · Paddlepoint Sta.Maria · Courtside Pickle ...",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "lastDiscoveredAt": "2026-03-10T12:24:27.381Z",
+      "sourceQuery": "pickleball reservations Paombong Bulacan",
+      "title": "PLACES TO PLAY, 08.06.23",
+      "snippet": "Bulacan Sports Complex. MacArthur Highway, Malolos. Bulacan. NCR. 2. Outdoor Courts. Daily, 6a-10a p30/player. Melody Garcia. 0917-561-8016.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:laguna:san-pedro-city:facebook",
   "createdAt": "2026-03-10T05:53:33.641Z",
-  "updatedAt": "2026-03-10T05:56:58.313Z",
+  "updatedAt": "2026-03-10T11:40:31.726Z",
   "scope": {
     "provinceSlug": "laguna",
     "citySlug": "san-pedro-city",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.313Z",
+      "finishedAt": "2026-03-10T11:40:31.726Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.313Z",
+      "finishedAt": "2026-03-10T11:40:31.726Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.313Z",
+      "finishedAt": "2026-03-10T11:40:31.726Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T05:56:58.313Z",
+      "finishedAt": "2026-03-10T11:40:31.726Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

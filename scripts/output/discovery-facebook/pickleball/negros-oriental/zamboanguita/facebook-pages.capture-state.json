@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:zamboanguita",
+  "createdAt": "2026-03-10T11:44:06.709Z",
+  "updatedAt": "2026-03-10T11:45:29.069Z",
+  "urls": {
+    "https://facebook.com/p/Negros-Island-Pickleball-Association-NIPA-100089723640330": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Island-Pickleball-Association-NIPA-100089723640330",
+      "latestUrl": "https://www.facebook.com/p/Negros-Island-Pickleball-Association-NIPA-100089723640330/",
+      "firstCapturedAt": "2026-03-10T11:44:08.407Z",
+      "lastCapturedAt": "2026-03-10T11:44:08.407Z",
+      "status": "captured",
+      "title": "Negros Island Pickleball Association - NIPA | Zamboanguita | Facebook",
+      "venueName": "Negros Island Pickleball Association - NIPA",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Zamboanguita-Pickleball-Club-61575756851634": {
+      "canonicalUrl": "https://facebook.com/p/Zamboanguita-Pickleball-Club-61575756851634",
+      "latestUrl": "https://www.facebook.com/p/Zamboanguita-Pickleball-Club-61575756851634/",
+      "firstCapturedAt": "2026-03-10T11:44:26.913Z",
+      "lastCapturedAt": "2026-03-10T11:44:26.913Z",
+      "status": "captured",
+      "title": "Zamboanguita Pickleball Club | Zamboanguita | Facebook",
+      "venueName": "Zamboanguita Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=122173451450858561&set=a.122104508894858561&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=122173451450858561&set=a.122104508894858561&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=122173451450858561&set=a.122104508894858561&type=3",
+      "firstCapturedAt": "2026-03-10T11:44:39.176Z",
+      "lastCapturedAt": "2026-03-10T11:44:39.176Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Zamboanguita Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/973878632464215": {
+      "canonicalUrl": "https://facebook.com/973878632464215",
+      "latestUrl": "https://www.facebook.com/973878632464215",
+      "firstCapturedAt": "2026-03-10T11:44:57.684Z",
+      "lastCapturedAt": "2026-03-10T11:44:57.684Z",
+      "status": "captured",
+      "title": "Family SPIN | Zamboanguita | Facebook",
+      "venueName": "Family SPIN",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Family SPIN"
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T11:45:13.490Z",
+      "lastCapturedAt": "2026-03-10T11:45:13.490Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

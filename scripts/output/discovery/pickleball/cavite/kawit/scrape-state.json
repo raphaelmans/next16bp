@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:06:52.790Z",
+  "updatedAt": "2026-03-10T11:07:27.716Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the pickleground ph|kawit|cavite",
+      "lastRowName": "The Pickleground Ph"
+    },
+    "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit": {
+      "canonicalUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa": {
+      "canonicalUrl": "https://www.threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa",
+      "latestUrl": "https://www.threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.youtube.com/watch?v=UXoEHQTogPM": {
+      "canonicalUrl": "https://www.youtube.com/watch?v=UXoEHQTogPM",
+      "latestUrl": "https://www.youtube.com/watch?v=UXoEHQTogPM",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club": {
+      "canonicalUrl": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "latestUrl": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@phoenix-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@phoenix-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@phoenix-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2": {
+      "canonicalUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2",
+      "firstDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:52.790Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:06:52.790Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "the pickleground ph|kawit|cavite": {
+      "rowKey": "the pickleground ph|kawit|cavite",
+      "name": "The Pickleground Ph",
+      "city": "KAWIT",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+      "firstSeenAt": "2026-03-10T11:06:52.790Z",
+      "lastSeenAt": "2026-03-10T11:06:52.790Z"
+    }
+  }
+}

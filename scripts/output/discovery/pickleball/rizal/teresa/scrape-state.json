@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T08:13:11.287Z",
+  "updatedAt": "2026-03-10T08:13:30.860Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp",
+      "firstDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "lastDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T08:13:11.287Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "quest adventure camp|teresa|rizal",
+      "lastRowName": "Quest Adventure Camp"
+    },
+    "https://www.questadventure.ph/pickleball": {
+      "canonicalUrl": "https://www.questadventure.ph/pickleball",
+      "latestUrl": "https://www.questadventure.ph/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "lastDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:13:11.287Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@questpickleballclub": {
+      "canonicalUrl": "https://reclub.co/clubs/@questpickleballclub",
+      "latestUrl": "https://reclub.co/clubs/@questpickleballclub",
+      "firstDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "lastDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:13:11.287Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickleballhub-vigor.com/": {
+      "canonicalUrl": "https://pickleballhub-vigor.com/",
+      "latestUrl": "https://pickleballhub-vigor.com/",
+      "firstDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "lastDiscoveredAt": "2026-03-10T08:13:11.287Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T08:13:11.287Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "quest adventure camp|teresa|rizal": {
+      "rowKey": "quest adventure camp|teresa|rizal",
+      "name": "Quest Adventure Camp",
+      "city": "TERESA",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/teresa/quest-adventure-camp",
+      "firstSeenAt": "2026-03-10T08:13:11.287Z",
+      "lastSeenAt": "2026-03-10T08:13:11.287Z"
+    }
+  }
+}

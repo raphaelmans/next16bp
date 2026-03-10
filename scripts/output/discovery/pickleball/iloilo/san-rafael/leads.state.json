@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:san-rafael",
+  "createdAt": "2026-03-10T09:19:55.279Z",
+  "updatedAt": "2026-03-10T09:20:17.214Z",
+  "queries": [
+    "pickleball courts in Iloilo San Rafael",
+    "pickleball court San Rafael Iloilo",
+    "San Rafael pickleball",
+    "courts in San Rafael Iloilo pickleball",
+    "sports center San Rafael Iloilo pickleball",
+    "pickleball club San Rafael Iloilo",
+    "pickleball reservations San Rafael Iloilo",
+    "host-map:cebupickleballcourts.com:San Rafael",
+    "host-map:dumapickleball.com:San Rafael",
+    "site:cebupickleballcourts.com San Rafael Iloilo pickleball",
+    "site:dumapickleball.com San Rafael Iloilo pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "pickleball reservations San Rafael Iloilo",
+      "title": "7 Most Popular Pickleball Courts in Iloilo City, Western Visayas",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Iloilo City, Western Visayas! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=G0CBDCin81E": {
+      "canonicalUrl": "https://youtube.com/watch?v=G0CBDCin81E",
+      "latestUrl": "https://www.youtube.com/watch?v=G0CBDCin81E",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "pickleball club San Rafael Iloilo",
+      "title": "ILOILO PICKLEBALL DOUBLES OPEN",
+      "snippet": "ILOILO PICKLEBALL DOUBLES OPEN 1st Iloilo Pickleball Doubles Open CPU Gymnasium.",
+      "domain": "youtube.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballsanrafael.com/": {
+      "canonicalUrl": "https://pickleballsanrafael.com/",
+      "latestUrl": "https://pickleballsanrafael.com/",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "San Rafael pickleball",
+      "title": "San Rafael Pickleball - Where to Play & Learn",
+      "snippet": "We're compiling a comprehensive guide to San Rafael's indoor and outdoor pickleball courts, complete with peak times for players of all skill levels.",
+      "domain": "pickleballsanrafael.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/UGDPRI": {
+      "canonicalUrl": "https://reclub.co/m/UGDPRI",
+      "latestUrl": "https://reclub.co/m/UGDPRI",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "San Rafael pickleball",
+      "title": "Pickleball clinic for 1st timers",
+      "snippet": "24/7 Pickle Mandaluyong. 362 San Rafael St, Mandaluyong City, Metro Manila, Philippines. see map. 1000 per person . 6 slots only 2 hours.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/us/california/san-rafael": {
+      "canonicalUrl": "https://pickleheads.com/courts/us/california/san-rafael",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/san-rafael",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "San Rafael pickleball",
+      "title": "7 Most Popular Pickleball Courts in San Rafael, CA",
+      "snippet": "There are 7 pickleball locations with 38 courts in San Rafael. Where can I find indoor pickleball courts in San Rafael? There are 3 locations with 12 indoor ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://flytemarin.com/": {
+      "canonicalUrl": "https://flytemarin.com/",
+      "latestUrl": "https://www.flytemarin.com/",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "San Rafael pickleball",
+      "title": "Flyte Racquet Club | marin indoor pickleball, padel, tennis",
+      "snippet": "Flyte Racquet Club: Marin County's ultimate racquet sports destination! Featuring 7 indoor and 16 outdoor pickleball ... 440 Smith Ranch Road, San Rafael CA 94903 ...",
+      "domain": "flytemarin.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=pickleball&find_loc=San+Rafael%2C+CA": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=pickleball&find_loc=San+Rafael%2C+CA",
+      "latestUrl": "https://m.yelp.com/search?cflt=pickleball&find_loc=San+Rafael%2C+CA",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "San Rafael pickleball",
+      "title": "THE BEST 10 PICKLEBALL in SAN RAFAEL, CA - Updated 2026 - Hours",
+      "snippet": "Top 10 Best Pickleball Near San Rafael, California - With Real Reviews ; 1. Flyte Racquet Club. 4.3 (4 reviews) ; 2. Pickleball World. 5.0 (4 reviews) ; 3. Marin ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "pickleball reservations San Rafael Iloilo",
+      "title": "Play Pickleball at Athlete's Point Sports Center: Court Information",
+      "snippet": "There are 3 indoor concrete courts. Tape lines have been laid, and portable nets are available. The courts are free. You can reserve the courts. Players have ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "sports center San Rafael Iloilo pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "Discover specialized clinics for your favorite sports at Milo Best. Enhance your abilities and excel in your chosen discipline. Enroll today!",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "lastDiscoveredAt": "2026-03-10T09:19:55.280Z",
+      "sourceQuery": "pickleball club San Rafael Iloilo",
+      "title": "ILOILO PICKLEBALL",
+      "snippet": "Iloilo's First and Premier Pickleball Community established on April 2023. Annual Membership: 500. Quarterly Dues: 300. You can avail of Senior Citizen, PWD, ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

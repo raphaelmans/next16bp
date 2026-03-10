@@ -1,0 +1,215 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Zarraga",
+    "citySlug": "zarraga",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:36:16.984Z",
+  "queries": [
+    "site:facebook.com pickleball Zarraga Iloilo",
+    "site:facebook.com \"Zarraga\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Zarraga\" \"pickleball club\"",
+    "site:facebook.com \"Zarraga\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/984583925418556/posts/1846321215911485/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1233436474784888/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/218692212833785/posts/1421182745918053/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1114710849537434/posts/1656242385384275/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/picklepointiloilo/videos/-live-now-at-picklepoint-iloilo-novice-night-is-ongoing-at-court-5-court-6come-w/3036409233211657/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/PadoniaParkClub/posts/%EF%B8%8F-padonia-pickleball-members-come-play-together-multiple-times-a-week-beginners-/1187249343307920/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/180899770923868/posts/1126617843018718/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/984583925418556/posts/1846321215911485/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1344339710361230/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/218692212833785/posts/1421182745918053/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1233436474784888/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/217289926189999/posts/1581049246480720/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/180899770923868/posts/1126617843018718/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1260457395727311/posts/1436645794775136/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1521491258261287/posts/2052112811865793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/PadoniaParkClub/posts/%EF%B8%8F-padonia-pickleball-members-come-play-together-multiple-times-a-week-beginners-/1187249343307920/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1521491258261287/posts/2101651283578612/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dcdpinas/posts/820830430512466/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/sportscornerph/photos/bacnotan-pickleball-club-marks-first-anniversary-with-tournamentby-agm-marlon-be/1430813405721164/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nikkozarraga/posts/konting-kembot-pa/24393238770347619/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100063774500670/posts/something-to-be-grateful-for-this-month-and-this-year-it-may-not-be-the-same-as-/1455230823279387/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/navtarangfiji/posts/let-the-final-count-down-begincome-down-to-courts-mega-samabula-and-get-everythi/1305335404962299/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3715707602050787/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1260457395727311/posts/1436645794775136/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/seminolehappenings/posts/1751039242321904/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1210343320202985/posts/1473295100574471/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/561789165532009/posts/1389058599471724/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/arubatraveltips/posts/1416161857190058/",
+      "score": 15
+    },
+    {
+      "url": "https://m.facebook.com/100048591055868/photos/1267993374830352/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/634187927166494/posts/1472444023340876/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1670575506569714/posts/3630740107219901/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/kawkaw.sidon/photos/d41d8cd9/2101450863919024/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1184923106236630/posts/1743367423725526/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/zarraga/facebook-pages.state.json"
+}

@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:dauin",
+  "createdAt": "2026-03-10T08:39:42.005Z",
+  "updatedAt": "2026-03-10T08:41:02.287Z",
+  "urls": {
+    "https://facebook.com/people/PalmPaddle/61578609654921": {
+      "canonicalUrl": "https://facebook.com/people/PalmPaddle/61578609654921",
+      "latestUrl": "https://www.facebook.com/people/PalmPaddle/61578609654921/",
+      "firstCapturedAt": "2026-03-10T08:39:46.268Z",
+      "lastCapturedAt": "2026-03-10T08:39:46.268Z",
+      "status": "captured",
+      "title": "Palm&Paddle | Dauin | Facebook",
+      "venueName": "Palm&Paddle",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Palm&Paddle"
+    },
+    "https://facebook.com/p/The-Soft-Serve-61569156955704": {
+      "canonicalUrl": "https://facebook.com/p/The-Soft-Serve-61569156955704",
+      "latestUrl": "https://www.facebook.com/p/The-Soft-Serve-61569156955704/",
+      "firstCapturedAt": "2026-03-10T08:40:00.619Z",
+      "lastCapturedAt": "2026-03-10T08:40:00.619Z",
+      "status": "captured",
+      "title": "The Soft Serve | Dauin | Facebook",
+      "venueName": "The Soft Serve",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/Dauin-Pickleball-Club/61578316713158": {
+      "canonicalUrl": "https://facebook.com/people/Dauin-Pickleball-Club/61578316713158",
+      "latestUrl": "https://www.facebook.com/people/Dauin-Pickleball-Club/61578316713158/",
+      "firstCapturedAt": "2026-03-10T08:40:16.565Z",
+      "lastCapturedAt": "2026-03-10T08:40:16.565Z",
+      "status": "captured",
+      "title": "Dauin Pickleball Club | Dauin | Facebook",
+      "venueName": "Dauin Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61569156955704?locale=ar_AR": {
+      "canonicalUrl": "https://facebook.com/61569156955704?locale=ar_AR",
+      "latestUrl": "https://www.facebook.com/61569156955704/?locale=ar_AR",
+      "firstCapturedAt": "2026-03-10T08:40:29.079Z",
+      "lastCapturedAt": "2026-03-10T08:40:29.079Z",
+      "status": "captured",
+      "title": "The Soft Serve | Dauin | Facebook",
+      "venueName": "The Soft Serve",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T08:40:46.301Z",
+      "lastCapturedAt": "2026-03-10T08:40:46.301Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

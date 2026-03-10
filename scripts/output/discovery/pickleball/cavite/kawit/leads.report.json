@@ -1,0 +1,116 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Kawit",
+    "citySlug": "kawit",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:06:28.715Z",
+  "queries": [
+    "pickleball courts in Cavite Kawit",
+    "pickleball court Kawit Cavite",
+    "Kawit pickleball",
+    "courts in Kawit Cavite pickleball",
+    "sports center Kawit Cavite pickleball",
+    "pickleball club Kawit Cavite",
+    "pickleball reservations Kawit Cavite",
+    "host-map:cebupickleballcourts.com:Kawit",
+    "host-map:dumapickleball.com:Kawit",
+    "site:cebupickleballcourts.com Kawit Cavite pickleball",
+    "site:dumapickleball.com Kawit Cavite pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+    "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+    "https://www.threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa",
+    "https://www.youtube.com/watch?v=UXoEHQTogPM",
+    "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+    "https://reclub.co/clubs/@phoenix-pickleball-club",
+    "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "score": 11
+    },
+    {
+      "url": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "score": 11
+    },
+    {
+      "url": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-6",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "score": 11
+    },
+    {
+      "url": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/center-court",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+    "https://www.instagram.com/reel/DTVS5qWjPbf/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+    "https://www.instagram.com/thepicklegroundph/?hl=en",
+    "https://www.reddit.com/r/cavite/comments/1qx6sqj/pickleball_around_tanza_or_kawit/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+    "https://www.instagram.com/reel/DTVS5qWjPbf/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+    "https://www.facebook.com/61576669311409/videos/we-now-have-a-total-of-13-usa-pickleballstandard-joola-powered-courts-in-kawit-c/1147601787267061/",
+    "https://www.tiktok.com/@kylayvonne__/video/7558433449082703122",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/61576669311409/videos/we-now-have-a-total-of-13-usa-pickleballstandard-joola-powered-courts-in-kawit-c/1147601787267061/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+    "https://www.instagram.com/reel/DL1viBUSxMZ/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+    "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+    "https://www.facebook.com/61576669311409/videos/we-now-have-a-total-of-13-usa-pickleballstandard-joola-powered-courts-in-kawit-c/1147601787267061/",
+    "https://www.reddit.com/r/cavite/comments/1o8yq6c/pickleball_courts/?tl=en",
+    "https://www.instagram.com/reel/DL1viBUSxMZ/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.instagram.com/p/DNQUrYj0tlo/",
+    "https://www.tiktok.com/@yourlovedars/video/7595556491512270088",
+    "https://www.facebook.com/61576669311409/videos/we-now-have-a-total-of-13-usa-pickleballstandard-joola-powered-courts-in-kawit-c/1147601787267061/",
+    "https://www.reddit.com/r/cavite/comments/1qx6sqj/pickleball_around_tanza_or_kawit/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+    "https://www.reddit.com/r/cavite/comments/1qx6sqj/pickleball_around_tanza_or_kawit/",
+    "https://www.instagram.com/p/DMpDNCZxl1O/",
+    "https://www.facebook.com/61576669311409/videos/we-now-have-a-total-of-13-usa-pickleballstandard-joola-powered-courts-in-kawit-c/1147601787267061/",
+    "https://www.facebook.com/p/Phoenix-Pickleball-Club-61573685476293/",
+    "https://www.instagram.com/reel/DL1viBUSxMZ/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+    "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+    "https://www.instagram.com/p/DMpDNCZxl1O/",
+    "https://www.instagram.com/reel/DTVS5qWjPbf/",
+    "https://www.reddit.com/r/cavite/comments/1qlj3xc/pickleball_place_near_imus_or_kawit/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4373816399573234/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/kawit/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/kawit/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/kawit/scrape-state.json"
+}

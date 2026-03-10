@@ -1,0 +1,79 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T09:16:13.092Z",
+  "updatedAt": "2026-03-10T09:16:50.771Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/pototan/pototan-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/pototan/pototan-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/pototan/pototan-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "lastDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T09:16:13.092Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pototan pickleball club|pototan|iloilo",
+      "lastRowName": "Pototan Pickleball Club"
+    },
+    "https://reclub.co/clubs/@pototan-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@pototan-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@pototan-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "lastDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:16:13.092Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "lastDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:16:13.092Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hans/clubs/@pototan-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/zh-hans/clubs/@pototan-pickleball-club",
+      "latestUrl": "https://reclub.co/zh-hans/clubs/@pototan-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "lastDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:16:13.092Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://picklehub.ph/": {
+      "canonicalUrl": "https://picklehub.ph/",
+      "latestUrl": "https://picklehub.ph/",
+      "firstDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "lastDiscoveredAt": "2026-03-10T09:16:13.092Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:16:13.092Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "pototan pickleball club|pototan|iloilo": {
+      "rowKey": "pototan pickleball club|pototan|iloilo",
+      "name": "Pototan Pickleball Club",
+      "city": "POTOTAN",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/pototan/pototan-pickleball-club",
+      "firstSeenAt": "2026-03-10T09:16:13.092Z",
+      "lastSeenAt": "2026-03-10T09:16:13.092Z"
+    }
+  }
+}

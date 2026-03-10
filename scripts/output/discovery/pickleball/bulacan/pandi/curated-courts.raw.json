@@ -1,0 +1,76 @@
+{
+  "generatedAt": "2026-03-10T12:23:58.809Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 6,
+  "candidateUrlsCount": 6,
+  "candidateUrlsSelectedForRunCount": 6,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://www.pickletrip.com/all/philippines/central-luzon/pandi"
+  ],
+  "candidateUrls": [
+    "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://www.pickletrip.com/all/philippines/central-luzon/pandi"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "http://reclub.co/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://reclub.co/ko/clubs/@the-pickle-farm-by-sitio-antonio",
+    "https://m.yelp.ca/search?find_desc=Badminton&find_loc=Pandi%2C+BUL",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://www.pickletrip.com/all/philippines/central-luzon/pandi"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Bulacan Sports Complex",
+        "address": "Philippines, Philippines, Philippines",
+        "city": "BULACAN",
+        "province": "BULACAN",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

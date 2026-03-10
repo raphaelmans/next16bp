@@ -1,0 +1,115 @@
+{
+  "generatedAt": "2026-03-10T08:30:07.222Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 5,
+  "candidateUrlsCount": 5,
+  "candidateUrlsSelectedForRunCount": 5,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+    "https://www.pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+    "https://www.pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+    "https://www.pickletrip.com/all/philippines/western-visayas/miagao/family-rentals",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Upv Miagao Pickleball Courts",
+        "address": "Miagao, Western Visayas, Philippines",
+        "city": "MIAGAO",
+        "province": "ILOILO",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/upv-miagao-pickleball-courts"
+    },
+    {
+      "row": {
+        "name": "University Of The Philippines Visayas",
+        "address": "Miagao, Western Visayas, Philippines",
+        "city": "MIAGAO",
+        "province": "ILOILO",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/miagao/university-of-the-philippines-visayas"
+    },
+    {
+      "row": {
+        "name": "Athletes Point Sports Center",
+        "address": "Iloilo City, Western Visayas, Philippines",
+        "city": "ILOILO CITY",
+        "province": "ILOILO",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 3,
+    "pendingMigrationRows": 3,
+    "dbCoverageEnabled": false
+  }
+}

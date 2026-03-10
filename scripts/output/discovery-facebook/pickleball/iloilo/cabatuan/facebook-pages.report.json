@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Cabatuan",
+    "citySlug": "cabatuan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:23:02.027Z",
+  "queries": [
+    "site:facebook.com pickleball Cabatuan Iloilo",
+    "site:facebook.com \"Cabatuan\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Cabatuan\" \"pickleball club\"",
+    "site:facebook.com \"Cabatuan\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/primesportsfloors/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1853657992044888/posts/2167237597353591/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/218692212833785/posts/1421182745918053/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/742053023243856/posts/2110614176387727/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/836094510284706/posts/2037017243525754/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/666836848260792/posts/1427153118895824/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/1853657992044888/posts/2167237597353591/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2829798483953182/posts/4260600790872937/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/218692212833785/posts/1421182745918053/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/612238940377279/posts/1461468302121001/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/742053023243856/posts/2110614176387727/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1370416488102163/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/836094510284706/posts/2037017243525754/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330448113910063/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/yesfmcauayan/posts/new-year-new-you-at-home-court-club-cabatuan-bring-your-entire-family-for-some-g/1510382741096507/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1034671707994700/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2016403365524290/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2579040142453887/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1370416488102163/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4008825412739003/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2472769383080964/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/868125911835839/posts/1280592390589187/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1403632141357382/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/514709697054264/posts/1493807895811101/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/primesportsfloors/posts/home-court-sports-center-cabatuan-isabelahardcourt-acrylic-pickleball-courtsdm-u/122244549212165075/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/yesfmcauayan/posts/new-year-new-you-at-home-court-club-cabatuan-bring-your-entire-family-for-some-g/1510382741096507/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1034671707994700/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/868125911835839/posts/1280592390589187/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/868125911835839/posts/1277816934200066/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4008825412739003/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2016403365524290/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/871308257143693/posts/2013643672910140/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2472769383080964/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/cabatuan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/cabatuan/facebook-pages.state.json"
+}

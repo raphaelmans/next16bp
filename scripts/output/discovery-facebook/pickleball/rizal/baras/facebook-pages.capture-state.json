@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:baras",
+  "createdAt": "2026-03-10T12:31:45.635Z",
+  "updatedAt": "2026-03-10T12:32:04.563Z",
+  "urls": {
+    "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845": {
+      "canonicalUrl": "https://facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845",
+      "latestUrl": "https://www.facebook.com/p/Pickleball-East-Dinkers-Club-Inc-61552150163845/",
+      "firstCapturedAt": "2026-03-10T12:31:46.928Z",
+      "lastCapturedAt": "2026-03-10T12:31:46.928Z",
+      "status": "captured",
+      "title": "Pickleball East Dinkers Club Inc. | Rizal | Facebook",
+      "venueName": "Pickleball East Dinkers Club Inc.",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

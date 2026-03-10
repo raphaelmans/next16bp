@@ -1,0 +1,101 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Pateros",
+    "citySlug": "pateros",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:27:40.896Z",
+  "queries": [
+    "pickleball courts in Metro Manila Pateros",
+    "pickleball court Pateros Metro Manila",
+    "Pateros pickleball",
+    "courts in Pateros Metro Manila pickleball",
+    "sports center Pateros Metro Manila pickleball",
+    "pickleball club Pateros Metro Manila",
+    "pickleball reservations Pateros Metro Manila",
+    "host-map:cebupickleballcourts.com:Pateros",
+    "host-map:dumapickleball.com:Pateros",
+    "site:cebupickleballcourts.com Pateros Metro Manila pickleball",
+    "site:dumapickleball.com Pateros Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/clubs/@pateros-pickle-club",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Pateros%2C+Metro+Manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://pateros.com/business_detail_T2_R36.php",
+    "https://pateros.com/business_detail_T2_R45.php",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.venyu.ph/venues?sport=Community%20center",
+      "score": 4
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://www.milo.com.ph/clinics-by-sport",
+      "score": 0
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4341735482781326/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4069222713365939/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1457272012401332/",
+    "https://www.instagram.com/p/DUs_8qIjqLH/",
+    "https://www.tiktok.com/@nicollllleeeeeyyyyy/video/7493132795380829457",
+    "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4314794798808728/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+    "https://www.tiktok.com/@igetmisty/video/7542716673346768136",
+    "https://www.instagram.com/p/DUs_8qIjqLH/",
+    "https://www.tiktok.com/@nicollllleeeeeyyyyy/video/7493132795380829457",
+    "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+    "https://www.facebook.com/p/Pateros-Pickleball-100077357564486/",
+    "https://www.facebook.com/larry.alcantara.16/posts/join-pateros-pickleball-club/10162707516327864/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4204710596483816/",
+    "https://www.facebook.com/61583173522285/posts/-come-and-join-pateros-pickleball-club-looking-for-a-fun-healthy-at-masayang-com/122121073965105784/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+    "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4314794798808728/",
+    "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+    "https://www.instagram.com/p/DUs_8qIjqLH/",
+    "https://www.tiktok.com/@iskomorenodomagoso/video/7546891855175175432",
+    "https://www.tiktok.com/@nicollllleeeeeyyyyy/video/7493132795380829457",
+    "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4273129349641940/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4341735482781326/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4373062752981932/",
+    "https://www.facebook.com/61568779744215/videos/the-new-home-for-pickleball-manila/866053686349959/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+    "https://www.tiktok.com/@igetmisty/video/7542716673346768136",
+    "https://www.facebook.com/61583173522285/posts/-come-and-join-pateros-pickleball-club-looking-for-a-fun-healthy-at-masayang-com/122121073965105784/",
+    "https://www.facebook.com/groups/217646647601437/posts/968241295875298/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4341735482781326/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4373915419563332/",
+    "https://www.facebook.com/groups/881612689765542/posts/1544067143520090/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4069222713365939/",
+    "https://www.instagram.com/reel/DON7HEzAen7/",
+    "https://www.tiktok.com/@igetmisty/video/7542716673346768136",
+    "https://www.facebook.com/groups/2723933654561525/posts/4362296277391913/",
+    "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4190223617932514/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4204710596483816/",
+    "https://www.facebook.com/groups/952820405333114/posts/1966688420612969/",
+    "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+    "https://www.tiktok.com/@igetmisty/video/7541400468182863112"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pateros/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pateros/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/pateros/scrape-state.json"
+}

@@ -1,0 +1,195 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Noveleta",
+    "citySlug": "noveleta",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:20:54.786Z",
+  "queries": [
+    "site:facebook.com pickleball Noveleta Cavite",
+    "site:facebook.com \"Noveleta\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Noveleta\" \"pickleball club\"",
+    "site:facebook.com \"Noveleta\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/ThePickleGroundPH/",
+    "https://www.facebook.com/swinglanecavite/",
+    "https://www.facebook.com/244535675957771/",
+    "https://www.facebook.com/ThePickleGroundPH?locale=fi_FI",
+    "https://www.facebook.com/ThePickleGroundPH?locale=ku_TR",
+    "https://www.facebook.com/p/Sideout-The-Pickleball-Court-61580047635090/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4068834776738066/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-hopping-65-say-hello-to-the-pickleground-ph-in-noveleta-cavite-/10213917115197998/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/the-pickleground-ph-cavite/1580327269955209/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/having-fun-at-the-pickleground-ph-noveleta-cavite-pickleball-pickleballtiktok-pi/10213937888557319/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/10214121371024266/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4068834776738066/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-hopping-65-say-hello-to-the-pickleground-ph-in-noveleta-cavite-/10213917115197998/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-65-the-pickleground-ph-noveleta-cavite-full-pickleball-pickl/10213974135783477/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/10214121371024266/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61580047635090/videos/sideout-strong-20-seconds-of-heart-one-experience-for-the-booksproud-of-everyone/1186721116624678/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/mentions/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4068834776738066/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/starting-the-week-the-tpg-way-playing-even-on-a-monday-book-your-slots-at-sports/1576877926764156/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/posts/1381922280613360/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4350098751944999/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-hopping-65-say-hello-to-the-pickleground-ph-in-noveleta-cavite-/10213917115197998/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61578560330338/photos/122126672408952011/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61580047635090/videos/sideout-strong-20-seconds-of-heart-one-experience-for-the-booksproud-of-everyone/1186721116624678/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-no-65-the-pickleground-ph-noveleta-cavite-full-pickleball-pickl/10213974135783477/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/pickleball-court-hopping-65-say-hello-to-the-pickleground-ph-in-noveleta-cavite-/10213917115197998/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4068834776738066/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/posts/10214121371024266/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/photos/pickleball-court-hopping-65-say-hello-to-the-pickleground-ph-in-noveleta-cavite-/10213917113957967/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/mentions/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/posts/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/1280158347456421/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61578560330338/photos/122126672408952011/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61580047635090/videos/sideout-strong-20-seconds-of-heart-one-experience-for-the-booksproud-of-everyone/1186721116624678/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/noveleta/facebook-pages.state.json"
+}

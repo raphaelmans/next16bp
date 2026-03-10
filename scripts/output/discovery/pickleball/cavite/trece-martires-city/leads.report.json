@@ -1,0 +1,110 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Trece Martires City",
+    "citySlug": "trece-martires-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T08:19:22.196Z",
+  "queries": [
+    "pickleball courts in Cavite Trece Martires City",
+    "pickleball court Trece Martires City Cavite",
+    "Trece Martires City pickleball",
+    "courts in Trece Martires City Cavite pickleball",
+    "sports center Trece Martires City Cavite pickleball",
+    "pickleball club Trece Martires City Cavite",
+    "pickleball reservations Trece Martires City Cavite",
+    "host-map:cebupickleballcourts.com:Trece Martires City",
+    "host-map:cebupickleballcourts.com:Trece Martires",
+    "host-map:dumapickleball.com:Trece Martires City",
+    "host-map:dumapickleball.com:Trece Martires",
+    "site:cebupickleballcourts.com Trece Martires City Cavite pickleball",
+    "site:dumapickleball.com Trece Martires City Cavite pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+    "https://www.smsupermalls.com/active-hub",
+    "https://www.yelp.com/search?find_desc=Badminton&find_loc=Trece+Martires+City%2C+Cavite",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://reclub.co/m/LC6Y3V"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 0
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/calabarzon/trece-martires/warriors-pickleball-club",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.facebook.com/61588611501558/videos/the-newest-pickleball-court-in-trece-martires-cavite-is-in-the-works-featuring-f/763093869855784/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.facebook.com/61588611501558/videos/the-newest-pickleball-court-in-trece-martires-cavite-is-in-the-works-featuring-f/763093869855784/",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.instagram.com/reel/DVQh6lfEiIC/",
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/60-courts-sm-supermalls-is-officially-the-home-of-pickleball-ph-subscribe-to-sm-/1336503251849848/",
+    "https://www.facebook.com/61588611501558/videos/the-newest-pickleball-court-in-trece-martires-cavite-is-in-the-works-featuring-f/763093869855784/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.instagram.com/reel/DVQh6lfEiIC/",
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.facebook.com/61588611501558/videos/the-newest-pickleball-court-in-trece-martires-cavite-is-in-the-works-featuring-f/763093869855784/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/60-courts-sm-supermalls-is-officially-the-home-of-pickleball-ph-subscribe-to-sm-/1336503251849848/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.tiktok.com/@smsupermalls/video/7601000303822900497",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.facebook.com/61588611501558/videos/the-newest-pickleball-court-in-trece-martires-cavite-is-in-the-works-featuring-f/763093869855784/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.facebook.com/Godshandiworkprintees/posts/client-approved-design-warriors-pickleball-club-trece-martires-city-cavitewarrio/1309493304527547/",
+    "https://www.instagram.com/p/DU-HoCKE6Jo/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4338923729729168/",
+    "https://www.instagram.com/reel/DVLdsmqE0-Y/",
+    "https://www.facebook.com/groups/603466333706824/posts/1916669662386478/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1qofeos/around_trece_martires_cavite/",
+    "https://www.facebook.com/SMCityTreceMartires/posts/get-active-this-summer-at-sm-active-hub-sm-city-trece-martires-make-the-most-of-/1124249199741922/",
+    "https://www.instagram.com/p/DVVbuQYiTX1/",
+    "https://www.instagram.com/reel/DTMqPdCiT2U/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/trece-martires-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/trece-martires-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/trece-martires-city/scrape-state.json"
+}

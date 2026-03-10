@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:plaridel",
+  "createdAt": "2026-03-10T09:00:35.235Z",
+  "updatedAt": "2026-03-10T09:00:58.806Z",
+  "queries": [
+    "pickleball courts in Bulacan Plaridel",
+    "pickleball court Plaridel Bulacan",
+    "Plaridel pickleball",
+    "courts in Plaridel Bulacan pickleball",
+    "sports center Plaridel Bulacan pickleball",
+    "pickleball club Plaridel Bulacan",
+    "pickleball reservations Plaridel Bulacan",
+    "host-map:cebupickleballcourts.com:Plaridel",
+    "host-map:dumapickleball.com:Plaridel",
+    "site:cebupickleballcourts.com Plaridel Bulacan pickleball",
+    "site:dumapickleball.com Plaridel Bulacan pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "sourceQuery": "pickleball reservations Plaridel Bulacan",
+      "title": "Play Pickleball at Bulacan Sports Complex: Court Information",
+      "snippet": "Can you reserve a pickleball court at Bulacan Sports Complex? We're not sure if reservations are available or required at Bulacan Sports Complex. If you ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "sourceQuery": "courts in Plaridel Bulacan pickleball",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "Bulacan Sports Complex. MacArthur Highway, Malolos. Bulacan. NCR. 2. Outdoor Courts. Daily, 6a-10a p30/player. Melody Garcia. 0917-561-8016.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Plaridel%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "sourceQuery": "pickleball club Plaridel Bulacan",
+      "title": "Top 10 Best Badminton Near Plaridel, Bulacan - With Real Reviews",
+      "snippet": "Top 10 Best Badminton Near Plaridel, Bulacan - With Real Reviews · 1. Power Smash · 2. CKSM Badminton Court · 3. Playground Badminton Courts · 4. Dumlao Gym · 5.",
+      "domain": "m.yelp.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@zentropickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@zentropickleball",
+      "latestUrl": "https://reclub.co/clubs/@zentropickleball",
+      "firstDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "sourceQuery": "Plaridel pickleball",
+      "title": "ZENtro Pickleball",
+      "snippet": "88 activities. Welcome to ZENtro Pickleball ARENA Where passion meets play — right at the boundary of Pulilan and Apalit! Just a short drive away:",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://shopee.ph/SOARFLY-Pickleball-Paddles-Set-(2-Paddles-1-Bag-4-Balls)-Lightweight-Durable-Starter-Kit-i.1618393601.50203189255": {
+      "canonicalUrl": "https://shopee.ph/SOARFLY-Pickleball-Paddles-Set-(2-Paddles-1-Bag-4-Balls)-Lightweight-Durable-Starter-Kit-i.1618393601.50203189255",
+      "latestUrl": "https://shopee.ph/SOARFLY-Pickleball-Paddles-Set-(2-Paddles-1-Bag-4-Balls)-Lightweight-Durable-Starter-Kit-i.1618393601.50203189255",
+      "firstDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "lastDiscoveredAt": "2026-03-10T09:00:35.236Z",
+      "sourceQuery": "Plaridel pickleball",
+      "title": "SOARFLY Pickleball Paddles Set (2 Paddles + 1 Bag + 4 Balls) ...",
+      "snippet": "The lightweight paddle and larger sweet spot design are beginner-friendly, making everyday practice easier. The ergonomic handle with spiral grip ensures a ...",
+      "domain": "shopee.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

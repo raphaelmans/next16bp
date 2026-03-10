@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:bulacan:guiguinto:facebook",
   "createdAt": "2026-03-10T07:12:12.948Z",
-  "updatedAt": "2026-03-10T07:16:33.505Z",
+  "updatedAt": "2026-03-10T11:30:07.535Z",
   "scope": {
     "provinceSlug": "bulacan",
     "citySlug": "guiguinto",
@@ -81,9 +81,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T07:16:13.393Z",
-      "finishedAt": "2026-03-10T07:16:33.505Z",
+      "finishedAt": "2026-03-10T11:30:07.535Z",
       "lastError": null,
-      "notes": "backfilled 2 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

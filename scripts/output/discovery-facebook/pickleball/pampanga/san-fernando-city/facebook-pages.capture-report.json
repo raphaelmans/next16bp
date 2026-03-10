@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "san-fernando-city",
+    "provinceName": "Pampanga",
+    "cityName": "San Fernando City"
+  },
+  "generatedAt": "2026-03-10T08:51:41.132Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/san-fernando-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/san-fernando-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/san-fernando-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/san-fernando-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 10,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 10,
+  "failedCount": 0,
+  "readyCount": 2,
+  "reviewCount": 5,
+  "skipCount": 3,
+  "csvRowCount": 2,
+  "failures": []
+}

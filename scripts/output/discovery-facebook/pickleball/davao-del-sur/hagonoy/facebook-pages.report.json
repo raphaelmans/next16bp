@@ -1,0 +1,214 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Hagonoy",
+    "citySlug": "hagonoy",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:28:34.704Z",
+  "queries": [
+    "site:facebook.com pickleball Hagonoy Davao Del Sur",
+    "site:facebook.com \"Hagonoy\" \"Davao Del Sur\" \"pickleball\"",
+    "site:facebook.com \"Hagonoy\" \"pickleball club\"",
+    "site:facebook.com \"Hagonoy\" \"pickleball court\"",
+    "site:facebook.com \"Davao Del Sur\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/photo.php?fbid=1902707000616564&set=a.106462233574392&type=3",
+    "https://www.facebook.com/story.php/?story_fbid=122107467242625991&id=61568779744215"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/digosbansalanpadadasulophagonoyjob/posts/25967661032928695/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/digosbansalanpadadasulophagonoyjob/posts/25493455470349256/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/darling.cruz.355/videos/bagging-with-my-nerner-reelsvideo%E3%82%B7-pickleball/4511736972445973/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2736538320042429/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/dylan.house.92167/posts/my-first-pickleball-tournament-pampanga-pickleball-center-ppl-philippine-pickleb/1627618894939886/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darling.cruz.355/videos/lastnight-game-team-angkol-gym-reelsvideo%E3%82%B7-pickleball/1968750520519612/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/Ambibo.ph/photos/d41d8cd9/1427662362703666/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/jeanette.miralles/posts/agarayso-mao-toneveeeer-by-sherwinabols-ang-show/10229062780025286/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/digosbansalanpadadasulophagonoyjob/posts/25967661032928695/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darling.cruz.355/videos/bagging-with-my-nerner-reelsvideo%E3%82%B7-pickleball/4511736972445973/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/dylan.house.92167/posts/my-first-pickleball-tournament-pampanga-pickleball-center-ppl-philippine-pickleb/1627618894939886/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/jeanette.miralles/posts/agarayso-mao-toneveeeer-by-sherwinabols-ang-show/10229062780025286/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/darling.cruz.355/videos/lastnight-game-team-angkol-gym-reelsvideo%E3%82%B7-pickleball/1968750520519612/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/jhong.ybanezpiornato/posts/kadulaon-kog-pickleball-/2024425834781676/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/5667031006746018/posts/25255161840839643/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/nicolasjrdelica/videos/another-win/803934386073199/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3725645091057038/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1370273327767868/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/LemFaustinoOfficial/posts/live-opening-ceremony-of-1st-mayor-lem-faustinos-pickle-ball-tournament/1310011941182443/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4380228178932056/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/picklecrew/photos/d41d8cd9/122134356554922675/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376177779337096/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/Javajpickleball/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2140142502917938/posts/3737229036542602/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/tWSilliman/posts/look-winning-student-organizations-for-the-2025-hibalag-cup-were-recognized-duri/1347397757392584/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4380228178932056/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4062080267413517/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/katubsridersalliance/posts/26571454262452425/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4279360282352180/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1869363583359966/posts/3683847441911562/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4293940867560788/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1468303234631543/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4193934274228115/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4380202892267918/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4368774436744097/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373916109563263/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61579378730200/photos/d41d8cd9/122150311280979291/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/DailyGuardianPH/posts/the-pickleball-champions-league-asia-rising-stars-u19-sectional-tournament-in-da/1344753064348140/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/davao-pickleball-at-the-mts-pavilion-is-your-go-to-spot-for-fun-and-competitive-/1315980717228234/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/LPUDavao/posts/new-game-new-vibe-new-lifestyle-pickleball-is-officially-here-to-upgrade-your-li/1231754955765261/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4292511924370349/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4113467152274828/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/matinatownsquare/posts/pickleball-court-at-mts-is-now-open-and-available-beginning-august-23-2025-satur/1160503379442636/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4186286041659605/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1069580638185751/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/hagonoy/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/davao-del-sur/hagonoy/facebook-pages.state.json"
+}

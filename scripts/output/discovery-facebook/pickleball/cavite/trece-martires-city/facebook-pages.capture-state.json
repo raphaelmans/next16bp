@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:trece-martires-city",
+  "createdAt": "2026-03-10T11:07:05.392Z",
+  "updatedAt": "2026-03-10T11:07:37.925Z",
+  "urls": {
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T11:07:08.049Z",
+      "lastCapturedAt": "2026-03-10T11:07:08.049Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:kawit",
+  "createdAt": "2026-03-10T11:06:28.714Z",
+  "updatedAt": "2026-03-10T11:06:52.781Z",
+  "queries": [
+    "pickleball courts in Cavite Kawit",
+    "pickleball court Kawit Cavite",
+    "Kawit pickleball",
+    "courts in Kawit Cavite pickleball",
+    "sports center Kawit Cavite pickleball",
+    "pickleball club Kawit Cavite",
+    "pickleball reservations Kawit Cavite",
+    "host-map:cebupickleballcourts.com:Kawit",
+    "host-map:dumapickleball.com:Kawit",
+    "site:cebupickleballcourts.com Kawit Cavite pickleball",
+    "site:dumapickleball.com Kawit Cavite pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/kawit/the-pickleground-ph",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "pickleball reservations Kawit Cavite",
+      "title": "Play Pickleball at The PickleGround PH: Court Information",
+      "snippet": "The PickleGround PH is a place to play pickleball in Kawit, Calabarzon. There are 6 indoor concrete courts. These are dedicated courts with permanent lines ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit": {
+      "canonicalUrl": "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "courts in Kawit Cavite pickleball",
+      "title": "The Dink Lab Robertson Plaza Kawit - Pickleball",
+      "snippet": "24/7 Pickleball in Kawit, Cavite! Get ready to dink, drive, and dominate anytime, day or night! The Dink Lab is your nonstop court for fun rallies and ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club": {
+      "canonicalUrl": "https://sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "latestUrl": "https://www.sparrk.ph/phoenix-pickleball-club/space/phoenix-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "pickleball club Kawit Cavite",
+      "title": "Phoenix Pickleball Club",
+      "snippet": "Phoenix Pickleball Club. Kawit, 4104 Cavite • 11 guests • Open Daily. Verified. About this space. The flames have landed in KAWIT CAVITE We're not just ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa": {
+      "canonicalUrl": "https://threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa",
+      "latestUrl": "https://www.threads.com/@jeppantes/post/DVBmRiMic5M/ang-all-home-din-sa-kawit-nagkaroon-na-ng-pickleball-court-at-commercial-gym-sa",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "sports center Kawit Cavite pickleball",
+      "title": "Ang All Home din sa Kawit nagkaroon na ng Pickleball court at commercial ...",
+      "snippet": "Ang All Home din sa Kawit nagkaroon na ng Pickleball court at commercial gym sa second floor lol ... Wala na din appliance center Pickleball ...",
+      "domain": "threads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=UXoEHQTogPM": {
+      "canonicalUrl": "https://youtube.com/watch?v=UXoEHQTogPM",
+      "latestUrl": "https://www.youtube.com/watch?v=UXoEHQTogPM",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "Kawit pickleball",
+      "title": "THE DINK LAB | OPEN 24/7 PICKLEBALL COURT",
+      "snippet": "Wazzup Kapuge! Cheking out this new pickleball court in Kawit, Cavite open 24 hours a day. So happy to play together with my brothers, ...",
+      "domain": "youtube.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-6": {
+      "canonicalUrl": "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-6",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-6",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "sports center Kawit Cavite pickleball",
+      "title": "The Dink Lab Robertson Plaza Kawit - Pickleball",
+      "snippet": "The Dink Lab Robertson Plaza Kawit. Kawit, 4104 Cavite • 20 guests • Mon to Sat. Verified. About this space. 24/7 Pickleball in Kawit, Cavite!",
+      "domain": "sparrk.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "sports center Kawit Cavite pickleball",
+      "title": "Member Clubs",
+      "snippet": "Pickleball is about making friends and enjoying sport. Below is a list of Philippine pickleball member clubs that we work with, recognize and support.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@phoenix-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@phoenix-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@phoenix-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "pickleball club Kawit Cavite",
+      "title": "Phoenix Pickleball Club",
+      "snippet": "Phoenix Pickleball Club. Isabela · Pickleball · Join Club. 164 members ·. 213 activities. Pickleball Court in Covelandia Rd. Kawit Cavite. Organized By.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2": {
+      "canonicalUrl": "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/court-2-1-2",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "pickleball reservations Kawit Cavite",
+      "title": "The Dink Lab Robertson Plaza Kawit - Pickleball",
+      "snippet": "24/7 Pickleball in Kawit, Cavite! Get ready ... Book a reservation. Set quantity of slots. 1. Mar 3 ... Guest can cancel their bookings anytime and request a ...",
+      "domain": "sparrk.ph",
+      "relevanceScore": 17,
+      "handedOffToScrapeAt": null
+    },
+    "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/center-court": {
+      "canonicalUrl": "https://sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/center-court",
+      "latestUrl": "https://www.sparrk.ph/thedinklab-robertson/space/the-dink-lab-robertson-plaza-kawit/center-court",
+      "firstDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "lastDiscoveredAt": "2026-03-10T11:06:28.715Z",
+      "sourceQuery": "pickleball reservations Kawit Cavite",
+      "title": "The Dink Lab Robertson Plaza Kawit - Pickleball",
+      "snippet": "The Dink Lab Robertson Plaza Kawit. Kawit, 4104 Cavite • 50 guests • Open Daily. Verified. About this space. 24/7 Pickleball in Kawit, Cavite!",
+      "domain": "sparrk.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

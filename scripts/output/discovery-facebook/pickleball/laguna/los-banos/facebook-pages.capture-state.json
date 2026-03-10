@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:los-banos",
+  "createdAt": "2026-03-10T11:37:26.119Z",
+  "updatedAt": "2026-03-10T11:39:35.331Z",
+  "urls": {
+    "https://facebook.com/uplbpickleballclub": {
+      "canonicalUrl": "https://facebook.com/uplbpickleballclub",
+      "latestUrl": "https://www.facebook.com/uplbpickleballclub/",
+      "firstCapturedAt": "2026-03-10T11:37:27.669Z",
+      "lastCapturedAt": "2026-03-10T11:37:27.669Z",
+      "status": "captured",
+      "title": "UPLB Pickleball Club | Los Baños | Facebook",
+      "venueName": "UPLB Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/aceanderesort": {
+      "canonicalUrl": "https://facebook.com/aceanderesort",
+      "latestUrl": "https://www.facebook.com/aceanderesort/",
+      "firstCapturedAt": "2026-03-10T11:37:49.499Z",
+      "lastCapturedAt": "2026-03-10T11:37:49.499Z",
+      "status": "captured",
+      "title": "ACE & E Resort | Los Baños | Facebook",
+      "venueName": "ACE & E Resort",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "ACE & E Resort"
+    },
+    "https://facebook.com/UPLBPC": {
+      "canonicalUrl": "https://facebook.com/UPLBPC",
+      "latestUrl": "https://www.facebook.com/UPLBPC/",
+      "firstCapturedAt": "2026-03-10T11:38:07.980Z",
+      "lastCapturedAt": "2026-03-10T11:38:07.980Z",
+      "status": "captured",
+      "title": "UPLB Pickleball Club | Los Baños | Facebook",
+      "venueName": "UPLB Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Los-Banos-Pickleball-100057436578439": {
+      "canonicalUrl": "https://facebook.com/p/Los-Banos-Pickleball-100057436578439",
+      "latestUrl": "https://www.facebook.com/p/Los-Banos-Pickleball-100057436578439/",
+      "firstCapturedAt": "2026-03-10T11:38:20.008Z",
+      "lastCapturedAt": "2026-03-10T11:38:20.008Z",
+      "status": "captured",
+      "title": "Los Banos Pickleball | Los Banos CA | Facebook",
+      "venueName": "Los Banos Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1156739986250543&id=100057436578439&set=a.314488107142406": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1156739986250543&id=100057436578439&set=a.314488107142406",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1156739986250543&set=a.314488107142406&id=100057436578439",
+      "firstCapturedAt": "2026-03-10T11:38:43.985Z",
+      "lastCapturedAt": "2026-03-10T11:38:43.985Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Los Banos Pickleball",
+      "confidence": "medium",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T11:38:59.255Z",
+      "lastCapturedAt": "2026-03-10T11:38:59.255Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T11:39:22.867Z",
+      "lastCapturedAt": "2026-03-10T11:39:22.867Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

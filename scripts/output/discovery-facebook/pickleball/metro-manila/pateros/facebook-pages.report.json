@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Pateros",
+    "citySlug": "pateros",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:28:03.020Z",
+  "queries": [
+    "site:facebook.com pickleball Pateros Metro Manila",
+    "site:facebook.com \"Pateros\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Pateros\" \"pickleball club\"",
+    "site:facebook.com \"Pateros\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61583173522285/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362296277391913/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1259607865155763/posts/1433329281116953/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369611853327022/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4372295516391989/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/bgcpickleballclub/posts/2768527143493860/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2732734033756191/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1017763977231566/posts/1221003700240925/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583173522285/posts/-come-and-join-pateros-pickleball-club-looking-for-a-fun-healthy-at-masayang-com/122121073965105784/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362296277391913/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4241452236142985/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61583173522285/photos/d41d8cd9/122121673443105784/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331404360481105/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369611853327022/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4260957117525830/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/bgcpickleballclub/posts/2738573889822519/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381590668795807/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/393267201758373/posts/1558598725225209/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369611853327022/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61568194952233/photos/d41d8cd9/122173531136606498/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362296277391913/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1470216344440232/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1444231303964132/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4378562205765320/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583173522285/photos/d41d8cd9/122121673443105784/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1457272012401332/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4379159532372254/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2684630995233162/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/625300165503716/posts/1683057163061339/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/rqsport49/posts/ready-set-pickleball-rq-pickleball-social-cardio-competitive-doubles-tue-67-pm-r/1515280590604539/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2012437722447468/posts/2682021048822462/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1259607865155763/posts/1433329281116953/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4371028953185312/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/500616635082157/posts/1372094907934321/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376687502619457/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pateros/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/pateros/facebook-pages.state.json"
+}

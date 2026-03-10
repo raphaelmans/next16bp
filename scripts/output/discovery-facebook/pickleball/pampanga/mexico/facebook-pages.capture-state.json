@@ -1,0 +1,112 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:mexico",
+  "createdAt": "2026-03-10T11:46:49.382Z",
+  "updatedAt": "2026-03-10T11:49:33.551Z",
+  "urls": {
+    "https://facebook.com/ThinkAndDink": {
+      "canonicalUrl": "https://facebook.com/ThinkAndDink",
+      "latestUrl": "https://www.facebook.com/ThinkAndDink/",
+      "firstCapturedAt": "2026-03-10T11:46:51.029Z",
+      "lastCapturedAt": "2026-03-10T11:46:51.029Z",
+      "status": "captured",
+      "title": "Think & Dink Pickleball Center | Mexico | Facebook",
+      "venueName": "Think & Dink Pickleball Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/CABO-Pickleball-Club-100095642466719": {
+      "canonicalUrl": "https://facebook.com/p/CABO-Pickleball-Club-100095642466719",
+      "latestUrl": "https://www.facebook.com/p/CABO-Pickleball-Club-100095642466719/",
+      "firstCapturedAt": "2026-03-10T11:47:10.557Z",
+      "lastCapturedAt": "2026-03-10T11:47:10.557Z",
+      "status": "captured",
+      "title": "CABO Pickleball Club | Cabo San Lucas | Facebook",
+      "venueName": "CABO Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/pampangapickleballcommunity": {
+      "canonicalUrl": "https://facebook.com/pampangapickleballcommunity",
+      "latestUrl": "https://www.facebook.com/pampangapickleballcommunity/",
+      "firstCapturedAt": "2026-03-10T11:47:53.349Z",
+      "lastCapturedAt": "2026-03-10T11:47:53.349Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Center | San Fernando | Facebook",
+      "venueName": "Pampanga Pickleball Center",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Center-61583363580722",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+      "firstCapturedAt": "2026-03-10T11:48:13.471Z",
+      "lastCapturedAt": "2026-03-10T11:48:13.471Z",
+      "status": "captured",
+      "title": "Pampanga Pickleball Center | San Fernando | Facebook",
+      "venueName": "Pampanga Pickleball Center",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/PCPH-Pampanga-61563494852035": {
+      "canonicalUrl": "https://facebook.com/p/PCPH-Pampanga-61563494852035",
+      "latestUrl": "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+      "firstCapturedAt": "2026-03-10T11:48:34.431Z",
+      "lastCapturedAt": "2026-03-10T11:48:34.431Z",
+      "status": "captured",
+      "title": "PCPH Pampanga | Angeles City | Facebook",
+      "venueName": "PCPH Pampanga (Pickleball Central Philippines)",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/pickleballworldpam": {
+      "canonicalUrl": "https://facebook.com/pickleballworldpam",
+      "latestUrl": "https://www.facebook.com/pickleballworldpam/",
+      "firstCapturedAt": "2026-03-10T11:48:58.416Z",
+      "lastCapturedAt": "2026-03-10T11:48:58.416Z",
+      "status": "captured",
+      "title": null,
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/745567121984101": {
+      "canonicalUrl": "https://facebook.com/745567121984101",
+      "latestUrl": "https://www.facebook.com/745567121984101/",
+      "firstCapturedAt": "2026-03-10T11:49:11.954Z",
+      "lastCapturedAt": "2026-03-10T11:49:11.954Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-mexico goto https://www.facebook.com/745567121984101/\nBrowser is already in use for /Users/raphaelm/Library/Caches/ms-playwright/daemon/5c6def17a8ee0073/ud-fbcap-pampanga-mexico-chrome, use --isolated to run multiple instances of the same browser\n",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790": {
+      "canonicalUrl": "https://facebook.com/p/Pampanga-Pickleball-Club-61557584475790",
+      "latestUrl": "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/",
+      "firstCapturedAt": "2026-03-10T11:49:24.114Z",
+      "lastCapturedAt": "2026-03-10T11:49:24.114Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Command failed: playwright-cli -s=fbcap-pampanga-mexico goto https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/\nBrowser is already in use for /Users/raphaelm/Library/Caches/ms-playwright/daemon/5c6def17a8ee0073/ud-fbcap-pampanga-mexico-chrome, use --isolated to run multiple instances of the same browser\n",
+      "outputRowName": null
+    }
+  }
+}

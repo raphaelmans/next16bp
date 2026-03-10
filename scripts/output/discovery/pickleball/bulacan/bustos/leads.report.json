@@ -1,0 +1,118 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Bustos",
+    "citySlug": "bustos",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:21:47.734Z",
+  "queries": [
+    "pickleball courts in Bulacan Bustos",
+    "pickleball court Bustos Bulacan",
+    "Bustos pickleball",
+    "courts in Bustos Bulacan pickleball",
+    "sports center Bustos Bulacan pickleball",
+    "pickleball club Bustos Bulacan",
+    "pickleball reservations Bustos Bulacan",
+    "host-map:cebupickleballcourts.com:Bustos",
+    "host-map:dumapickleball.com:Bustos",
+    "site:cebupickleballcourts.com Bustos Bulacan pickleball",
+    "site:dumapickleball.com Bustos Bulacan pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/m/LSJWM5",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Bustos%2C+Bulacan",
+    "https://m.yelp.com/search?cflt=gyms&find_loc=Bustos%2C+Bulacan",
+    "https://reclub.co/m/OAJ9YB",
+    "https://m.yelp.com/search?find_desc=Gyms&find_loc=Bustos%2C+Bulacan"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://bulacan.gov.ph/bulacan-based-media-unleashed-friendly-competitiveness-on-a-pickleball-tournament/",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/LSJWM5",
+      "score": 3
+    },
+    {
+      "url": "https://pickleball.com/players/alexis-bustos/league",
+      "score": 12
+    },
+    {
+      "url": "https://m.imdb.com/title/tt35242981/characters/nm13514522/?ref_=tt_cst_c_1",
+      "score": 11
+    },
+    {
+      "url": "https://m.yelp.com/search?find_desc=Gyms&find_loc=Bustos%2C+Bulacan",
+      "score": 5
+    },
+    {
+      "url": "https://www.milo.com.ph/clinics-by-sport",
+      "score": 4
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4051369125151298/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1q47qmh/pickleball/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/100093132034773/posts/look-who-dropped-by-and-played-a-round-at-our-newly-opened-pickleball-courtwere-/611084868672576/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.tiktok.com/@airaandmeagan/video/7589640983067806997",
+    "https://www.instagram.com/reel/DTnJOSdE9TZ/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1q47qmh/pickleball/",
+    "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/p/Dinkin-Park-Pickleball-Club-100063733970315/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.facebook.com/rapplerdotcom/videos/homestretch-the-pickleball-craze-how-courts-create-communities/1116172527051189/",
+    "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+    "https://www.tiktok.com/@bacanisam/video/7538383705157553425",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.facebook.com/100093132034773/posts/look-who-dropped-by-and-played-a-round-at-our-newly-opened-pickleball-courtwere-/611084868672576/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.instagram.com/reel/DTnJOSdE9TZ/",
+    "https://www.facebook.com/margalsports/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.facebook.com/61567383417002/videos/1699954850971891/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/61567383417002/videos/1201435202049799/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4113938955560981/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.instagram.com/p/DUFZ3-6ESaz/",
+    "https://www.facebook.com/photo.php?fbid=122197592702579447&set=a.122097492500579447&id=61567383417002",
+    "https://www.facebook.com/groups/2723933654561525/posts/4304852986469576/",
+    "https://www.facebook.com/groups/393113988714272/posts/1714552533237071/",
+    "https://www.tiktok.com/discover/events-place-with-pickleball-court-bulacan",
+    "https://www.facebook.com/groups/1889410034451767/posts/26350906057875491/",
+    "https://www.reddit.com/r/BulacanPH/comments/1p3iwli/pickleball_sa_bustos/",
+    "https://www.facebook.com/groups/393113988714272/posts/1728179348541056/",
+    "https://www.tiktok.com/@airaandmeagan/video/7589640983067806997"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/bustos/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/bustos/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/bustos/scrape-state.json"
+}

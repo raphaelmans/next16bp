@@ -1,0 +1,209 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Dumangas",
+    "citySlug": "dumangas",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:30:29.154Z",
+  "queries": [
+    "site:facebook.com pickleball Dumangas Iloilo",
+    "site:facebook.com \"Dumangas\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Dumangas\" \"pickleball club\"",
+    "site:facebook.com \"Dumangas\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/andrei.pantin/",
+    "https://www.facebook.com/photo.php?fbid=34085139247767264&set=a.249305635110726&type=3",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1012034358653300/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thisisdorlenn/videos/friday-sports-pickleball/1481420990300738/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1016155718241164/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2012347842596509/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1114710849537434/posts/1555654648776383/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/666836848260792/posts/1427153118895824/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/FestiveWalkIloilo/posts/-pickleball-fever-at-festive-walk-iloilo-ready-to-dink-smash-and-rally-your-way-/1096215475879501/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1233436474784888/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/CPUCentralianLink/posts/dinagyang-iloilo-pickleball-cup-2026-championship-gamecpu-university-gymjanuary-/1343845041105698/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2012347842596509/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thisisdorlenn/videos/friday-sports-pickleball/1481420990300738/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1114710849537434/posts/1555654648776383/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/328822870265796/posts/810834015398010/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1233436474784888/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/FestiveWalkIloilo/posts/-pickleball-fever-at-festive-walk-iloilo-ready-to-dink-smash-and-rally-your-way-/1096215475879501/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/666836848260792/posts/1427153118895824/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/judie.duyag/posts/ara-gid-basta-may-logo-ni-salt-and-tears-kampion-congrats-karl-anthony-juanga-de/34199087419737368/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1152183666243503/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/379153029249896/posts/1601595680338952/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/thekitchenPB/posts/2054996995014669/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/855044791910393/posts/2150522192362640/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/andre.balderas.96/photos/barn-swallownovember-6-2021-dumangas-iloilo-d500-14000-f8-iso-2000-handheld-200-/10226907392369148/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/929845454800941/posts/1406689610449854/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dcdpinas/posts/820830430512466/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1076234543834936/posts/1477444727047247/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1152183666243503/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/andre.balderas.96/photos/barn-swallownovember-6-2021-dumangas-iloilo-d500-14000-f8-iso-2000-handheld-200-/10226907392369148/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/istoryaforestgarden/posts/rainy-season-no-problem-stay-active-and-have-fun-at-the-matchpoint-court-here-at/1134615122030434/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/FestiveWalkIloilo/posts/-pickleball-fever-at-festive-walk-iloilo-ready-to-dink-smash-and-rally-your-way-/1096215475879501/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/nico.yap.56/posts/pwede-tambok/10232986920759403/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nico.yap.56/posts/dali-na-bukas-na-silakings-bagnet/10231292735965842/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/nico.yap.56/posts/tak-an-ku-mag-pili-color-teh-binakal-ku-nalang-tanan-if-you-cant-play-display-ku/10233176800186270/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thebuendiafoodbythecourt/posts/pull-up-from-the-deep-let-it-fly-for-court-availability-please-call-028635-7660-/789067957105058/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/dumangas/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/dumangas/facebook-pages.state.json"
+}

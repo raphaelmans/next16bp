@@ -1,0 +1,197 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Kawit",
+    "citySlug": "kawit",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:15:38.035Z",
+  "queries": [
+    "site:facebook.com pickleball Kawit Cavite",
+    "site:facebook.com \"Kawit\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Kawit\" \"pickleball club\"",
+    "site:facebook.com \"Kawit\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/61576669311409/?locale=vi_VN",
+    "https://www.facebook.com/61576669311409/?locale=hy_AM",
+    "https://www.facebook.com/61576669311409/?locale=zh_CN",
+    "https://www.facebook.com/picklebanjclub/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192765411011668/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/robertsonplazakawitcavite/posts/come-visit-the-dink-lab-at-robertson-plaza-see-whats-newhttpswwwfacebookcomshare/1191337036344565/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367797263508481/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1459466892181844/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192765411011668/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/robertsonplazakawitcavite/posts/come-visit-the-dink-lab-at-robertson-plaza-see-whats-newhttpswwwfacebookcomshare/1191337036344565/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4111324592489084/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370800599874814/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192765411011668/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61576669311409/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1459466892181844/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/robertsonplazakawitcavite/posts/come-visit-the-dink-lab-at-robertson-plaza-see-whats-newhttpswwwfacebookcomshare/1191337036344565/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367797263508481/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61576669311409/posts/-sneak-peek-alert-take-a-first-look-at-the-future-of-pickleball-in-kawit-heres-a/122094331232888977/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1196718341790035/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4192765411011668/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/robertsonplazakawitcavite/posts/come-visit-the-dink-lab-at-robertson-plaza-see-whats-newhttpswwwfacebookcomshare/1191337036344565/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1201877054607497/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4111324592489084/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365007640454110/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61576669311409/posts/-sneak-peek-alert-take-a-first-look-at-the-future-of-pickleball-in-kawit-heres-a/122094331232888977/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1459466892181844/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1296288958499639/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4087046578250219/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/kawit/facebook-pages.state.json"
+}

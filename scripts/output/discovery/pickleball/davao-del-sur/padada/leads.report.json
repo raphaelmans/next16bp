@@ -1,0 +1,108 @@
+{
+  "scope": {
+    "provinceName": "Davao Del Sur",
+    "provinceSlug": "davao-del-sur",
+    "cityName": "Padada",
+    "citySlug": "padada",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T12:25:48.321Z",
+  "queries": [
+    "pickleball courts in Davao Del Sur Padada",
+    "pickleball court Padada Davao Del Sur",
+    "Padada pickleball",
+    "courts in Padada Davao Del Sur pickleball",
+    "sports center Padada Davao Del Sur pickleball",
+    "pickleball club Padada Davao Del Sur",
+    "pickleball reservations Padada Davao Del Sur",
+    "host-map:cebupickleballcourts.com:Padada",
+    "host-map:dumapickleball.com:Padada",
+    "site:cebupickleballcourts.com Padada Davao Del Sur pickleball",
+    "site:dumapickleball.com Padada Davao Del Sur pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city",
+    "https://picklehub.ph/clubs",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/flores-village-pickleball",
+    "https://picklehub.ph/paddleup?tab=home",
+    "https://www.pickleheads.com/courts/ph/davao-region/davao-city/pickletown",
+    "https://app.court-access.com/",
+    "https://jfmdevelopmentcorp.com/mtspickleball/",
+    "https://pickletown.skedda.com/",
+    "https://reclub.co/clubs/@southside-davao",
+    "https://southsidedavao.com/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://app.utrsports.net/profiles/4376289",
+      "score": 11
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fWE-bfeMP1s",
+      "score": 1
+    },
+    {
+      "url": "https://reclub.co/m/DZT0OE",
+      "score": 6
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=fWE-bfeMP1s",
+      "score": 1
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.reddit.com/r/davao/comments/1iz9h55/pickleball_in_davao_megathread/?tl=en",
+    "https://www.facebook.com/groups/500616635082157/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7579894817249873159",
+    "https://www.instagram.com/paddleupdavao/",
+    "https://www.facebook.com/paddleupdavao/videos/%F0%9D%97%9A%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2-%F0%9D%97%BC%F0%9D%97%BB-%F0%9D%97%97%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%AE%F0%9D%97%BCpaddle-up-is-here-to-serve-the-citys-newest-pickleball-courtopening/1312800950350521/",
+    "https://www.instagram.com/reel/DOvXvUREqOV/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4113467152274828/",
+    "https://www.facebook.com/paddleupdavao/",
+    "https://www.facebook.com/61588255677357/videos/pickle-night-hits-different-in-padada-padadapickledpeppers-picklefam-pickleball/904488852174961/",
+    "https://www.facebook.com/paddleupdavao/videos/%F0%9D%97%AC%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF-%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%84-%F0%9D%97%B3%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%BC%F0%9D%97%BF%F0%9D%97%B6%F0%9D%98%81%F0%9D%97%B2-%F0%9D%97%BD%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%98%80%F0%9D%97%BD%F0%9D%97%BC%F0%9D%98%81-%F0%9D%97%B6%F0%9D%97%BB-%F0%9D%97%97%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%AE%F0%9D%97%BC-%F0%9D%97%B6%F0%9D%98%80-%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2at-paddle-up-%F0%9D%98%B8%F0%9D%98%A6%F0%9D%98%B7%F0%9D%98%A6-%F0%9D%98%A8%F0%9D%98%B0%F0%9D%98%B5-%F0%9D%98%A6%F0%9D%98%B7%F0%9D%98%A6%F0%9D%98%B3%F0%9D%98%BA%F0%9D%98%B5%F0%9D%98%A9%F0%9D%98%AA/1344630087117382/",
+    "https://www.instagram.com/p/DUs_8qIjqLH/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7582039112362806535?lang=en",
+    "https://www.facebook.com/paddleupdavao/videos/1652802269323024/",
+    "https://www.instagram.com/p/DVQTHUckn3t/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.tiktok.com/@eydventuretime/video/7607804886146616596",
+    "https://www.facebook.com/groups/2723933654561525/posts/4113467152274828/",
+    "https://www.facebook.com/ftc.love/videos/crisron-pickleball-courts-davao-city/717887407598953/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7605788184181525778",
+    "https://www.facebook.com/davaoidiotdriversofficial/posts/ootpaddle-republic-sports-center-is-set-to-become-the-premier-destination-for-pi/122173572020770568/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.tiktok.com/@eydventuretime/video/7538279101652552980",
+    "https://www.tiktok.com/@davaofoodtrip/video/7572917167381810440",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1470271447768055/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4329736917314516/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7577085690316328200",
+    "https://www.instagram.com/reel/DR4KooDk6s2/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/paddleupdavao/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7579894817249873159",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.instagram.com/reel/DTSK2QAEnhE/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.facebook.com/InsideDavao/posts/-southside-davao-the-first-ever-pickleball-hub-in-the-south-is-now-open-free-to-/1165562655735280/",
+    "https://www.facebook.com/paddleupdavao/videos/%F0%9D%97%9A%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2-%F0%9D%97%BC%F0%9D%97%BB-%F0%9D%97%97%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%AE%F0%9D%97%BCpaddle-up-is-here-to-serve-the-citys-newest-pickleball-courtopening/1312800950350521/",
+    "https://www.facebook.com/eydventuretime/videos/1966991850761028/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7582039112362806535?lang=en",
+    "https://www.facebook.com/dcpci/",
+    "https://www.facebook.com/eydventuretime/videos/ranking-davao-citys-top-5-pickleball-courtsand-fueling-every-game-with-fast-fres/1201424644870190/",
+    "https://www.facebook.com/paddleupdavao/",
+    "https://www.facebook.com/groups/232586655579902/posts/1372175208287702/",
+    "https://www.instagram.com/p/DS49erQErKj/",
+    "https://www.tiktok.com/@davaofoodtrip/video/7605788184181525778"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/padada/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/padada/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/davao-del-sur/padada/scrape-state.json"
+}

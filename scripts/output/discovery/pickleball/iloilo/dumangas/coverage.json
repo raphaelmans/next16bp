@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T11:17:28.948Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 2,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "nawa wellness|calatagan|batangas",
+      "name": "Nawa Wellness",
+      "city": "CALATAGAN",
+      "province": "BATANGAS",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/calatagan/nawa-wellness",
+      "firstSeenAt": "2026-03-10T11:17:28.948Z",
+      "lastSeenAt": "2026-03-10T11:17:28.948Z"
+    },
+    {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T11:17:28.948Z",
+      "lastSeenAt": "2026-03-10T11:17:28.948Z"
+    }
+  ]
+}

@@ -1,0 +1,200 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Miagao",
+    "citySlug": "miagao",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T11:12:18.300Z",
+  "queries": [
+    "site:facebook.com pickleball Miagao Iloilo",
+    "site:facebook.com \"Miagao\" \"Iloilo\" \"pickleball\"",
+    "site:facebook.com \"Miagao\" \"pickleball club\"",
+    "site:facebook.com \"Miagao\" \"pickleball court\"",
+    "site:facebook.com \"Iloilo\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/sinadya.pickleball/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/107869635741474/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/joerowfederico/posts/pickleball/25984722564517088/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/upaailoilochapter/posts/the-first-upv-alumni-pickleball-tournament-is-happening-this-friday-saturdayadvi/756915906862905/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/BMJoAnnGerminanda/posts/wow-miagaopickleball-na-kita-sa-miagao-atty-bm-rica-jane-l-garin-dr-janette-lore/887129890967457/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330448113910063/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/joerowfederico/photos/pickleball/25984722427850435/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1164661854995684/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330448113910063/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1047387309630443/posts/1422408555461648/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1233436474784888/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2022101424954484/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/962394988607665/posts/1281740230006471/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/860399460338721/posts/860401430338524/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/annabelle.maligpasrosales/videos/dsmash-squad-pickleball-club-open-play-at-the-stack-roomregular-schedulewednesda/954609943655880/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/posts/calling-all-upv-students-and-staffsinadya-pickleball-club-is-hosting-a-free-pick/1082271117276759/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sinadya.pickleball/posts/demo-day-at-upv-miagaoit-was-great-to-team-up-with-palakol-pickleball-ambassador/122124569000724566/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330448113910063/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1318788549583013/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/videos/this-is-the-new-pickleball-court-in-upv-miagao-and-the-homecourt-of-the-upv-sina/922853819990533/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/860399460338721/posts/860401430338524/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/posts/1030511069119431/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/UPValidusAmicitia/mentions/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/936344153822167/posts/2121206435335927/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1278037846991417/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/228546738212817/posts/1543636860037125/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1199987571463112/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1184307063031163/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/860663314515680/posts/1980653252516675/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1055287414327994/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/see-you-in-iloilolets-get-certified-and-play-pickleball0-0-2/719177401272332/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/posts/september-7-2025-pickleball-at-north-grove-is-so-much-fun-the-community-is-growi/826005627256175/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/videos/a-short-video-of-iloilo-pickleball-at-festive-walk-mall-megaworld-iloilo-citytha/1593707941778065/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/iloilopickleball/photos/d41d8cd9/1052516804605055/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/miagao/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/iloilo/miagao/facebook-pages.state.json"
+}

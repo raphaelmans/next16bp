@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T11:19:29.822Z",
+  "updatedAt": "2026-03-10T11:19:48.929Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:19:29.822Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dauin sport park|dauin|negros oriental",
+      "lastRowName": "Dauin Sport Park"
+    },
+    "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T11:19:29.822Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "lastRowName": "Dr Pickle Pickleball Court"
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:19:29.822Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.facebook.com/61557985336286/photos/122208530108266177": {
+      "canonicalUrl": "https://m.facebook.com/61557985336286/photos/122208530108266177",
+      "latestUrl": "https://m.facebook.com/61557985336286/photos/122208530108266177/",
+      "firstDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:19:29.822Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "latestUrl": "https://reclub.co/zh-hant/communities/negros-oriental-philippines-428",
+      "firstDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "lastDiscoveredAt": "2026-03-10T11:19:29.822Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T11:19:29.822Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "dauin sport park|dauin|negros oriental": {
+      "rowKey": "dauin sport park|dauin|negros oriental",
+      "name": "Dauin Sport Park",
+      "city": "DAUIN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstSeenAt": "2026-03-10T11:19:29.822Z",
+      "lastSeenAt": "2026-03-10T11:19:29.822Z"
+    },
+    "dr pickle pickleball court|dumaguete city|negros oriental": {
+      "rowKey": "dr pickle pickleball court|dumaguete city|negros oriental",
+      "name": "Dr Pickle Pickleball Court",
+      "city": "DUMAGUETE CITY",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dumaguete-city/dr-pickle-pickleball-court",
+      "firstSeenAt": "2026-03-10T11:19:29.822Z",
+      "lastSeenAt": "2026-03-10T11:19:29.822Z"
+    }
+  }
+}

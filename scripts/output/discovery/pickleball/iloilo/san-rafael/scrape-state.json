@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T09:20:17.219Z",
+  "updatedAt": "2026-03-10T09:20:40.320Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickleballsanrafael.com/": {
+      "canonicalUrl": "https://pickleballsanrafael.com/",
+      "latestUrl": "https://pickleballsanrafael.com/",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/us/california/san-rafael": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/us/california/san-rafael",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/san-rafael",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.flytemarin.com/": {
+      "canonicalUrl": "https://www.flytemarin.com/",
+      "latestUrl": "https://www.flytemarin.com/",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "lastDiscoveredAt": "2026-03-10T09:20:17.219Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T09:20:17.219Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T09:20:17.219Z",
+      "lastSeenAt": "2026-03-10T09:20:17.219Z"
+    }
+  }
+}
