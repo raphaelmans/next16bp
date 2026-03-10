@@ -14,8 +14,10 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { PlaceFilters } from "./court-filters";
+import { DiscoverySearchField } from "./discovery-search-field";
 
 interface PlaceFiltersSheetProps {
+  q?: string;
   amenities?: string[];
   province?: string;
   city?: string;
@@ -25,6 +27,8 @@ interface PlaceFiltersSheetProps {
   verification?: "verified_reservable" | "curated" | "unverified_reservable";
   hasClearableFilters?: boolean;
   resetLocationHref?: string;
+  onQueryChange: (query: string) => void;
+  onQuerySubmit: () => void;
   onAmenitiesChange: (amenities: string[] | undefined) => void;
   onProvinceChange: (province: string | undefined) => void;
   onCityChange: (city: string | undefined) => void;
@@ -44,6 +48,7 @@ interface PlaceFiltersSheetProps {
 }
 
 export function PlaceFiltersSheet({
+  q,
   amenities,
   province,
   city,
@@ -53,6 +58,8 @@ export function PlaceFiltersSheet({
   verification,
   hasClearableFilters,
   resetLocationHref,
+  onQueryChange,
+  onQuerySubmit,
   onAmenitiesChange,
   onProvinceChange,
   onCityChange,
@@ -91,13 +98,17 @@ export function PlaceFiltersSheet({
       <SheetTrigger asChild>
         <Button
           variant="outline"
-          size="icon"
+          size="sm"
           aria-label="Open filters"
-          className={cn("relative lg:hidden", className)}
+          className={cn(
+            "relative gap-2 rounded-xl border-border/60 bg-background/95 px-4 shadow-sm lg:hidden",
+            className,
+          )}
         >
           <SlidersHorizontal className="h-4 w-4" />
+          <span>Filters</span>
           {hasFilters && (
-            <span className="absolute -right-1 -top-1 grid h-4 min-w-4 place-items-center rounded-full bg-primary px-0.5 text-[9px] font-bold text-primary-foreground">
+            <span className="grid h-5 min-w-5 place-items-center rounded-full bg-primary px-1 text-[10px] font-bold text-primary-foreground">
               {activeCount > 9 ? "9+" : activeCount}
             </span>
           )}
@@ -112,6 +123,15 @@ export function PlaceFiltersSheet({
           <SheetHeader className="border-b px-4 py-3">
             <SheetTitle className="font-heading text-base">Filters</SheetTitle>
           </SheetHeader>
+
+          <div className="border-b px-4 py-3">
+            <DiscoverySearchField
+              value={q ?? ""}
+              onValueChange={onQueryChange}
+              onSubmit={onQuerySubmit}
+              className="w-full"
+            />
+          </div>
 
           <ScrollArea className="flex-1">
             <div className="px-4 py-4">

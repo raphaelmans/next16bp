@@ -38,6 +38,7 @@ import {
   PlaceMap,
   ViewToggle,
 } from "@/features/discovery/components";
+import { DiscoverySearchField } from "@/features/discovery/components/discovery-search-field";
 import {
   buildDiscoveryPlaceCard,
   useModDiscoveryFilters,
@@ -128,7 +129,6 @@ interface CourtsPageContentProps {
 }
 
 type StagedFilters = {
-  q?: string | null;
   province?: string | null;
   city?: string | null;
   sportId?: string | null;
@@ -237,7 +237,6 @@ function CourtsPageContent({
 
   // ── Staged filter state (edits before Apply) ──
   const [staged, setStaged] = useState<StagedFilters>({
-    q: filters.q,
     province: filters.province ?? initialFilters?.province ?? null,
     city: filters.city ?? initialFilters?.city ?? null,
     sportId: filters.sportId ?? initialFilters?.sportId ?? null,
@@ -246,6 +245,11 @@ function CourtsPageContent({
     amenities: filters.amenities,
     verification: filters.verification,
   });
+  const [queryDraft, setQueryDraft] = useState(filters.q ?? "");
+
+  useEffect(() => {
+    setQueryDraft(filters.q ?? "");
+  }, [filters.q]);
 
   const updateStaged = useCallback((patch: Partial<StagedFilters>) => {
     setStaged((prev) => ({ ...prev, ...patch }));
@@ -254,7 +258,7 @@ function CourtsPageContent({
   const applyFilters = useCallback(() => {
     queueResultsScroll();
     filters.commitFilters({
-      q: staged.q ?? null,
+      q: queryDraft.trim() || null,
       province: staged.province ?? null,
       city: staged.city ?? null,
       sportId: staged.sportId ?? null,
@@ -264,13 +268,18 @@ function CourtsPageContent({
       verification: staged.verification ?? null,
       page: 1,
     });
-  }, [filters, queueResultsScroll, staged]);
+  }, [filters, queryDraft, queueResultsScroll, staged]);
+
+  const handleQuerySubmit = useCallback(() => {
+    queueResultsScroll();
+    filters.setQuery(queryDraft.trim());
+  }, [filters, queryDraft, queueResultsScroll]);
 
   const clearAllFilters = useCallback(() => {
     queueResultsScroll();
     filters.clearAll();
+    setQueryDraft("");
     setStaged({
-      q: null,
       province:
         locationRouteScope === "none"
           ? null
@@ -530,6 +539,7 @@ function CourtsPageContent({
   );
 
   const filterProps = {
+    q: queryDraft,
     amenities: staged.amenities ?? undefined,
     province: staged.province ?? effectiveProvince ?? undefined,
     city: staged.city ?? effectiveCity ?? undefined,
@@ -539,6 +549,8 @@ function CourtsPageContent({
     verification: staged.verification ?? filters.verification ?? undefined,
     hasClearableFilters,
     resetLocationHref,
+    onQueryChange: setQueryDraft,
+    onQuerySubmit: handleQuerySubmit,
     ...stagedFilterHandlers,
   } as const;
 
@@ -546,7 +558,7 @@ function CourtsPageContent({
     <Container className="pt-6">
       <div className="space-y-4">
         {/* Header */}
-        <div className="flex items-center justify-between gap-3">
+        <div className="hidden items-center justify-between gap-3 lg:flex">
           <div className="min-w-0">
             <h1 className="truncate text-xl font-bold tracking-tight sm:text-2xl">
               {locationLabel ? `Venues in ${locationLabel}` : "Browse Venues"}
@@ -568,6 +580,45 @@ function CourtsPageContent({
           <div className="flex shrink-0 items-center gap-2">
             <PlaceFiltersSheet {...filterProps} onApply={applyFilters} />
             <ViewToggle value={filters.view} onChange={handleViewChange} />
+          </div>
+        </div>
+
+        <div className="space-y-3 lg:hidden">
+          <div className="min-w-0">
+            <h1 className="text-xl font-bold tracking-tight">
+              {locationLabel ? `Venues in ${locationLabel}` : "Browse Venues"}
+            </h1>
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-muted-foreground">
+              <span>
+                {total} result{total !== 1 ? "s" : ""}
+              </span>
+              <span className="text-border">|</span>
+              <Link
+                href={appRoutes.submitVenue.base}
+                className="text-primary hover:underline"
+              >
+                Add a venue
+              </Link>
+            </div>
+          </div>
+
+          <DiscoverySearchField
+            value={queryDraft}
+            onValueChange={setQueryDraft}
+            onSubmit={handleQuerySubmit}
+          />
+
+          <div className="flex items-center justify-between gap-2">
+            <PlaceFiltersSheet
+              {...filterProps}
+              onApply={applyFilters}
+              className="shrink-0"
+            />
+            <ViewToggle
+              value={filters.view}
+              onChange={handleViewChange}
+              className="min-w-0"
+            />
           </div>
         </div>
 
