@@ -30,7 +30,7 @@ export function PlaceDetailSkeleton() {
           <div className="hidden h-64 rounded-xl bg-muted animate-pulse lg:block" />
         </div>
       </div>
-      <div className="fixed inset-x-0 bottom-0 z-40 space-y-3 rounded-t-3xl bg-background p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_oklch(0_0_0/0.15)] lg:hidden">
+      <div className="fixed inset-x-0 bottom-0 z-[60] space-y-3 rounded-t-3xl bg-background p-5 pb-[max(1.25rem,env(safe-area-inset-bottom))] shadow-[0_-10px_40px_oklch(0_0_0/0.15)] lg:hidden">
         <div className="flex justify-center pb-1">
           <div className="h-1 w-9 rounded-full bg-muted" />
         </div>

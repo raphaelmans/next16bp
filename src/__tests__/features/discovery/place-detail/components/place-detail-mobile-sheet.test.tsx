@@ -93,6 +93,15 @@ function makeProps(overrides?: Partial<MobileSheetProps>): MobileSheetProps {
 }
 
 describe("PlaceDetailMobileSheet", () => {
+  it("renders above the mobile discovery header", () => {
+    render(<PlaceDetailMobileSheet {...makeProps()} />);
+
+    expect(
+      screen.getByRole("button", { name: "Check Availability" }).parentElement
+        ?.className,
+    ).toContain("z-[60]");
+  });
+
   it("moves to review step after adding to booking", () => {
     const onAddToCartAction = vi.fn();
     const onClearSelection = vi.fn();
