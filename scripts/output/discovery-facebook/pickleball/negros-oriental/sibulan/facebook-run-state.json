@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:sibulan:facebook",
+  "createdAt": "2026-03-10T06:06:56.353Z",
+  "updatedAt": "2026-03-10T06:13:14.939Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "sibulan",
+    "provinceName": "Negros Oriental",
+    "cityName": "Sibulan",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "68c02aa0-24ed-46b9-946f-2b59dbf3de1e"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:06:56.371Z",
+      "finishedAt": "2026-03-10T06:07:05.609Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:07:05.610Z",
+      "finishedAt": "2026-03-10T06:11:19.124Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:11:19.126Z",
+      "finishedAt": "2026-03-10T06:12:08.866Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:12:08.996Z",
+      "finishedAt": "2026-03-10T06:12:37.986Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:12:38.099Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:12:38.099Z",
+      "finishedAt": "2026-03-10T06:13:14.939Z",
+      "lastError": null,
+      "notes": "backfilled 1 facebook place ids"
+    }
+  }
+}

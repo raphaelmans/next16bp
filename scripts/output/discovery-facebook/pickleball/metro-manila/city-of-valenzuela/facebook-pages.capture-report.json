@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "city-of-valenzuela",
+    "provinceName": "Metro Manila",
+    "cityName": "City of Valenzuela"
+  },
+  "generatedAt": "2026-03-10T06:00:30.601Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/city-of-valenzuela/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 7,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 7,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 3,
+  "skipCount": 4,
+  "csvRowCount": 0,
+  "failures": []
+}

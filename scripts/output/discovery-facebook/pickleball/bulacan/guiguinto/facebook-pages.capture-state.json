@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:guiguinto",
+  "createdAt": "2026-03-10T07:12:20.133Z",
+  "updatedAt": "2026-03-10T07:13:57.787Z",
+  "urls": {
+    "https://facebook.com/61584251613063": {
+      "canonicalUrl": "https://facebook.com/61584251613063",
+      "latestUrl": "https://www.facebook.com/61584251613063/",
+      "firstCapturedAt": "2026-03-10T07:12:22.312Z",
+      "lastCapturedAt": "2026-03-10T07:12:22.312Z",
+      "status": "captured",
+      "title": "Bulacan Pickleball Collective | Guiguinto | Facebook",
+      "venueName": "Bulacan Pickleball Collective",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Mighty-Sports-Center-Bulacan-61581447100234": {
+      "canonicalUrl": "https://facebook.com/p/Mighty-Sports-Center-Bulacan-61581447100234",
+      "latestUrl": "https://www.facebook.com/p/Mighty-Sports-Center-Bulacan-61581447100234/",
+      "firstCapturedAt": "2026-03-10T07:12:40.357Z",
+      "lastCapturedAt": "2026-03-10T07:12:40.357Z",
+      "status": "captured",
+      "title": "Mighty Sports Center Bulacan | Guiguinto | Facebook",
+      "venueName": "Mighty Sports Center Bulacan",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Mighty Sports Center Bulacan"
+    },
+    "https://facebook.com/p/Swoosh-Sports-Club-61580425141553": {
+      "canonicalUrl": "https://facebook.com/p/Swoosh-Sports-Club-61580425141553",
+      "latestUrl": "https://www.facebook.com/p/Swoosh-Sports-Club-61580425141553/",
+      "firstCapturedAt": "2026-03-10T07:12:54.579Z",
+      "lastCapturedAt": "2026-03-10T07:12:54.579Z",
+      "status": "captured",
+      "title": "Swoosh Sports Club | Guiguinto | Facebook",
+      "venueName": "Swoosh Sports Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Swoosh Sports Club"
+    },
+    "https://facebook.com/61580425141553?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61580425141553?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61580425141553/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T07:13:11.333Z",
+      "lastCapturedAt": "2026-03-10T07:13:11.333Z",
+      "status": "captured",
+      "title": "Swoosh Sports Club | Guiguinto | Facebook",
+      "venueName": "Swoosh Sports Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Swoosh Sports Club"
+    },
+    "https://facebook.com/61580425141553?locale=en_GB": {
+      "canonicalUrl": "https://facebook.com/61580425141553?locale=en_GB",
+      "latestUrl": "https://www.facebook.com/61580425141553/?locale=en_GB",
+      "firstCapturedAt": "2026-03-10T07:13:24.035Z",
+      "lastCapturedAt": "2026-03-10T07:13:24.035Z",
+      "status": "captured",
+      "title": "Swoosh Sports Club | Guiguinto | Facebook",
+      "venueName": "Swoosh Sports Club",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Swoosh Sports Club"
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T07:13:36.227Z",
+      "lastCapturedAt": "2026-03-10T07:13:36.227Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

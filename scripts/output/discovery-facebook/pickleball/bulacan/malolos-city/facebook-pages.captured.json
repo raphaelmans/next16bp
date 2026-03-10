@@ -1,0 +1,121 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "malolos-city",
+    "provinceName": "Bulacan",
+    "cityName": "Malolos City"
+  },
+  "generatedAt": "2026-03-10T05:42:44.846Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/",
+      "canonicalUrl": "https://facebook.com/cityofmalolospickleballclub",
+      "capturedAt": "2026-03-10T05:38:13.307Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Unexpected token '#', \"### Error\n\"... is not valid JSON"
+    },
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+      "capturedAt": "2026-03-10T05:39:31.615Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nCity of Malolos Pickleball Club\nFebruary 20 at 1:08 AM\n \n·\nFull House at our Thursday Open Play! \n\n\nCourts filled with fun, laughter, and an awesome mix of beginners and seasoned players — just like the good old days.\n\nThis is the kind of energy we love. This is what pickleball is all about. Let’s bring it back! \n\nPickleball is meant to be played with fun.\n\nA huge thank you to our visitors, non-members, and of course our amazing members for bringing the energy and making the night extra special. We appreciate every single one of yo… See more\nAll reactions:\n15\n1\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D893370280342142%26set%3Da.118190881193423%26type%3D3",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/?__tn__=*F",
+          "https://www.facebook.com/cityofmalolospickleballclub?__tn__=%3C%3C*F",
+          "https://www.facebook.com/cityofmalolospickleballclub?__tn__=-UC*F",
+          "https://www.facebook.com/cityofmalolospickleballclub/posts/pfbid02KUKHkokzFk1KQnRqpHzf3q2HBdTLKYM92zv4rzgWuDj79DfKcEX6Y2aCakWmWQXil?__tn__=%2CO*F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "review",
+        "confidence": "medium",
+        "reason": "Page appears to be a pickleball club (City of Malolos Pickleball Club) and thus a venue, but the page content does not include a usable address or other location details required for 'ready' status.",
+        "name": "City of Malolos Pickleball Club",
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": true,
+        "isWithinScope": true,
+        "evidence": [
+          "\"City of Malolos Pickleball Club\" (page name)",
+          "\"Full House at our Thursday Open Play!\"",
+          "\"Courts filled with fun, laughter, and an awesome mix of beginners and seasoned players\"",
+          "Source URL: https://www.facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/p/PickleFit-61579610165193/",
+      "canonicalUrl": "https://facebook.com/p/PickleFit-61579610165193",
+      "capturedAt": "2026-03-10T05:40:25.089Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 162.159.140.245:443, 172.66.0.243:443, timeout: 10000ms)"
+    },
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+      "capturedAt": "2026-03-10T05:41:09.070Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nCity of Malolos Pickleball Club\nFebruary 5\n \n·\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D880467161632454%26set%3Da.252836881062155%26type%3D3",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/?__tn__=*F",
+          "https://www.facebook.com/cityofmalolospickleballclub?__tn__=%3C%3C*F",
+          "https://www.facebook.com/cityofmalolospickleballclub?__tn__=-UC*F",
+          "https://www.facebook.com/photo/?fbid=880467161632454&set=a.252836881062155&__tn__=%2CO*F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "medium",
+        "reason": "Page appears to be a club named 'City of Malolos Pickleball Club' but the provided page content contains no usable address, location details, phone, email, website, Instagram, amenities, or court count. Per rules, pages without enough venue/location evidence should be skipped.",
+        "name": "City of Malolos Pickleball Club",
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": true,
+        "isWithinScope": true,
+        "evidence": [
+          "Visible body text: \"City of Malolos Pickleball Club\"",
+          "Known outbound link: https://www.facebook.com/cityofmalolospickleballclub?__tn__=%3C%3C*F",
+          "Source URL: https://www.facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "capturedAt": "2026-03-10T05:41:58.858Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)"
+    }
+  ]
+}

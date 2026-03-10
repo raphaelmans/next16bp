@@ -1,0 +1,120 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "San Fernando City",
+    "citySlug": "san-fernando-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:11:57.066Z",
+  "queries": [
+    "pickleball courts in Pampanga San Fernando City",
+    "pickleball court San Fernando City Pampanga",
+    "San Fernando City pickleball",
+    "courts in San Fernando City Pampanga pickleball",
+    "sports center San Fernando City Pampanga pickleball",
+    "pickleball club San Fernando City Pampanga",
+    "pickleball reservations San Fernando City Pampanga",
+    "host-map:cebupickleballcourts.com:San Fernando City",
+    "host-map:cebupickleballcourts.com:San Fernando",
+    "host-map:dumapickleball.com:San Fernando City",
+    "host-map:dumapickleball.com:San Fernando",
+    "site:cebupickleballcourts.com San Fernando City Pampanga pickleball",
+    "site:dumapickleball.com San Fernando City Pampanga pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando",
+    "https://www.pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga",
+    "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center",
+    "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+    "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA",
+    "https://reclub.co/clubs/@pickleball-world"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.terracourts.com/",
+      "score": 5
+    },
+    {
+      "url": "https://www.terracourts.com/",
+      "score": 5
+    },
+    {
+      "url": "https://www.terracourts.com/",
+      "score": 5
+    },
+    {
+      "url": "https://ci.san-fernando.ca.us/pickleball/",
+      "score": 9
+    },
+    {
+      "url": "https://reclub.co/m/CQGWYX",
+      "score": 14
+    },
+    {
+      "url": "https://www.junglebase.ph/",
+      "score": 10
+    },
+    {
+      "url": "https://www.terracourts.com/",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.instagram.com/terracourts.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+    "https://www.facebook.com/samantha.bacani/videos/1st-ever-outdoor-pickleball-court-in-pampanga-sm-city-telabastagan-parking-cpick/673059645871350/",
+    "https://www.instagram.com/reel/DTSO7tokWuk/",
+    "https://www.tiktok.com/@herasocialstudios/video/7610029385957117205",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.instagram.com/terracourts.ph/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/samantha.bacani/videos/1st-ever-outdoor-pickleball-court-in-pampanga-sm-city-telabastagan-parking-cpick/673059645871350/",
+    "https://www.instagram.com/reel/DTSO7tokWuk/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7546841606305910023",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.facebook.com/p/Courtside-Pickleball-61580808570268/",
+    "https://www.instagram.com/terracourts.ph/",
+    "https://www.facebook.com/samantha.bacani/videos/1st-ever-outdoor-pickleball-court-in-pampanga-sm-city-telabastagan-parking-cpick/673059645871350/",
+    "https://www.instagram.com/reel/DTSO7tokWuk/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7546841606305910023",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.instagram.com/ppc.ph/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.facebook.com/samantha.bacani/videos/1st-ever-outdoor-pickleball-court-in-pampanga-sm-city-telabastagan-parking-cpick/673059645871350/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.instagram.com/ppc.ph/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+    "https://www.instagram.com/reel/DTm4yqnEkzI/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7546841606305910023",
+    "https://www.tiktok.com/@explorewithcookie/video/7602191696922791175",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.instagram.com/terracourts.ph/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.instagram.com/reel/DTSO7tokWuk/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7546841606305910023",
+    "https://www.instagram.com/reel/DTm4yqnEkzI/",
+    "https://www.tiktok.com/@explorewithcookie/video/7602191696922791175",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/cookiebasa/posts/pickleball-cafe-date-in-pampanga-club-bookings-or-rent-for-4-hourspeak-hours-4pm/1295267512623721/",
+    "https://www.instagram.com/terracourts.ph/",
+    "https://www.facebook.com/p/Courtside-Pickleball-61580808570268/",
+    "https://www.facebook.com/61577638191758/videos/meet-the-new-terra-courts-we-welcome-walk-ins-but-those-with-online-reservations/933862342438153/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.instagram.com/reel/DTSO7tokWuk/",
+    "https://www.tiktok.com/@explorewithcookie/video/7602191696922791175"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/san-fernando-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/san-fernando-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/san-fernando-city/scrape-state.json"
+}

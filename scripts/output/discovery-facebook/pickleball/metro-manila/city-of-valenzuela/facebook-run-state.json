@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:city-of-valenzuela:facebook",
   "createdAt": "2026-03-10T04:03:00.522Z",
-  "updatedAt": "2026-03-10T04:03:07.149Z",
+  "updatedAt": "2026-03-10T06:00:30.709Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "city-of-valenzuela",
@@ -48,37 +48,37 @@
       "notes": "runner executed facebook discovery"
     },
     "facebookCapture": {
-      "status": "running",
-      "startedAt": "2026-03-10T04:03:07.149Z",
-      "finishedAt": null,
+      "status": "completed",
+      "startedAt": "2026-03-10T05:57:08.689Z",
+      "finishedAt": "2026-03-10T06:00:30.670Z",
       "lastError": null,
-      "notes": null
+      "notes": "runner executed facebook capture"
     },
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:03:00.523Z",
+      "finishedAt": "2026-03-10T06:00:30.709Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:03:00.523Z",
+      "finishedAt": "2026-03-10T06:00:30.709Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:03:00.523Z",
+      "finishedAt": "2026-03-10T06:00:30.709Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:03:00.523Z",
+      "finishedAt": "2026-03-10T06:00:30.709Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

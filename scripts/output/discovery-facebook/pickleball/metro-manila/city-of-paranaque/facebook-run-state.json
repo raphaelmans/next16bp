@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:city-of-paranaque:facebook",
   "createdAt": "2026-03-09T17:14:43.661Z",
-  "updatedAt": "2026-03-09T17:28:34.845Z",
+  "updatedAt": "2026-03-10T05:57:08.661Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "city-of-paranaque",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": "2026-03-09T17:15:20.950Z",
-      "finishedAt": "2026-03-09T17:28:34.845Z",
+      "finishedAt": "2026-03-10T05:57:08.661Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.845Z",
+      "finishedAt": "2026-03-10T05:57:08.661Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.845Z",
+      "finishedAt": "2026-03-10T05:57:08.661Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.845Z",
+      "finishedAt": "2026-03-10T05:57:08.661Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

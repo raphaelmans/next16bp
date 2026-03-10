@@ -1,0 +1,36 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "malolos-city",
+    "provinceName": "Bulacan",
+    "cityName": "Malolos City"
+  },
+  "generatedAt": "2026-03-10T05:42:44.846Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 5,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 3,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 0,
+  "failures": [
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/",
+      "error": "Unexpected token '#', \"### Error\n\"... is not valid JSON"
+    },
+    {
+      "url": "https://www.facebook.com/p/PickleFit-61579610165193/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 162.159.140.245:443, 172.66.0.243:443, timeout: 10000ms)"
+    },
+    {
+      "url": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)"
+    }
+  ]
+}

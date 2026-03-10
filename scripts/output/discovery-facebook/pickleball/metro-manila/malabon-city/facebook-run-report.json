@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "malabon-city",
+    "provinceName": "Metro Manila",
+    "cityName": "Malabon City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:00:30.818Z",
+      "finishedAt": "2026-03-10T06:00:55.034Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:00:55.040Z",
+      "finishedAt": "2026-03-10T06:03:17.507Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:03:18.005Z",
+      "finishedAt": "2026-03-10T06:04:02.219Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:04:02.963Z",
+      "lastError": null,
+      "notes": "no approved facebook rows after duplicate preflight"
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:04:02.963Z",
+      "lastError": null,
+      "notes": "no approved facebook rows after duplicate preflight"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:04:02.963Z",
+      "lastError": null,
+      "notes": "no imported place ids"
+    }
+  }
+}

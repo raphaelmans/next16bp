@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:general-trias-city",
+  "createdAt": "2026-03-10T05:13:18.523Z",
+  "updatedAt": "2026-03-10T05:14:36.276Z",
+  "urls": {
+    "https://facebook.com/juanvetnaic": {
+      "canonicalUrl": "https://facebook.com/juanvetnaic",
+      "latestUrl": "https://www.facebook.com/juanvetnaic/",
+      "firstCapturedAt": "2026-03-10T05:13:21.635Z",
+      "lastCapturedAt": "2026-03-10T05:13:21.635Z",
+      "status": "captured",
+      "title": "Drop & Drive Pickleball Camp | General Trias | Facebook",
+      "venueName": "Drop & Drive Pickleball Camp",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Drop & Drive Pickleball Camp"
+    },
+    "https://facebook.com/IsaacSportsPh": {
+      "canonicalUrl": "https://facebook.com/IsaacSportsPh",
+      "latestUrl": "https://www.facebook.com/IsaacSportsPh/",
+      "firstCapturedAt": "2026-03-10T05:13:38.487Z",
+      "lastCapturedAt": "2026-03-10T05:13:38.487Z",
+      "status": "captured",
+      "title": "Isaac Sports | General Trias | Facebook",
+      "venueName": "Isaac Sports",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Eagle-Ridge-Sports-Clubhouse-100091749497527": {
+      "canonicalUrl": "https://facebook.com/p/Eagle-Ridge-Sports-Clubhouse-100091749497527",
+      "latestUrl": "https://www.facebook.com/p/Eagle-Ridge-Sports-Clubhouse-100091749497527/",
+      "firstCapturedAt": "2026-03-10T05:13:56.204Z",
+      "lastCapturedAt": "2026-03-10T05:13:56.204Z",
+      "status": "captured",
+      "title": "Eagle Ridge Sports Clubhouse | General Trias | Facebook",
+      "venueName": "Eagle Ridge Sports Clubhouse",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Eagle Ridge Sports Clubhouse"
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T05:14:14.772Z",
+      "lastCapturedAt": "2026-03-10T05:14:14.772Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

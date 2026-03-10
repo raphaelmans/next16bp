@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:dasmarinas-city",
+  "createdAt": "2026-03-10T05:10:13.065Z",
+  "updatedAt": "2026-03-10T05:12:05.820Z",
+  "urls": {
+    "https://facebook.com/DasmarinasPickleball": {
+      "canonicalUrl": "https://facebook.com/DasmarinasPickleball",
+      "latestUrl": "https://www.facebook.com/DasmarinasPickleball/",
+      "firstCapturedAt": "2026-03-10T05:10:22.804Z",
+      "lastCapturedAt": "2026-03-10T05:10:22.804Z",
+      "status": "captured",
+      "title": "Dasmariñas Pickleball | Dasmariñas | Facebook",
+      "venueName": "Dasmariñas Pickleball",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/The-Pickle-Yard-Dasma-61575648282287": {
+      "canonicalUrl": "https://facebook.com/p/The-Pickle-Yard-Dasma-61575648282287",
+      "latestUrl": "https://www.facebook.com/p/The-Pickle-Yard-Dasma-61575648282287/",
+      "firstCapturedAt": "2026-03-10T05:10:43.244Z",
+      "lastCapturedAt": "2026-03-10T05:10:43.244Z",
+      "status": "captured",
+      "title": "The Pickle Yard Dasma | Dasmariñas | Facebook",
+      "venueName": "The Pickle Yard Dasma",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Yard Dasma"
+    },
+    "https://facebook.com/thepicklezoneleisurehub": {
+      "canonicalUrl": "https://facebook.com/thepicklezoneleisurehub",
+      "latestUrl": "https://www.facebook.com/thepicklezoneleisurehub/",
+      "firstCapturedAt": "2026-03-10T05:11:11.670Z",
+      "lastCapturedAt": "2026-03-10T05:11:11.670Z",
+      "status": "captured",
+      "title": "The Picklezone Leisure Hub | Dasmariñas | Facebook",
+      "venueName": "The Picklezone Leisure Hub",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Picklezone Leisure Hub"
+    },
+    "https://facebook.com/61575648282287?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/61575648282287?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/61575648282287/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T05:11:28.090Z",
+      "lastCapturedAt": "2026-03-10T05:11:28.090Z",
+      "status": "captured",
+      "title": "The Pickle Yard Dasma | Dasmariñas | Facebook",
+      "venueName": "The Pickle Yard Dasma",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Yard Dasma"
+    },
+    "https://facebook.com/p/The-Dink-Lab-61576669311409": {
+      "canonicalUrl": "https://facebook.com/p/The-Dink-Lab-61576669311409",
+      "latestUrl": "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+      "firstCapturedAt": "2026-03-10T05:11:44.401Z",
+      "lastCapturedAt": "2026-03-10T05:11:44.401Z",
+      "status": "captured",
+      "title": "The Dink Lab | Kawit | Facebook",
+      "venueName": "The Dink Lab",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

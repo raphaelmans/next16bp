@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:angeles-city",
+  "createdAt": "2026-03-10T05:09:20.907Z",
+  "updatedAt": "2026-03-10T05:09:57.750Z",
+  "queries": [
+    "pickleball courts in Pampanga Angeles City",
+    "pickleball court Angeles City Pampanga",
+    "Angeles City pickleball",
+    "courts in Angeles City Pampanga pickleball",
+    "sports center Angeles City Pampanga pickleball",
+    "pickleball club Angeles City Pampanga",
+    "pickleball reservations Angeles City Pampanga",
+    "host-map:cebupickleballcourts.com:Angeles City",
+    "host-map:cebupickleballcourts.com:Angeles",
+    "host-map:dumapickleball.com:Angeles City",
+    "host-map:dumapickleball.com:Angeles",
+    "site:cebupickleballcourts.com Angeles City Pampanga pickleball",
+    "site:dumapickleball.com Angeles City Pampanga pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "pickleball reservations Angeles City Pampanga",
+      "title": "Play Pickleball at Marquee Place Sports Zone: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Marquee Place Sports Zone! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=nQj--QMfQsI": {
+      "canonicalUrl": "https://youtube.com/watch?v=nQj--QMfQsI",
+      "latestUrl": "https://www.youtube.com/watch?v=nQj--QMfQsI",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "sports center Angeles City Pampanga pickleball",
+      "title": "Discover Angeles Pickleball Center - YouTube",
+      "snippet": "Join us for an exclusive tour and interview at Angeles Pickleball Center—the first dedicated pickleball facility in Pampanga, Philippines!",
+      "domain": "youtube.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga": {
+      "canonicalUrl": "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga",
+      "latestUrl": "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga/",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "pickleball reservations Angeles City Pampanga",
+      "title": "Pickleball in the PH: Angeles Pickleball Centre Opens in Pampanga",
+      "snippet": "The grand opening of Angeles Pickleball Centre on October 20, 2024. Located at the Best Western Plus Metro Clark compound in Balibago, Angeles City.",
+      "domain": "pickleballnewsasia.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://thevoicenewsweekly.com/%F0%9D%90%80%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%AC-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5": {
+      "canonicalUrl": "https://thevoicenewsweekly.com/%F0%9D%90%80%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%AC-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5",
+      "latestUrl": "https://thevoicenewsweekly.com/%F0%9D%90%80%F0%9D%90%A7%F0%9D%90%A0%F0%9D%90%9E%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%AC-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5/",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "sports center Angeles City Pampanga pickleball",
+      "title": "Angeles Pickleball Center opens at Savers Complex, ...",
+      "snippet": "... Complex in Balibago, Angeles City, is open from 730am to 9pm daily. Go ahead. Try your hand at pickleball, the sport that is easy to learn ...",
+      "domain": "thevoicenewsweekly.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "pickleball reservations Angeles City Pampanga",
+      "title": "PLACES TO PLAY, 08.06.23",
+      "snippet": "Angeles. Pampanga. 2. Indoor Courts. MWF: 8a-12nn. Invitation ... General Santos Drive (Koronadal City). Marbel. Cotabato City. 3. Covered ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=6rYPBnHv4BM": {
+      "canonicalUrl": "https://youtube.com/watch?v=6rYPBnHv4BM",
+      "latestUrl": "https://www.youtube.com/watch?v=6rYPBnHv4BM",
+      "firstDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:20.909Z",
+      "sourceQuery": "pickleball club Angeles City Pampanga",
+      "title": "BP2 Visits Angeles Pickleball Club!",
+      "snippet": "Their club has been around for almost two years, and they have a very big growing number of players and courts in Angeles, Pampanga. Thank ...",
+      "domain": "youtube.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

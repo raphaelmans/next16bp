@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T06:07:25.895Z",
+  "updatedAt": "2026-03-10T06:07:58.151Z",
+  "urls": {
+    "https://www.pickletrip.com/all/philippines/marilao/cabins": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/marilao/cabins",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/marilao/cabins",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022": {
+      "canonicalUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "latestUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/QRL8A2": {
+      "canonicalUrl": "https://reclub.co/m/QRL8A2",
+      "latestUrl": "https://reclub.co/m/QRL8A2",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0": {
+      "canonicalUrl": "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0",
+      "latestUrl": "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@marilao-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@marilao-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@marilao-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/WFFEMS": {
+      "canonicalUrl": "https://reclub.co/m/WFFEMS",
+      "latestUrl": "https://reclub.co/m/WFFEMS",
+      "firstDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "lastDiscoveredAt": "2026-03-10T06:07:25.895Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:07:25.895Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T06:07:25.895Z",
+      "lastSeenAt": "2026-03-10T06:07:25.895Z"
+    }
+  }
+}

@@ -1,0 +1,166 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Angeles City",
+    "citySlug": "angeles-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:13:52.036Z",
+  "queries": [
+    "site:facebook.com pickleball Angeles City Pampanga",
+    "site:facebook.com \"Angeles City\" \"Pampanga\" \"pickleball\"",
+    "site:facebook.com \"Angeles City\" \"pickleball club\"",
+    "site:facebook.com \"Angeles City\" \"pickleball court\"",
+    "site:facebook.com \"Pampanga\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Angeles-Pickleball-Club-100092029436820/",
+    "https://www.facebook.com/p/Angeles-Pickleball-Center-61563543320714/",
+    "https://www.facebook.com/p/PCPH-Pampanga-61563494852035/",
+    "https://www.facebook.com/pampangapickleballcommunity/",
+    "https://www.facebook.com/profile.php?id=100092029436820&locale=uk_UA",
+    "https://www.facebook.com/pickldph/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Center-61583363580722/",
+    "https://www.facebook.com/pickleballworldpam/",
+    "https://www.facebook.com/745567121984101/",
+    "https://www.facebook.com/p/Pampanga-Pickleball-Club-61557584475790/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/100092029436820/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115660395388837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4183272421960967/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/759080315553842/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61563494852035/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4115660395388837/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4183272421960967/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61563494852035/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377271932561014/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/989455062516365/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/759080315553842/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/reels/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/albums/205999915810988/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377271932561014/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61563543320714/photos/d41d8cd9/122182108286451444/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4341837559437785/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4335530986735109/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4338633023091572/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/100092029436820/mentions/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4288606571427551/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377271932561014/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1455365054764104/posts/3829426350691284/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4312215429066665/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1289237912538077/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1418305082964692/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/759080315553842/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363421447279396/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4297207483900793/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/chezkadennise/videos/newly-opened-pickleball-court-in-pampanga-kingscourt-pickleball-probably-the-bes/804352612637429/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages.state.json"
+}

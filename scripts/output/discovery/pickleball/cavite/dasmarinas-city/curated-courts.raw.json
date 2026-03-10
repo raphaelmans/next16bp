@@ -1,0 +1,68 @@
+{
+  "generatedAt": "2026-03-10T04:43:03.927Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 4,
+  "candidateUrlsCount": 3,
+  "candidateUrlsSelectedForRunCount": 3,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Dasmarinas Pickleball",
+        "address": "Dasmarinas, Calabarzon, Philippines",
+        "city": "DASMARIÑAS CITY",
+        "province": "CAVITE",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

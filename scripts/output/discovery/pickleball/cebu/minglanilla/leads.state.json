@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:minglanilla",
+  "createdAt": "2026-03-10T04:48:36.510Z",
+  "updatedAt": "2026-03-10T04:48:59.350Z",
+  "queries": [
+    "pickleball courts in Cebu Minglanilla",
+    "pickleball court Minglanilla Cebu",
+    "Minglanilla pickleball",
+    "courts in Minglanilla Cebu pickleball",
+    "sports center Minglanilla Cebu pickleball",
+    "pickleball club Minglanilla Cebu",
+    "pickleball reservations Minglanilla Cebu",
+    "host-map:cebupickleballcourts.com:Minglanilla",
+    "host-map:dumapickleball.com:Minglanilla",
+    "site:cebupickleballcourts.com Minglanilla Cebu pickleball",
+    "site:dumapickleball.com Minglanilla Cebu pickleball",
+    "site:pickleheads.com pickleball Minglanilla Cebu",
+    "site:playtimescheduler.com pickleball Minglanilla Cebu",
+    "site:app.court-access.com pickleball Minglanilla Cebu",
+    "dink Minglanilla pickleball"
+  ],
+  "urls": {
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "lastDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "sourceQuery": "sports center Minglanilla Cebu pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "SPORTS CLINIC PARTNERS CONTACT INFO. Archery. Sports Center, Contact, Website/Email. Village Sports Club ... Pickleball. Sports Center, Contact, Website/Email.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-metro-south": {
+      "canonicalUrl": "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-metro-south",
+      "latestUrl": "https://swishtournaments.com/product/philippines-the-dink-minor-league-pickleball-metro-south/",
+      "firstDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "lastDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "sourceQuery": "dink Minglanilla pickleball",
+      "title": "PHILIPPINES The Dink Minor League Pickleball – Metro South @ Tela Park",
+      "snippet": "Address. Tela Park Pickleballl Center. Las Piñas, Metro Manila, Philippines. Directions. Events. Format: The Dink Minor League Pickleball. Price: $37.00 / ...",
+      "domain": "swishtournaments.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dink-dynasty-mnl": {
+      "canonicalUrl": "https://reclub.co/clubs/@dink-dynasty-mnl",
+      "latestUrl": "https://reclub.co/clubs/@dink-dynasty-mnl",
+      "firstDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "lastDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "sourceQuery": "dink Minglanilla pickleball",
+      "title": "Dink Dynasty MNL",
+      "snippet": "Dink Dynasty MNL. Metro Manila · Pickleball ... We believe in the power of pickleball to bring people together, get active, and create lasting friendships.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://youtube.com/watch?v=UXoEHQTogPM": {
+      "canonicalUrl": "https://youtube.com/watch?v=UXoEHQTogPM",
+      "latestUrl": "https://www.youtube.com/watch?v=UXoEHQTogPM",
+      "firstDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "lastDiscoveredAt": "2026-03-10T04:48:36.511Z",
+      "sourceQuery": "dink Minglanilla pickleball",
+      "title": "THE DINK LAB | OPEN 24/7 PICKLEBALL COURT",
+      "snippet": "Wazzup Kapuge! Cheking out this new pickleball court in Kawit, Cavite open 24 hours a day. So happy to play together with my brothers, ...",
+      "domain": "youtube.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

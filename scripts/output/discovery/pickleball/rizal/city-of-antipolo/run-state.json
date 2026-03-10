@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:city-of-antipolo",
+  "createdAt": "2026-03-10T05:01:06.400Z",
+  "updatedAt": "2026-03-10T05:03:43.296Z",
+  "scope": {
+    "provinceSlug": "rizal",
+    "citySlug": "city-of-antipolo",
+    "provinceName": "Rizal",
+    "cityName": "City of Antipolo",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "ea4c976a-2332-43cc-938b-539a3f5c74df",
+    "6c4e59dc-d861-4fe0-aba0-a67f1c532522"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:01:06.402Z",
+      "finishedAt": "2026-03-10T05:01:34.181Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:01:34.202Z",
+      "finishedAt": "2026-03-10T05:02:05.600Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:02:05.602Z",
+      "finishedAt": "2026-03-10T05:02:33.495Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:02:33.939Z",
+      "finishedAt": "2026-03-10T05:03:15.981Z",
+      "lastError": null,
+      "notes": "processed 2 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T05:03:15.987Z",
+      "lastError": null,
+      "notes": "verified 2 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:03:20.055Z",
+      "finishedAt": "2026-03-10T05:03:43.279Z",
+      "lastError": null,
+      "notes": "backfilled 2 place ids"
+    }
+  }
+}

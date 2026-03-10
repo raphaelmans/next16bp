@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:city-of-binan:facebook",
+  "createdAt": "2026-03-10T05:48:45.434Z",
+  "updatedAt": "2026-03-10T06:20:12.942Z",
+  "scope": {
+    "provinceSlug": "laguna",
+    "citySlug": "city-of-binan",
+    "provinceName": "Laguna",
+    "cityName": "City of Biñan",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "54d1d1af-54ec-4cfc-bb63-29eecbb59348"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:48:45.434Z",
+      "finishedAt": "2026-03-10T05:48:52.080Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:48:52.080Z",
+      "finishedAt": "2026-03-10T05:50:55.825Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:50:55.830Z",
+      "finishedAt": "2026-03-10T05:51:23.231Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:51:23.392Z",
+      "finishedAt": "2026-03-10T05:52:02.126Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T05:52:02.447Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:19:39.903Z",
+      "finishedAt": "2026-03-10T06:20:12.942Z",
+      "lastError": null,
+      "notes": "backfilled 1 facebook place ids"
+    }
+  }
+}

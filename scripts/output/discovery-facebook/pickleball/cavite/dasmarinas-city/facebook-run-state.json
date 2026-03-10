@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:dasmarinas-city:facebook",
+  "createdAt": "2026-03-10T05:02:48.638Z",
+  "updatedAt": "2026-03-10T07:00:48.166Z",
+  "scope": {
+    "provinceSlug": "cavite",
+    "citySlug": "dasmarinas-city",
+    "provinceName": "Cavite",
+    "cityName": "Dasmariñas City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "5138e5e1-549d-487d-95b8-c81dde5ba6c7"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:02:48.639Z",
+      "finishedAt": "2026-03-10T05:02:57.001Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:10:13.060Z",
+      "finishedAt": "2026-03-10T05:12:05.822Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:12:05.825Z",
+      "finishedAt": "2026-03-10T05:12:31.241Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:12:31.376Z",
+      "finishedAt": "2026-03-10T05:12:51.550Z",
+      "lastError": null,
+      "notes": "processed 1 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T05:12:51.659Z",
+      "lastError": null,
+      "notes": "verified 1 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:12:51.660Z",
+      "finishedAt": "2026-03-10T07:00:48.166Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

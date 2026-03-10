@@ -1,0 +1,129 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:angono",
+  "createdAt": "2026-03-10T07:11:58.367Z",
+  "updatedAt": "2026-03-10T07:12:20.601Z",
+  "queries": [
+    "pickleball courts in Rizal Angono",
+    "pickleball court Angono Rizal",
+    "Angono pickleball",
+    "courts in Angono Rizal pickleball",
+    "sports center Angono Rizal pickleball",
+    "pickleball club Angono Rizal",
+    "pickleball reservations Angono Rizal",
+    "host-map:cebupickleballcourts.com:Angono",
+    "host-map:dumapickleball.com:Angono",
+    "site:cebupickleballcourts.com Angono Rizal pickleball",
+    "site:dumapickleball.com Angono Rizal pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "pickleball reservations Angono Rizal",
+      "title": "Play Pickleball at Richmond Angono Tennis Court",
+      "snippet": "Everything you need to know about playing Pickleball at Richmond Angono Tennis Court! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@angono-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@angono-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@angono-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "pickleball reservations Angono Rizal",
+      "title": "Angono Pickleball Club",
+      "snippet": "533 activities. Pickleball club in Angono, Rizal. Organized By. Al Joshua Remot. Ethel. Nix Remot. Cristina Sun. Greg. Ariel. Marian Dubouzet.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/angono/angono-tennis-club": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/angono/angono-tennis-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/angono-tennis-club",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "pickleball reservations Angono Rizal",
+      "title": "Play Pickleball at Angono Tennis Club: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at Angono Tennis Club! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/clubs/@kpc-2": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@kpc-2",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@kpc-2",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "courts in Angono Rizal pickleball",
+      "title": "Kpc",
+      "snippet": "Located in the heart of Angono, Rizal, Kapuso Pickleball Courts (KPC) stands as a vibrant hub for pickleball enthusiasts and the local.",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "sports center Angono Rizal pickleball",
+      "title": "Member Clubs",
+      "snippet": "Angono Pickleball Club. July 30, 2024. Picture. https://www.facebook.com/people/AngonoPB · Picture. Angono, Rizal. Anti-Kitchen Squad. July 31, 2025. Picture.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/ZSVGDT": {
+      "canonicalUrl": "https://reclub.co/m/ZSVGDT",
+      "latestUrl": "https://reclub.co/m/ZSVGDT",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "sports center Angono Rizal pickleball",
+      "title": "APC Open Play at Richmond Angono Pickleball Court Cancelled",
+      "snippet": "Richmond Angono Pickleball Court. Richmond Subdivision, Virginia Ave, Angono, 1930 Rizal, Philippines. see map. Per Player. $90.00. Join us for ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@kpc-2": {
+      "canonicalUrl": "https://reclub.co/clubs/@kpc-2",
+      "latestUrl": "https://reclub.co/clubs/@kpc-2",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "sports center Angono Rizal pickleball",
+      "title": "Kpc",
+      "snippet": "Located in the heart of Angono, Rizal, Kapuso Pickleball Courts (KPC) stands as a vibrant hub for pickleball enthusiasts and the local community. The courts ...",
+      "domain": "reclub.co",
+      "relevanceScore": 16,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Angono%2C+Rizal": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Angono%2C+Rizal",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Angono%2C+Rizal",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "sports center Angono Rizal pickleball",
+      "title": "THE BEST 10 BADMINTON in ANGONO, RIZAL, PHILIPPINES",
+      "snippet": "Moro Lorenzo Sports Center - Badminton near me - Angono, Rizal. 11. Moro ... They cater pickleball, basketball, badminton reservation and also they have ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dink-and-smash-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@dink-and-smash-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@dink-and-smash-pickleball",
+      "firstDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:58.368Z",
+      "sourceQuery": "pickleball reservations Angono Rizal",
+      "title": "Dink & Smash - Pickleball",
+      "snippet": "Reserve your slot and come play! No. 53 Kaimito St., Aurora Subdivision, Angono, Rizal Google Maps Link: https://maps.app.goo.gl/4kDtDrDK59FqB5vQ6",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

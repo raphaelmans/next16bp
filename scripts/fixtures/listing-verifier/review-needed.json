@@ -1,0 +1,65 @@
+{
+  "fixtureName": "review-needed",
+  "cases": [
+    {
+      "evidence": {
+        "placeId": "77777777-7777-4777-8777-777777777777",
+        "trackingBucket": "curated_place",
+        "placeType": "CURATED",
+        "organizationId": null,
+        "slug": "pickle-camp",
+        "name": "Pickle Camp",
+        "address": "22 Hillside Drive",
+        "city": "SAN MATEO",
+        "province": "RIZAL",
+        "country": "PH",
+        "claimStatus": "UNCLAIMED",
+        "verificationStatus": "NONE",
+        "activeCourtCount": 1,
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
+        "photoCount": 0,
+        "hasContactDetails": false,
+        "baselineFlags": ["missing_trust_signal"],
+        "baselineSuggestion": {
+          "label": "review",
+          "reasonCode": "missing_trust_signal"
+        }
+      },
+      "expected": {
+        "label": "review",
+        "reasonCode": "missing_trust_signal"
+      }
+    },
+    {
+      "evidence": {
+        "placeId": "88888888-8888-4888-8888-888888888888",
+        "trackingBucket": "curated_place",
+        "placeType": "CURATED",
+        "organizationId": null,
+        "slug": "mystery-courts",
+        "name": "Mystery Courts",
+        "address": "",
+        "city": "",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "claimStatus": "UNCLAIMED",
+        "verificationStatus": "NONE",
+        "activeCourtCount": 2,
+        "activeCourtLabels": ["Court A", "Court B"],
+        "activeSports": ["pickleball"],
+        "photoCount": 0,
+        "hasContactDetails": false,
+        "baselineFlags": ["missing_location", "missing_trust_signal"],
+        "baselineSuggestion": {
+          "label": "review",
+          "reasonCode": "missing_location"
+        }
+      },
+      "expected": {
+        "label": "review",
+        "reasonCode": "missing_location"
+      }
+    }
+  ]
+}

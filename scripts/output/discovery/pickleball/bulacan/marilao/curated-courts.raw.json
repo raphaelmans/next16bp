@@ -1,0 +1,83 @@
+{
+  "generatedAt": "2026-03-10T06:07:25.895Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 9,
+  "candidateUrlsCount": 8,
+  "candidateUrlsSelectedForRunCount": 8,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickletrip.com/all/philippines/marilao/cabins",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://reclub.co/m/QRL8A2",
+    "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://reclub.co/clubs/@marilao-pickleball-club",
+    "https://reclub.co/m/WFFEMS"
+  ],
+  "candidateUrls": [
+    "https://www.pickletrip.com/all/philippines/marilao/cabins",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://reclub.co/m/QRL8A2",
+    "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0",
+    "https://reclub.co/clubs/@marilao-pickleball-club",
+    "https://reclub.co/m/WFFEMS"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickletrip.com/all/philippines/marilao/cabins",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Marilao%2C+Bulacan",
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+    "https://reclub.co/m/QRL8A2",
+    "https://chrissports.com/products/flexicourt-picklefloor-blue?srsltid=AfmBOooMUWa-fBf3fb4IH_KgqOikBEsnVrh_JTxtnv_zQmLPL7zFlaA0",
+    "https://reclub.co/clubs/@marilao-pickleball-club",
+    "https://reclub.co/m/WFFEMS"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Bulacan Sports Complex",
+        "address": "Philippines, Philippines, Philippines",
+        "city": "BULACAN",
+        "province": "BULACAN",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

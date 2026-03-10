@@ -317,6 +317,7 @@ async function runPlaywrightCli(args: string[]): Promise<string> {
   const { stdout, stderr } = await execFileAsync("playwright-cli", args, {
     cwd: process.cwd(),
     maxBuffer: 1024 * 1024 * 8,
+    timeout: 45_000,
   });
 
   return `${stdout}${stderr}`.trim();

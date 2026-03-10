@@ -1,0 +1,28 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "manila",
+    "provinceName": "Metro Manila",
+    "cityName": "Manila"
+  },
+  "generatedAt": "2026-03-10T06:05:31.978Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/manila/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/manila/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/manila/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/manila/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 1,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 0,
+  "failedCount": 1,
+  "readyCount": 0,
+  "reviewCount": 0,
+  "skipCount": 0,
+  "csvRowCount": 0,
+  "failures": [
+    {
+      "url": "https://www.facebook.com/manilapickleball/",
+      "error": "Command failed: playwright-cli -s=fbcap-metro-manila-manila eval () => JSON.stringify((() => {\n      const links = Array.from(document.querySelectorAll('a[href]'))\n        .map((anchor) => anchor.href)\n        .filter(Boolean)\n        .slice(0, 200);\n      const ogTitle =\n        document.querySelector('meta[property=\"og:title\"]')?.getAttribute('content') ?? '';\n      const ogDescription =\n        document.querySelector('meta[property=\"og:description\"]')?.getAttribute('content') ?? '';\n\n      return {\n        pageUrl: location.href,\n        title: document.title,\n        bodyText: document.body ? document.body.innerText.slice(0, 16000) : '',\n        links,\n        ogTitle,\n        ogDescription,\n      };\n    })())\nEINTR: interrupted system call, uv_cwd\n"
+    }
+  ]
+}

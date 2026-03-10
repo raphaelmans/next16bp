@@ -1,0 +1,111 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Naga City",
+    "citySlug": "naga-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:15:01.812Z",
+  "queries": [
+    "pickleball courts in Cebu Naga City",
+    "pickleball court Naga City Cebu",
+    "Naga City pickleball",
+    "courts in Naga City Cebu pickleball",
+    "sports center Naga City Cebu pickleball",
+    "pickleball club Naga City Cebu",
+    "pickleball reservations Naga City Cebu",
+    "host-map:cebupickleballcourts.com:Naga City",
+    "host-map:cebupickleballcourts.com:Naga",
+    "host-map:dumapickleball.com:Naga City",
+    "host-map:dumapickleball.com:Naga",
+    "site:cebupickleballcourts.com Naga City Cebu pickleball",
+    "site:dumapickleball.com Naga City Cebu pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+    "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle/",
+    "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+    "https://reclub.co/clubs/@naga-city-pickleball-club",
+    "https://www.smsupermalls.com/active-hub",
+    "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 5
+    },
+    {
+      "url": "https://www.smsupermalls.com/whats-new/lifestyle/sm-seaside-city-opens-cebus-first-outdoor-free-play-pickle-ball-court-in-cebu-city",
+      "score": 3
+    },
+    {
+      "url": "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle/",
+      "score": 12
+    },
+    {
+      "url": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/RobNagaOfficial/posts/ready-set-dink-the-new-pickleball-court-at-robinsons-naga-near-motorcycle-parkin/1266819592150823/",
+    "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+    "https://www.tiktok.com/discover/pickleball-in-naga-cebu-city",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/groups/2952262758410177/posts/3710144625955316/",
+    "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.instagram.com/reel/DGIuxM_ypAX/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1151345152994021/",
+    "https://www.facebook.com/nagacitypickleballclub/",
+    "https://www.facebook.com/100094151390131/videos/now-accepting-1-on-1-group-pickleball-coaching-location-winwin-naga-city/997370335695126/",
+    "https://www.instagram.com/p/DOIt47qknTG/",
+    "https://www.facebook.com/provinceofcamsur/posts/the-philippines-most-luxurious-yet-affordable-pickleball-court-is-in-camsur-ang-/1333693525455473/",
+    "https://www.facebook.com/shanemarkm/videos/naga-city-pickleball-club-friday-open-play-fri-oct-24-700-pm-holy-rosary-minor-s/1170603801656980/",
+    "https://www.instagram.com/nagacitypickleballclub/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/RobNagaOfficial/posts/blessed-and-ready-the-pickleball-court-at-robinsons-naga-is-officially-blessedre/1277259571106825/",
+    "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.tiktok.com/discover/pickleball-in-naga-cebu-city",
+    "https://www.facebook.com/p/Sip-Serve-61579062813906/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+    "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+    "https://www.instagram.com/p/DOY5cEIk3Ow/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.facebook.com/nagacitypickleballclub/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/p/CON-Pickleball-Club-61560469654419/",
+    "https://www.facebook.com/matchpoint.cebu/videos/match-point-liloan-pickleball-club-x-city-of-naga-pickleball-cluban-incredible-d/631078442745063/",
+    "https://www.instagram.com/p/DU0nXeGk_X-/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4126350467653163/",
+    "https://www.reddit.com/r/PickleballCebu/comments/1k56o5e/pickleball_court_rates_locations_in_cebu/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3846296928991853/",
+    "https://www.facebook.com/nagacitytourism/posts/%F0%9D%97%A1%F0%9D%97%98%F0%9D%97%AA-%F0%9D%97%94%F0%9D%97%97%F0%9D%97%97%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%9C%F0%9D%97%A2%F0%9D%97%A1-%F0%9D%97%A7%F0%9D%97%A2-%F0%9D%97%AC%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%AA%F0%9D%97%98%F0%9D%97%94%F0%9D%97%A7-%F0%9D%97%A6%F0%9D%97%A7%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%A6-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A5%F0%9D%97%96%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%98%81-%F0%9D%97%AE%F0%9D%98%81-%F0%9D%97%A5%F0%9D%97%BC%F0%9D%97%AF%F0%9D%97%B6%F0%9D%97%BB%F0%9D%98%80%F0%9D%97%BC%F0%9D%97%BB%F0%9D%98%80-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%B4%F0%9D%97%AEready-to-ral/1307823861384705/",
+    "https://www.facebook.com/smsscitycebu/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/1042128841273817/",
+    "https://www.instagram.com/matchpoint.cebu/reels/",
+    "https://www.instagram.com/reel/DGIuxM_ypAX/",
+    "https://www.tiktok.com/discover/pickleball-in-naga-cebu-city"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/naga-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/naga-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cebu/naga-city/scrape-state.json"
+}

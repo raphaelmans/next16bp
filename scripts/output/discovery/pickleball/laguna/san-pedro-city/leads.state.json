@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:san-pedro-city",
+  "createdAt": "2026-03-10T04:47:30.688Z",
+  "updatedAt": "2026-03-10T04:48:06.310Z",
+  "queries": [
+    "pickleball courts in Laguna San Pedro City",
+    "pickleball court San Pedro City Laguna",
+    "San Pedro City pickleball",
+    "courts in San Pedro City Laguna pickleball",
+    "sports center San Pedro City Laguna pickleball",
+    "pickleball club San Pedro City Laguna",
+    "pickleball reservations San Pedro City Laguna",
+    "host-map:cebupickleballcourts.com:San Pedro City",
+    "host-map:cebupickleballcourts.com:San Pedro",
+    "host-map:dumapickleball.com:San Pedro City",
+    "host-map:dumapickleball.com:San Pedro",
+    "site:cebupickleballcourts.com San Pedro City Laguna pickleball",
+    "site:dumapickleball.com San Pedro City Laguna pickleball"
+  ],
+  "urls": {
+    "https://panda-pickleball-center.easyweek.io/": {
+      "canonicalUrl": "https://panda-pickleball-center.easyweek.io/",
+      "latestUrl": "https://panda-pickleball-center.easyweek.io/",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "pickleball reservations San Pedro City Laguna",
+      "title": "Panda Pickleball Center – Sports centre San Pedro",
+      "snippet": "A maximum of eight (8) players is permitted per court reservation. • No outside food is allowed in the facility. • No pets are allowed inside the facility. • ...",
+      "domain": "panda-pickleball-center.easyweek.io",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "pickleball reservations San Pedro City Laguna",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "San Pedro East Elementary School. Barangay San Pedro, East Rosales ... 1410 Laguna Heights Dr,. Alabang. NCR. 3. Indoor Courts. Wed, 6p-10p.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@san-pedro-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@san-pedro-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@san-pedro-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "pickleball club San Pedro City Laguna",
+      "title": "San Pedro Pickleball Club",
+      "snippet": "We are located at The Garage, San Pedro, Laguna: https://maps.app.goo.gl/AE91cYUvhxrMHZVMA? Open Play Schedule: - Monday: 7pm-11pm - Thursday: 1pm-5pm - ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/communities/laguna-philippines-380": {
+      "canonicalUrl": "https://reclub.co/zh-hant/communities/laguna-philippines-380",
+      "latestUrl": "https://reclub.co/zh-hant/communities/laguna-philippines-380",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "courts in San Pedro City Laguna pickleball",
+      "title": "Laguna, Philippines",
+      "snippet": "Pickleball HQ (PHQ) · Revel Grove · ALPHA & OMEGA A&O Pickleball Biñan · The Pickle & Co. 1016 · PALOO SM STA.ROSA · The Mills Pickleball.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "pickleball club San Pedro City Laguna",
+      "title": "Member Clubs",
+      "snippet": "San Pedro, Laguna. Impact Pickleball Club. February 26, 2024. Picture. darv_tuazon@yahoo.com · Picture. Pasig City, NCR. Imus Pickleball Club. January 4, 2024 ...",
+      "domain": "pickleball.ph",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/": {
+      "canonicalUrl": "https://pickleball.ph/",
+      "latestUrl": "https://www.pickleball.ph/",
+      "firstDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "lastDiscoveredAt": "2026-03-10T04:47:30.689Z",
+      "sourceQuery": "pickleball reservations San Pedro City Laguna",
+      "title": "PHILIPPINE PICKLEBALL FEDERATION - Philippine ...",
+      "snippet": "Registration is: ​ ✓ First Come, First Served ✓ Limited Slots Per Division ✓ Closed once divisions are full. Registration Deadline: March 20, 2026",
+      "domain": "pickleball.ph",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

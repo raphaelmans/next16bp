@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T05:12:35.099Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 0,
+    "aiResolved": 0,
+    "unresolved": 1
+  },
+  "discoveredUrls": 6,
+  "scrapedUrls": 1,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "jungle base fitness|san fernando|central luzon",
+      "name": "Jungle Base Fitness",
+      "city": "San Fernando",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstSeenAt": "2026-03-10T05:12:35.099Z",
+      "lastSeenAt": "2026-03-10T05:12:35.099Z"
+    }
+  ]
+}

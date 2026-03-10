@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Bacoor City",
+    "citySlug": "bacoor-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:00:30.103Z",
+  "queries": [
+    "site:facebook.com pickleball Bacoor City Cavite",
+    "site:facebook.com \"Bacoor City\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"Bacoor City\" \"pickleball club\"",
+    "site:facebook.com \"Bacoor City\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/people/Olobamas-Pickleball-Club/61581929459764/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/need-exercise-while-having-fun-come-and-join-the-main-square-pickleball-club-we-/1100031678941442/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1077703956812457/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/p/The-Pickle-Yard-SOMO-61579587854410/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549681149300088/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4169083346713208/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3615200892101459/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4168078083480401/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/985383066256898/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/bacoor-strikers-honored-for-outstanding-performance-at-national-pickleball-tourn/1122101779953218/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128747560746787/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/rebornfitnessph/posts/pickleball-is-coming-more-fun-more-fitness-more-reasons-to-join-uswatch-out-for-/122098041687136915/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1303003957283465/posts/1927011841549337/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/strike-pickleball-open-tournament-a-resounding-success-in-bacoor-city-congratula/1305830664913661/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61584489584800/posts/online-sign-up-is-now-open-tap-in-suit-up-and-smash-with-us-at-reborn-smash-pick/122112659427149652/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/strikeas1-bacoor-city-employees-pickleball-club-opens-strike-gymnasium-november-/1296257639204297/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4014630825491795/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/bacoor-strikers-honored-for-outstanding-performance-at-national-pickleball-tourn/1122101779953218/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/985383066256898/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/strikeas1-bacoor-city-employees-pickleball-club-opens-strike-gymnasium-november-/1296257639204297/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1303003957283465/posts/1927011841549337/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1054696049325599/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballclubnomo/videos/we-are-just-under-your-nose-and-we-are-not-going-anywhere-committedtopickleball-/1804994983516718/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/%F0%9D%97%A6%F0%9D%98%81%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B8%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-%F0%9D%97%94%F0%9D%97%BF%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%AE-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A2%F0%9D%97%BD%F0%9D%97%B2%F0%9D%97%BB-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%97%BB%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%A6%F0%9D%98%81%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B8%F0%9D%97%B2-%F0%9D%97%9A%F0%9D%98%86%F0%9D%97%BA%F0%9D%97%BB%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B6%F0%9D%98%82%F0%9D%97%BA-%F0%9D%97%95%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%BC%F0%9D%97%BC%F0%9D%97%BF-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A6%F0%9D%97%B2%F0%9D%97%BD%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%BA%F0%9D%97%AF%F0%9D%97%B2%F0%9D%97%BF/1248207917342603/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128747560746787/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/985383066256898/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/strikeas1-bacoor-city-employees-pickleball-club-opens-strike-gymnasium-november-/1296257639204297/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4303634366591438/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/donrobert0728/posts/looking-for-a-pickleball-court-inside-the-mall-now-open-nomo-pickleball-court-in/10233487611146753/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4271608503127358/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1054696049325599/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128747560746787/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1549681149300088/posts/1918731295728403/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CityGovtBacoor/posts/%F0%9D%97%A6%F0%9D%98%81%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B8%F0%9D%97%B2%F0%9D%97%BF%F0%9D%98%80-%F0%9D%97%94%F0%9D%97%BF%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%AE-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%A2%F0%9D%97%BD%F0%9D%97%B2%F0%9D%97%BB-%F0%9D%97%A7%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BF%F0%9D%97%BB%F0%9D%97%AE%F0%9D%97%BA%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81-%F0%9D%97%A6%F0%9D%98%81%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B8%F0%9D%97%B2-%F0%9D%97%9A%F0%9D%98%86%F0%9D%97%BA%F0%9D%97%BB%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B6%F0%9D%98%82%F0%9D%97%BA-%F0%9D%97%95%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%BC%F0%9D%97%BC%F0%9D%97%BF-%F0%9D%97%96%F0%9D%97%B6%F0%9D%98%81%F0%9D%98%86-%F0%9D%97%A6%F0%9D%97%B2%F0%9D%97%BD%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%BA%F0%9D%97%AF%F0%9D%97%B2%F0%9D%97%BF/1248207917342603/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/bacoor-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/bacoor-city/facebook-pages.state.json"
+}

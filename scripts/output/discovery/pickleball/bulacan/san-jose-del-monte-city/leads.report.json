@@ -1,0 +1,155 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "San Jose Del Monte City",
+    "citySlug": "san-jose-del-monte-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:00:54.701Z",
+  "queries": [
+    "pickleball courts in Bulacan San Jose Del Monte City",
+    "pickleball court San Jose Del Monte City Bulacan",
+    "San Jose Del Monte City pickleball",
+    "courts in San Jose Del Monte City Bulacan pickleball",
+    "sports center San Jose Del Monte City Bulacan pickleball",
+    "pickleball club San Jose Del Monte City Bulacan",
+    "pickleball reservations San Jose Del Monte City Bulacan",
+    "host-map:cebupickleballcourts.com:San Jose Del Monte City",
+    "host-map:cebupickleballcourts.com:San Jose Del Monte",
+    "host-map:dumapickleball.com:San Jose Del Monte City",
+    "host-map:dumapickleball.com:San Jose Del Monte",
+    "site:cebupickleballcourts.com San Jose Del Monte City Bulacan pickleball",
+    "site:dumapickleball.com San Jose Del Monte City Bulacan pickleball",
+    "site:pickleheads.com pickleball San Jose Del Monte City Bulacan",
+    "site:playtimescheduler.com pickleball San Jose Del Monte City Bulacan",
+    "site:app.court-access.com pickleball San Jose Del Monte City Bulacan",
+    "dink San Jose Del Monte City pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.yelp.com/search?cflt=badminton&find_loc=San+Jose+St%2C+San+Jose+Del+Monte+City%2C+Bulacan",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/ORGVA3",
+      "score": 6
+    },
+    {
+      "url": "https://www.yelp.com/search?cflt=badminton&find_loc=San+Jose+St%2C+San+Jose+Del+Monte+City%2C+Bulacan",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/m/ESMMCC",
+      "score": 6
+    },
+    {
+      "url": "https://www.yelp.com/search?cflt=badminton&find_loc=San+Jose+St%2C+San+Jose+Del+Monte+City%2C+Bulacan",
+      "score": 3
+    },
+    {
+      "url": "https://www.yelp.com/search?cflt=tennis&find_loc=Del+Monte+Rd%2C+San+Jose+del+Monte%2C+Bulacan",
+      "score": 5
+    },
+    {
+      "url": "https://www.milo.com.ph/clinics-by-sport",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/m/ESMMCC",
+      "score": 14
+    },
+    {
+      "url": "https://reclub.co/m/8I7G4L",
+      "score": 6
+    },
+    {
+      "url": "https://reclub.co/m/8Q78HG",
+      "score": 6
+    },
+    {
+      "url": "https://reclub.co/m/8I7G4L",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/m/T05SWI",
+      "score": 6
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/tecniqsports/posts/new-court-unlocked-thanks-for-inviting-us-to-pop-up-at-your-grand-opening-the-di/871207615889733/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3915007385454140/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.instagram.com/reel/DTLHydNkz5G/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/tecniqsports/posts/new-court-unlocked-thanks-for-inviting-us-to-pop-up-at-your-grand-opening-the-di/871207615889733/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3915007385454140/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.instagram.com/reel/DTLHydNkz5G/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.facebook.com/tecniqsports/posts/new-court-unlocked-thanks-for-inviting-us-to-pop-up-at-your-grand-opening-the-di/871207615889733/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.instagram.com/reel/DIcrk8WhhxN/",
+    "https://www.tiktok.com/@innahama/video/7609627833807162631",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/tecniqsports/posts/new-court-unlocked-thanks-for-inviting-us-to-pop-up-at-your-grand-opening-the-di/871207615889733/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4360412014247006/",
+    "https://www.facebook.com/EBTownCenter/videos/-get-into-the-zone-this-january-2026experience-the-latest-sports-craze-with-3-us/760575470398274/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.instagram.com/reel/DTLHydNkz5G/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4360412014247006/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.instagram.com/reel/DTLHydNkz5G/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1252493236212545/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.facebook.com/61580020857124/videos/bulacan-pickleball-open-2026-beginners-category/27098915229698704/",
+    "https://www.facebook.com/SJDMPickleball/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.facebook.com/EastwoodCityPickleball/posts/here-in-eastwood-city-pickleball-all-ages-and-all-skill-levels-are-welcome-lets-/122159196968858963/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4308194156135459/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4135435700077973/",
+    "https://www.instagram.com/p/DOBaKQfDRbO/",
+    "https://www.instagram.com/reel/DTLHydNkz5G/",
+    "https://www.tiktok.com/discover/pickleball-court-san-jose-del-monte-bilacan",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.facebook.com/groups/977840142630852/posts/2524823227932528/",
+    "https://www.facebook.com/dinkzone/",
+    "https://www.facebook.com/61568779744215/posts/maswerte-ang-san-jose-del-monte-bulacan-dink-zone-pickleball-courts-just-opened-/122161032764625991/",
+    "https://www.facebook.com/61568779744215/videos/pickleball-at-eb-town-center-bulacan/1618032986314416/",
+    "https://www.facebook.com/tecniqsports/videos/the-dink-zone-pop-up-booth/1207659218100900/",
+    "https://www.facebook.com/SJDMPickleball/",
+    "https://www.facebook.com/miriamgilles419/videos/pickleball-the-dink-zone/894253226317480/",
+    "https://www.facebook.com/dinkzone/videos/the-dink-zonegrand-opening-at-eb-town-centerfree-play-to-all%EF%B8%8Fjan-17-202610am-to-/2016902402214763/",
+    "https://www.instagram.com/p/Ck2PpOatdoU/",
+    "https://www.facebook.com/p/City-Of-SJDM-Pickleball-Club-61579355731336/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/san-jose-del-monte-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/san-jose-del-monte-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/san-jose-del-monte-city/scrape-state.json"
+}

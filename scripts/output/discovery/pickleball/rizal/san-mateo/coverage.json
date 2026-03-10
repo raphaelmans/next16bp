@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T05:58:22.297Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 0,
+    "aiResolved": 1,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 1,
+  "noDataUrls": 8,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "moncarlo village basketball court|san mateo|rizal",
+      "name": "Moncarlo Village Basketball Court",
+      "city": "SAN MATEO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+      "firstSeenAt": "2026-03-10T05:58:22.297Z",
+      "lastSeenAt": "2026-03-10T05:58:22.297Z"
+    }
+  ]
+}

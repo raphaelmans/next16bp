@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T06:03:21.326Z",
+  "updatedAt": "2026-03-10T06:03:47.843Z",
+  "urls": {
+    "https://reclub.co/m/C8C49X": {
+      "canonicalUrl": "https://reclub.co/m/C8C49X",
+      "latestUrl": "https://reclub.co/m/C8C49X",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/I2IEK2": {
+      "canonicalUrl": "https://reclub.co/m/I2IEK2",
+      "latestUrl": "https://reclub.co/m/I2IEK2",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Binangonan%2C+Rizal": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Binangonan%2C+Rizal",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Binangonan%2C+Rizal",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@binangonan-rizal-pickle-club-op": {
+      "canonicalUrl": "https://reclub.co/clubs/@binangonan-rizal-pickle-club-op",
+      "latestUrl": "https://reclub.co/clubs/@binangonan-rizal-pickle-club-op",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/CSKF3L": {
+      "canonicalUrl": "https://reclub.co/m/CSKF3L",
+      "latestUrl": "https://reclub.co/m/CSKF3L",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@dirty-kitchen-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@dirty-kitchen-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@dirty-kitchen-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "richmond angono tennis court|angono|rizal",
+      "lastRowName": "Richmond Angono Tennis Court"
+    },
+    "https://picklehub.ph/clubs": {
+      "canonicalUrl": "https://picklehub.ph/clubs",
+      "latestUrl": "https://picklehub.ph/clubs",
+      "firstDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "lastDiscoveredAt": "2026-03-10T06:03:21.326Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T06:03:21.326Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "richmond angono tennis court|angono|rizal": {
+      "rowKey": "richmond angono tennis court|angono|rizal",
+      "name": "Richmond Angono Tennis Court",
+      "city": "ANGONO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "firstSeenAt": "2026-03-10T06:03:21.326Z",
+      "lastSeenAt": "2026-03-10T06:03:21.326Z"
+    }
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T04:53:41.233Z",
+  "updatedAt": "2026-03-10T04:53:57.700Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T04:53:41.233Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "ace covered pickleball court|sibulan|negros oriental",
+      "lastRowName": "Ace Covered Pickleball Court"
+    },
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000": {
+      "canonicalUrl": "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+      "latestUrl": "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+      "firstDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:53:41.233Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:53:41.233Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan": {
+      "canonicalUrl": "https://reclub.co/clubs/@hbox-pickleball-sibulan",
+      "latestUrl": "https://reclub.co/clubs/@hbox-pickleball-sibulan",
+      "firstDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:41.233Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:53:41.233Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "ace covered pickleball court|sibulan|negros oriental": {
+      "rowKey": "ace covered pickleball court|sibulan|negros oriental",
+      "name": "Ace Covered Pickleball Court",
+      "city": "SIBULAN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "firstSeenAt": "2026-03-10T04:53:41.233Z",
+      "lastSeenAt": "2026-03-10T04:53:41.233Z"
+    }
+  }
+}

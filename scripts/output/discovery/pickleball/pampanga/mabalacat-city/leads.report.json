@@ -1,0 +1,130 @@
+{
+  "scope": {
+    "provinceName": "Pampanga",
+    "provinceSlug": "pampanga",
+    "cityName": "Mabalacat City",
+    "citySlug": "mabalacat-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:05:38.428Z",
+  "queries": [
+    "pickleball courts in Pampanga Mabalacat City",
+    "pickleball court Mabalacat City Pampanga",
+    "Mabalacat City pickleball",
+    "courts in Mabalacat City Pampanga pickleball",
+    "sports center Mabalacat City Pampanga pickleball",
+    "pickleball club Mabalacat City Pampanga",
+    "pickleball reservations Mabalacat City Pampanga",
+    "host-map:cebupickleballcourts.com:Mabalacat City",
+    "host-map:cebupickleballcourts.com:Mabalacat",
+    "host-map:dumapickleball.com:Mabalacat City",
+    "host-map:dumapickleball.com:Mabalacat",
+    "site:cebupickleballcourts.com Mabalacat City Pampanga pickleball",
+    "site:dumapickleball.com Mabalacat City Pampanga pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/m/567WKN",
+    "https://reclub.co/clubs/@scorpion-smashers",
+    "https://reclub.co/ko/clubs/@scorpion-smashers",
+    "https://www.fpsdc.coop/cth-pickleball",
+    "https://pampanga-pickleball.rezerv.co/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/DCXA15",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/GA1PGB",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/DCXA15",
+      "score": 14
+    },
+    {
+      "url": "https://thevoicenewsweekly.com/%F0%9D%90%86%F0%9D%90%80%F0%9D%90%8C%F0%9D%90%84-%F0%9D%90%8E%F0%9D%90%8D-%F0%9D%90%80%F0%9D%90%93-%F0%9D%90%92%F0%9D%90%8C-%F0%9D%90%93%F0%9D%90%84%F0%9D%90%8B%F0%9D%90%80%F0%9D%90%81%F0%9D%90%80/",
+      "score": 0
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/DCXA15",
+      "score": 14
+    },
+    {
+      "url": "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga/",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/m/DCXA15",
+      "score": 14
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.facebook.com/angelo2518/videos/new-court-alert-%EF%B8%8Fthe-pickle-cavesapang-biabas-mabalacat-city-pampangathank-you-s/2041776933270936/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7607046579425430805",
+    "https://www.tiktok.com/discover/pickleball-court-in-pampanga",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.reddit.com/r/Pampanga/comments/1lg0g10/where_can_i_play_pickleball_in_pampanga/",
+    "https://www.tiktok.com/@geloguiao/video/7606054540671995156",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7607046579425430805",
+    "https://www.tiktok.com/discover/pickleball-court-in-pampanga",
+    "https://www.facebook.com/pampangapickleballcommunity",
+    "https://www.facebook.com/samantha.bacani/posts/1st-ever-outdoor-pickleball-court-in-pampanga-sm-city-telabastagan-parking-cpick/24502250952729657/",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7562774484529319176",
+    "https://www.reddit.com/r/Pampanga/comments/1qf7a0c/pickleball_in_angeles_city/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.facebook.com/Scorpiondinksmashpickleballclub",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7607046579425430805",
+    "https://www.facebook.com/smcitypampanga/videos/play-your-heart-out-and-enjoy-the-most-exciting-summer-sports-at-sm-active-hub-f/871792531730004/",
+    "https://www.reddit.com/r/Pampanga/comments/1lg0g10/where_can_i_play_pickleball_in_pampanga/",
+    "https://www.tiktok.com/discover/tennis-pickleball-court-pampanga",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.reddit.com/r/Pampanga/comments/1lg0g10/where_can_i_play_pickleball_in_pampanga/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7607046579425430805",
+    "https://www.tiktok.com/discover/tennis-pickleball-court-pampanga",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.facebook.com/61571405094929/posts/look-the-pampanga-pickleball-centerwill-open-on-december-8-2025-with-nine-intern/122152935668713503/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.facebook.com/61568779744215/videos/pickleball-central-pampanga-walkthrough/1268316044275564/",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.facebook.com/samantha.bacani/posts/new-cafe-inside-a-pickleball-court-%EF%B8%8F-begin-coffee-inside-terra-courts-freluz-bui/24026953256926098/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.facebook.com/Scorpiondinksmashpickleballclub",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.reddit.com/r/Pampanga/comments/1lg0g10/where_can_i_play_pickleball_in_pampanga/",
+    "https://www.tiktok.com/@thepicklecouple.ph/video/7607046579425430805",
+    "https://www.tiktok.com/discover/tennis-pickleball-court-pampanga",
+    "https://www.instagram.com/p/DVjAFUuEx2-/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4276253595996182/",
+    "https://www.facebook.com/photo.php?fbid=122125297131060591&set=a.122099368119060591&id=61581817747025",
+    "https://www.instagram.com/reel/DVYiETCkfd3/",
+    "https://www.tiktok.com/@geloguiao/video/7604545869710511381",
+    "https://www.facebook.com/groups/2723933654561525/posts/4108459332775610/",
+    "https://www.tiktok.com/discover/tennis-pickleball-court-pampanga",
+    "https://www.instagram.com/p/DTAAVbvExNt/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/mabalacat-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/mabalacat-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/pampanga/mabalacat-city/scrape-state.json"
+}

@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:cordoba",
+  "createdAt": "2026-03-10T04:49:11.657Z",
+  "updatedAt": "2026-03-10T04:49:33.484Z",
+  "queries": [
+    "pickleball courts in Cebu Cordoba",
+    "pickleball court Cordoba Cebu",
+    "Cordoba pickleball",
+    "courts in Cordoba Cebu pickleball",
+    "sports center Cordoba Cebu pickleball",
+    "pickleball club Cordoba Cebu",
+    "pickleball reservations Cordoba Cebu",
+    "host-map:cebupickleballcourts.com:Cordoba",
+    "host-map:dumapickleball.com:Cordoba",
+    "site:cebupickleballcourts.com Cordoba Cebu pickleball",
+    "site:dumapickleball.com Cordoba Cebu pickleball"
+  ],
+  "urls": {
+    "https://getyourguide.com/en-gb/cordova-l196202/padel-and-pickleball-on-camotes-island-t1172577?closeTabOnNavigationBack=true": {
+      "canonicalUrl": "https://getyourguide.com/en-gb/cordova-l196202/padel-and-pickleball-on-camotes-island-t1172577?closeTabOnNavigationBack=true",
+      "latestUrl": "https://www.getyourguide.com/en-gb/cordova-l196202/padel-and-pickleball-on-camotes-island-t1172577/?closeTabOnNavigationBack=true",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "courts in Cordoba Cebu pickleball",
+      "title": "Padel & Pickleball on Camotes Island",
+      "snippet": "Play paddle or pickleball at the most beautiful resort on Camotes Island. The only paddle court on Camotes Island.",
+      "domain": "getyourguide.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@cordova-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@cordova-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@cordova-pickleball",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "pickleball club Cordoba Cebu",
+      "title": "Cordova Pickleball",
+      "snippet": "Play Pickleball with Cordova Pickleball ! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/co/bogota/bogota/pickleball-parque-cordoba": {
+      "canonicalUrl": "https://pickleheads.com/courts/co/bogota/bogota/pickleball-parque-cordoba",
+      "latestUrl": "https://www.pickleheads.com/courts/co/bogota/bogota/pickleball-parque-cordoba",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "Cordoba pickleball",
+      "title": "Pickleball Parque Cordoba",
+      "snippet": "Pickleball Parque Cordoba is a place to play pickleball in Bogotá, Bogotá. There are 3 outdoor concrete, asphalt, and hard courts. The lines are permanent, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.youtube.com/shorts/vJzNBpiYrBc": {
+      "canonicalUrl": "https://m.youtube.com/shorts/vJzNBpiYrBc",
+      "latestUrl": "https://m.youtube.com/shorts/vJzNBpiYrBc",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "Cordoba pickleball",
+      "title": "Impromptu Pickleball in Córdoba.",
+      "snippet": "Impromptu Pickleball in Córdoba. ... This content isn't available. Skip video.",
+      "domain": "m.youtube.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://app.utrsports.net/locations/argentina/cordoba-province": {
+      "canonicalUrl": "https://app.utrsports.net/locations/argentina/cordoba-province",
+      "latestUrl": "https://app.utrsports.net/locations/argentina/cordoba-province",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "Cordoba pickleball",
+      "title": "Tennis & Pickleball Rankings & Events in Cordoba Province",
+      "snippet": "Find tennis and pickleball players, tournaments, and leagues in Cordoba Province. Discover local tennis and pickleball communities, rankings, ...",
+      "domain": "app.utrsports.net",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://thevillages.com/recreation/cordoba": {
+      "canonicalUrl": "https://thevillages.com/recreation/cordoba",
+      "latestUrl": "https://www.thevillages.com/recreation/cordoba/",
+      "firstDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "lastDiscoveredAt": "2026-03-10T04:49:11.658Z",
+      "sourceQuery": "Cordoba pickleball",
+      "title": "Cordoba Recreation",
+      "snippet": "Play golf, pickleball, enjoy FREE nightly entertainment and try something new. Stay from 4-7 nights in a private Villa, complete with golf car and bicycles, ...",
+      "domain": "thevillages.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

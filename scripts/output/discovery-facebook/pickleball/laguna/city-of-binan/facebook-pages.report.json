@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "City of Biñan",
+    "citySlug": "city-of-binan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:48:45.438Z",
+  "queries": [
+    "site:facebook.com pickleball City of Biñan Laguna",
+    "site:facebook.com \"City of Biñan\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"City of Biñan\" \"pickleball club\"",
+    "site:facebook.com \"City of Biñan\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Bi%C3%B1an-Laguna-Pickleball-61564356776725/",
+    "https://www.facebook.com/photo.php?fbid=122214845270178080&set=a.122098877294178080&id=61555342404842",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2130415681037425/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2096291677783159/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2113553129390347/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61573501840376/posts/newly-opened-pickleball-court-in-bi%C3%B1an-lagunawe-are-located-at-warehouse-2401-wa/122125166012783394/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/930297261444914/posts/1626717845136182/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2103711640374496/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4264694770485398/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1705359480209716/posts/2120282888717371/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/BinanDentalClub/photos/registration-for-united-bdc-charity-games-pickleball-for-a-cause-is-now-closeda-/1194196162913447/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/375103007361250/posts/1508991103972429/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4210007125954163/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3669558859998995/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4174944726127070/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/659708659222399/posts/1437427328117191/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kitkat.adventour16/photos/d41d8cd9/950840690790594/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61555342404842/videos/indeed-a-must-visit-when-you-are-in-the-south-time-to-practice-your-swings-here-/1192146613058516/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/471552621074704/posts/1164392368457389/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/375103007361250/posts/1508991103972429/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3669558859998995/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/GalleriaSouthOfficial/posts/pickleball-and-chill-enjoy-a-game-or-two-with-your-friends-here-at-ourfavoritepl/1103177755354359/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/eyahc/photos/%EF%B8%8F/25996008670019650/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/GalleriaSouthOfficial/posts/game-on-rmalls-shoppers-reserve-your-spot-at-the-pickleball-rcourt-at-the-guest-/1091732329832235/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4174944726127070/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61555342404842/videos/indeed-a-must-visit-when-you-are-in-the-south-time-to-practice-your-swings-here-/1192146613058516/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/a3p3admin/posts/26185502101066691/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/GalleriaSouthOfficial/posts/game-on-rmalls-shoppers-reserve-your-spot-at-the-pickleball-rcourt-at-the-guest-/1091732329832235/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/GalleriaSouthOfficial/posts/pickleball-and-chill-enjoy-a-game-or-two-with-your-friends-here-at-ourfavoritepl/1103177755354359/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/posts/serve-rally-and-have-fun-experience-the-thrill-of-pickleball-right-here-at-smcit/1198461882311207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/GalleriaSouthOfficial/videos/new-fave-hangout-unlocked-at-galleria-south-%EF%B8%8F-try-the-pickleball-court-at-level-/1320441959465103/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitysantarosa/videos/max-out-experience-/1814400472552616/",
+      "score": 5
+    },
+    {
+      "url": "https://www.facebook.com/groups/a3p3admin/posts/26244122535204647/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1302922466751292/posts/2321001581610037/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/CongresswomanAnnMatibag/videos/from-legislation-to-recreation-pickleball-with-cong-annafter-a-full-week-of-legi/1256449059694695/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CongresswomanAnnMatibag/videos/from-legislation-to-recreation-%EF%B8%8Fafter-a-week-of-hearings-and-plenary-sessions-co/1422768426007539/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1302922466751292/posts/2768439923532865/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages.state.json"
+}

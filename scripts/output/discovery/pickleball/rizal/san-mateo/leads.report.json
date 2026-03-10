@@ -1,0 +1,112 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "San Mateo",
+    "citySlug": "san-mateo",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:57:59.925Z",
+  "queries": [
+    "pickleball courts in Rizal San Mateo",
+    "pickleball court San Mateo Rizal",
+    "San Mateo pickleball",
+    "courts in San Mateo Rizal pickleball",
+    "sports center San Mateo Rizal pickleball",
+    "pickleball club San Mateo Rizal",
+    "pickleball reservations San Mateo Rizal",
+    "host-map:cebupickleballcourts.com:San Mateo",
+    "host-map:dumapickleball.com:San Mateo",
+    "site:cebupickleballcourts.com San Mateo Rizal pickleball",
+    "site:dumapickleball.com San Mateo Rizal pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+    "https://app.sports360.ph/sportshub/pickle-camp",
+    "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+    "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+    "https://www.pickleheads.com/courts/us/california/san-mateo",
+    "https://www.sanmateoelks1112.org/copy-of-handball",
+    "https://pickleballsanmateo.com/",
+    "https://reclub.co/clubs/@san-mateo-pickleball-community",
+    "https://www.pickleball.ph/pickleball-clubs.html"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.cityofsanmateo.org/4831/Pickleball",
+      "score": 11
+    },
+    {
+      "url": "https://www.smcgov.org/ceo/news/oaks-pickleball-san-mateo-county-unveils-revamped-public-space",
+      "score": 8
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://www.timberlandresort.com/",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4057101624578048/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.instagram.com/p/DUpLIValYVv/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4366842830270591/",
+    "https://www.facebook.com/picklecamp.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4367496216871919/",
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192622531025956/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.instagram.com/p/DU3XS_NE6-p/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4367496216871919/",
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.facebook.com/groups/smpickleballclub/",
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.facebook.com/ExploreMNL.PH/videos/new-pickleball-spot-in-the-east-timberland-highlands-resort-san-mateo-rizal-pick/1450489673401397/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192622531025956/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4366842830270591/",
+    "https://www.instagram.com/p/DUpLIValYVv/",
+    "https://www.facebook.com/picklecamp.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4379631945658346/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/smcitysanmateoofficial/posts/-welcome-to-the-home-of-pickleball-sm-active-hub-discover-the-fastest-growing-sp/969225928738661/",
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.instagram.com/p/DVa5TH_kSgJ/",
+    "https://www.instagram.com/p/DUpLIValYVv/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4345294262425448/",
+    "https://www.instagram.com/p/DM6gJyUS42O/",
+    "https://www.facebook.com/groups/3559632374303891/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192622531025956/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4367496216871919/",
+    "https://www.instagram.com/p/DUpLIValYVv/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4347786862176188/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4169542680000608/",
+    "https://www.facebook.com/picklecamp.ph/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4325763617711846/",
+    "https://www.instagram.com/reel/DVdZirGEtlg/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4379631945658346/",
+    "https://www.facebook.com/groups/210865936170705/posts/1956294204961194/",
+    "https://www.instagram.com/p/DUpLIValYVv/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4367496216871919/",
+    "https://www.facebook.com/clubvihara/posts/pickleball-is-now-open-to-all-at-club-viharaenjoy-an-exclusive-20-off-on-your-fi/1188208530191695/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/san-mateo/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/san-mateo/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/san-mateo/scrape-state.json"
+}

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:sibulan",
+  "createdAt": "2026-03-10T04:53:19.814Z",
+  "updatedAt": "2026-03-10T04:53:41.231Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Sibulan",
+    "pickleball court Sibulan Negros Oriental",
+    "Sibulan pickleball",
+    "courts in Sibulan Negros Oriental pickleball",
+    "sports center Sibulan Negros Oriental pickleball",
+    "pickleball club Sibulan Negros Oriental",
+    "pickleball reservations Sibulan Negros Oriental",
+    "host-map:cebupickleballcourts.com:Sibulan",
+    "host-map:dumapickleball.com:Sibulan",
+    "site:cebupickleballcourts.com Sibulan Negros Oriental pickleball",
+    "site:dumapickleball.com Sibulan Negros Oriental pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "pickleball reservations Sibulan Negros Oriental",
+      "title": "Ace Covered Pickleball Court",
+      "snippet": "Everything you need to know about playing Pickleball at Ace Covered Pickleball Court! View information on courts, open play sessions, reservations, lessons, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/T4L2CQ": {
+      "canonicalUrl": "https://reclub.co/m/T4L2CQ",
+      "latestUrl": "https://reclub.co/m/T4L2CQ",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "pickleball court Sibulan Negros Oriental",
+      "title": "FRNDS court 4",
+      "snippet": "FRNDS Pickleball. Highway, Cangmating, Sibulan, 6201 Negros Oriental, Philippines. see map. Per Player. $130.00. This meet has no description. Please contact ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000": {
+      "canonicalUrl": "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+      "latestUrl": "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "courts in Sibulan Negros Oriental pickleball",
+      "title": "1ST SIX ZERO PICKLEBALL TOURNAMENT",
+      "snippet": "1ST SIX ZERO PICKLEBALL TOURNAMENT. Fri Jan 2nd - Sun 4th (PST). FRNDS PICKLEBALL COURT, Highway, Sibulan, 6201 Negros Oriental map directions. BIG ...",
+      "domain": "tockify.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://app.court-access.com/": {
+      "canonicalUrl": "https://app.court-access.com/",
+      "latestUrl": "https://app.court-access.com/",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "pickleball reservations Sibulan Negros Oriental",
+      "title": "Court Access - Sports Facility Booking",
+      "snippet": "Ang Laro Mo, I-book Na! ; No Double Bookings. Real-time booking system ensures your reservation is secure and conflict-free ; Real-time Availability. See live ...",
+      "domain": "app.court-access.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan": {
+      "canonicalUrl": "https://reclub.co/clubs/@hbox-pickleball-sibulan",
+      "latestUrl": "https://reclub.co/clubs/@hbox-pickleball-sibulan",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "pickleball club Sibulan Negros Oriental",
+      "title": "HBox Pickleball Sibulan",
+      "snippet": "Play Pickleball with HBox Pickleball Sibulan! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/1N774D": {
+      "canonicalUrl": "https://reclub.co/m/1N774D",
+      "latestUrl": "https://reclub.co/m/1N774D",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "courts in Sibulan Negros Oriental pickleball",
+      "title": "FRNDS court 4",
+      "snippet": "FRNDS Pickleball. Highway, Cangmating, Sibulan, 6201 Negros Oriental, Philippines. see map. Per Player. $130.00. This meet has no description. Please contact ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/FZRTMB": {
+      "canonicalUrl": "https://reclub.co/m/FZRTMB",
+      "latestUrl": "https://reclub.co/m/FZRTMB",
+      "firstDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "lastDiscoveredAt": "2026-03-10T04:53:19.816Z",
+      "sourceQuery": "pickleball club Sibulan Negros Oriental",
+      "title": "Pickleball Social OP",
+      "snippet": "FRNDS Pickleball. Dumaguete North Road, Cangmating, Sibulan, Negros Oriental, 6201. see map. Per Player. $180.00. Please upload payment receipt before ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

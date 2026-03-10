@@ -1,0 +1,204 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "San Pedro City",
+    "citySlug": "san-pedro-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:53:33.684Z",
+  "queries": [
+    "site:facebook.com pickleball San Pedro City Laguna",
+    "site:facebook.com \"San Pedro City\" \"Laguna\" \"pickleball\"",
+    "site:facebook.com \"San Pedro City\" \"pickleball club\"",
+    "site:facebook.com \"San Pedro City\" \"pickleball court\"",
+    "site:facebook.com \"Laguna\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Urban-Rally-61579597994873/",
+    "https://www.facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+    "https://www.facebook.com/winartpickleballclub/",
+    "https://www.facebook.com/courtshaveoceanviews/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/802683887860151/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/belizevacation/posts/26675498395469920/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266121587009383/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1407726017355932/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1048387712667634/posts/1866580150848382/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1251194929675709/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4223082887979920/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377964622491745/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/re-live-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-unasa/1227237852774696/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61577855828641/posts/your-new-happy-place-is-coming-to-san-pedro-get-ready-to-play-connect-and-level-/122110666802928527/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/live-now-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-pick/1227017432796738/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4270078543280354/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363199400634934/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/rlty2023/posts/first-ever-san-pedro-city-mayors-cup-pickleball-tournament-unasalaguna-katropamo/711738525213246/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3884325401855672/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1964091174206027/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/re-live-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-unasa/1227237852774696/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/live-now-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-pick/1227017432796738/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61563762964244/posts/the-1st-san-pedro-mayors-cup-pickleball-tournament-passion-pride-pickleball-is-h/122167539482458765/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61577855828641/posts/your-new-happy-place-is-coming-to-san-pedro-get-ready-to-play-connect-and-level-/122110666802928527/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377964622491745/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4270078543280354/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363199400634934/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4064888633799347/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/DepEdTayoCordillera/posts/%F0%9D%97%AC%F0%9D%97%BC%F0%9D%98%82%F0%9D%97%BB%F0%9D%97%B4-%F0%9D%97%B0%F0%9D%98%82%F0%9D%97%B2%F0%9D%97%B6%F0%9D%98%80%F0%9D%98%81%F0%9D%98%80-%F0%9D%97%B0%F0%9D%97%B9%F0%9D%97%AE%F0%9D%98%80%F0%9D%97%B5-%F0%9D%97%B6%F0%9D%97%BB-%F0%9D%9F%AE%F0%9D%9F%AC%F0%9D%9F%AE%F0%9D%9F%B2-%F0%9D%97%96%F0%9D%97%94%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%94-%F0%9D%9F%B4-%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%BE%F0%9D%98%82%F0%9D%97%AE%F0%9D%97%BF%F0%9D%98%81%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B3%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%AE%F0%9D%97%B9%F0%9D%98%80wayside-billiard-hall-in-p/1325162536307749/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3884325401855672/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/live-now-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-pick/1227017432796738/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SanPedroCityGov/posts/re-live-first-mayors-cup-pickleball-tournament-at-the-san-pedro-city-plaza-unasa/1227237852774696/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/834163193686751/posts/2092893001147091/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/CongresswomanAnnMatibag/videos/from-legislation-to-recreation-pickleball-with-cong-annafter-a-full-week-of-legi/1256449059694695/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/fetchdowntown/posts/1791573045131505/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/6884756171617464/posts/25015656531434151/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/SteveAyokoTV/videos/paloo-ph-sm-city-sta-rosa/743786311970189/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/819448079635411/posts/1339436684303212/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4329479097340298/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4354963558125185/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4209006789387530/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4066214053666805/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/125355889610948/posts/1091677392978788/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4206168023004740/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4178283182459891/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1005205490977031/posts/1347220400108870/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/san-pedro-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/san-pedro-city/facebook-pages.state.json"
+}

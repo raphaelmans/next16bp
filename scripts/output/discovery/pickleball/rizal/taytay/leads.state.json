@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:taytay",
+  "createdAt": "2026-03-10T05:06:54.877Z",
+  "updatedAt": "2026-03-10T05:07:16.940Z",
+  "queries": [
+    "pickleball courts in Rizal Taytay",
+    "pickleball court Taytay Rizal",
+    "Taytay pickleball",
+    "courts in Taytay Rizal pickleball",
+    "sports center Taytay Rizal pickleball",
+    "pickleball club Taytay Rizal",
+    "pickleball reservations Taytay Rizal",
+    "host-map:cebupickleballcourts.com:Taytay",
+    "host-map:dumapickleball.com:Taytay",
+    "site:cebupickleballcourts.com Taytay Rizal pickleball",
+    "site:dumapickleball.com Taytay Rizal pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "pickleball reservations Taytay Rizal",
+      "title": "Play Pickleball at Mission Hills Clubhouse: Court Information",
+      "snippet": "Mission Hills Clubhouse is a place to play pickleball in Taytay, Calabarzon. There are 5 hard courts. 3 are outdoors and 2 are indoors.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/taytay": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/taytay",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "Taytay pickleball",
+      "title": "The Most Popular Pickleball Courts in Taytay, Calabarzon",
+      "snippet": "How many pickleball courts are there in Taytay? There are 1 pickleball location with 5 courts in Taytay. Where can I find indoor pickleball courts in Taytay?",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/J9B0XC": {
+      "canonicalUrl": "https://reclub.co/m/J9B0XC",
+      "latestUrl": "https://reclub.co/m/J9B0XC",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "pickleball club Taytay Rizal",
+      "title": "Taytay-Dolores Pickleball Club Wednesday Schedule",
+      "snippet": "Looking for Pickleball meets in Rizal, Philippines? Check out this Reclub meet at Golden City Baskeball Court hosted by Edison Reterta.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/B987Z0": {
+      "canonicalUrl": "https://reclub.co/m/B987Z0",
+      "latestUrl": "https://reclub.co/m/B987Z0",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "sports center Taytay Rizal pickleball",
+      "title": "Taytay dolores pickleball club",
+      "snippet": "Mount Calbayog Road, Dolores, Taytay, Rizal, 1920. see map. Per Player. $120.00. Join us for Open Play at Montevista heights Basketball court ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/Y5PEV6": {
+      "canonicalUrl": "https://reclub.co/m/Y5PEV6",
+      "latestUrl": "https://reclub.co/m/Y5PEV6",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "pickleball club Taytay Rizal",
+      "title": "Taytay dolores pickleball club",
+      "snippet": "Mount Calbayog Road, Dolores, Taytay, Rizal, 1920. see map. Per Player. $120.00. Join us for Open Play at Montevista heights Basketball court! ‼️ SEND PAYMENT ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/communities/Antipolo,%20Taytay-438": {
+      "canonicalUrl": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "latestUrl": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "sports center Taytay Rizal pickleball",
+      "title": "Rizal, Philippines",
+      "snippet": "Taytay-Dolores Pickleball Club. Pickleball. 231 members. Greenridge Pickleball Court. Pickleball. 250 ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/0JQRQZ": {
+      "canonicalUrl": "https://reclub.co/m/0JQRQZ",
+      "latestUrl": "https://reclub.co/m/0JQRQZ",
+      "firstDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "lastDiscoveredAt": "2026-03-10T05:06:54.878Z",
+      "sourceQuery": "pickleball reservations Taytay Rizal",
+      "title": "Taytay-Dolores Pickleball Club Friday",
+      "snippet": "ANNOUNCEMENT + OPEN PLAY RESERVATION GUIDELINES Open Play Session Time: 1:00 PM to 5:00 PM (4 hrs) Rate: ₱120 per head PAYMENT DETAILS:",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -1,0 +1,65 @@
+{
+  "generatedAt": "2026-03-10T05:09:57.759Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 3,
+  "candidateUrlsCount": 2,
+  "candidateUrlsSelectedForRunCount": 2,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+    "https://www.youtube.com/watch?v=6rYPBnHv4BM",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+    "https://www.youtube.com/watch?v=6rYPBnHv4BM"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+    "https://www.youtube.com/watch?v=6rYPBnHv4BM"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Marquee Place Sports Zone",
+        "address": "Angeles, Central Luzon, Philippines",
+        "city": "ANGELES CITY",
+        "province": "PAMPANGA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:valencia-luzurriaga",
+  "createdAt": "2026-03-10T06:13:19.867Z",
+  "updatedAt": "2026-03-10T06:13:52.032Z",
+  "urls": {
+    "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286": {
+      "canonicalUrl": "https://facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286",
+      "latestUrl": "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/",
+      "firstCapturedAt": "2026-03-10T06:13:23.221Z",
+      "lastCapturedAt": "2026-03-10T06:13:23.221Z",
+      "status": "captured",
+      "title": "Negros Oriental Pickleball Club | Dumaguete City | Facebook",
+      "venueName": "Negros Oriental Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

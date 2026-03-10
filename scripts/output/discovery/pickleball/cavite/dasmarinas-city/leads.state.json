@@ -1,0 +1,131 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:dasmarinas-city",
+  "createdAt": "2026-03-10T04:42:15.455Z",
+  "updatedAt": "2026-03-10T04:43:03.924Z",
+  "queries": [
+    "pickleball courts in Cavite Dasmariñas City",
+    "pickleball court Dasmariñas City Cavite",
+    "Dasmariñas City pickleball",
+    "courts in Dasmariñas City Cavite pickleball",
+    "sports center Dasmariñas City Cavite pickleball",
+    "pickleball club Dasmariñas City Cavite",
+    "pickleball reservations Dasmariñas City Cavite",
+    "host-map:cebupickleballcourts.com:Dasmariñas City",
+    "host-map:cebupickleballcourts.com:Dasmariñas",
+    "host-map:dumapickleball.com:Dasmariñas City",
+    "host-map:dumapickleball.com:Dasmariñas",
+    "site:cebupickleballcourts.com Dasmariñas City Cavite pickleball",
+    "site:dumapickleball.com Dasmariñas City Cavite pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "pickleball reservations Dasmariñas City Cavite",
+      "title": "Dasmariñas Pickleball",
+      "snippet": "Can you reserve a pickleball court at Dasmariñas Pickleball? We're not sure if reservations are available or required at Dasmariñas Pickleball. If you have ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma": {
+      "canonicalUrl": "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+      "latestUrl": "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "pickleball reservations Dasmariñas City Cavite",
+      "title": "The Pickle Yard Dasma",
+      "snippet": "Book your pickleball game time for just ₱500! Whether you're a newbie or a seasoned slammer, our friendly court is perfect for fun rallies and epic smashes ...",
+      "domain": "ticketwaveph.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard": {
+      "canonicalUrl": "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+      "latestUrl": "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "Dasmariñas City pickleball",
+      "title": "Dasma Cavite Pickle Yard",
+      "snippet": "Play Pickleball with Dasma Cavite Pickle Yard! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "sports center Dasmariñas City Cavite pickleball",
+      "title": "PLACES TO PLAY, 05.15.24.xlsx",
+      "snippet": "The Zone Sports Center. 7224 Malugay St., cor Buendia. Makati. NCR. 6. Indoor Courts. MWF, 10a-1p; Tue/Thu, 930a-1230p p200/player James Santos.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living": {
+      "canonicalUrl": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living",
+      "latestUrl": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "sports center Dasmariñas City Cavite pickleball",
+      "title": "By Popular Demand, Philippine Malls Add Pickleball Courts for Active & ...",
+      "snippet": "RLC told Rappler it had at least seven malls with pickle ball courts as of end July, with two more set to open. These are in: Robinsons Metro ...",
+      "domain": "globalpickleballfederation.org",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://tobys.com/?srsltid=AfmBOorCftK2R3zmX54q_DoqnkbSpVkX5tTDhF-jykrMryT23huk-Ph0": {
+      "canonicalUrl": "https://tobys.com/?srsltid=AfmBOorCftK2R3zmX54q_DoqnkbSpVkX5tTDhF-jykrMryT23huk-Ph0",
+      "latestUrl": "https://www.tobys.com/?srsltid=AfmBOorCftK2R3zmX54q_DoqnkbSpVkX5tTDhF-jykrMryT23huk-Ph0",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "sports center Dasmariñas City Cavite pickleball",
+      "title": "Toby's Sports: The Philippines' Largest Store for Sports and Fitness",
+      "snippet": "Top categories · Basketball · Pickleball · Running · All Fitness · Badminton · Volleyball · Tennis · Boxing ...",
+      "domain": "tobys.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/communities/cavite-philippines-553": {
+      "canonicalUrl": "https://reclub.co/communities/cavite-philippines-553",
+      "latestUrl": "https://reclub.co/communities/cavite-philippines-553",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "pickleball club Dasmariñas City Cavite",
+      "title": "Cavite, Philippines",
+      "snippet": "The Dink Lab · Dasma Cavite Pickle Yard · Pickle Play · Powerhouse Pickleball Club · Positive Ground · PLAY HOUSE PICKLE · Riviera Silang Pickleball Club · The ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://theorchardgolf.com/1st-member-guest-pickleball-tournament-march-23-2025": {
+      "canonicalUrl": "https://theorchardgolf.com/1st-member-guest-pickleball-tournament-march-23-2025",
+      "latestUrl": "https://theorchardgolf.com/1st-member-guest-pickleball-tournament-march-23-2025/",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "pickleball club Dasmariñas City Cavite",
+      "title": "1st Member & Guest Pickleball Tournament | March 23, 2025",
+      "snippet": "Dasmariñas City, Cavite, Philippines 4114 Manila. Tel: +632 8982-2000 Cavite Tel:+6346 416-5931 to 35. Join Our Team Contact Us. Our Social ...",
+      "domain": "theorchardgolf.com",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "lastDiscoveredAt": "2026-03-10T04:42:15.456Z",
+      "sourceQuery": "pickleball reservations Dasmariñas City Cavite",
+      "title": "PLACES TO PLAY, 10.25.23",
+      "snippet": "LUZON. ADDRESS. CITY. REGION. COURTS DESCRIPTION. SCHEDULE. COST. CONTACT. NUMBER. EMAIL. Marquee Place Sports Zone.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

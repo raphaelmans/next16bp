@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:san-pedro-city",
+  "createdAt": "2026-03-10T04:47:30.669Z",
+  "updatedAt": "2026-03-10T04:48:34.096Z",
+  "scope": {
+    "provinceSlug": "laguna",
+    "citySlug": "san-pedro-city",
+    "provinceName": "Laguna",
+    "cityName": "San Pedro City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T04:47:30.687Z",
+      "finishedAt": "2026-03-10T04:48:06.310Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "failed",
+      "startedAt": "2026-03-10T04:48:06.311Z",
+      "finishedAt": "2026-03-10T04:48:34.096Z",
+      "lastError": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs.",
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  }
+}

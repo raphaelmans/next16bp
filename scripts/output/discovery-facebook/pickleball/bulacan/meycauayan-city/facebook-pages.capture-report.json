@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "meycauayan-city",
+    "provinceName": "Bulacan",
+    "cityName": "Meycauayan City"
+  },
+  "generatedAt": "2026-03-10T06:52:44.188Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 2,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 2,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 0,
+  "failures": []
+}

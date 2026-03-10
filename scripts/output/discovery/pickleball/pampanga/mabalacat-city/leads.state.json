@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:mabalacat-city",
+  "createdAt": "2026-03-10T06:05:38.408Z",
+  "updatedAt": "2026-03-10T06:06:16.701Z",
+  "queries": [
+    "pickleball courts in Pampanga Mabalacat City",
+    "pickleball court Mabalacat City Pampanga",
+    "Mabalacat City pickleball",
+    "courts in Mabalacat City Pampanga pickleball",
+    "sports center Mabalacat City Pampanga pickleball",
+    "pickleball club Mabalacat City Pampanga",
+    "pickleball reservations Mabalacat City Pampanga",
+    "host-map:cebupickleballcourts.com:Mabalacat City",
+    "host-map:cebupickleballcourts.com:Mabalacat",
+    "host-map:dumapickleball.com:Mabalacat City",
+    "host-map:dumapickleball.com:Mabalacat",
+    "site:cebupickleballcourts.com Mabalacat City Pampanga pickleball",
+    "site:dumapickleball.com Mabalacat City Pampanga pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/m/567WKN": {
+      "canonicalUrl": "https://reclub.co/m/567WKN",
+      "latestUrl": "https://reclub.co/m/567WKN",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball court Mabalacat City Pampanga",
+      "title": "FIRST GG's OPEN PLAY/MEET + THE PICKLE CAVE SOFT OPENING",
+      "snippet": "Sapang Biabas, Mabalacat City, Pampanga, Philippines. see map. Per Player. $250.00. The Pickle Cave courts are ready! Join us as we celebrate ...",
+      "domain": "reclub.co",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/DCXA15": {
+      "canonicalUrl": "https://reclub.co/m/DCXA15",
+      "latestUrl": "https://reclub.co/m/DCXA15",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball reservations Mabalacat City Pampanga",
+      "title": "Scorpion Dink & Smash Saturday Open Play | 5PM-9PM",
+      "snippet": "Looking for Pickleball meets in Pampanga, Philippines? Check out this Reclub meet at 7H57+RF Mabalacat City hosted by Mina and friends.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@scorpion-smashers": {
+      "canonicalUrl": "https://reclub.co/clubs/@scorpion-smashers",
+      "latestUrl": "https://reclub.co/clubs/@scorpion-smashers",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball club Mabalacat City Pampanga",
+      "title": "Scorpion Dink & Smash - Mabalacat Pickleball Club",
+      "snippet": "Scorpion Dink & Smash Pickleball Club is based in Mabalacat City, Pampanga, founded in 2025. Beginner-friendly and open to all skill.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ko/clubs/@scorpion-smashers": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@scorpion-smashers",
+      "latestUrl": "https://reclub.co/ko/clubs/@scorpion-smashers",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball club Mabalacat City Pampanga",
+      "title": "Scorpion Dink & Smash - Mabalacat Pickleball Club",
+      "snippet": "Scorpion Dink & Smash Pickleball Club is based in Mabalacat City, Pampanga, founded in 2025. Beginner-friendly and open to all skill.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "sports center Mabalacat City Pampanga pickleball",
+      "title": "PLACES TO PLAY, 08.06.23",
+      "snippet": "LUZON. ADDRESS. CITY. REGION. COURTS. DESCRIPTION. SCHEDULE. COST. CONTACT. NUMBER. EMAIL. Marquee Place Sports Zone.",
+      "domain": "pickleball.ph",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/GA1PGB": {
+      "canonicalUrl": "https://reclub.co/m/GA1PGB",
+      "latestUrl": "https://reclub.co/m/GA1PGB",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "courts in Mabalacat City Pampanga pickleball",
+      "title": "rally time at the cave",
+      "snippet": "Looking for Pickleball meets in Pampanga, Philippines? Check out this Reclub meet at The Pickle Cave hosted by Milo. Join Reclub to find meets, make friends ...",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://thevoicenewsweekly.com/%F0%9D%90%86%F0%9D%90%80%F0%9D%90%8C%F0%9D%90%84-%F0%9D%90%8E%F0%9D%90%8D-%F0%9D%90%80%F0%9D%90%93-%F0%9D%90%92%F0%9D%90%8C-%F0%9D%90%93%F0%9D%90%84%F0%9D%90%8B%F0%9D%90%80%F0%9D%90%81%F0%9D%90%80": {
+      "canonicalUrl": "https://thevoicenewsweekly.com/%F0%9D%90%86%F0%9D%90%80%F0%9D%90%8C%F0%9D%90%84-%F0%9D%90%8E%F0%9D%90%8D-%F0%9D%90%80%F0%9D%90%93-%F0%9D%90%92%F0%9D%90%8C-%F0%9D%90%93%F0%9D%90%84%F0%9D%90%8B%F0%9D%90%80%F0%9D%90%81%F0%9D%90%80",
+      "latestUrl": "https://thevoicenewsweekly.com/%F0%9D%90%86%F0%9D%90%80%F0%9D%90%8C%F0%9D%90%84-%F0%9D%90%8E%F0%9D%90%8D-%F0%9D%90%80%F0%9D%90%93-%F0%9D%90%92%F0%9D%90%8C-%F0%9D%90%93%F0%9D%90%84%F0%9D%90%8B%F0%9D%90%80%F0%9D%90%81%F0%9D%90%80/",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "courts in Mabalacat City Pampanga pickleball",
+      "title": "GAME ON AT SM TELABASTAGAN PICKLEBALL COURT",
+      "snippet": "The Pickleball Courts at SM City Telabastagan officially opened on October 9, marked by a ceremonial ribbon cutting led by City of San ...",
+      "domain": "thevoicenewsweekly.com",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga": {
+      "canonicalUrl": "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga",
+      "latestUrl": "https://pickleballnewsasia.com/pickleball-in-the-ph-angeles-pickleball-centre-opens-in-pampanga/",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "sports center Mabalacat City Pampanga pickleball",
+      "title": "Pickleball in the PH: Angeles Pickleball Centre Opens in Pampanga",
+      "snippet": "The grand opening of Angeles Pickleball Centre on October 20, 2024. Located at the Best Western Plus Metro Clark compound in Balibago, Angeles City.",
+      "domain": "pickleballnewsasia.com",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://fpsdc.coop/cth-pickleball": {
+      "canonicalUrl": "https://fpsdc.coop/cth-pickleball",
+      "latestUrl": "https://www.fpsdc.coop/cth-pickleball",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball reservations Mabalacat City Pampanga",
+      "title": "Pickleball Court – Reserve Your Game in Pampanga",
+      "snippet": "Easily check available slots and reserve your pickleball court in Co-op Trading Hub (CTH) Mabalacat, Pampanga. Our scheduler makes booking fast, simple, and ...",
+      "domain": "fpsdc.coop",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pampanga-pickleball.rezerv.co/": {
+      "canonicalUrl": "https://pampanga-pickleball.rezerv.co/",
+      "latestUrl": "https://pampanga-pickleball.rezerv.co/",
+      "firstDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "lastDiscoveredAt": "2026-03-10T06:05:38.428Z",
+      "sourceQuery": "pickleball reservations Mabalacat City Pampanga",
+      "title": "Pampanga Pickleball Center",
+      "snippet": "Welcome to Pampanga Pickleball Club — the home of pickleball enthusiasts in ... Book private sessions, coaching, or court rentals at your preferred time.",
+      "domain": "pampanga-pickleball.rezerv.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:calamba-city",
+  "createdAt": "2026-03-10T05:46:10.871Z",
+  "updatedAt": "2026-03-10T05:48:15.789Z",
+  "urls": {
+    "https://facebook.com/p/Calamba-Pickleball-61576363462378": {
+      "canonicalUrl": "https://facebook.com/p/Calamba-Pickleball-61576363462378",
+      "latestUrl": "https://www.facebook.com/p/Calamba-Pickleball-61576363462378/",
+      "firstCapturedAt": "2026-03-10T05:46:16.442Z",
+      "lastCapturedAt": "2026-03-10T05:46:16.442Z",
+      "status": "captured",
+      "title": "Calamba Pickleball | Calamba | Facebook",
+      "venueName": "Calamba Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/apexpickleballhubcalamba": {
+      "canonicalUrl": "https://facebook.com/apexpickleballhubcalamba",
+      "latestUrl": "https://www.facebook.com/apexpickleballhubcalamba/",
+      "firstCapturedAt": "2026-03-10T05:47:13.877Z",
+      "lastCapturedAt": "2026-03-10T05:47:13.877Z",
+      "status": "captured",
+      "title": "APEX Pickleball Hub Calamba | Calamba | Facebook",
+      "venueName": "APEX Pickleball Hub Calamba",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "APEX Pickleball Hub Calamba"
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T05:47:27.452Z",
+      "lastCapturedAt": "2026-03-10T05:47:27.452Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T05:47:56.267Z",
+      "lastCapturedAt": "2026-03-10T05:47:56.267Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

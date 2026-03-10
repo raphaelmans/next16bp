@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "laguna",
+    "citySlug": "city-of-binan",
+    "provinceName": "Laguna",
+    "cityName": "City of Biñan"
+  },
+  "generatedAt": "2026-03-10T05:50:55.816Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/laguna/city-of-binan/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 4,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 4,
+  "failedCount": 0,
+  "readyCount": 1,
+  "reviewCount": 0,
+  "skipCount": 3,
+  "csvRowCount": 1,
+  "failures": []
+}

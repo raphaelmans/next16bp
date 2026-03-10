@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "guiguinto",
+    "provinceName": "Bulacan",
+    "cityName": "Guiguinto"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:03:53.706Z",
+      "finishedAt": "2026-03-10T07:04:15.439Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:04:15.441Z",
+      "finishedAt": "2026-03-10T07:04:38.512Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:04:38.513Z",
+      "finishedAt": "2026-03-10T07:05:03.870Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T07:05:04.278Z",
+      "finishedAt": "2026-03-10T07:05:04.288Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for guiguinto, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:05:04.288Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for guiguinto"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:05:04.288Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

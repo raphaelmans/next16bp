@@ -1,0 +1,113 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Navotas City",
+    "citySlug": "navotas-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:39:02.141Z",
+  "queries": [
+    "pickleball courts in Metro Manila Navotas City",
+    "pickleball court Navotas City Metro Manila",
+    "Navotas City pickleball",
+    "courts in Navotas City Metro Manila pickleball",
+    "sports center Navotas City Metro Manila pickleball",
+    "pickleball club Navotas City Metro Manila",
+    "pickleball reservations Navotas City Metro Manila",
+    "host-map:cebupickleballcourts.com:Navotas City",
+    "host-map:cebupickleballcourts.com:Navotas",
+    "host-map:dumapickleball.com:Navotas City",
+    "host-map:dumapickleball.com:Navotas",
+    "site:cebupickleballcourts.com Navotas City Metro Manila pickleball",
+    "site:dumapickleball.com Navotas City Metro Manila pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/metro-manila",
+    "https://www.pickleheads.com/courts/ph/metro-manila/navotas/nbc-court",
+    "https://reclub.co/m/5NRB8R",
+    "https://reclub.co/clubs/@navotas-pickleball-club",
+    "https://reclub.co/m/TLUGFM",
+    "https://reclub.co/m/6ATFGF",
+    "https://www.pickleball.ph/pickleball-clubs.html",
+    "https://www.venyu.ph/venues?sport=Sports%20club"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/6ATFGF",
+      "score": 5
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://www.milo.com.ph/clinics-by-sport",
+      "score": 0
+    },
+    {
+      "url": "https://www.pickleball.ph/pickleball-clubs.html",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/m/NV4MM1",
+      "score": 6
+    },
+    {
+      "url": "https://pickleballnewsasia.com/dinkdojo-mp-malabon-pickleballers-and-picklebees-host-free-play-basic-training-at-sm-grand-central/",
+      "score": -2
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.facebook.com/p/Navotas-Pickleball-Club-61576380187440/",
+    "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+    "https://www.facebook.com/61557072639396/videos/pickle-ball-3ds-sports-center-navotas/1153381989588411/",
+    "https://www.instagram.com/p/DRCaryKDVhp/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3809307422690804/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4106075113014032/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4217732051848337/",
+    "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+    "https://www.facebook.com/61557072639396/videos/pickle-ball-3ds-sports-center-navotas/1153381989588411/",
+    "https://www.instagram.com/p/DRbM1qjkWM8/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4106075113014032/",
+    "https://www.instagram.com/p/DRbM1qjkWM8/",
+    "https://www.tiktok.com/@igetmisty/video/7542716673346768136",
+    "https://www.facebook.com/p/Navotas-Pickleball-Club-61576380187440/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3809307422690804/",
+    "https://www.facebook.com/p/Navotas-Pickleball-Club-61576380187440/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4294928410795367/",
+    "https://www.instagram.com/reel/DVbRIdQj5gi/",
+    "https://www.facebook.com/61557072639396/videos/pickle-ball-3ds-sports-center-navotas/1153381989588411/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.facebook.com/61557072639396/videos/pickle-ball-3ds-sports-center-navotas/1153381989588411/",
+    "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+    "https://www.instagram.com/p/DVN1VbAE6SG/",
+    "https://www.facebook.com/p/Navotas-Pickleball-Club-61576380187440/",
+    "https://www.facebook.com/p/Navotas-Pickleball-Club-61576380187440/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4106075113014032/",
+    "https://www.instagram.com/p/DVN1VbAE6SG/",
+    "https://www.facebook.com/61557072639396/videos/pickle-ball-3ds-sports-center-navotas/1153381989588411/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.instagram.com/p/DNLhRBYJmIB/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3809307422690804/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4147329145555295/",
+    "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+    "https://www.instagram.com/p/DRbM1qjkWM8/",
+    "https://www.facebook.com/pickaballcourt/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/navotas-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/navotas-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/metro-manila/navotas-city/scrape-state.json"
+}

@@ -1,0 +1,84 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cavite",
+    "citySlug": "tagaytay-city",
+    "provinceName": "Cavite",
+    "cityName": "Tagaytay City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:05:29.935Z",
+      "finishedAt": "2026-03-10T07:06:05.968Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "failed",
+      "startedAt": "2026-03-10T07:06:05.968Z",
+      "finishedAt": "2026-03-10T07:06:27.216Z",
+      "lastError": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs.",
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "embeddingBackfill": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    }
+  },
+  "failedStage": "scrape",
+  "error": "No candidate URLs after filtering and no fallback rows found. Use --urls-file with explicit venue URLs."
+}

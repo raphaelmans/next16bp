@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:city-of-muntinlupa:facebook",
   "createdAt": "2026-03-10T04:02:31.632Z",
-  "updatedAt": "2026-03-10T04:02:58.370Z",
+  "updatedAt": "2026-03-10T05:57:08.626Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "city-of-muntinlupa",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "finishedAt": "2026-03-10T05:57:08.626Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "finishedAt": "2026-03-10T05:57:08.626Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "finishedAt": "2026-03-10T05:57:08.626Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-10T04:02:58.370Z",
+      "finishedAt": "2026-03-10T05:57:08.626Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

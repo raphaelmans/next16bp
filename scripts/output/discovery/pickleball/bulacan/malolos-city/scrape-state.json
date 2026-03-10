@@ -1,0 +1,136 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:17:06.834Z",
+  "updatedAt": "2026-03-10T05:17:18.958Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://booking.page/en/company/page/picklefit": {
+      "canonicalUrl": "https://booking.page/en/company/page/picklefit",
+      "latestUrl": "https://booking.page/en/company/page/picklefit",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@city-of-malolos-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@city-of-malolos-pickleball-club",
+      "latestUrl": "https://reclub.co/ko/clubs/@city-of-malolos-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/clubs/@city-of-malolos-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@city-of-malolos-pickleball-club",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@city-of-malolos-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-luzon/malolos-city/pet-friendly-rentals": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-luzon/malolos-city/pet-friendly-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/malolos-city/pet-friendly-rentals",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/malolos": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/malolos",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/malolos",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://playtimescheduler.com/region/malolos-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/malolos-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/malolos-luzon",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center",
+      "firstDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "lastDiscoveredAt": "2026-03-10T05:17:06.833Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:17:06.833Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "citywalk badminton sports center|malolos city|bulacan",
+      "lastRowName": "Citywalk Badminton Sports Center"
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T05:17:06.833Z",
+      "lastSeenAt": "2026-03-10T05:17:06.833Z"
+    },
+    "citywalk badminton sports center|malolos city|bulacan": {
+      "rowKey": "citywalk badminton sports center|malolos city|bulacan",
+      "name": "Citywalk Badminton Sports Center",
+      "city": "MALOLOS CITY",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center",
+      "firstSeenAt": "2026-03-10T05:17:06.833Z",
+      "lastSeenAt": "2026-03-10T05:17:06.833Z"
+    }
+  }
+}

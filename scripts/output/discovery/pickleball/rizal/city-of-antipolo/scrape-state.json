@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:01:34.248Z",
+  "updatedAt": "2026-03-10T05:02:05.599Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/sm-center-antipolo-downtown": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/sm-center-antipolo-downtown",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/sm-center-antipolo-downtown",
+      "firstDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "lastDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:01:34.247Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "sm center antipolo downtown|city of antipolo|rizal",
+      "lastRowName": "Sm Center Antipolo Downtown"
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "lastDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@sm-center-antipolo-downtown-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@sm-center-antipolo-downtown-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@sm-center-antipolo-downtown-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "lastDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:01:34.247Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/kingsville-hills-pickleball-club": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/kingsville-hills-pickleball-club",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/kingsville-hills-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "lastDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:01:34.247Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "kingsville hills pickleball club|city of antipolo|rizal",
+      "lastRowName": "Kingsville Hills Pickleball Club"
+    },
+    "https://manilapolo.com.ph/facilities/pickleball": {
+      "canonicalUrl": "https://manilapolo.com.ph/facilities/pickleball",
+      "latestUrl": "https://manilapolo.com.ph/facilities/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "lastDiscoveredAt": "2026-03-10T05:01:34.247Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:01:34.247Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "sm center antipolo downtown|city of antipolo|rizal": {
+      "rowKey": "sm center antipolo downtown|city of antipolo|rizal",
+      "name": "Sm Center Antipolo Downtown",
+      "city": "CITY OF ANTIPOLO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/sm-center-antipolo-downtown",
+      "firstSeenAt": "2026-03-10T05:01:34.247Z",
+      "lastSeenAt": "2026-03-10T05:01:34.247Z"
+    },
+    "kingsville hills pickleball club|city of antipolo|rizal": {
+      "rowKey": "kingsville hills pickleball club|city of antipolo|rizal",
+      "name": "Kingsville Hills Pickleball Club",
+      "city": "CITY OF ANTIPOLO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/kingsville-hills-pickleball-club",
+      "firstSeenAt": "2026-03-10T05:01:34.247Z",
+      "lastSeenAt": "2026-03-10T05:01:34.247Z"
+    }
+  }
+}

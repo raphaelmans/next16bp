@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "guiguinto",
+    "provinceName": "Bulacan",
+    "cityName": "Guiguinto"
+  },
+  "generatedAt": "2026-03-10T07:13:57.786Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 6,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 6,
+  "failedCount": 0,
+  "readyCount": 4,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 2,
+  "failures": []
+}

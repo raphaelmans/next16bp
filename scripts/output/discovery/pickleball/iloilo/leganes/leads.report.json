@@ -1,0 +1,114 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Leganes",
+    "citySlug": "leganes",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:16:37.807Z",
+  "queries": [
+    "pickleball courts in Iloilo Leganes",
+    "pickleball court Leganes Iloilo",
+    "Leganes pickleball",
+    "courts in Leganes Iloilo pickleball",
+    "sports center Leganes Iloilo pickleball",
+    "pickleball club Leganes Iloilo",
+    "pickleball reservations Leganes Iloilo",
+    "host-map:cebupickleballcourts.com:Leganes",
+    "host-map:dumapickleball.com:Leganes",
+    "site:cebupickleballcourts.com Leganes Iloilo pickleball",
+    "site:dumapickleball.com Leganes Iloilo pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickleheads.com/courts/ph/western-visayas/philippines/sinadya-pickleball-courts-at-vista-mall-iloilo",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/north-grove",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/robinson-jaro-3rd-floor-car-park",
+    "https://www.mypacer.com/parks/csp5/iloilo-city-western-visayas/basketball",
+    "https://www.pickleheads.com/courts/ph/northern-mindanao",
+    "https://sec.solaireresort.com/experience/solaire-sports-club",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+    "https://reclub.co/clubs/@iloilo-pickleball",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/upv-city-campus-pickleball-court"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.phpickleballleague.com/",
+      "score": 5
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=4vaRtp04Pqs",
+      "score": 1
+    },
+    {
+      "url": "https://pickleball.com/",
+      "score": 3
+    },
+    {
+      "url": "https://www.smsupermalls.com/active-hub",
+      "score": 5
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/picklepointiloilo/posts/-98-done-100-game-changinga-new-era-for-pickleball-in-iloilo-is-almost-herefeel-/122113200140918972/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1165495941578942/",
+    "https://www.facebook.com/groups/1184213529240765/",
+    "https://www.facebook.com/smcityiloilo/posts/-pickleball-in-iloilo-for-the-51st-paraw-regatta-festival-mayor-jerry-tre%C3%B1as-off/807215434778563/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.reddit.com/r/Iloilo/comments/1lg3ta3/pickleball_court_and_equipment/",
+    "https://www.instagram.com/reel/DMSbxF6TFtH/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+    "https://www.facebook.com/picklepointiloilo/videos/-exciting-news-pickleball-playerspicklepoint-iloilo-is-now-opening-earlier-so-yo/748504994768213/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.reddit.com/r/Iloilo/comments/1lg3ta3/pickleball_court_and_equipment/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.instagram.com/p/DK3ApBSy7Cu/",
+    "https://www.facebook.com/iloilopickleball/posts/north-grove-x-iloilo-pickleballpickleball-heroesshort-reel-%EF%B8%8F%EF%B8%8Filoilopickleballphi/792831080573630/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3761297880825092/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4259316187689923/",
+    "https://www.facebook.com/marketplace/106042382760390/pickleball-equipment/",
+    "https://www.instagram.com/p/DRFs68IiDUs/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1465978771530656/",
+    "https://www.tiktok.com/@mypinaylife/video/7470062285365546283",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/iloilopickleball/videos/905499815243116/",
+    "https://www.facebook.com/NorthGroveIloilo/posts/%F0%9D%90%88%F0%9D%90%A5%F0%9D%90%A8%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A8-%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9E-%F0%9D%90%B2%F0%9D%90%A8%F0%9D%90%AE-%F0%9D%90%AB%F0%9D%90%9E%F0%9D%90%9A%F0%9D%90%9D%F0%9D%90%B2-unleash-your-inner-hero-at-the-north-grove-pickleball-heroe/122249508686231146/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/QueenCityoftheSouthIloilo/videos/picklepoint-iloilo-iloilos-ultimate-pickleball-destination/1275275587844996/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546/",
+    "https://www.facebook.com/iloilopickleball/",
+    "https://www.facebook.com/picklepointiloilo/videos/-exciting-news-pickleball-playerspicklepoint-iloilo-is-now-opening-earlier-so-yo/748504994768213/",
+    "https://www.facebook.com/groups/183647479495208/posts/1489660915560518/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1260786042049931/",
+    "https://www.instagram.com/reel/DMSbxF6TFtH/?hl=en",
+    "https://www.facebook.com/picklepointiloilo/videos/-exciting-news-pickleball-playerspicklepoint-iloilo-is-now-opening-earlier-so-yo/748504994768213/",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/leganes/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/leganes/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/leganes/scrape-state.json"
+}

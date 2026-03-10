@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:bocaue",
+  "createdAt": "2026-03-10T07:02:58.771Z",
+  "updatedAt": "2026-03-10T07:03:20.788Z",
+  "queries": [
+    "pickleball courts in Bulacan Bocaue",
+    "pickleball court Bocaue Bulacan",
+    "Bocaue pickleball",
+    "courts in Bocaue Bulacan pickleball",
+    "sports center Bocaue Bulacan pickleball",
+    "pickleball club Bocaue Bulacan",
+    "pickleball reservations Bocaue Bulacan",
+    "host-map:cebupickleballcourts.com:Bocaue",
+    "host-map:dumapickleball.com:Bocaue",
+    "site:cebupickleballcourts.com Bocaue Bulacan pickleball",
+    "site:dumapickleball.com Bocaue Bulacan pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/ko/clubs/@dinkdistrictph": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@dinkdistrictph",
+      "latestUrl": "https://reclub.co/ko/clubs/@dinkdistrictph",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "courts in Bocaue Bulacan pickleball",
+      "title": "Dinkers",
+      "snippet": "DINK District PH Pickleball Club is a friendly and inclusive pickleball community based at the pickleball court in Batia, Bocaue, Bulacan.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://dinkdistrictph.com/": {
+      "canonicalUrl": "https://dinkdistrictph.com/",
+      "latestUrl": "https://dinkdistrictph.com/",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "Bocaue pickleball",
+      "title": "Dink District PH: COMING SOON",
+      "snippet": "Get ready for Dink District PH, the most exciting and aesthetic pickleball court coming soon to Tambubong, Bocaue, Bulacan! We're serving up a space built for ...",
+      "domain": "dinkdistrictph.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@bocaue-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@bocaue-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@bocaue-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "sports center Bocaue Bulacan pickleball",
+      "title": "Bocaue Pickleball Club",
+      "snippet": "Play Pickleball with Bocaue Pickleball Club! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://threads.com/@kimjerrrome/post/DVdkQfRAaUE/video-pickleball-court-pa-ba-to-o-magpi-pick-up-ng-delivery-package-heres-another": {
+      "canonicalUrl": "https://threads.com/@kimjerrrome/post/DVdkQfRAaUE/video-pickleball-court-pa-ba-to-o-magpi-pick-up-ng-delivery-package-heres-another",
+      "latestUrl": "https://www.threads.com/@kimjerrrome/post/DVdkQfRAaUE/video-pickleball-court-pa-ba-to-o-magpi-pick-up-ng-delivery-package-heres-another",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "courts in Bocaue Bulacan pickleball",
+      "title": "Pickleball court pa ba 'to o magpi-pick up ng delivery package!?",
+      "snippet": "Here's another Pickleball court visit I did this week. This time, we headed to The Pickle Pad in Bocaue, Bulacan. · Saan ang next court dayo ...",
+      "domain": "threads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@dinkdistrictph": {
+      "canonicalUrl": "https://reclub.co/clubs/@dinkdistrictph",
+      "latestUrl": "https://reclub.co/clubs/@dinkdistrictph",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "pickleball club Bocaue Bulacan",
+      "title": "Dinkers",
+      "snippet": "DINK District PH Pickleball Club is a friendly and inclusive pickleball community based at the pickleball court in Batia, Bocaue, Bulacan.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Bocaue%2C+Bulacan": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Bocaue%2C+Bulacan",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Bocaue%2C+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "pickleball reservations Bocaue Bulacan",
+      "title": "THE BEST 10 BADMINTON in BOCAUE, BULACAN, PHILIPPINES",
+      "snippet": "They cater pickleball, basketball, badminton reservation and also they have boxing, muaythai and lastly weights.read more. From the business: We specialize ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/217JDP": {
+      "canonicalUrl": "https://reclub.co/m/217JDP",
+      "latestUrl": "https://reclub.co/m/217JDP",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "sports center Bocaue Bulacan pickleball",
+      "title": "Pickle Ball open play By DailyDose protein",
+      "snippet": "Friendly pickleball open play at Dink District PH, Bocaue Bulacan! Open to all skill levels - beginners to experienced players. Fair rotations, great games, and ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/central-luzon/bocaue": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/central-luzon/bocaue",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/bocaue",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "Bocaue pickleball",
+      "title": "Bocaue PickleBall Stays and Rentals",
+      "snippet": "We offer a variety of premium rental properties, resorts, and hotels with private pickleball courts or nearby facilities in Bocaue. Whether you're a beginner or ...",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/RGYAT7": {
+      "canonicalUrl": "https://reclub.co/m/RGYAT7",
+      "latestUrl": "https://reclub.co/m/RGYAT7",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "pickleball reservations Bocaue Bulacan",
+      "title": "All Levels Open Play at Dink District",
+      "snippet": "Pickleball Open Play is ON at Dink District - Batia, Bocaue — Just have fun, the court is calling! 2 Courts ⏱️ 6PM - 11PM",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://localgymsandfitness.com/PH/Bocaue/973847929138261/The-Pickle-Pad": {
+      "canonicalUrl": "https://localgymsandfitness.com/PH/Bocaue/973847929138261/The-Pickle-Pad",
+      "latestUrl": "https://www.localgymsandfitness.com/PH/Bocaue/973847929138261/The-Pickle-Pad",
+      "firstDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "lastDiscoveredAt": "2026-03-10T07:02:58.773Z",
+      "sourceQuery": "pickleball reservations Bocaue Bulacan",
+      "title": "The Pickle Pad - Bocaue",
+      "snippet": "This is The Pickle Pad (TPP). Your neighbourhood pickleball hub. Play. Connect. Have fun! Tambubong, Bocaue, Bulacan All levels welcome Together ...",
+      "domain": "localgymsandfitness.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

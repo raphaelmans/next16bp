@@ -1,0 +1,69 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Valencia (Luzurriaga)",
+    "citySlug": "valencia-luzurriaga",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:13:14.966Z",
+  "queries": [
+    "site:facebook.com pickleball Valencia (Luzurriaga) Negros Oriental",
+    "site:facebook.com \"Valencia (Luzurriaga)\" \"Negros Oriental\" \"pickleball\"",
+    "site:facebook.com \"Valencia (Luzurriaga)\" \"pickleball club\"",
+    "site:facebook.com \"Valencia (Luzurriaga)\" \"pickleball court\"",
+    "site:facebook.com \"Negros Oriental\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Negros-Oriental-Pickleball-Club-61557985336286/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/ChadaSKValencia/posts/get-ready-valencia-this-isnt-just-another-game-dayits-a-celebration-of-local-tal/1199477245522673/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/events/934086205806719/?acontext=%7B%22action_history%22%3A%22null%22%7D&ref_source=newsfeed&ref_mechanism=feed_attachment",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1419555523098377/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451711993216063/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451903079863621/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451600926560503/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1449718153415447/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1440912950962634/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1452474419806487/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1451518973235365/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/valencia-luzurriaga/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/negros-oriental/valencia-luzurriaga/facebook-pages.state.json"
+}

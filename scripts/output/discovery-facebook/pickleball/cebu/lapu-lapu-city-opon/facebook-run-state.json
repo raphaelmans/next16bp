@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cebu:lapu-lapu-city-opon:facebook",
   "createdAt": "2026-03-09T17:24:20.171Z",
-  "updatedAt": "2026-03-09T17:28:22.571Z",
+  "updatedAt": "2026-03-10T05:43:07.114Z",
   "scope": {
     "provinceSlug": "cebu",
     "citySlug": "lapu-lapu-city-opon",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:22.570Z",
+      "finishedAt": "2026-03-10T05:43:07.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:22.571Z",
+      "finishedAt": "2026-03-10T05:43:07.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:22.571Z",
+      "finishedAt": "2026-03-10T05:43:07.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:22.571Z",
+      "finishedAt": "2026-03-10T05:43:07.113Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

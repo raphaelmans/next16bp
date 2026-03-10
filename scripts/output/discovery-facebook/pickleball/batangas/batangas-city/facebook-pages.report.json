@@ -1,0 +1,161 @@
+{
+  "scope": {
+    "provinceName": "Batangas",
+    "provinceSlug": "batangas",
+    "cityName": "Batangas City",
+    "citySlug": "batangas-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:25:08.616Z",
+  "queries": [
+    "site:facebook.com pickleball Batangas City Batangas",
+    "site:facebook.com \"Batangas City\" \"Batangas\" \"pickleball\"",
+    "site:facebook.com \"Batangas City\" \"pickleball club\"",
+    "site:facebook.com \"Batangas City\" \"pickleball court\"",
+    "site:facebook.com \"Batangas\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/EJs-Pickleball-Lounge-61579049522050/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Club-61566591501722/",
+    "https://www.facebook.com/p/Batangas-City-Pickleball-Club-61575645631229/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Arena-61578531977462/",
+    "https://www.facebook.com/474219265766513"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4275008152787393/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4372140529740821/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4341305246157683/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4163041087317434/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466969054764961/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135864206701789/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4275008152787393/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4163041087317434/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1194654515329751/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4275008152787393/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4341305246157683/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135864206701789/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466969054764961/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4381131165508424/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4352728041682070/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/spinp/posts/1844152419603516/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4275008152787393/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4144305829190960/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4163041087317434/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566591501722/videos/1884617698834785/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 17
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/batangas-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/batangas-city/facebook-pages.state.json"
+}

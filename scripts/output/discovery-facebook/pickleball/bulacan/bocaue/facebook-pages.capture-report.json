@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "bocaue",
+    "provinceName": "Bulacan",
+    "cityName": "Bocaue"
+  },
+  "generatedAt": "2026-03-10T07:10:02.825Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 5,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 5,
+  "failedCount": 0,
+  "readyCount": 3,
+  "reviewCount": 1,
+  "skipCount": 1,
+  "csvRowCount": 1,
+  "failures": []
+}

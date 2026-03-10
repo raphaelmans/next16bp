@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T05:14:30.284Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 1
+  },
+  "discoveredUrls": 11,
+  "scrapedUrls": 2,
+  "noDataUrls": 9,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T05:14:30.284Z",
+      "lastSeenAt": "2026-03-10T05:14:30.284Z"
+    },
+    {
+      "rowKey": "violago compound|philippines|central luzon",
+      "name": "Violago Compound",
+      "city": "Philippines",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound",
+      "firstSeenAt": "2026-03-10T05:14:30.284Z",
+      "lastSeenAt": "2026-03-10T05:14:30.284Z"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:city-of-valenzuela",
+  "createdAt": "2026-03-10T05:57:09.047Z",
+  "updatedAt": "2026-03-10T06:00:30.653Z",
+  "urls": {
+    "https://facebook.com/TheSmashCityPH": {
+      "canonicalUrl": "https://facebook.com/TheSmashCityPH",
+      "latestUrl": "https://www.facebook.com/TheSmashCityPH/",
+      "firstCapturedAt": "2026-03-10T05:57:14.046Z",
+      "lastCapturedAt": "2026-03-10T05:57:14.046Z",
+      "status": "captured",
+      "title": "The Smash City | Valenzuela | Facebook",
+      "venueName": "The Smash City",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/valpickleball": {
+      "canonicalUrl": "https://facebook.com/valpickleball",
+      "latestUrl": "https://www.facebook.com/valpickleball/",
+      "firstCapturedAt": "2026-03-10T05:57:51.409Z",
+      "lastCapturedAt": "2026-03-10T05:57:51.409Z",
+      "status": "captured",
+      "title": "Valenzuela Pickleball Association | Facebook",
+      "venueName": "Valenzuela Pickleball Association",
+      "confidence": "medium",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879": {
+      "canonicalUrl": "https://facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879",
+      "latestUrl": "https://www.facebook.com/p/Smash-Plus-Badminton-Pickleball-Court-61580003362879/",
+      "firstCapturedAt": "2026-03-10T05:58:12.143Z",
+      "lastCapturedAt": "2026-03-10T05:58:12.143Z",
+      "status": "captured",
+      "title": "Smash Plus Badminton & Pickleball Court | Valenzuela | Facebook",
+      "venueName": "Smash Plus Badminton & Pickleball Court",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/109283081226076": {
+      "canonicalUrl": "https://facebook.com/109283081226076",
+      "latestUrl": "https://www.facebook.com/109283081226076",
+      "firstCapturedAt": "2026-03-10T05:58:47.887Z",
+      "lastCapturedAt": "2026-03-10T05:58:47.887Z",
+      "status": "captured",
+      "title": "Valenzuela Pickleball Association | Facebook",
+      "venueName": "Valenzuela Pickleball Association",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/tecniqsports": {
+      "canonicalUrl": "https://facebook.com/tecniqsports",
+      "latestUrl": "https://www.facebook.com/tecniqsports/",
+      "firstCapturedAt": "2026-03-10T05:59:09.220Z",
+      "lastCapturedAt": "2026-03-10T05:59:09.220Z",
+      "status": "captured",
+      "title": "TecniQ Sports | Valenzuela | Facebook",
+      "venueName": "TecniQ Sports",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=122124457274130515&id=61553915459800&set=a.122106075644130515": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=122124457274130515&id=61553915459800&set=a.122106075644130515",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=122124457274130515&id=61553915459800&set=a.122106075644130515",
+      "firstCapturedAt": "2026-03-10T05:59:40.626Z",
+      "lastCapturedAt": "2026-03-10T05:59:40.626Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Sangguniang Kabataan ng Veinte Reales",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-10T06:00:05.817Z",
+      "lastCapturedAt": "2026-03-10T06:00:05.817Z",
+      "status": "captured",
+      "title": "Manila Pickleball Club | Manila | Facebook",
+      "venueName": "Manila Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

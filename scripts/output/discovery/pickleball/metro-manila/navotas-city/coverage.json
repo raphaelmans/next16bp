@@ -1,0 +1,31 @@
+{
+  "generatedAt": "2026-03-10T04:39:44.258Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 1,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 1,
+  "migratedRows": 0,
+  "pendingMigrationRows": 1,
+  "pending": [
+    {
+      "rowKey": "nbc court|navotas city|metro manila",
+      "name": "Nbc Court",
+      "city": "NAVOTAS CITY",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/metro-manila/navotas/nbc-court",
+      "firstSeenAt": "2026-03-10T04:39:44.258Z",
+      "lastSeenAt": "2026-03-10T04:39:44.258Z"
+    }
+  ]
+}

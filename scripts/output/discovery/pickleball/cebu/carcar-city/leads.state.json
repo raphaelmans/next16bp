@@ -1,0 +1,63 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:carcar-city",
+  "createdAt": "2026-03-10T05:20:22.242Z",
+  "updatedAt": "2026-03-10T05:21:03.669Z",
+  "queries": [
+    "pickleball courts in Cebu Carcar City",
+    "pickleball court Carcar City Cebu",
+    "Carcar City pickleball",
+    "courts in Carcar City Cebu pickleball",
+    "sports center Carcar City Cebu pickleball",
+    "pickleball club Carcar City Cebu",
+    "pickleball reservations Carcar City Cebu",
+    "host-map:cebupickleballcourts.com:Carcar City",
+    "host-map:cebupickleballcourts.com:Carcar",
+    "host-map:dumapickleball.com:Carcar City",
+    "host-map:dumapickleball.com:Carcar",
+    "site:cebupickleballcourts.com Carcar City Cebu pickleball",
+    "site:dumapickleball.com Carcar City Cebu pickleball",
+    "site:pickleheads.com pickleball Carcar City Cebu",
+    "site:playtimescheduler.com pickleball Carcar City Cebu",
+    "site:app.court-access.com pickleball Carcar City Cebu",
+    "dink Carcar City pickleball"
+  ],
+  "urls": {
+    "https://youtube.com/watch?v=Mxy2AXRmZAU": {
+      "canonicalUrl": "https://youtube.com/watch?v=Mxy2AXRmZAU",
+      "latestUrl": "https://www.youtube.com/watch?v=Mxy2AXRmZAU",
+      "firstDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "lastDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "sourceQuery": "dink Carcar City pickleball",
+      "title": "Pickleball at Carcar Academy",
+      "snippet": "Pickleball at Carcar Academy. 26 views · 5 months ago ...more. John Jason Francisco. 1.89K. Subscribe. 0. Share. Save. Report ...",
+      "domain": "youtube.com",
+      "relevanceScore": 1,
+      "handedOffToScrapeAt": null
+    },
+    "https://cebudailynews.inquirer.net/694363/pickleball-with-a-dance-break-in-cebu-goes-viral": {
+      "canonicalUrl": "https://cebudailynews.inquirer.net/694363/pickleball-with-a-dance-break-in-cebu-goes-viral",
+      "latestUrl": "https://cebudailynews.inquirer.net/694363/pickleball-with-a-dance-break-in-cebu-goes-viral",
+      "firstDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "lastDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "sourceQuery": "sports center Carcar City Cebu pickleball",
+      "title": "Pickleball with a dance break in Cebu goes viral",
+      "snippet": "Pickleball with a dance break in Cebu goes viral, involving pickleball players in Cebu dancing during a game to the tune of \"I Love Cebu.\"",
+      "domain": "cebudailynews.inquirer.net",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-visayas/cebu-city": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/cebu-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/cebu-city",
+      "firstDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "lastDiscoveredAt": "2026-03-10T05:20:22.243Z",
+      "sourceQuery": "pickleball courts in Cebu Carcar City",
+      "title": "7 Most Popular Pickleball Courts in Cebu City, Central Visayas",
+      "snippet": "How many pickleball courts are there in Cebu City? There are 7 pickleball locations with 25 courts in Cebu City.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

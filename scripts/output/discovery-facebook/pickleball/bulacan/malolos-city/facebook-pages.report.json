@@ -1,0 +1,205 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Malolos City",
+    "citySlug": "malolos-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:38:01.047Z",
+  "queries": [
+    "site:facebook.com pickleball Malolos City Bulacan",
+    "site:facebook.com \"Malolos City\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Malolos City\" \"pickleball club\"",
+    "site:facebook.com \"Malolos City\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+    "https://www.facebook.com/p/PickleFit-61579610165193/",
+    "https://www.facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/posts/thinking-of-trying-pickleball-for-the-first-time-now-is-the-perfect-time-our-ses/889342107411626/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61580009804712/photos/curious-about-pickleball-start-your-journey-with-us-learn-the-fundamentals-build/122124572907000326/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/posts/good-vibes-only-at-open-play-tomorrow-dont-miss-outscan-the-qr-code-below-to-sec/885958364416667/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/mentions/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61580009804712/posts/curious-about-pickleball-start-your-journey-with-us-learn-the-fundamentals-build/122124572709000326/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/photos/d41d8cd9/889400554072448/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3893991880889024/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2316104552188477/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/27610152248/posts/10164306032317249/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2404988546633410/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/VistaMallMalolosOfficial/posts/-guess-what-malolos-the-wait-is-finally-over-your-very-own-pickleball-court-open/798992966025956/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61579610165193/posts/its-back-round-2-titan-pickleball-machine-is-visiting-us-for-the-second-time-get/122139640328987005/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/photos/d41d8cd9/750097771336061/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61579610165193/videos/havent-played-in-over-a-weekno-wonder-youre-a-little-unhingedplay-now-at-picklef/849147484681740/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/photos/d41d8cd9/889400554072448/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/photos/d41d8cd9/816990457980125/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/184369232192372/posts/1952385412057403/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2404988546633410/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3893991880889024/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/milette.vizcarra/posts/10164645409890948/",
+      "score": 13
+    },
+    {
+      "url": "https://m.facebook.com/100090075351674/photos/750097704669401/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/865366504095390/posts/1882378112394219/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579610165193/videos/havent-played-in-over-a-weekno-wonder-youre-a-little-unhingedplay-now-at-picklef/849147484681740/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/VistaMallMalolosOfficial/posts/-guess-what-malolos-the-wait-is-finally-over-your-very-own-pickleball-court-open/798992966025956/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cityofmalolospickleballclub/photos/d41d8cd9/816990457980125/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/VistaMallMalolosOfficial/posts/-its-game-on-picklefit-is-now-open-at-vista-mall-malolos-big-playsintense-rallie/881577994434119/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/305530363245916/posts/2404988546633410/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/850811986380674/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/greenhillsofficial/posts/new-year-new-goals-new-game-welcome-2026-with-exciting-matches-skill-building-se/1315148467318970/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4129111110710432/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4323165497971658/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61573436911789/videos/yes-our-100-day-pass-is-still-here-at-spin-republicplay-all-day-from-1000-am-to-/697578999646484/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/ParkRangerPH/posts/weekend-court-brew-at-domesal-sports-events-%EF%B8%8Fdomesalph-bulihan-city-of-malolos/1311210784360055/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/malolos-city/facebook-pages.state.json"
+}

@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:san-mateo",
+  "createdAt": "2026-03-10T05:57:59.920Z",
+  "updatedAt": "2026-03-10T06:01:42.553Z",
+  "scope": {
+    "provinceSlug": "rizal",
+    "citySlug": "san-mateo",
+    "provinceName": "Rizal",
+    "cityName": "San Mateo",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "6da282f8-eff9-4cfb-8cb4-1e93bf9a91a3"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:57:59.921Z",
+      "finishedAt": "2026-03-10T05:58:22.295Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:58:22.296Z",
+      "finishedAt": "2026-03-10T05:58:55.559Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:58:55.562Z",
+      "finishedAt": "2026-03-10T05:59:42.841Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:59:44.507Z",
+      "finishedAt": "2026-03-10T06:00:28.404Z",
+      "lastError": null,
+      "notes": "processed 1 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:00:28.415Z",
+      "lastError": null,
+      "notes": "verified 1 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:00:28.499Z",
+      "finishedAt": "2026-03-10T06:01:42.476Z",
+      "lastError": null,
+      "notes": "backfilled 1 place ids"
+    }
+  }
+}

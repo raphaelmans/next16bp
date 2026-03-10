@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:batangas:lipa-city",
+  "createdAt": "2026-03-10T05:34:59.128Z",
+  "updatedAt": "2026-03-10T05:38:00.455Z",
+  "urls": {
+    "https://facebook.com/p/Banay-Banay-Pickleball-61577112863684": {
+      "canonicalUrl": "https://facebook.com/p/Banay-Banay-Pickleball-61577112863684",
+      "latestUrl": "https://www.facebook.com/p/Banay-Banay-Pickleball-61577112863684/",
+      "firstCapturedAt": "2026-03-10T05:35:02.692Z",
+      "lastCapturedAt": "2026-03-10T05:35:02.692Z",
+      "status": "captured",
+      "title": "Banay-Banay Pickleball | Facebook",
+      "venueName": "Banay-Banay Pickleball",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/LipaRacketClub": {
+      "canonicalUrl": "https://facebook.com/LipaRacketClub",
+      "latestUrl": "https://www.facebook.com/LipaRacketClub/",
+      "firstCapturedAt": "2026-03-10T05:35:24.826Z",
+      "lastCapturedAt": "2026-03-10T05:35:24.826Z",
+      "status": "captured",
+      "title": "Lipa Racket Club | Lipa City | Facebook",
+      "venueName": "Lipa Racket Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Batangas-Pickleball-Club-61566591501722": {
+      "canonicalUrl": "https://facebook.com/p/Batangas-Pickleball-Club-61566591501722",
+      "latestUrl": "https://www.facebook.com/p/Batangas-Pickleball-Club-61566591501722/",
+      "firstCapturedAt": "2026-03-10T05:35:43.685Z",
+      "lastCapturedAt": "2026-03-10T05:35:43.685Z",
+      "status": "captured",
+      "title": "Batangas Pickleball Club | Malvar | Facebook",
+      "venueName": "Batangas Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Batangas-Pickleball-Arena-61578531977462": {
+      "canonicalUrl": "https://facebook.com/p/Batangas-Pickleball-Arena-61578531977462",
+      "latestUrl": "https://www.facebook.com/p/Batangas-Pickleball-Arena-61578531977462/",
+      "firstCapturedAt": "2026-03-10T05:36:04.961Z",
+      "lastCapturedAt": "2026-03-10T05:36:04.961Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)",
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Batangas-City-Pickleball-Club-61575645631229": {
+      "canonicalUrl": "https://facebook.com/p/Batangas-City-Pickleball-Club-61575645631229",
+      "latestUrl": "https://www.facebook.com/p/Batangas-City-Pickleball-Club-61575645631229/",
+      "firstCapturedAt": "2026-03-10T05:36:46.667Z",
+      "lastCapturedAt": "2026-03-10T05:36:46.667Z",
+      "status": "captured",
+      "title": "Batangas City Pickleball Club | Facebook",
+      "venueName": "Batangas City Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/EJs-Pickleball-Lounge-61579049522050": {
+      "canonicalUrl": "https://facebook.com/p/EJs-Pickleball-Lounge-61579049522050",
+      "latestUrl": "https://www.facebook.com/p/EJs-Pickleball-Lounge-61579049522050/",
+      "firstCapturedAt": "2026-03-10T05:37:27.815Z",
+      "lastCapturedAt": "2026-03-10T05:37:27.815Z",
+      "status": "captured",
+      "title": "EJ's Pickleball Lounge | Batangas City | Facebook",
+      "venueName": "EJ's Pickleball Lounge",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/474219265766513": {
+      "canonicalUrl": "https://facebook.com/474219265766513",
+      "latestUrl": "https://www.facebook.com/474219265766513",
+      "firstCapturedAt": "2026-03-10T05:37:44.608Z",
+      "lastCapturedAt": "2026-03-10T05:37:44.608Z",
+      "status": "captured",
+      "title": "Batangas Pickleball Club | Malvar | Facebook",
+      "venueName": "Batangas Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

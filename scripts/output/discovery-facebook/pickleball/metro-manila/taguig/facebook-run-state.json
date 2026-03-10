@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:taguig:facebook",
   "createdAt": "2026-03-09T17:14:43.664Z",
-  "updatedAt": "2026-03-09T17:29:12.550Z",
+  "updatedAt": "2026-03-10T06:06:56.318Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "taguig",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": "2026-03-09T17:15:20.952Z",
-      "finishedAt": "2026-03-09T17:29:12.550Z",
+      "finishedAt": "2026-03-10T06:06:56.318Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:29:12.550Z",
+      "finishedAt": "2026-03-10T06:06:56.318Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:29:12.550Z",
+      "finishedAt": "2026-03-10T06:06:56.318Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:29:12.550Z",
+      "finishedAt": "2026-03-10T06:06:56.318Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

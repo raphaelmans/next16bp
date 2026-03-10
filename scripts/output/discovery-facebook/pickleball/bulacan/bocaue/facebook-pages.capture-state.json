@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:bocaue",
+  "createdAt": "2026-03-10T07:08:22.398Z",
+  "updatedAt": "2026-03-10T07:10:02.833Z",
+  "urls": {
+    "https://facebook.com/thepicklepadbocaue": {
+      "canonicalUrl": "https://facebook.com/thepicklepadbocaue",
+      "latestUrl": "https://www.facebook.com/thepicklepadbocaue/",
+      "firstCapturedAt": "2026-03-10T07:08:24.477Z",
+      "lastCapturedAt": "2026-03-10T07:08:24.477Z",
+      "status": "captured",
+      "title": "The Pickle Pad | Bocaue | Facebook",
+      "venueName": "The Pickle Pad",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Pad"
+    },
+    "https://facebook.com/973847929138261": {
+      "canonicalUrl": "https://facebook.com/973847929138261",
+      "latestUrl": "https://www.facebook.com/973847929138261",
+      "firstCapturedAt": "2026-03-10T07:08:57.855Z",
+      "lastCapturedAt": "2026-03-10T07:08:57.855Z",
+      "status": "captured",
+      "title": "The Pickle Pad | Bocaue | Facebook",
+      "venueName": "The Pickle Pad",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Pad"
+    },
+    "https://facebook.com/p/Dink-District-PH-61583265851622": {
+      "canonicalUrl": "https://facebook.com/p/Dink-District-PH-61583265851622",
+      "latestUrl": "https://www.facebook.com/p/Dink-District-PH-61583265851622/",
+      "firstCapturedAt": "2026-03-10T07:09:14.390Z",
+      "lastCapturedAt": "2026-03-10T07:09:14.390Z",
+      "status": "captured",
+      "title": "Dink District PH | Bocaue | Facebook",
+      "venueName": "Dink District PH",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/thepicklepadbocaue?locale=es_LA": {
+      "canonicalUrl": "https://facebook.com/thepicklepadbocaue?locale=es_LA",
+      "latestUrl": "https://www.facebook.com/thepicklepadbocaue/?locale=es_LA",
+      "firstCapturedAt": "2026-03-10T07:09:30.021Z",
+      "lastCapturedAt": "2026-03-10T07:09:30.021Z",
+      "status": "captured",
+      "title": "The Pickle Pad | Bocaue | Facebook",
+      "venueName": "The Pickle Pad",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickle Pad"
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T07:09:44.945Z",
+      "lastCapturedAt": "2026-03-10T07:09:44.945Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

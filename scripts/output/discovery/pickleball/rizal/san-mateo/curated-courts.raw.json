@@ -1,0 +1,85 @@
+{
+  "generatedAt": "2026-03-10T05:58:22.297Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 9,
+  "candidateUrlsCount": 9,
+  "candidateUrlsSelectedForRunCount": 9,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+    "https://app.sports360.ph/sportshub/pickle-camp",
+    "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+    "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+    "https://www.pickleheads.com/courts/us/california/san-mateo",
+    "https://www.sanmateoelks1112.org/copy-of-handball",
+    "https://pickleballsanmateo.com/",
+    "https://reclub.co/clubs/@san-mateo-pickleball-community",
+    "https://www.pickleball.ph/pickleball-clubs.html"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+    "https://app.sports360.ph/sportshub/pickle-camp",
+    "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+    "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+    "https://www.pickleheads.com/courts/us/california/san-mateo",
+    "https://www.sanmateoelks1112.org/copy-of-handball",
+    "https://pickleballsanmateo.com/",
+    "https://reclub.co/clubs/@san-mateo-pickleball-community",
+    "https://www.pickleball.ph/pickleball-clubs.html"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+    "https://app.sports360.ph/sportshub/pickle-camp",
+    "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+    "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+    "https://www.pickleheads.com/courts/us/california/san-mateo",
+    "https://www.sanmateoelks1112.org/copy-of-handball",
+    "https://pickleballsanmateo.com/",
+    "https://reclub.co/clubs/@san-mateo-pickleball-community",
+    "https://www.pickleball.ph/pickleball-clubs.html"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Moncarlo Village Basketball Court",
+        "address": "San Mateo, Calabarzon, Philippines",
+        "city": "SAN MATEO",
+        "province": "RIZAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 0,
+    "aiResolved": 1,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

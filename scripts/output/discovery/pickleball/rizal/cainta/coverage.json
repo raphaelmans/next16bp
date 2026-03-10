@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T05:04:35.861Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 6,
+  "scrapedUrls": 2,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "pedci pickleball courts|cainta|rizal",
+      "name": "Pedci Pickleball Courts",
+      "city": "CAINTA",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "firstSeenAt": "2026-03-10T05:04:35.861Z",
+      "lastSeenAt": "2026-03-10T05:04:35.861Z"
+    },
+    {
+      "rowKey": "st francis covered court|cainta|rizal",
+      "name": "St Francis Covered Court",
+      "city": "CAINTA",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "firstSeenAt": "2026-03-10T05:04:35.861Z",
+      "lastSeenAt": "2026-03-10T05:04:35.861Z"
+    }
+  ]
+}

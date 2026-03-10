@@ -1,0 +1,70 @@
+{
+  "generatedAt": "2026-03-10T04:53:41.233Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 4,
+  "candidateUrlsCount": 4,
+  "candidateUrlsSelectedForRunCount": 4,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+    "https://app.court-access.com/",
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+    "https://app.court-access.com/",
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+    "https://app.court-access.com/",
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "Ace Covered Pickleball Court",
+        "address": "Sibulan, Central Visayas, Philippines",
+        "city": "SIBULAN",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 1,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 1,
+    "pendingMigrationRows": 1,
+    "dbCoverageEnabled": false
+  }
+}

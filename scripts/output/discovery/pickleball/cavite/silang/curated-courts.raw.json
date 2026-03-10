@@ -1,0 +1,103 @@
+{
+  "generatedAt": "2026-03-10T07:07:31.132Z",
+  "startUrl": "https://kudoscourts.com/",
+  "sportSlug": "pickleball",
+  "sourceUrlsCount": 8,
+  "candidateUrlsCount": 8,
+  "candidateUrlsSelectedForRunCount": 8,
+  "skippedAlreadyScrapedUrlsCount": 0,
+  "sourceUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+    "https://reclub.co/clubs/@hideout-pickleball-court",
+    "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang",
+    "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+    "https://www.airbnb.co.nz/rooms/1573053827917103698",
+    "https://reclub.co/clubs/@powerhouse-pickleball-club",
+    "https://reclub.co/clubs/@riviera-silang-pickleball-club",
+    "https://reclub.co/m/W1YRNF"
+  ],
+  "candidateUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+    "https://reclub.co/clubs/@hideout-pickleball-court",
+    "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang",
+    "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+    "https://www.airbnb.co.nz/rooms/1573053827917103698",
+    "https://reclub.co/clubs/@powerhouse-pickleball-club",
+    "https://reclub.co/clubs/@riviera-silang-pickleball-club",
+    "https://reclub.co/m/W1YRNF"
+  ],
+  "candidateUrlsSelectedForRun": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+    "https://reclub.co/clubs/@hideout-pickleball-court",
+    "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang",
+    "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+    "https://www.airbnb.co.nz/rooms/1573053827917103698",
+    "https://reclub.co/clubs/@powerhouse-pickleball-club",
+    "https://reclub.co/clubs/@riviera-silang-pickleball-club",
+    "https://reclub.co/m/W1YRNF"
+  ],
+  "skippedAlreadyScrapedUrls": [],
+  "usedSports360ApiFallback": false,
+  "usedPickleheadsUrlFallback": true,
+  "usedDiscoverOnlyMode": false,
+  "usedCrawlOnlyMode": false,
+  "rawRecords": [
+    {
+      "row": {
+        "name": "South Forbes Villas Pickleball",
+        "address": "Silang, Calabarzon, Philippines",
+        "city": "SILANG",
+        "province": "CAVITE",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball"
+    },
+    {
+      "row": {
+        "name": "The Riviera Sports And Country Club Inc",
+        "address": "Philippines, Calabarzon, Philippines",
+        "city": "PORT AREA",
+        "province": "METRO MANILA",
+        "country": "PH",
+        "time_zone": "Asia/Manila",
+        "latitude": "",
+        "longitude": "",
+        "facebook_url": "",
+        "instagram_url": "",
+        "viber_contact": "",
+        "website_url": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+        "other_contact_info": "",
+        "amenities": "",
+        "courts": "pickleball|",
+        "photo_urls": ""
+      },
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc"
+    }
+  ],
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0,
+    "locationsFile": "public/assets/files/ph-provinces-cities.enriched.json",
+    "locationModel": "gpt-4.1-mini"
+  },
+  "extractItems": [],
+  "coverageSummary": {
+    "discoveredRows": 2,
+    "pendingMigrationRows": 2,
+    "dbCoverageEnabled": false
+  }
+}

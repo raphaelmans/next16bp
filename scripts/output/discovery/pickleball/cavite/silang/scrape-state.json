@@ -1,0 +1,124 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T07:07:31.132Z",
+  "updatedAt": "2026-03-10T07:07:52.051Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "south forbes villas pickleball|silang|cavite",
+      "lastRowName": "South Forbes Villas Pickleball"
+    },
+    "https://reclub.co/clubs/@hideout-pickleball-court": {
+      "canonicalUrl": "https://reclub.co/clubs/@hideout-pickleball-court",
+      "latestUrl": "https://reclub.co/clubs/@hideout-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang": {
+      "canonicalUrl": "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang",
+      "latestUrl": "https://www.threads.com/@janellajoyag_/post/DVN-6h7k_vy/wala-silang-court-rentals-lang",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "the riviera sports and country club inc|port area|metro manila",
+      "lastRowName": "The Riviera Sports And Country Club Inc"
+    },
+    "https://www.airbnb.co.nz/rooms/1573053827917103698": {
+      "canonicalUrl": "https://www.airbnb.co.nz/rooms/1573053827917103698",
+      "latestUrl": "https://www.airbnb.co.nz/rooms/1573053827917103698",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@powerhouse-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@powerhouse-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@powerhouse-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@riviera-silang-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@riviera-silang-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@riviera-silang-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/W1YRNF": {
+      "canonicalUrl": "https://reclub.co/m/W1YRNF",
+      "latestUrl": "https://reclub.co/m/W1YRNF",
+      "firstDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "lastDiscoveredAt": "2026-03-10T07:07:31.132Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:07:31.132Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "south forbes villas pickleball|silang|cavite": {
+      "rowKey": "south forbes villas pickleball|silang|cavite",
+      "name": "South Forbes Villas Pickleball",
+      "city": "SILANG",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+      "firstSeenAt": "2026-03-10T07:07:31.132Z",
+      "lastSeenAt": "2026-03-10T07:07:31.132Z"
+    },
+    "the riviera sports and country club inc|port area|metro manila": {
+      "rowKey": "the riviera sports and country club inc|port area|metro manila",
+      "name": "The Riviera Sports And Country Club Inc",
+      "city": "PORT AREA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+      "firstSeenAt": "2026-03-10T07:07:31.132Z",
+      "lastSeenAt": "2026-03-10T07:07:31.132Z"
+    }
+  }
+}

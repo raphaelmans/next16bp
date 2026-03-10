@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "san-fernando-city",
+    "provinceName": "Pampanga",
+    "cityName": "San Fernando City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:11:57.062Z",
+      "finishedAt": "2026-03-10T05:12:35.087Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:12:35.089Z",
+      "finishedAt": "2026-03-10T05:13:00.474Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T05:13:00.476Z",
+      "finishedAt": "2026-03-10T05:13:23.504Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T05:13:24.096Z",
+      "finishedAt": "2026-03-10T05:13:24.181Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for san-fernando-city, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T05:13:24.181Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for san-fernando-city"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T05:13:24.181Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

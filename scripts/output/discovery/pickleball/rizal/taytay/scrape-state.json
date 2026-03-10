@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:07:16.950Z",
+  "updatedAt": "2026-03-10T05:07:52.630Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "mission hills clubhouse|taytay|rizal",
+      "lastRowName": "Mission Hills Clubhouse"
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/taytay": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/J9B0XC": {
+      "canonicalUrl": "https://reclub.co/m/J9B0XC",
+      "latestUrl": "https://reclub.co/m/J9B0XC",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/B987Z0": {
+      "canonicalUrl": "https://reclub.co/m/B987Z0",
+      "latestUrl": "https://reclub.co/m/B987Z0",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/Y5PEV6": {
+      "canonicalUrl": "https://reclub.co/m/Y5PEV6",
+      "latestUrl": "https://reclub.co/m/Y5PEV6",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/communities/Antipolo,%20Taytay-438": {
+      "canonicalUrl": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "latestUrl": "https://reclub.co/communities/Antipolo,%20Taytay-438",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/0JQRQZ": {
+      "canonicalUrl": "https://reclub.co/m/0JQRQZ",
+      "latestUrl": "https://reclub.co/m/0JQRQZ",
+      "firstDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "lastDiscoveredAt": "2026-03-10T05:07:16.950Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:07:16.950Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "mission hills clubhouse|taytay|rizal": {
+      "rowKey": "mission hills clubhouse|taytay|rizal",
+      "name": "Mission Hills Clubhouse",
+      "city": "TAYTAY",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/taytay/mission-hills-clubhouse",
+      "firstSeenAt": "2026-03-10T05:07:16.950Z",
+      "lastSeenAt": "2026-03-10T05:07:16.950Z"
+    }
+  }
+}

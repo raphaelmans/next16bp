@@ -1,0 +1,55 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:09:57.759Z",
+  "updatedAt": "2026-03-10T05:10:19.090Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+      "firstDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:09:57.759Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "marquee place sports zone|angeles city|pampanga",
+      "lastRowName": "Marquee Place Sports Zone"
+    },
+    "https://www.youtube.com/watch?v=6rYPBnHv4BM": {
+      "canonicalUrl": "https://www.youtube.com/watch?v=6rYPBnHv4BM",
+      "latestUrl": "https://www.youtube.com/watch?v=6rYPBnHv4BM",
+      "firstDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:09:57.759Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_08.06.23.pdf",
+      "firstDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "lastDiscoveredAt": "2026-03-10T05:09:57.759Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "marquee place sports zone|angeles city|pampanga": {
+      "rowKey": "marquee place sports zone|angeles city|pampanga",
+      "name": "Marquee Place Sports Zone",
+      "city": "ANGELES CITY",
+      "province": "PAMPANGA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/angeles/marquee-place-sports-zone",
+      "firstSeenAt": "2026-03-10T05:09:57.759Z",
+      "lastSeenAt": "2026-03-10T05:09:57.759Z"
+    }
+  }
+}

@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:cainta",
+  "createdAt": "2026-03-10T05:04:07.416Z",
+  "updatedAt": "2026-03-10T05:04:35.297Z",
+  "queries": [
+    "pickleball courts in Rizal Cainta",
+    "pickleball court Cainta Rizal",
+    "Cainta pickleball",
+    "courts in Cainta Rizal pickleball",
+    "sports center Cainta Rizal pickleball",
+    "pickleball club Cainta Rizal",
+    "pickleball reservations Cainta Rizal",
+    "host-map:cebupickleballcourts.com:Cainta",
+    "host-map:dumapickleball.com:Cainta",
+    "site:cebupickleballcourts.com Cainta Rizal pickleball",
+    "site:dumapickleball.com Cainta Rizal pickleball"
+  ],
+  "urls": {
+    "https://athletecentral.fit/": {
+      "canonicalUrl": "https://athletecentral.fit/",
+      "latestUrl": "https://athletecentral.fit/",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "pickleball reservations Cainta Rizal",
+      "title": "Athlete Central Cainta 24/7 - Pickleball Badminton Billiards ...",
+      "snippet": "7 Dedicated Pickleball Courts · 4 Hybrid Courts (perfect for both Pickleball and Badminton) · 10 Rasson's® Billiard Tables · 7 Archery Ranges · 2 Private Family KTV ...",
+      "domain": "athletecentral.fit",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "pickleball reservations Cainta Rizal",
+      "title": "PEDCI Pickleball Courts",
+      "snippet": "PEDCI Pickleball Courts is a place to play pickleball in Cainta, Calabarzon. There are 6 outdoor hard courts. These are dedicated courts with permanent lines ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://playtimescheduler.com/region/cainta-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "Cainta pickleball",
+      "title": "Find Pickleball Games in Cainta, Rizal, Luzon",
+      "snippet": "PlayTime Scheduler is a free site that lets you easily arrange pickleball games and play sessions with other players in your area.",
+      "domain": "playtimescheduler.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta": {
+      "canonicalUrl": "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta",
+      "latestUrl": "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta/",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "sports center Cainta Rizal pickleball",
+      "title": "Check Out Athlete Central, the Newest Sports Hub in Cainta - ALL-STAR",
+      "snippet": "So if you're in Rizal and itching to run full court, smash a shuttle, or get into your pickleball groove, this is your spot. Check out the ...",
+      "domain": "all-starmagazine.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "courts in Cainta Rizal pickleball",
+      "title": "Play Pickleball at St. Francis Covered Court",
+      "snippet": "St. Francis Covered Court is a place to play pickleball in Cainta, Calabarzon. There is 1 outdoor hard court. The lines are permanent, but you'll need to bring ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@victory-pickleball-club-cainta": {
+      "canonicalUrl": "https://reclub.co/clubs/@victory-pickleball-club-cainta",
+      "latestUrl": "https://reclub.co/clubs/@victory-pickleball-club-cainta",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "pickleball club Cainta Rizal",
+      "title": "Victory Pickleball Club - Cainta",
+      "snippet": "Come and have some fun playing pickleball at Victory Cainta. ‎ ‎Pickleball with Christians ‎⏰ Thu, Jun 19 12:00PM - 5:00 PM ‎ Victory Cainta",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/KDSU3X": {
+      "canonicalUrl": "https://reclub.co/m/KDSU3X",
+      "latestUrl": "https://reclub.co/m/KDSU3X",
+      "firstDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:07.418Z",
+      "sourceQuery": "sports center Cainta Rizal pickleball",
+      "title": "Pickleball Open Play",
+      "snippet": "Pickleball Open Play. Monday, Feb 16 @ 3:00 PM5 hours. Monday, Feb 16 @ 3:00 PM. 5 hours. Blk 41. Blk 41, Lot 74 Alder, Cainta, 1900 Rizal, Philippines. see map.",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

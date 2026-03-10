@@ -1,0 +1,160 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:14:30.284Z",
+  "updatedAt": "2026-03-10T05:15:17.659Z",
+  "urls": {
+    "http://reclub.co/communities/bulacan-philippines-555": {
+      "canonicalUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "latestUrl": "http://reclub.co/communities/bulacan-philippines-555",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "bulacan sports complex|bulacan|bulacan",
+      "lastRowName": "Bulacan Sports Complex"
+    },
+    "https://reclub.co/m/0TGZCC": {
+      "canonicalUrl": "https://reclub.co/m/0TGZCC",
+      "latestUrl": "https://reclub.co/m/0TGZCC",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@meycauayan-city-pickleball-club-2": {
+      "canonicalUrl": "https://reclub.co/clubs/@meycauayan-city-pickleball-club-2",
+      "latestUrl": "https://reclub.co/clubs/@meycauayan-city-pickleball-club-2",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "violago compound|philippines|central luzon",
+      "lastRowName": "Violago Compound"
+    },
+    "https://reclub.co/clubs/@meycauayan-city-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@meycauayan-city-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@meycauayan-city-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518": {
+      "canonicalUrl": "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "latestUrl": "https://www.studocu.com/ph/document/nueva-ecija-university-of-science-and-technology/bs-architecture-design/initial-research-on-pickleball-sports-complex-vs-sports-club/138324518",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/m/Y3F56S": {
+      "canonicalUrl": "https://reclub.co/m/Y3F56S",
+      "latestUrl": "https://reclub.co/m/Y3F56S",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickleballtournaments.com/tournaments/mgpc-club-tournament-ms": {
+      "canonicalUrl": "https://pickleballtournaments.com/tournaments/mgpc-club-tournament-ms",
+      "latestUrl": "https://pickleballtournaments.com/tournaments/mgpc-club-tournament-ms",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/marilao/cabins": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/marilao/cabins",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/marilao/cabins",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.yelp.com/search?cflt=muaythai&find_loc=Meycauayan%2C+3020+Bulacan": {
+      "canonicalUrl": "https://www.yelp.com/search?cflt=muaythai&find_loc=Meycauayan%2C+3020+Bulacan",
+      "latestUrl": "https://www.yelp.com/search?cflt=muaythai&find_loc=Meycauayan%2C+3020+Bulacan",
+      "firstDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "lastDiscoveredAt": "2026-03-10T05:14:30.284Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:14:30.284Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "bulacan sports complex|bulacan|bulacan": {
+      "rowKey": "bulacan sports complex|bulacan|bulacan",
+      "name": "Bulacan Sports Complex",
+      "city": "BULACAN",
+      "province": "BULACAN",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+      "firstSeenAt": "2026-03-10T05:14:30.284Z",
+      "lastSeenAt": "2026-03-10T05:14:30.284Z"
+    },
+    "violago compound|philippines|central luzon": {
+      "rowKey": "violago compound|philippines|central luzon",
+      "name": "Violago Compound",
+      "city": "Philippines",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/philippines/violago-compound",
+      "firstSeenAt": "2026-03-10T05:14:30.284Z",
+      "lastSeenAt": "2026-03-10T05:14:30.284Z"
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:metro-manila:manila",
+  "createdAt": "2026-03-10T06:04:14.124Z",
+  "updatedAt": "2026-03-10T06:05:31.987Z",
+  "urls": {
+    "https://facebook.com/manilapickleball": {
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "latestUrl": "https://www.facebook.com/manilapickleball/",
+      "firstCapturedAt": "2026-03-10T06:05:20.922Z",
+      "lastCapturedAt": "2026-03-10T06:05:20.922Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Command failed: playwright-cli -s=fbcap-metro-manila-manila eval () => JSON.stringify((() => {\n      const links = Array.from(document.querySelectorAll('a[href]'))\n        .map((anchor) => anchor.href)\n        .filter(Boolean)\n        .slice(0, 200);\n      const ogTitle =\n        document.querySelector('meta[property=\"og:title\"]')?.getAttribute('content') ?? '';\n      const ogDescription =\n        document.querySelector('meta[property=\"og:description\"]')?.getAttribute('content') ?? '';\n\n      return {\n        pageUrl: location.href,\n        title: document.title,\n        bodyText: document.body ? document.body.innerText.slice(0, 16000) : '',\n        links,\n        ogTitle,\n        ogDescription,\n      };\n    })())\nEINTR: interrupted system call, uv_cwd\n",
+      "outputRowName": null
+    }
+  }
+}

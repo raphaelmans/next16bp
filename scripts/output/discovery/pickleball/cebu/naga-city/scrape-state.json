@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T07:15:50.333Z",
+  "updatedAt": "2026-03-10T07:16:08.113Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "city of naga pickleball court|naga city|cebu",
+      "lastRowName": "City Of Naga Pickleball Court"
+    },
+    "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle": {
+      "canonicalUrl": "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle",
+      "latestUrl": "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle/",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pages.ph/2025/02/pickleball-in-cebu": {
+      "canonicalUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu",
+      "latestUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@naga-city-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@naga-city-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@naga-city-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://www.smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun": {
+      "canonicalUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "firstDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:50.333Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T07:15:50.333Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "city of naga pickleball court|naga city|cebu": {
+      "rowKey": "city of naga pickleball court|naga city|cebu",
+      "name": "City Of Naga Pickleball Court",
+      "city": "NAGA CITY",
+      "province": "CEBU",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+      "firstSeenAt": "2026-03-10T07:15:50.333Z",
+      "lastSeenAt": "2026-03-10T07:15:50.333Z"
+    }
+  }
+}

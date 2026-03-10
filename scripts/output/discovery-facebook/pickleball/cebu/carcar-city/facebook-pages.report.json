@@ -1,0 +1,166 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Carcar City",
+    "citySlug": "carcar-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:56:23.195Z",
+  "queries": [
+    "site:facebook.com pickleball Carcar City Cebu",
+    "site:facebook.com \"Carcar City\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Carcar City\" \"pickleball club\"",
+    "site:facebook.com \"Carcar City\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61586262266724?locale=ga_IE",
+    "https://www.facebook.com/61586262266724?locale=fr_FR",
+    "https://www.facebook.com/61586262266724?locale=et_EE",
+    "https://www.facebook.com/982270351629555/",
+    "https://www.facebook.com/61586262266724?locale=en_GB",
+    "https://www.facebook.com/61586262266724?locale=mt_MT",
+    "https://www.facebook.com/61586262266724?locale=bg_BG",
+    "https://www.facebook.com/61586262266724?locale=nn_NO",
+    "https://www.facebook.com/61586262266724?locale=fo_FO",
+    "https://www.facebook.com/61586262266724?locale=he_IL"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1398236881147372/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/yohhhkarlo/posts/calling-all-beginner-pickleball-players-sa-carcar-ready-na-ba-mo-mo-level-up-sa-/866629972518398/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/kristine.alilin/videos/new-court-alert-in-carcar-city/953105217282660/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61586262266724/posts/1st-kabkad-paddle-stackers-pickleball-tournamentthe-battle-of-the-best-picklebal/122096215773208742/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/soulmatekickscarcar/videos/pickle-ball-era%EF%B8%8F-pwede-utang-up-to-12-monthsvalid-id-ug-imo-self-ra-ang-needacce/1951632556234695/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430511534586573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/cpblsports/posts/-cpbl-carcar-city-tryouts-calling-all-men-and-women-ballers-of-carcar-city-this-/1352290480021687/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/soulmatekickscarcar/posts/pickle-ball-era%EF%B8%8F-pwede-utang-up-to-12-monthsvalid-id-ug-imo-self-ra-ang-needacce/122215907438093901/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/945751213986764/posts/1383361786892369/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/kristine.alilin/videos/new-court-alert-in-carcar-city/953105217282660/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/sunstarcebu/posts/snapshots-of-the-carcar-city-sports-complex-two-days-before-the-pasigarbo-sa-sug/313118331386686/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/6884756171617464/posts/25366786059654528/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430511534586573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/ToledoCityPIO/posts/rallies-cheers-and-victories-mark-the-2025-joyful-cup-inter-department-picklebal/1220577850110595/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/pbeyeprotectph/photos/d41d8cd9/122154537236956272/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/kristine.alilin/videos/opalite-dance-trend/4234649700091567/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61568565826735/posts/kita-kits-tonight-d-super-club-location-valladolid-carcar-city-inside-the-daruha/122159319278618860/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/1286229208931331/posts/1503559383864978/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61554500566861/posts/%F0%9D%90%8B%F0%9D%90%A8%F0%9D%90%A8%F0%9D%90%A4-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%AB-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2%F0%9D%90%AC-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%82%F0%9D%90%A8%F0%9D%90%AE%F0%9D%90%AB%F0%9D%90%AD-%F0%9D%90%9A%F0%9D%90%AD-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9C%F0%9D%90%9A%F0%9D%90%AB-%F0%9D%90%82%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%8F%F0%9D%90%9E%F0%9D%90%A8%F0%9D%90%A9%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%AC-%F0%9D%90%8F%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%A4%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%97%BD%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%AF%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B9-%F0%9D%97%B0%F0%9D%97%BC%F0%9D%98%82/122249962034150018/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430511534586573/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/587906354702492/posts/3337674813058952/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/ofwlookingforproperty/posts/1746482243198757/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1387368708233481/posts/3869708703332790/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1553051315005503/posts/4148253005485308/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/153323544720794/posts/26036554739304320/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/ofwlookingforproperty/posts/1731735158006799/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61579239644559/posts/peoples-park-pickleball-courtabli-na-gyud-ug-andam-na-ang-atoang-pickleball-cour/122145964394974654/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/quisina-pickleball-cebu/1316219467005579/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/keetapublications/posts/kitchenline-pickleball-is-where-pickleball-gets-real-cebus-first-usapa-standard-/1409760644496898/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132038270417716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/seasidehavencebu/posts/our-pickleball-court-is-now-officially-open-to-rent-for-only-p150hour-open-9am-1/1076455260844722/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4122919991329544/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/carcar-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/carcar-city/facebook-pages.state.json"
+}

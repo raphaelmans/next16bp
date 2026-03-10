@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cavite:tagaytay-city",
+  "createdAt": "2026-03-10T07:05:29.937Z",
+  "updatedAt": "2026-03-10T07:06:05.967Z",
+  "queries": [
+    "pickleball courts in Cavite Tagaytay City",
+    "pickleball court Tagaytay City Cavite",
+    "Tagaytay City pickleball",
+    "courts in Tagaytay City Cavite pickleball",
+    "sports center Tagaytay City Cavite pickleball",
+    "pickleball club Tagaytay City Cavite",
+    "pickleball reservations Tagaytay City Cavite",
+    "host-map:cebupickleballcourts.com:Tagaytay City",
+    "host-map:cebupickleballcourts.com:Tagaytay",
+    "host-map:dumapickleball.com:Tagaytay City",
+    "host-map:dumapickleball.com:Tagaytay",
+    "site:cebupickleballcourts.com Tagaytay City Cavite pickleball",
+    "site:dumapickleball.com Tagaytay City Cavite pickleball"
+  ],
+  "urls": {
+    "https://playtimescheduler.com/region/tagaytay_city-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/tagaytay_city-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/tagaytay_city-luzon",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball club Tagaytay City Cavite",
+      "title": "Find Pickleball Games in Tagaytay City, Luzon",
+      "snippet": "Pickleball Courts in Tagaytay City. PlayTime Scheduler is a FREE scheduling ... Tagaytay-Nasugbo hwy, Tagaytay City Cavite 4120 1 Outdoor courts. Nets ...",
+      "domain": "playtimescheduler.com",
+      "relevanceScore": 17,
+      "handedOffToScrapeAt": null
+    },
+    "https://smashpickleballph.playbypoint.com/": {
+      "canonicalUrl": "https://smashpickleballph.playbypoint.com/",
+      "latestUrl": "https://smashpickleballph.playbypoint.com/",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball reservations Tagaytay City Cavite",
+      "title": "Smash Pickelball Ph",
+      "snippet": "Login Book Now · Smash Pickelball Ph · Book Now. Menu. Smash Pickelball Ph. Santa Rosa - Tagaytay Rd, Tagaytay City, Cavite, Philippines. +639178669577. See ...",
+      "domain": "smashpickleballph.playbypoint.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://tagaytayhighlands.com/pickleball": {
+      "canonicalUrl": "https://tagaytayhighlands.com/pickleball",
+      "latestUrl": "https://www.tagaytayhighlands.com/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball reservations Tagaytay City Cavite",
+      "title": "Pickleball",
+      "snippet": "Try our new activity at the Sports Center, PICKLEBALL! For any inquiries/ reservations, please call us at 0917-5830848.",
+      "domain": "tagaytayhighlands.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.com/rooms/1056348926114339513": {
+      "canonicalUrl": "https://airbnb.com/rooms/1056348926114339513",
+      "latestUrl": "https://www.airbnb.com/rooms/1056348926114339513",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball reservations Tagaytay City Cavite",
+      "title": "Pickleball Staycation Place in Tagaytay - Farm stays for Rent in ...",
+      "snippet": "Nature vibe staycation in Tagaytay with Pickleball court and in-house restaurant. The space. What to expect? Exclusive access to our modern kubo which ...",
+      "domain": "airbnb.com",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@pickle-play-2": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickle-play-2",
+      "latestUrl": "https://reclub.co/clubs/@pickle-play-2",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball club Tagaytay City Cavite",
+      "title": "Pickle Play",
+      "snippet": "Pickle Play is an indoor Pickleball Court located in Amadeo, Cavite, very near Metro Tagaytay. We welcome all beginners and Pickleball.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://airbnb.com/rooms/1299113053948107687": {
+      "canonicalUrl": "https://airbnb.com/rooms/1299113053948107687",
+      "latestUrl": "https://www.airbnb.com/rooms/1299113053948107687",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "courts in Tagaytay City Cavite pickleball",
+      "title": "Pickleball | GardenVilla 2 | Tagaytay Center - Farm stays for Rent in ...",
+      "snippet": "A private half a hectare wide lush property at the center of Tagaytay City. Open to accommodate delightful guests with utmost serenity, peace, fun and ...",
+      "domain": "airbnb.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballnewsasia.com/popular-staycation-spot-in-tagaytay-opens-outdoor-private-pickleball-court": {
+      "canonicalUrl": "https://pickleballnewsasia.com/popular-staycation-spot-in-tagaytay-opens-outdoor-private-pickleball-court",
+      "latestUrl": "https://pickleballnewsasia.com/popular-staycation-spot-in-tagaytay-opens-outdoor-private-pickleball-court/",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "Tagaytay City pickleball",
+      "title": "Popular 'Staycation' Spot in Tagaytay City in PH Opens Outdoor Private ...",
+      "snippet": "Eagles Nest Tagaytay's private pickleball court is set against a scenic backdrop of nature at its finest, allowing players to play in a ...",
+      "domain": "pickleballnewsasia.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://tagaytay-highlands.com/--sports-center.html": {
+      "canonicalUrl": "https://tagaytay-highlands.com/--sports-center.html",
+      "latestUrl": "https://www.tagaytay-highlands.com/--sports-center.html",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "sports center Tagaytay City Cavite pickleball",
+      "title": "Tagaytay Highlands Sports Center",
+      "snippet": "There is a full basketball court, squash, tennis, a fitness gym, billiards, darts, horseback riding, go-carts and a petting zoo at the members' disposal.",
+      "domain": "tagaytay-highlands.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://tagaytayhighlands.com/category/clubs/page/5": {
+      "canonicalUrl": "https://tagaytayhighlands.com/category/clubs/page/5",
+      "latestUrl": "https://www.tagaytayhighlands.com/category/clubs/page/5/",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "sports center Tagaytay City Cavite pickleball",
+      "title": "Clubs Archives - Page 5 of 9",
+      "snippet": "Why don't you try our new activity at the Sports Center, PICKLEBALL! For any inquiries/ reservations, please call us at 0917-5830848. Published July 29, 2023.",
+      "domain": "tagaytayhighlands.com",
+      "relevanceScore": 8,
+      "handedOffToScrapeAt": null
+    },
+    "https://smashpickleballph.playbypoint.com/pros/don-robert-bautista": {
+      "canonicalUrl": "https://smashpickleballph.playbypoint.com/pros/don-robert-bautista",
+      "latestUrl": "https://smashpickleballph.playbypoint.com/pros/don-robert-bautista",
+      "firstDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "lastDiscoveredAt": "2026-03-10T07:05:29.938Z",
+      "sourceQuery": "pickleball club Tagaytay City Cavite",
+      "title": "Lessons - Don Robert Bautista - Smash Pickelball Ph - Playbypoint",
+      "snippet": "Member of the Southside Pickleball Club. Open. Programs Professionals +63917-866-9577. Santa Rosa - Tagaytay Rd, Tagaytay City, Cavite, Philippines. Playbypoint.",
+      "domain": "smashpickleballph.playbypoint.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

@@ -1,0 +1,208 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Malabon City",
+    "citySlug": "malabon-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:00:30.904Z",
+  "queries": [
+    "site:facebook.com pickleball Malabon City Metro Manila",
+    "site:facebook.com \"Malabon City\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Malabon City\" \"pickleball club\"",
+    "site:facebook.com \"Malabon City\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/MP-Malabon-Pickleballers-100077719640308/",
+    "https://www.facebook.com/photo.php?fbid=954630446894615&set=a.229259706098363&id=100070430060497",
+    "https://www.facebook.com/thepicklemindcourt/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/mark-your-calendars-our-pickleball-court-officially-opens-on-march-13-message-pl/956524443371882/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/get-ready-to-serve-volley-and-score-at-playland-fisher-mall-malabon-our-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A/954630473561279/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/politikoregional/posts/malabon-city-mayor-jeannie-sandoval-has-spearheaded-the-opening-of-the-first-eve/122241744716126374/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373258896295651/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4277919822496226/",
+      "score": 2
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4175056666115876/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367956743492533/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351821598439381/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/get-ready-to-serve-volley-and-score-at-playland-fisher-mall-malabon-our-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A/954630473561279/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367956743492533/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4277919822496226/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4041090179512526/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/politikoregional/posts/malabon-city-mayor-jeannie-sandoval-has-spearheaded-the-opening-of-the-first-eve/122241744716126374/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373258896295651/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/783030716935745/posts/1372436034661874/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351821598439381/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362767347344806/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4340109326277275/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/mark-your-calendars-our-pickleball-court-officially-opens-on-march-13-message-pl/956524443371882/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367956743492533/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/politikoregional/posts/malabon-city-mayor-jeannie-sandoval-has-spearheaded-the-opening-of-the-first-eve/122241744716126374/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4277919822496226/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373258896295651/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4041090179512526/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4175056666115876/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/get-ready-to-serve-volley-and-score-at-playland-fisher-mall-malabon-our-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A/954630473561279/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100077719640308/videos/newest-court-in-town-palo-palo-pickleball-court-former-salo-salo-along-gov-pascu/900489259253728/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/783030716935745/posts/1372436034661874/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/mark-your-calendars-our-pickleball-court-officially-opens-on-march-13-message-pl/956524443371882/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4367956743492533/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/politikoregional/posts/malabon-city-mayor-jeannie-sandoval-has-spearheaded-the-opening-of-the-first-eve/122241744716126374/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4175056666115876/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/officialFisherMallMalabon/posts/get-ready-to-serve-volley-and-score-at-playland-fisher-mall-malabon-our-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A/954630473561279/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373258896295651/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/100077719640308/posts/newest-court-in-town-palo-palo-pickleball-court-former-salo-salo-along-gov-pascu/944036341530345/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/malabon-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/malabon-city/facebook-pages.state.json"
+}

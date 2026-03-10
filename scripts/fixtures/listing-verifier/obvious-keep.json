@@ -1,0 +1,65 @@
+{
+  "fixtureName": "obvious-keep",
+  "cases": [
+    {
+      "evidence": {
+        "placeId": "44444444-4444-4444-8444-444444444444",
+        "trackingBucket": "curated_place",
+        "placeType": "CURATED",
+        "organizationId": null,
+        "slug": "sunrise-pickleball-club",
+        "name": "Sunrise Pickleball Club",
+        "address": "789 Mango Avenue",
+        "city": "DUMAGUETE CITY",
+        "province": "NEGROS ORIENTAL",
+        "country": "PH",
+        "claimStatus": "UNCLAIMED",
+        "verificationStatus": "VERIFIED",
+        "activeCourtCount": 4,
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
+        "photoCount": 6,
+        "hasContactDetails": true,
+        "baselineFlags": [],
+        "baselineSuggestion": {
+          "label": "keep",
+          "reasonCode": "looks_valid"
+        }
+      },
+      "expected": {
+        "label": "keep",
+        "reasonCode": "looks_valid"
+      }
+    },
+    {
+      "evidence": {
+        "placeId": "55555555-5555-4555-8555-555555555555",
+        "trackingBucket": "org_created_place",
+        "placeType": "RESERVABLE",
+        "organizationId": "66666666-6666-4666-8666-666666666666",
+        "slug": "kudos-courts-complex",
+        "name": "Kudos Courts Complex",
+        "address": "101 Waterfront Road",
+        "city": "CEBU CITY",
+        "province": "CEBU",
+        "country": "PH",
+        "claimStatus": "CLAIMED",
+        "verificationStatus": "VERIFIED",
+        "activeCourtCount": 3,
+        "activeCourtLabels": ["Center Court", "Court 2", "Court 3"],
+        "activeSports": ["pickleball", "badminton"],
+        "photoCount": 8,
+        "hasContactDetails": true,
+        "baselineFlags": [],
+        "baselineSuggestion": {
+          "label": "keep",
+          "reasonCode": "looks_valid"
+        }
+      },
+      "expected": {
+        "label": "keep",
+        "reasonCode": "looks_valid"
+      }
+    }
+  ]
+}

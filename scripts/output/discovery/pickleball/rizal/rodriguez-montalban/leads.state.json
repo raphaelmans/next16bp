@@ -1,0 +1,93 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:rizal:rodriguez-montalban",
+  "createdAt": "2026-03-10T07:11:04.179Z",
+  "updatedAt": "2026-03-10T07:11:32.708Z",
+  "queries": [
+    "pickleball courts in Rizal Rodriguez (Montalban)",
+    "pickleball court Rodriguez (Montalban) Rizal",
+    "Rodriguez (Montalban) pickleball",
+    "courts in Rodriguez (Montalban) Rizal pickleball",
+    "sports center Rodriguez (Montalban) Rizal pickleball",
+    "pickleball club Rodriguez (Montalban) Rizal",
+    "pickleball reservations Rodriguez (Montalban) Rizal",
+    "host-map:cebupickleballcourts.com:Rodriguez (Montalban)",
+    "host-map:dumapickleball.com:Rodriguez (Montalban)",
+    "site:cebupickleballcourts.com Rodriguez (Montalban) Rizal pickleball",
+    "site:dumapickleball.com Rodriguez (Montalban) Rizal pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@rodriguezrizalpickleballclub": {
+      "canonicalUrl": "https://reclub.co/clubs/@rodriguezrizalpickleballclub",
+      "latestUrl": "https://reclub.co/clubs/@rodriguezrizalpickleballclub",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "pickleball reservations Rodriguez (Montalban) Rizal",
+      "title": "Rodriguez Rizal Pickleball Club (RRPC)",
+      "snippet": "OPEN PLAY RULES SIGN UP 1. Select your preferred meet on Reclub 2. Click \"Request To Join\" 3. Once your slot is confirmed, pay through.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/2BF4XR": {
+      "canonicalUrl": "https://reclub.co/m/2BF4XR",
+      "latestUrl": "https://reclub.co/m/2BF4XR",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "sports center Rodriguez (Montalban) Rizal pickleball",
+      "title": "ALL LEVELS(AC) @ VENSAND PICKLEBALL HUB Sun, Jan 4 @ 6: 00",
+      "snippet": "34 MH del Pilar St, Rodriguez, Rizal, Philippines. see map. Venue: Vensand Pickleball Hub 3rd Floor, Vensand Building, Montalban, Rizal",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal": {
+      "canonicalUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "latestUrl": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "pickleball reservations Rodriguez (Montalban) Rizal",
+      "title": "THE BEST 10 BADMINTON in RODRIGUEZ, RIZAL, PHILIPPINES",
+      "snippet": "They cater pickleball, basketball, badminton reservation and also they have boxing, muaythai and lastly weights.read more. From the business: We specialize ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/TVSVQD": {
+      "canonicalUrl": "https://reclub.co/m/TVSVQD",
+      "latestUrl": "https://reclub.co/m/TVSVQD",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "pickleball club Rodriguez (Montalban) Rizal",
+      "title": "Friday RRPC's Open Drills Session at Hillside Resort Montalban | 7PM-9PM",
+      "snippet": "Looking for Pickleball meets in Metro Manila, Philippines? Check out this Reclub meet at L3009B hosted by Rodriguez Rizal Pickleball Club.",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/find-sport-center": {
+      "canonicalUrl": "https://milo.com.ph/find-sport-center",
+      "latestUrl": "https://www.milo.com.ph/find-sport-center",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "sports center Rodriguez (Montalban) Rizal pickleball",
+      "title": "Find a Sports Complex Near Me",
+      "snippet": "Discover the MILO sports complex near me! Enjoy top-notch facilities for various sports, fitness classes, and community events. Join the fun today.",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/JIK7S1": {
+      "canonicalUrl": "https://reclub.co/m/JIK7S1",
+      "latestUrl": "https://reclub.co/m/JIK7S1",
+      "firstDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "lastDiscoveredAt": "2026-03-10T07:11:04.180Z",
+      "sourceQuery": "pickleball reservations Rodriguez (Montalban) Rizal",
+      "title": "Open Play - All Levels (Non-AC)",
+      "snippet": "Fee (Non-AC): ₱150/head Venue: Vensand Pickleball Hub 3/F Vensand Bldg., MH del Pilar st., Montalban, Rizal Landmarks: Near Jeafer Gas Station; ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

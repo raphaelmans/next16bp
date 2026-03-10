@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:iloilo:leganes",
+  "createdAt": "2026-03-10T07:16:37.801Z",
+  "updatedAt": "2026-03-10T07:18:49.095Z",
+  "scope": {
+    "provinceSlug": "iloilo",
+    "citySlug": "leganes",
+    "provinceName": "Iloilo",
+    "cityName": "Leganes",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:16:37.803Z",
+      "finishedAt": "2026-03-10T07:16:59.794Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:16:59.796Z",
+      "finishedAt": "2026-03-10T07:17:27.664Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:17:27.664Z",
+      "finishedAt": "2026-03-10T07:18:48.576Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T07:18:49.088Z",
+      "finishedAt": "2026-03-10T07:18:49.095Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for leganes, skipped 2"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:18:49.095Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for leganes"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:18:49.095Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

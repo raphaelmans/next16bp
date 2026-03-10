@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "pampanga",
+    "citySlug": "angeles-city",
+    "provinceName": "Pampanga",
+    "cityName": "Angeles City"
+  },
+  "generatedAt": "2026-03-10T06:17:28.795Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/pampanga/angeles-city/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 10,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 10,
+  "failedCount": 0,
+  "readyCount": 3,
+  "reviewCount": 3,
+  "skipCount": 4,
+  "csvRowCount": 3,
+  "failures": []
+}

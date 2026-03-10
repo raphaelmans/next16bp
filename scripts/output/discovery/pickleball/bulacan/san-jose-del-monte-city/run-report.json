@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "bulacan",
+    "citySlug": "san-jose-del-monte-city",
+    "provinceName": "Bulacan",
+    "cityName": "San Jose Del Monte City"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:00:54.698Z",
+      "finishedAt": "2026-03-10T07:01:36.817Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:01:36.820Z",
+      "finishedAt": "2026-03-10T07:02:03.221Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:02:03.221Z",
+      "finishedAt": "2026-03-10T07:02:30.767Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T07:02:31.224Z",
+      "finishedAt": "2026-03-10T07:02:31.232Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for san-jose-del-monte-city, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:02:31.232Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for san-jose-del-monte-city"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:02:31.233Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:04:35.862Z",
+  "updatedAt": "2026-03-10T05:05:03.264Z",
+  "urls": {
+    "https://athletecentral.fit/": {
+      "canonicalUrl": "https://athletecentral.fit/",
+      "latestUrl": "https://athletecentral.fit/",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pedci pickleball courts|cainta|rizal",
+      "lastRowName": "Pedci Pickleball Courts"
+    },
+    "https://playtimescheduler.com/region/cainta-luzon": {
+      "canonicalUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "latestUrl": "https://playtimescheduler.com/region/cainta-luzon",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "st francis covered court|cainta|rizal",
+      "lastRowName": "St Francis Covered Court"
+    },
+    "https://reclub.co/clubs/@victory-pickleball-club-cainta": {
+      "canonicalUrl": "https://reclub.co/clubs/@victory-pickleball-club-cainta",
+      "latestUrl": "https://reclub.co/clubs/@victory-pickleball-club-cainta",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta": {
+      "canonicalUrl": "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta",
+      "latestUrl": "https://all-starmagazine.com/lifestyle/athlete-central-a-sports-hub-in-cainta/",
+      "firstDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "lastDiscoveredAt": "2026-03-10T05:04:35.861Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:04:35.861Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "pedci pickleball courts|cainta|rizal": {
+      "rowKey": "pedci pickleball courts|cainta|rizal",
+      "name": "Pedci Pickleball Courts",
+      "city": "CAINTA",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/pedci-pickleball-courts",
+      "firstSeenAt": "2026-03-10T05:04:35.861Z",
+      "lastSeenAt": "2026-03-10T05:04:35.861Z"
+    },
+    "st francis covered court|cainta|rizal": {
+      "rowKey": "st francis covered court|cainta|rizal",
+      "name": "St Francis Covered Court",
+      "city": "CAINTA",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/cainta/st-francis-covered-court",
+      "firstSeenAt": "2026-03-10T05:04:35.861Z",
+      "lastSeenAt": "2026-03-10T05:04:35.861Z"
+    }
+  }
+}

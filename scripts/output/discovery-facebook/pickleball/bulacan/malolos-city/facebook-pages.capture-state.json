@@ -1,0 +1,73 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:malolos-city",
+  "createdAt": "2026-03-10T05:38:10.462Z",
+  "updatedAt": "2026-03-10T05:42:44.849Z",
+  "urls": {
+    "https://facebook.com/cityofmalolospickleballclub": {
+      "canonicalUrl": "https://facebook.com/cityofmalolospickleballclub",
+      "latestUrl": "https://www.facebook.com/cityofmalolospickleballclub/",
+      "firstCapturedAt": "2026-03-10T05:38:13.307Z",
+      "lastCapturedAt": "2026-03-10T05:38:13.307Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Unexpected token '#', \"### Error\n\"... is not valid JSON",
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=893370280342142&set=a.118190881193423&type=3",
+      "firstCapturedAt": "2026-03-10T05:39:31.615Z",
+      "lastCapturedAt": "2026-03-10T05:39:31.615Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "City of Malolos Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/PickleFit-61579610165193": {
+      "canonicalUrl": "https://facebook.com/p/PickleFit-61579610165193",
+      "latestUrl": "https://www.facebook.com/p/PickleFit-61579610165193/",
+      "firstCapturedAt": "2026-03-10T05:40:25.089Z",
+      "lastCapturedAt": "2026-03-10T05:40:25.089Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 162.159.140.245:443, 172.66.0.243:443, timeout: 10000ms)",
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=880467161632454&set=a.252836881062155&type=3",
+      "firstCapturedAt": "2026-03-10T05:41:09.070Z",
+      "lastCapturedAt": "2026-03-10T05:41:09.070Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "City of Malolos Pickleball Club",
+      "confidence": "medium",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T05:41:58.858Z",
+      "lastCapturedAt": "2026-03-10T05:41:58.858Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)",
+      "outputRowName": null
+    }
+  }
+}

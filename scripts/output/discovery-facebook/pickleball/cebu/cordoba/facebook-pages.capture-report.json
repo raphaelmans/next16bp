@@ -1,0 +1,23 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cebu",
+    "citySlug": "cordoba",
+    "provinceName": "Cebu",
+    "cityName": "Cordoba"
+  },
+  "generatedAt": "2026-03-10T05:19:20.452Z",
+  "urlsPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/cordoba/facebook-pages.urls.txt",
+  "captureOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/cordoba/facebook-pages.captured.json",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/cordoba/facebook-pages.capture-state.json",
+  "csvOutputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/cordoba/facebook-pages-curated-courts.csv",
+  "processedUrlCount": 7,
+  "skippedAlreadyCapturedCount": 0,
+  "capturedCount": 7,
+  "failedCount": 0,
+  "readyCount": 0,
+  "reviewCount": 1,
+  "skipCount": 6,
+  "csvRowCount": 0,
+  "failures": []
+}

@@ -1,0 +1,197 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Bocaue",
+    "citySlug": "bocaue",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:08:15.064Z",
+  "queries": [
+    "site:facebook.com pickleball Bocaue Bulacan",
+    "site:facebook.com \"Bocaue\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Bocaue\" \"pickleball club\"",
+    "site:facebook.com \"Bocaue\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/thepicklepadbocaue/",
+    "https://www.facebook.com/973847929138261",
+    "https://www.facebook.com/p/Dink-District-PH-61583265851622/",
+    "https://www.facebook.com/thepicklepadbocaue/?locale=es_LA",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/hellocoachanne/posts/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637403607992/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/952820405333114/posts/1963377630944048/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/hellocoachanne/photos/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637389607642/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/shoutout-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2%F0%9D%98%80%F0%9D%97%AE-%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1-%F0%9D%97%B3%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%B1%F0%9D%98%80-for-bringing-the-fun-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%AE%F0%9D%97%B1-thanks-fo/122115397119193529/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376010382687169/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/thefarmprivatepoolbysitioantonio/posts/-game-on-at-the-pickle-farm-by-sitio-antonioour-new-pickleball-court-is-now-open/122227218218314385/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/big-thanks-to-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%AE%F0%9D%97%BA-%F0%9D%97%A1%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2-and-the-squad-for-bringing-the-energy-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%AE/122113447761193529/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/hellocoachanne/posts/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637403607992/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/hellocoachanne/photos/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637389607642/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4173291199625756/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/shoutout-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2%F0%9D%97%BF%F0%9D%97%B2%F0%9D%98%80%F0%9D%97%AE-%F0%9D%97%AE%F0%9D%97%BB%F0%9D%97%B1-%F0%9D%97%B3%F0%9D%97%BF%F0%9D%97%B6%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%B1%F0%9D%98%80-for-bringing-the-fun-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%AE%F0%9D%97%B1-thanks-fo/122115397119193529/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2391758907631348/posts/3398721880268374/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/full-house-for-wednesday-pm-open-play-thank-you-everyonethepicklepad-openplay-pi/122115553995193529/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4166241923664017/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/hellocoachanne/posts/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637403607992/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/videos/want-to-play-pickleball-dm-us-for-more-info-thepicklepad-bocauebulacan-picklebal/4431698907105000/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/big-thanks-to-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%AE%F0%9D%97%BA-%F0%9D%97%A1%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%BC%F0%9D%97%B9%F0%9D%97%B2-and-the-squad-for-bringing-the-energy-to-%F0%9D%97%A7%F0%9D%97%B5%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%B6%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B9%F0%9D%97%B2-%F0%9D%97%A3%F0%9D%97%AE/122113447761193529/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/photos/-%F0%9D%97%A7%F0%9D%97%9B%F0%9D%97%98-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97-%F0%9D%97%A9%F0%9D%97%AE%F0%9D%97%B9%F0%9D%97%B2%F0%9D%97%BB%F0%9D%98%81%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B2%F0%9D%98%80-%F0%9D%97%A6%F0%9D%97%BC%F0%9D%97%B3%F0%9D%98%81-%F0%9D%97%A2%F0%9D%97%BD%F0%9D%97%B2%F0%9D%97%BB%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%B4-after-all-the-waiting-its-time-to-play-j/122112373509193529/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4173291199625756/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/videos/the-pickle-pad/1551254405943934/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/photos/d41d8cd9/122112964773193529/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/big-thanks-to-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%AE%F0%9D%97%BA-%F0%9D%97%A1%F0%9D%97%AE%F0%9D%97%BC%F0%9D%97%BA%F0%9D%97%B6-and-%F0%9D%97%A6%F0%9D%97%B6%F0%9D%97%BF-%F0%9D%97%94%F0%9D%97%B9%F0%9D%98%83%F0%9D%97%B6%F0%9D%97%BB-it-was-a-pleasure-having-you-on-court-and/122113702701193529/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/posts/big-thanks-to-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%AE%F0%9D%97%BA-%F0%9D%97%9D%F0%9D%97%B2%F0%9D%98%80%F0%9D%98%80%F0%9D%97%AE-and-the-whole-crew-for-playing-with-us-at-the-pickle-pa/122113401807193529/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepicklepadbocaue/videos/friday-night-op-at-the-pickle-pad-see-you-on-court-thepicklepad-fridayplay/1607951590326900/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/hellocoachanne/posts/dink-district-ph-in-bocaue-bulacan-is-our-new-pickleball-pop-up-location-may-gag/10238637403607992/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4324132224541652/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4173291199625756/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/thefarmprivatepoolbysitioantonio/posts/-game-on-at-the-pickle-farm-by-sitio-antonioour-new-pickleball-court-is-now-open/122227218218314385/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331819840439557/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4145824562372420/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2738416946521233/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4166241923664017/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331812710440270/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/bocaue/facebook-pages.state.json"
+}

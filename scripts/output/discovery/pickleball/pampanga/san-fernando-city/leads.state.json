@@ -1,0 +1,143 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:pampanga:san-fernando-city",
+  "createdAt": "2026-03-10T05:11:57.065Z",
+  "updatedAt": "2026-03-10T05:12:35.082Z",
+  "queries": [
+    "pickleball courts in Pampanga San Fernando City",
+    "pickleball court San Fernando City Pampanga",
+    "San Fernando City pickleball",
+    "courts in San Fernando City Pampanga pickleball",
+    "sports center San Fernando City Pampanga pickleball",
+    "pickleball club San Fernando City Pampanga",
+    "pickleball reservations San Fernando City Pampanga",
+    "host-map:cebupickleballcourts.com:San Fernando City",
+    "host-map:cebupickleballcourts.com:San Fernando",
+    "host-map:dumapickleball.com:San Fernando City",
+    "host-map:dumapickleball.com:San Fernando",
+    "site:cebupickleballcourts.com San Fernando City Pampanga pickleball",
+    "site:dumapickleball.com San Fernando City Pampanga pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-luzon/san-fernando": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "pickleball reservations San Fernando City Pampanga",
+      "title": "The Most Popular Pickleball Courts in San Fernando, Central Luzon",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in San Fernando, Central Luzon! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://terracourts.com/": {
+      "canonicalUrl": "https://terracourts.com/",
+      "latestUrl": "https://www.terracourts.com/",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "pickleball reservations San Fernando City Pampanga",
+      "title": "Terra Courts",
+      "snippet": "Play at Terra. New location is 1st Street, Dolores Homesite, Brgy. Dolores, City of San Fernando, Pampanga. BOOK A COURT.",
+      "domain": "terracourts.com",
+      "relevanceScore": 5,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "courts in San Fernando City Pampanga pickleball",
+      "title": "Pickleball Stays with Courts Near SM City Pampanga",
+      "snippet": "Find Pickleball-Friendly Properties near SM City Pampanga on PickleTrip™ | Easily compare vacation rentals, hotels, and resorts with private pickleball ...",
+      "domain": "pickletrip.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "San Fernando City pickleball",
+      "title": "San Fernando Pickleball Center",
+      "snippet": "Play Pickleball with San Fernando Pickleball Center! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 6,
+      "handedOffToScrapeAt": null
+    },
+    "https://ci.san-fernando.ca.us/pickleball": {
+      "canonicalUrl": "https://ci.san-fernando.ca.us/pickleball",
+      "latestUrl": "https://ci.san-fernando.ca.us/pickleball/",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "San Fernando City pickleball",
+      "title": "SUMMER BLAST & PICKLEBALL | City of San Fernando",
+      "snippet": "Our City. City Council · Commissions & Boards · City Standing ... Pickleball. Home · Launch Outlook · Contact Us. © San Fernando City 2015 | All Rights Reserved.",
+      "domain": "ci.san-fernando.ca.us",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "San Fernando City pickleball",
+      "title": "Play Pickleball at Jungle Base Fitness: Court Information",
+      "snippet": "Jungle Base Fitness is a place to play pickleball in San Fernando, Central Luzon. There are 4 indoor hard courts. The lines are permanent, and portable nets ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA": {
+      "canonicalUrl": "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA",
+      "latestUrl": "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "San Fernando City pickleball",
+      "title": "TOP 10 BEST Indoor Pickleball Courts in San Fernando Valley, CA",
+      "snippet": "Top 10 Best Indoor Pickleball Courts Near San Fernando Valley, California · Wolf & Bear Indoor Pickleball - Indoor Pickleball Courts near me - San Fernando ...",
+      "domain": "m.yelp.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/CQGWYX": {
+      "canonicalUrl": "https://reclub.co/m/CQGWYX",
+      "latestUrl": "https://reclub.co/m/CQGWYX",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "sports center San Fernando City Pampanga pickleball",
+      "title": "Tuesday Open Play | All levels | Pampanga Pickleball Center",
+      "snippet": "Pampanga Pickleball Center. Apple Tint, Telabastagan, San Fernando City, Pampanga, 2000. see map. Per Player. $200.00. ❗️ANNOUNCEMENT❗️ CPC members get ...",
+      "domain": "reclub.co",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://junglebase.ph/": {
+      "canonicalUrl": "https://junglebase.ph/",
+      "latestUrl": "https://www.junglebase.ph/",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "sports center San Fernando City Pampanga pickleball",
+      "title": "Jungle Base",
+      "snippet": "... pickleball, we are the place for you. Learn More. Born in Pampanga. Visit us in our pioneer facility in Telabastagan, San Fernando, Pampanga. Locate us ...",
+      "domain": "junglebase.ph",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@pickleball-world": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickleball-world",
+      "latestUrl": "https://reclub.co/clubs/@pickleball-world",
+      "firstDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "lastDiscoveredAt": "2026-03-10T05:11:57.066Z",
+      "sourceQuery": "pickleball club San Fernando City Pampanga",
+      "title": "Pickleball World",
+      "snippet": "197 activities. Pickleball World Lara Industrial Park (Lot 16), Purok 5, Barangay Lara, City of San Fernando, Pampanga Follow us on our socials:",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

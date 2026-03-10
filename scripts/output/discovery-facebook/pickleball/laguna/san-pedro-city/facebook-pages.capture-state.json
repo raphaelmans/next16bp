@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:san-pedro-city",
+  "createdAt": "2026-03-10T05:53:50.938Z",
+  "updatedAt": "2026-03-10T05:56:58.307Z",
+  "urls": {
+    "https://facebook.com/p/Urban-Rally-61579597994873": {
+      "canonicalUrl": "https://facebook.com/p/Urban-Rally-61579597994873",
+      "latestUrl": "https://www.facebook.com/p/Urban-Rally-61579597994873/",
+      "firstCapturedAt": "2026-03-10T05:53:59.138Z",
+      "lastCapturedAt": "2026-03-10T05:53:59.138Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Unexpected token '#', \"### Error\n\"... is not valid JSON",
+      "outputRowName": null
+    },
+    "https://facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+      "firstCapturedAt": "2026-03-10T05:55:13.686Z",
+      "lastCapturedAt": "2026-03-10T05:55:13.686Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": null,
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T05:55:28.626Z",
+      "lastCapturedAt": "2026-03-10T05:55:28.626Z",
+      "status": "failed",
+      "title": null,
+      "venueName": null,
+      "confidence": null,
+      "importStatus": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)",
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T05:56:16.496Z",
+      "lastCapturedAt": "2026-03-10T05:56:16.496Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

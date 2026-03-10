@@ -1,0 +1,151 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Bacoor City",
+    "citySlug": "bacoor-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:41:34.516Z",
+  "queries": [
+    "pickleball courts in Cavite Bacoor City",
+    "pickleball court Bacoor City Cavite",
+    "Bacoor City pickleball",
+    "courts in Bacoor City Cavite pickleball",
+    "sports center Bacoor City Cavite pickleball",
+    "pickleball club Bacoor City Cavite",
+    "pickleball reservations Bacoor City Cavite",
+    "host-map:cebupickleballcourts.com:Bacoor City",
+    "host-map:cebupickleballcourts.com:Bacoor",
+    "host-map:dumapickleball.com:Bacoor City",
+    "host-map:dumapickleball.com:Bacoor",
+    "site:cebupickleballcourts.com Bacoor City Cavite pickleball",
+    "site:dumapickleball.com Bacoor City Cavite pickleball",
+    "site:pickleheads.com pickleball Bacoor City Cavite",
+    "site:playtimescheduler.com pickleball Bacoor City Cavite",
+    "site:app.court-access.com pickleball Bacoor City Cavite",
+    "dink Bacoor City pickleball"
+  ],
+  "emittedUrls": [],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://bacoor.gov.ph/latest-news/strike-as-1-bacoor-city-employees-pickleball-club-opens/",
+      "score": 9
+    },
+    {
+      "url": "https://manilastandard.net/spotlight/314713802/pycl-2026-pickle-yard-conference-league-holds-official-event-at-vista-mall-somo.html",
+      "score": 10
+    },
+    {
+      "url": "https://www.globalpickleball.network/pickleball-leagues/leagues/city/24411-city-of-bacoor-philippines",
+      "score": 5
+    },
+    {
+      "url": "https://bacoor.gov.ph/latest-news/bacoor-strikers-pickleball-club-humakot-ng-medalya/",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/communities/cavite-philippines-553",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/SR6PPE",
+      "score": 11
+    },
+    {
+      "url": "https://bacoor.gov.ph/latest-news/bacoor-strikers-pickleball-club-humakot-ng-medalya/",
+      "score": 3
+    },
+    {
+      "url": "https://reclub.co/m/ZA59RL",
+      "score": 11
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/calabarzon/imus/lotus-central-mall",
+      "score": 9
+    },
+    {
+      "url": "https://www.youtube.com/watch?v=NXutTX0inrE",
+      "score": 1
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/2723933654561525/posts/3796830950605118/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/groups/1549681149300088/",
+    "https://www.tiktok.com/@pickleric.pb/video/7594435902617767175",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1ip9i4p/near_molino_bacoor_pickleball/",
+    "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+    "https://www.instagram.com/p/DS6h2hUkXVo/",
+    "https://www.facebook.com/darsaquino29/posts/first-time-to-play-in-cavite-and-playing-high-level-games-tonight-at-the-pickleg/10213912774449482/",
+    "https://www.instagram.com/reel/DPN_eR_jjRH/",
+    "https://www.facebook.com/groups/2075031119497964/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/985383066256898/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+    "https://www.reddit.com/r/cavite/comments/1qhtqj6/any_pickleball_court_reco_in_bacoor/",
+    "https://www.instagram.com/p/DR8f-saEiY_/",
+    "https://www.tiktok.com/@pickleric.pb/video/7594435902617767175",
+    "https://www.facebook.com/groups/1549681149300088/",
+    "https://www.instagram.com/reel/DPN_eR_jjRH/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/videos/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/1104475964692564/",
+    "https://www.tiktok.com/discover/pickleball-court-bacoor-cavite",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/985383066256898/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+    "https://www.instagram.com/p/DR8f-saEiY_/",
+    "https://www.tiktok.com/@pickleric.pb/video/7594435902617767175",
+    "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+    "https://www.instagram.com/reel/DUFv_rwksNO/",
+    "https://www.reddit.com/r/cavite/comments/1qhtqj6/any_pickleball_court_reco_in_bacoor/",
+    "https://www.tiktok.com/@patvelasquezgaspar/video/7555787801715936532",
+    "https://www.tiktok.com/discover/pickleball-court-bacoor-cavite",
+    "https://www.facebook.com/groups/1077703956812457/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.instagram.com/reel/DPN_eR_jjRH/",
+    "https://www.facebook.com/groups/1549681149300088/",
+    "https://www.reddit.com/r/cavite/comments/1qhtqj6/any_pickleball_court_reco_in_bacoor/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3615200892101459/",
+    "https://www.facebook.com/Paatislol/videos/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1554542712627430/",
+    "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4169083346713208/",
+    "https://www.reddit.com/r/cavite/comments/1pgu20b/badminton_pickleball_or_any_sports_around/",
+    "https://www.tiktok.com/@patvelasquezgaspar/video/7555787801715936532",
+    "https://www.facebook.com/darsaquino29/posts/first-time-to-play-in-cavite-and-playing-high-level-games-tonight-at-the-pickleg/10213912774449482/",
+    "https://www.instagram.com/reel/DPN_eR_jjRH/",
+    "https://www.facebook.com/groups/1077703956812457/",
+    "https://www.facebook.com/groups/1077703956812457/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/groups/1549681149300088/",
+    "https://www.instagram.com/p/DS6h2hUkXVo/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3615200892101459/",
+    "https://www.tiktok.com/@patvelasquezgaspar/video/7555787801715936532",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1ip9i4p/near_molino_bacoor_pickleball/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/videos/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/1104475964692564/",
+    "https://www.facebook.com/groups/2723933654561525/posts/3615200892101459/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/calling-all-pickleball-enthusiasts-in-partnership-with-the-bacoor-strikers-pickl/947301614214450/",
+    "https://www.facebook.com/FilinvestLifemallsMAINSQUARE/posts/need-exercise-while-having-fun-come-and-join-the-main-square-pickleball-club-we-/1100031678941442/",
+    "https://www.instagram.com/reel/DUFv_rwksNO/",
+    "https://www.facebook.com/groups/1077703956812457/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1ip9i4p/near_molino_bacoor_pickleball/",
+    "https://www.tiktok.com/@lestersanaz/video/7598768409391680788",
+    "https://www.facebook.com/Paatislol/posts/your-pickleball-playground-is-finally-here-playhouse-pickle-bacoor-cavite-openin/1338894144555237/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4116813688606841/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/",
+    "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+    "https://www.facebook.com/CityGovtBacoor/posts/-pickleball-update-mga-ka-strikersdahil-sa-sobrang-bilis-nyo-full-na-ang-slots-m/1302941518535909/",
+    "https://www.facebook.com/61586219595053/posts/bacoor-pickleball-players-this-ones-for-you-naghahanap-ka-ba-ng-pickleball-court/122110404885207319/",
+    "https://www.tiktok.com/@pickleric.pb/video/7594435902617767175",
+    "https://www.facebook.com/rovocadevt/posts/groundbreaking-for-dink-yard-6100-a-6-court-pickleball-facility-in-bacolod-cityt/802548398952701/",
+    "https://www.instagram.com/p/DPLpqLUjDvC/",
+    "https://www.facebook.com/61576669311409/",
+    "https://www.tiktok.com/discover/pickleball-court-bacoor-cavite"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/bacoor-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/bacoor-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/bacoor-city/scrape-state.json"
+}

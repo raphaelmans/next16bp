@@ -1,0 +1,212 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "General Trias City",
+    "citySlug": "general-trias-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:13:11.714Z",
+  "queries": [
+    "site:facebook.com pickleball General Trias City Cavite",
+    "site:facebook.com \"General Trias City\" \"Cavite\" \"pickleball\"",
+    "site:facebook.com \"General Trias City\" \"pickleball club\"",
+    "site:facebook.com \"General Trias City\" \"pickleball court\"",
+    "site:facebook.com \"Cavite\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/juanvetnaic/",
+    "https://www.facebook.com/IsaacSportsPh/",
+    "https://www.facebook.com/p/Eagle-Ridge-Sports-Clubhouse-100091749497527/",
+    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/3131332323755532/posts/4234402653448488/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/300672488656602/posts/1089262213130955/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/603466333706824/posts/1916669662386478/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4333427086945499/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1459254745536392/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/play-pickleball-at-eagle-ridgeenjoy-our-exclusive-promo-for-our-new-pickleball-c/1399682798617955/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/100091749497527/posts/welcome-to-our-vibrant-sports-clubhouse-where-fun-and-fitness-come-together-enjo/874278458973796/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/1438227321430169/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/3131332323755532/posts/4234402653448488/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/603466333706824/posts/1916669662386478/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/play-pickleball-at-eagle-ridgeenjoy-our-exclusive-promo-for-our-new-pickleball-c/1399682798617955/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/100091749497527/posts/-pickleball-lovers-this-is-your-momentwalk-in-right-now-until-2pm-and-jump-on-th/869237076144601/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/1438227321430169/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/100091749497527/posts/-happening-right-now-family-friends-and-fun-eagle-ridge-makes-it-unforgettable-a/862536703481305/",
+      "score": 4
+    },
+    {
+      "url": "https://www.facebook.com/groups/381440285676071/posts/2409471086206304/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/where-leisure-meets-an-active-lifestyle-experience-sports-relaxation-and-nature-/1422472013005700/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/417109113455569/posts/1438293404670463/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/309664730223482/posts/1553147282541881/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/palawanpawnshoptennis/posts/cong-edwin-l-olivarez-national-juniors-tennis-championships-palawan-pawnshop-nat/1013710887212386/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/CatbaloganCityDivision/posts/division-memorandumno-080-s-2026re-updates-to-division-memorandum-no-444-s-2025-/1370942671714200/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1292973557976201/posts/1817233755550176/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/karatepilipinas/posts/karate-pilipinas-opens-7th-national-championships-highlights-hosting-of-karate-o/1385303436945375/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1649603038719831/posts/2682843525395772/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/ToledoCityPIO/posts/kyrie-eleison-canillo-shines-as-toledo-citys-young-champion-in-1st-leg-ping-smas/1306711731497206/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/199562183445907/posts/9066183700117000/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1277105699727500/posts/2102863007151761/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/psc.gov.ph/posts/%F0%9D%90%88%F0%9D%90%8D-%F0%9D%90%8F%F0%9D%90%87%F0%9D%90%8E%F0%9D%90%93%F0%9D%90%8E%F0%9D%90%92-philippine-sports-commission-psc-comm-walter-francis-wawit-k-torres-at/1124227583073784/",
+      "score": 7
+    },
+    {
+      "url": "https://www.facebook.com/groups/381440285676071/posts/2409471086206304/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/eagleridgeph/posts/play-pickleball-at-eagle-ridgeenjoy-our-exclusive-promo-for-our-new-pickleball-c/1399682798617955/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/138147108352809/posts/1331293655704809/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/424924075697617/posts/1455443675978980/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/5774822595864711/posts/26900234429563554/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/149880072032365/posts/2732957100391303/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/baddicks/posts/26005851439043500/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/738484767354908/posts/1595359151667461/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/baddicks/posts/9091680087553900/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/149880072032365/posts/2734878760199137/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2075031119497964/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4346547388966802/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4239412703013605/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/61568779744215/posts/say-hello-to-the-dink-lab-cavites-newest-pickleball-playgroundwith-3-us-pro-stan/122141702768625991/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/968053541323184/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/100067037978030/posts/1238061468438441/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/ThePickleGroundPH/videos/welcome-to-thepicklegroundph-your-community-centered-pickleball-court-in-caviteo/809220334944409/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986516446143560/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/986901159438422/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/general-trias-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cavite/general-trias-city/facebook-pages.state.json"
+}

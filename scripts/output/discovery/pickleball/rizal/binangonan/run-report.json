@@ -1,0 +1,82 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "rizal",
+    "citySlug": "binangonan",
+    "provinceName": "Rizal",
+    "cityName": "Binangonan"
+  },
+  "importedPlaceIds": [],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:02:54.773Z",
+      "finishedAt": "2026-03-10T06:03:21.310Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:03:21.312Z",
+      "finishedAt": "2026-03-10T06:03:48.158Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:03:48.174Z",
+      "finishedAt": "2026-03-10T06:04:25.425Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "skipped",
+      "startedAt": "2026-03-10T06:04:26.443Z",
+      "finishedAt": "2026-03-10T06:04:26.802Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for binangonan, skipped 1"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:04:26.802Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope for binangonan"
+    },
+    "embeddingBackfill": {
+      "status": "skipped",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:04:26.803Z",
+      "lastError": null,
+      "notes": "all approved rows were out of scope"
+    }
+  }
+}

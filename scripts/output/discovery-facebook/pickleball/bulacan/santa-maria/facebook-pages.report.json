@@ -1,0 +1,190 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Santa Maria",
+    "citySlug": "santa-maria",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:52:44.196Z",
+  "queries": [
+    "site:facebook.com pickleball Santa Maria Bulacan",
+    "site:facebook.com \"Santa Maria\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Santa Maria\" \"pickleball club\"",
+    "site:facebook.com \"Santa Maria\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/thepickleballcentersantamaria/",
+    "https://www.facebook.com/people/SMPC-Santa-Maria-Pickleball-Club/61581715238133/",
+    "https://www.facebook.com/thepickleballcentersantamaria/?locale=en_GB",
+    "https://www.facebook.com/thepickleballcentersantamaria/?locale=zh_CN",
+    "https://www.facebook.com/890431384163758/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/monday-open-play-court-rentaljoin-our-monday-open-play-and-court-rental-900-am-1/122164869866941050/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/videos/-tuesday-play-all-court-rental-join-our-monday-open-play-and-court-rental-900-am/1688951655614690/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/new-to-pickleball-we-got-you-were-open-monday-sunday-9am-9pm-to-join-our-open-pl/122163790634941050/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/videos/new-to-pickleball-we-got-you/898134943013986/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/sunday-op-court-rentaljoin-our-sunday-op-and-court-rental-100-pm-900-pm-for-1800/122163461486941050/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3915007385454140/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/monday-op-court-rentaljoin-our-monday-op-and-court-rental-900-am-100-pm-for-1500/122163638264941050/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4351607751794099/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/monday-open-play-court-rentaljoin-our-monday-open-play-and-court-rental-900-am-1/122164869866941050/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/videos/-tuesday-play-all-court-rental-join-our-monday-open-play-and-court-rental-900-am/1688951655614690/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/new-to-pickleball-we-got-you-were-open-monday-sunday-9am-9pm-to-join-our-open-pl/122163790634941050/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/-tuesday-play-all-court-rental-join-our-monday-open-play-and-court-rental-900-am/122165085674941050/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/videos/new-to-pickleball-we-got-you/898134943013986/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61581715238133/photos/d41d8cd9/122127399639057174/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/thepickleballcentersantamaria/posts/congratulations-smpc-santa-maria-pickleball-club-/122164782368941050/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/853558448386471/posts/2071997309875906/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1161821672448763/posts/1162082165756047/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1542659149765039/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1825303304833954/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1690217981675821/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1806598693371082/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1597200274310926/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1824519091579042/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/510128712680385/posts/2143786999314540/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/614513438590654/posts/32345499951731923/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/510128712680385/posts/2406322313061006/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/510128712680385/posts/2411159182577319/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1719841668713452/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/160022411362060/posts/1679611506069802/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/santa-maria/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/santa-maria/facebook-pages.state.json"
+}

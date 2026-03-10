@@ -1,0 +1,130 @@
+{
+  "scope": {
+    "provinceName": "Laguna",
+    "provinceSlug": "laguna",
+    "cityName": "San Pedro City",
+    "citySlug": "san-pedro-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:47:30.689Z",
+  "queries": [
+    "pickleball courts in Laguna San Pedro City",
+    "pickleball court San Pedro City Laguna",
+    "San Pedro City pickleball",
+    "courts in San Pedro City Laguna pickleball",
+    "sports center San Pedro City Laguna pickleball",
+    "pickleball club San Pedro City Laguna",
+    "pickleball reservations San Pedro City Laguna",
+    "host-map:cebupickleballcourts.com:San Pedro City",
+    "host-map:cebupickleballcourts.com:San Pedro",
+    "host-map:dumapickleball.com:San Pedro City",
+    "host-map:dumapickleball.com:San Pedro",
+    "site:cebupickleballcourts.com San Pedro City Laguna pickleball",
+    "site:dumapickleball.com San Pedro City Laguna pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://reclub.co/clubs/@san-pedro-pickleball-club",
+    "https://panda-pickleball-center.easyweek.io/",
+    "https://www.pickleball.ph/pickleball-clubs.html"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://panda-pickleball-center.easyweek.io/",
+      "score": 10
+    },
+    {
+      "url": "https://panda-pickleball-center.easyweek.io/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/zh-hant/communities/laguna-philippines-380",
+      "score": 11
+    },
+    {
+      "url": "https://panda-pickleball-center.easyweek.io/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 5
+    },
+    {
+      "url": "https://panda-pickleball-center.easyweek.io/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 6
+    },
+    {
+      "url": "https://panda-pickleball-center.easyweek.io/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/",
+      "score": 5
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/802683887860151/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4290215984599943/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1251194929675709/",
+    "https://www.tiktok.com/@cherrishf/video/7572891938769210631",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/bamtintontimeph/posts/rackets-up-san-pedro-laguna-get-ready-for-the-newest-6-court-badminton-picklebal/122173948430258703/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.instagram.com/sanpedropickleballclub/?hl=en",
+    "https://www.tiktok.com/discover/pickleball-court-san-pedro-laguna",
+    "https://www.facebook.com/jeffreytamagic/videos/one-of-the-best-pickleball-court-na-mairerecommend-ko-sugurin-niyo-na-walang-mal/757634047419269/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1407726017355932/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.facebook.com/CongresswomanAnnMatibag/videos/from-session-halls-to-pickleball-courts-lagunanay-on-the-go-para-sa-mas-matibay-/901141462246317/",
+    "https://www.tiktok.com/discover/pickleball-court-san-pedro-laguna",
+    "https://www.facebook.com/p/San-Pedro-Pickleball-Club-61563762964244/",
+    "https://www.instagram.com/sanpedropickleballclub/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1n71566/anyone_from_san_pedro_wanna_try_pickleball_or/",
+    "https://www.instagram.com/reel/DGoHHaoz_MJ/",
+    "https://www.facebook.com/p/Smash-It-Sports-Center-61572500297839/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.tiktok.com/@kitkat.adventour/video/7544380390669110548",
+    "https://www.facebook.com/bamtintontimeph/posts/rackets-up-san-pedro-laguna-get-ready-for-the-newest-6-court-badminton-picklebal/122173948430258703/",
+    "https://www.instagram.com/p/DTuO352FGom/",
+    "https://www.tiktok.com/discover/laguna-pickleball-courts",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/sanpedropickleballclub/?hl=en",
+    "https://www.facebook.com/p/San-Pedro-Pickleball-Club-61563762964244/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/bamtintontimeph/posts/san-pedro-laguna-are-ready-to-smashyes-smash-it-sports-center-is-getting-ready-t/122181612116258703/",
+    "https://www.tiktok.com/discover/pickleball-court-san-pedro-laguna",
+    "https://www.instagram.com/reel/DBmFDGLy1jl/?hl=en",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1022666145861923/",
+    "https://www.instagram.com/p/DNVDyGXPWf_/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4290215984599943/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1n71566/anyone_from_san_pedro_wanna_try_pickleball_or/",
+    "https://www.tiktok.com/@nicollllleeeeeyyyyy/video/7488731986392026384",
+    "https://www.tiktok.com/discover/pickleball-court-san-pedro-laguna",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1407726017355932/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/san-pedro-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/san-pedro-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/laguna/san-pedro-city/scrape-state.json"
+}

@@ -1,0 +1,89 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:batangas:batangas-city:facebook",
+  "createdAt": "2026-03-10T06:25:08.610Z",
+  "updatedAt": "2026-03-10T07:08:14.806Z",
+  "scope": {
+    "provinceSlug": "batangas",
+    "citySlug": "batangas-city",
+    "provinceName": "Batangas",
+    "cityName": "Batangas City",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "335ca588-684c-4394-a12d-7795c7599567",
+    "d2b3ddc9-b344-47b4-b108-54147c37cf53"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "scrape": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "duplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "importApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDiscovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:25:08.613Z",
+      "finishedAt": "2026-03-10T06:25:18.247Z",
+      "lastError": null,
+      "notes": "runner executed facebook discovery"
+    },
+    "facebookCapture": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:25:18.247Z",
+      "finishedAt": "2026-03-10T06:26:50.404Z",
+      "lastError": null,
+      "notes": "runner executed facebook capture"
+    },
+    "facebookDuplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:26:50.404Z",
+      "finishedAt": "2026-03-10T06:27:22.797Z",
+      "lastError": null,
+      "notes": "runner executed facebook duplicate preflight"
+    },
+    "facebookImportApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:27:23.354Z",
+      "finishedAt": "2026-03-10T06:28:38.249Z",
+      "lastError": null,
+      "notes": "processed 2 approved facebook rows sequentially"
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:28:38.382Z",
+      "lastError": null,
+      "notes": "verified 2 facebook rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:28:38.409Z",
+      "finishedAt": "2026-03-10T07:08:14.806Z",
+      "lastError": null,
+      "notes": "all imported facebook rows already have embeddings"
+    }
+  }
+}

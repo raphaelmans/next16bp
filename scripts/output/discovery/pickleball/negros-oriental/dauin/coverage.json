@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T06:13:30.231Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 7,
+  "scrapedUrls": 2,
+  "noDataUrls": 5,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "dauin sport park|dauin|negros oriental",
+      "name": "Dauin Sport Park",
+      "city": "DAUIN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/dauin/dauin-sport-park",
+      "firstSeenAt": "2026-03-10T06:13:30.231Z",
+      "lastSeenAt": "2026-03-10T06:13:30.231Z"
+    },
+    {
+      "rowKey": "the soft serve cafe and courts|dauin|negros oriental",
+      "name": "The Soft Serve Cafe And Courts",
+      "city": "DAUIN",
+      "province": "NEGROS ORIENTAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-visayas/dauin/the-soft-serve-cafe-and-courts",
+      "firstSeenAt": "2026-03-10T06:13:30.231Z",
+      "lastSeenAt": "2026-03-10T06:13:30.231Z"
+    }
+  ]
+}

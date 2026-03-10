@@ -1,0 +1,99 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:cordoba",
+  "createdAt": "2026-03-10T05:16:15.875Z",
+  "updatedAt": "2026-03-10T05:19:20.460Z",
+  "urls": {
+    "https://facebook.com/p/Cordova-Pickleball-Court-61579333161408": {
+      "canonicalUrl": "https://facebook.com/p/Cordova-Pickleball-Court-61579333161408",
+      "latestUrl": "https://www.facebook.com/p/Cordova-Pickleball-Court-61579333161408/",
+      "firstCapturedAt": "2026-03-10T05:16:42.408Z",
+      "lastCapturedAt": "2026-03-10T05:16:42.408Z",
+      "status": "captured",
+      "title": "Cordova Pickleball Court | Cordova | Facebook",
+      "venueName": "Cordova Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Pickle-Reserve-61582487244991": {
+      "canonicalUrl": "https://facebook.com/p/Pickle-Reserve-61582487244991",
+      "latestUrl": "https://www.facebook.com/p/Pickle-Reserve-61582487244991/",
+      "firstCapturedAt": "2026-03-10T05:17:07.955Z",
+      "lastCapturedAt": "2026-03-10T05:17:07.955Z",
+      "status": "captured",
+      "title": "Pickle Reserve | Cordova | Facebook",
+      "venueName": "Pickle Reserve",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/ans0304062019": {
+      "canonicalUrl": "https://facebook.com/ans0304062019",
+      "latestUrl": "https://www.facebook.com/ans0304062019/",
+      "firstCapturedAt": "2026-03-10T05:17:24.925Z",
+      "lastCapturedAt": "2026-03-10T05:17:24.925Z",
+      "status": "captured",
+      "title": "Consuelo Rosales Plaza | Facebook",
+      "venueName": "Consuelo Rosales Plaza",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-10T05:17:53.218Z",
+      "lastCapturedAt": "2026-03-10T05:17:53.218Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/matchpoint.cebu": {
+      "canonicalUrl": "https://facebook.com/matchpoint.cebu",
+      "latestUrl": "https://www.facebook.com/matchpoint.cebu/",
+      "firstCapturedAt": "2026-03-10T05:18:13.746Z",
+      "lastCapturedAt": "2026-03-10T05:18:13.746Z",
+      "status": "captured",
+      "title": "Match Point Badminton and Pickleball Court Cebu | Facebook",
+      "venueName": "Match Point Badminton and Pickleball Court Cebu",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389": {
+      "canonicalUrl": "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389",
+      "latestUrl": "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+      "firstCapturedAt": "2026-03-10T05:18:41.137Z",
+      "lastCapturedAt": "2026-03-10T05:18:41.137Z",
+      "status": "captured",
+      "title": "Linkers Pickleball Court | Cebu City | Facebook",
+      "venueName": "Linkers Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/HQ-Pickleball-61585259447279": {
+      "canonicalUrl": "https://facebook.com/p/HQ-Pickleball-61585259447279",
+      "latestUrl": "https://www.facebook.com/p/HQ-Pickleball-61585259447279/",
+      "firstCapturedAt": "2026-03-10T05:19:02.902Z",
+      "lastCapturedAt": "2026-03-10T05:19:02.902Z",
+      "status": "captured",
+      "title": "HQ Pickleball | Cebu City | Facebook",
+      "venueName": "HQ Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

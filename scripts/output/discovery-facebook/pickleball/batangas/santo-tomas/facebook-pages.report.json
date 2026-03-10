@@ -1,0 +1,190 @@
+{
+  "scope": {
+    "provinceName": "Batangas",
+    "provinceSlug": "batangas",
+    "cityName": "Santo Tomas",
+    "citySlug": "santo-tomas",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:29:03.604Z",
+  "queries": [
+    "site:facebook.com pickleball Santo Tomas Batangas",
+    "site:facebook.com \"Santo Tomas\" \"Batangas\" \"pickleball\"",
+    "site:facebook.com \"Santo Tomas\" \"pickleball club\"",
+    "site:facebook.com \"Santo Tomas\" \"pickleball court\"",
+    "site:facebook.com \"Batangas\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/PDCCPTC/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Club-61566591501722/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Arena-61578531977462/",
+    "https://www.facebook.com/p/Batangas-City-Pickleball-Club-61575645631229/",
+    "https://www.facebook.com/p/EJs-Pickleball-Lounge-61579049522050/",
+    "https://www.facebook.com/474219265766513"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/newly-opened-pdcc-pickleball-court-in-santo-tomas-batangasjoin-our-open-play-pic/1154913766134913/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3891866391101573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4098740617080815/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/smcitystotomas/posts/its-officialsm-supermalls-is-the-new-home-base-of-pickleball-in-the-philippinesw/874302745584949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3855562851398594/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4123917951229748/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1352811972847337/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4168100013478208/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/newly-opened-pdcc-pickleball-court-in-santo-tomas-batangasjoin-our-open-play-pic/1154913766134913/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3891866391101573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462156101912923/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3855562851398594/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4372140529740821/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4098740617080815/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4275008152787393/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1186510226144180/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331822143772660/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3891866391101573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/newly-opened-pdcc-pickleball-court-in-santo-tomas-batangasjoin-our-open-play-pic/1154913766134913/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4098740617080815/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3855562851398594/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/picklebeesph/posts/1061267135494029/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1352811972847337/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4324473207840887/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1830968597401102/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1205096034544328/posts/1432766181777311/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/PickleballPhilippines/posts/newly-opened-pdcc-pickleball-court-in-santo-tomas-batangasjoin-our-open-play-pic/1154913766134913/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3891866391101573/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1462156101912923/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1352811972847337/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4366899366931604/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370013076620233/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4085667561721454/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4368710710083803/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3855562851398594/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566591501722/videos/1884617698834785/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/santo-tomas/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/santo-tomas/facebook-pages.state.json"
+}

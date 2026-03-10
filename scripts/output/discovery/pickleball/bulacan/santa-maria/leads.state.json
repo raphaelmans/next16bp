@@ -1,0 +1,141 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:santa-maria",
+  "createdAt": "2026-03-10T06:09:02.685Z",
+  "updatedAt": "2026-03-10T06:09:25.495Z",
+  "queries": [
+    "pickleball courts in Bulacan Santa Maria",
+    "pickleball court Santa Maria Bulacan",
+    "Santa Maria pickleball",
+    "courts in Santa Maria Bulacan pickleball",
+    "sports center Santa Maria Bulacan pickleball",
+    "pickleball club Santa Maria Bulacan",
+    "pickleball reservations Santa Maria Bulacan",
+    "host-map:cebupickleballcourts.com:Santa Maria",
+    "host-map:dumapickleball.com:Santa Maria",
+    "site:cebupickleballcourts.com Santa Maria Bulacan pickleball",
+    "site:dumapickleball.com Santa Maria Bulacan pickleball"
+  ],
+  "urls": {
+    "https://reclub.co/clubs/@the-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "latestUrl": "https://reclub.co/clubs/@the-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "pickleball club Santa Maria Bulacan",
+      "title": "The Pickleball Center @ Santa Maria Bulacan",
+      "snippet": "The Pickleball Center @ Santa Maria Bulacan ... Beginner-friendly court for all ages. Schedule to be announced soon! Organized By. Crisanto Perez.",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022": {
+      "canonicalUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "latestUrl": "https://moovitapp.com/index/en/public_transit-Pickleball_Court-Manila-site_273570978-1022",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "courts in Santa Maria Bulacan pickleball",
+      "title": "How to Get to Pickleball Court in Santa Maria by Bus?",
+      "snippet": "The closest stations to Pickleball Court are: Dental Clinic, New Bypass Road, Santa Maria is 1329 meters away, 18 min walk. Which bus lines stop near Pickleball ...",
+      "domain": "moovitapp.com",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/PQG68L": {
+      "canonicalUrl": "https://reclub.co/m/PQG68L",
+      "latestUrl": "https://reclub.co/m/PQG68L",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "pickleball courts in Bulacan Santa Maria",
+      "title": "play all tuesday",
+      "snippet": "PLAY ALL TUESDAY! The Pickleball Center – New Location (Former SMAX Shopping Center, Sta. Maria, Bulacan) 9:00 AM – 9:00 PM P150.00 per person",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/F5VOJH": {
+      "canonicalUrl": "https://reclub.co/m/F5VOJH",
+      "latestUrl": "https://reclub.co/m/F5VOJH",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "courts in Santa Maria Bulacan pickleball",
+      "title": "play all tuesday",
+      "snippet": "PLAY ALL TUESDAY! The Pickleball Center – New Location (Former SMAX Shopping Center, Sta. Maria, Bulacan) 9:00 AM – 9:00 PM P150.00 per person",
+      "domain": "reclub.co",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleballsantamaria.com/": {
+      "canonicalUrl": "https://pickleballsantamaria.com/",
+      "latestUrl": "https://pickleballsantamaria.com/",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "Santa Maria pickleball",
+      "title": "Play Pickleball in Santa Maria - Courts & Events",
+      "snippet": "Our comprehensive list includes both indoor and outdoor pickleball courts across Santa Maria, complete with details on the best times for different play levels.",
+      "domain": "pickleballsantamaria.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/clubs/@sta-maria-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@sta-maria-pickleball-club",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@sta-maria-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "Santa Maria pickleball",
+      "title": "Santa Maria Pickleball Club",
+      "snippet": "Welcome to Santa Maria Pickleball Club— where everyone's game gets better. Whether you're just learning what a dink shot is or you're.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/it/lazio/roma/santa-maria-sports-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/it/lazio/roma/santa-maria-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/it/lazio/roma/santa-maria-sports-center",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "Santa Maria pickleball",
+      "title": "Play Pickleball at Santa Maria Sports Center: Court Information",
+      "snippet": "Santa Maria Sports Center is one of the most popular places to play pickleball in Roma, Lazio. There is 1 outdoor hard court. This is a dedicated court.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Maria%2C+CA": {
+      "canonicalUrl": "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Maria%2C+CA",
+      "latestUrl": "https://m.yelp.com/search?find_desc=Pickleball+Courts&find_loc=Santa+Maria%2C+CA",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "Santa Maria pickleball",
+      "title": "TOP 10 BEST Pickleball Courts in Santa Maria, CA - Updated 2026",
+      "snippet": "Top 10 Best Pickleball Courts Near Santa Maria, California · 1. Foxenwood Tennis & Swim Club · 2. Palisades Park · 3. Santa Barbara Pickleball · 4. Del Mar Park · 5.",
+      "domain": "m.yelp.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/id/clubs/@sta-maria-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/id/clubs/@sta-maria-pickleball-club",
+      "latestUrl": "https://reclub.co/id/clubs/@sta-maria-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "pickleball club Santa Maria Bulacan",
+      "title": "Santa Maria Pickleball Club",
+      "snippet": "Welcome to Santa Maria Pickleball Club— where everyone's game gets better. Whether you're just learning what a dink shot is or you're already slicing winners ...",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickletrip.com/all/philippines/central-luzon/santa-maria/vacation-rentals": {
+      "canonicalUrl": "https://pickletrip.com/all/philippines/central-luzon/santa-maria/vacation-rentals",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/santa-maria/vacation-rentals",
+      "firstDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "lastDiscoveredAt": "2026-03-10T06:09:02.686Z",
+      "sourceQuery": "pickleball reservations Santa Maria Bulacan",
+      "title": "Vacation Rentals and Pickleball Stays in Santa Maria, PH",
+      "snippet": "Find Vacation Rentals in Santa Maria, PH. Discover 155 vacation rentals, resorts, and hotels with private courts and nearby facilities in Santa Maria.",
+      "domain": "pickletrip.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

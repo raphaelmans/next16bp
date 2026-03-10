@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:metro-manila:city-of-makati:facebook",
   "createdAt": "2026-03-09T17:14:43.659Z",
-  "updatedAt": "2026-03-09T17:28:34.841Z",
+  "updatedAt": "2026-03-10T05:57:08.578Z",
   "scope": {
     "provinceSlug": "metro-manila",
     "citySlug": "city-of-makati",
@@ -57,28 +57,28 @@
     "facebookDuplicatePreflight": {
       "status": "skipped",
       "startedAt": "2026-03-09T17:15:20.948Z",
-      "finishedAt": "2026-03-09T17:28:34.841Z",
+      "finishedAt": "2026-03-10T05:57:08.578Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "facebookImportApproved": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.841Z",
+      "finishedAt": "2026-03-10T05:57:08.578Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "dbVerification": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.841Z",
+      "finishedAt": "2026-03-10T05:57:08.578Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     },
     "embeddingBackfill": {
       "status": "skipped",
       "startedAt": null,
-      "finishedAt": "2026-03-09T17:28:34.841Z",
+      "finishedAt": "2026-03-10T05:57:08.578Z",
       "lastError": null,
       "notes": "facebook capture CSV has no data rows"
     }

@@ -1,0 +1,107 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:naga-city",
+  "createdAt": "2026-03-10T07:15:01.811Z",
+  "updatedAt": "2026-03-10T07:15:50.328Z",
+  "queries": [
+    "pickleball courts in Cebu Naga City",
+    "pickleball court Naga City Cebu",
+    "Naga City pickleball",
+    "courts in Naga City Cebu pickleball",
+    "sports center Naga City Cebu pickleball",
+    "pickleball club Naga City Cebu",
+    "pickleball reservations Naga City Cebu",
+    "host-map:cebupickleballcourts.com:Naga City",
+    "host-map:cebupickleballcourts.com:Naga",
+    "host-map:dumapickleball.com:Naga City",
+    "host-map:dumapickleball.com:Naga",
+    "site:cebupickleballcourts.com Naga City Cebu pickleball",
+    "site:dumapickleball.com Naga City Cebu pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-visayas/city-of-naga/city-of-naga-pickleball-court",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball reservations Naga City Cebu",
+      "title": "City of Naga Pickleball Court",
+      "snippet": "Can you reserve a pickleball court at City of Naga Pickleball Court? We're not sure if reservations are available or required at City of Naga Pickleball Court.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle": {
+      "canonicalUrl": "https://nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle",
+      "latestUrl": "https://www.nagacityguide.com/pickleball-in-naga-city-the-sport-thats-redefining-fitness-community-and-lifestyle/",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball club Naga City Cebu",
+      "title": "Pickleball in Naga City: The Sport That's Redefining Fitness, ...",
+      "snippet": "More than just a place, Camsur Pickle Ball Club represents the community side of the sport with more elevated courts and facilities. With ...",
+      "domain": "nagacityguide.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/active-hub": {
+      "canonicalUrl": "https://smsupermalls.com/active-hub",
+      "latestUrl": "https://www.smsupermalls.com/active-hub",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball reservations Naga City Cebu",
+      "title": "Active Hub at SM",
+      "snippet": "Check out these Pickleball events happening this summer: ; Pickleball OPEN PLAY, SM City Urdaneta Central 2 COURTS, Tue & Thu - 6pm onwards, Sun - 10 am onwards.",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://pages.ph/2025/02/pickleball-in-cebu": {
+      "canonicalUrl": "https://pages.ph/2025/02/pickleball-in-cebu",
+      "latestUrl": "https://www.pages.ph/2025/02/pickleball-in-cebu/",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball club Naga City Cebu",
+      "title": "Pickleball's rising popularity in Cebu",
+      "snippet": "The racket/paddle sport of Pickleball has become widespread in Cebu. What started as a niche sport played by balikbayans and expats has now expanded from ...",
+      "domain": "pages.ph",
+      "relevanceScore": 10,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/whats-new/lifestyle/sm-seaside-city-opens-cebus-first-outdoor-free-play-pickle-ball-court-in-cebu-city": {
+      "canonicalUrl": "https://smsupermalls.com/whats-new/lifestyle/sm-seaside-city-opens-cebus-first-outdoor-free-play-pickle-ball-court-in-cebu-city",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/sm-seaside-city-opens-cebus-first-outdoor-free-play-pickle-ball-court-in-cebu-city",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball courts in Cebu Naga City",
+      "title": "SM SEASIDE CITY OPENS CEBU'S FIRST OUTDOOR FREE-PLAY ...",
+      "snippet": "Located at the upper ground level, Tower Garden, Cube Wing, this new facility is set to become a hub for both seasoned players and newcomers to the sport.",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 3,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@naga-city-pickleball-club": {
+      "canonicalUrl": "https://reclub.co/clubs/@naga-city-pickleball-club",
+      "latestUrl": "https://reclub.co/clubs/@naga-city-pickleball-club",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "pickleball club Naga City Cebu",
+      "title": "Naga City Pickleball Club",
+      "snippet": "Play Pickleball with Naga City Pickleball Club! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    },
+    "https://smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun": {
+      "canonicalUrl": "https://smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "latestUrl": "https://www.smsupermalls.com/whats-new/lifestyle/pickleball-is-here-sm-supermalls-introduces-permanent-courts-for-everyday-fun",
+      "firstDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "lastDiscoveredAt": "2026-03-10T07:15:01.812Z",
+      "sourceQuery": "sports center Naga City Cebu pickleball",
+      "title": "Pickleball is here! SM Supermalls introduces permanent courts for ...",
+      "snippet": "SM Sports and Leisure Center (SLC) brings permanent pickleball courts to three major malls: SM City Sta. Mesa, SM City Bicutan, and SM City Marikina.",
+      "domain": "smsupermalls.com",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

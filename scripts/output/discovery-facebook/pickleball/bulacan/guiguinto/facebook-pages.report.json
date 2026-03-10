@@ -1,0 +1,190 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Guiguinto",
+    "citySlug": "guiguinto",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:12:12.951Z",
+  "queries": [
+    "site:facebook.com pickleball Guiguinto Bulacan",
+    "site:facebook.com \"Guiguinto\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Guiguinto\" \"pickleball club\"",
+    "site:facebook.com \"Guiguinto\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61584251613063/",
+    "https://www.facebook.com/p/Mighty-Sports-Center-Bulacan-61581447100234/",
+    "https://www.facebook.com/p/Swoosh-Sports-Club-61580425141553/",
+    "https://www.facebook.com/61580425141553/?locale=zh_CN",
+    "https://www.facebook.com/61580425141553/?locale=en_GB",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4213025402319002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61581447100234/posts/competitive-rallies-smooth-rotations-strong-homecourt-energy-open-play-nights-at/122126652117048236/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345187559102785/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356308991323975/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/61581447100234/videos/%F0%9D%90%87%F0%9D%90%A8%F0%9D%90%B0-%F0%9D%90%8C%F0%9D%90%A2%F0%9D%90%A0%F0%9D%90%A1%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%8F%F0%9D%90%A5%F0%9D%90%9A%F0%9D%90%B2%F0%9D%90%9E%F0%9D%90%AB%F0%9D%90%AC-%F0%9D%90%AB%F0%9D%90%AE%F0%9D%90%A7-%F0%9D%90%AD%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%A0%F0%9D%90%9A%F0%9D%90%A6%F0%9D%90%9E-real-rallies-real-teamwork-real-game-day-energyg/1635860914069300/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4352034375084770/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4213025402319002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61581447100234/posts/competitive-rallies-smooth-rotations-strong-homecourt-energy-open-play-nights-at/122126652117048236/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356308991323975/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4352034375084770/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4345187559102785/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4328522684102606/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4213025402319002/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61581447100234/posts/competitive-rallies-smooth-rotations-strong-homecourt-energy-open-play-nights-at/122126652117048236/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356308991323975/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4352034375084770/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61581447100234/videos/%F0%9D%90%96%F0%9D%90%9E-%F0%9D%90%A0%F0%9D%90%A8%F0%9D%90%AD-%F0%9D%90%AD%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%AB%F0%9D%90%A2%F0%9D%90%A0%F0%9D%90%A1%F0%9D%90%AD-%F0%9D%90%9C%F0%9D%90%A8%F0%9D%90%AE%F0%9D%90%AB%F0%9D%90%AD-clean-space-game-ready-courts-and-a-community-that-pushes/928177429885719/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4328522684102606/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/angbosesngbarangaysantaritaguiguinto/posts/1905311666737471/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4213025402319002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1348513819833526/posts/1517256036292636/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356308991323975/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4352034375084770/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4134235763531300/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/guiguinto/facebook-pages.state.json"
+}

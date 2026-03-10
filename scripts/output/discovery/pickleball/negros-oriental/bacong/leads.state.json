@@ -1,0 +1,81 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:bacong",
+  "createdAt": "2026-03-10T06:17:05.575Z",
+  "updatedAt": "2026-03-10T06:17:29.929Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Bacong",
+    "pickleball court Bacong Negros Oriental",
+    "Bacong pickleball",
+    "courts in Bacong Negros Oriental pickleball",
+    "sports center Bacong Negros Oriental pickleball",
+    "pickleball club Bacong Negros Oriental",
+    "pickleball reservations Bacong Negros Oriental",
+    "host-map:cebupickleballcourts.com:Bacong",
+    "host-map:dumapickleball.com:Bacong",
+    "site:cebupickleballcourts.com Bacong Negros Oriental pickleball",
+    "site:dumapickleball.com Bacong Negros Oriental pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/negros-island-region/bacong/pickle-jungle": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/negros-island-region/bacong/pickle-jungle",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/bacong/pickle-jungle",
+      "firstDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "lastDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "sourceQuery": "pickleball reservations Bacong Negros Oriental",
+      "title": "Play Pickleball at Pickle Jungle: Court Information",
+      "snippet": "Pickle Jungle is one of the most popular places to play pickleball in Bacong, Negros Island Region. There is 1 indoor hard court. This is a dedicated court ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/m/AR3Z5K": {
+      "canonicalUrl": "https://reclub.co/m/AR3Z5K",
+      "latestUrl": "https://reclub.co/m/AR3Z5K",
+      "firstDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "lastDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "sourceQuery": "pickleball club Bacong Negros Oriental",
+      "title": "Exclusive OP",
+      "snippet": "TAT Pickleball court. Balayagmanok, Bacong, Negros Oriental, Philippines. see map. Per Player. $112.50. We'll have total of 14 players. Only looking for 5 ...",
+      "domain": "reclub.co",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/negros-island-region/bacong": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/negros-island-region/bacong",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/negros-island-region/bacong",
+      "firstDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "lastDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "sourceQuery": "Bacong pickleball",
+      "title": "1 pickleball court in Bacong, Negros Island Region",
+      "snippet": "Discover the most popular indoor and outdoor pickleball courts in Bacong, Negros Island Region! Filter by court type, surface, amenities, lighting and more.",
+      "domain": "pickleheads.com",
+      "relevanceScore": 14,
+      "handedOffToScrapeAt": null
+    },
+    "https://metropost-online.com/negors-growing-pickleball-craze": {
+      "canonicalUrl": "https://metropost-online.com/negors-growing-pickleball-craze",
+      "latestUrl": "https://metropost-online.com/negors-growing-pickleball-craze/",
+      "firstDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "lastDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "sourceQuery": "pickleball club Bacong Negros Oriental",
+      "title": "NegOr's growing pickleball craze",
+      "snippet": "What started as a weekend sport at the boulevard near the Press Club building in 2024 has since grown into a province-wide passion that visitors ...",
+      "domain": "metropost-online.com",
+      "relevanceScore": 2,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@pickle-spot-bacong": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickle-spot-bacong",
+      "latestUrl": "https://reclub.co/clubs/@pickle-spot-bacong",
+      "firstDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "lastDiscoveredAt": "2026-03-10T06:17:05.579Z",
+      "sourceQuery": "pickleball club Bacong Negros Oriental",
+      "title": "Pickle Spot - Bacong",
+      "snippet": "Play Pickleball with Pickle Spot - Bacong! Browse social play, join club events, and connect with the community on the Reclub platform.",
+      "domain": "reclub.co",
+      "relevanceScore": 12,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

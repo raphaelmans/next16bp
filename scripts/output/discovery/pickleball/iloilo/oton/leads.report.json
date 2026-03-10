@@ -1,0 +1,97 @@
+{
+  "scope": {
+    "provinceName": "Iloilo",
+    "provinceSlug": "iloilo",
+    "cityName": "Oton",
+    "citySlug": "oton",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:50:11.554Z",
+  "queries": [
+    "pickleball courts in Iloilo Oton",
+    "pickleball court Oton Iloilo",
+    "Oton pickleball",
+    "courts in Oton Iloilo pickleball",
+    "sports center Oton Iloilo pickleball",
+    "pickleball club Oton Iloilo",
+    "pickleball reservations Oton Iloilo",
+    "host-map:cebupickleballcourts.com:Oton",
+    "host-map:dumapickleball.com:Oton",
+    "site:cebupickleballcourts.com Oton Iloilo pickleball",
+    "site:dumapickleball.com Oton Iloilo pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/western-visayas/oton/triple-a-sports-center-pickleball-courts-at-vista-mall",
+    "https://www.pickleheads.com/courts/ph/western-visayas/philippines/sinadya-pickleball-courts-at-vista-mall-iloilo",
+    "https://www.youtube.com/watch?v=Rz-v9X4rgqM",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+    "https://www.pickletrip.com/all/philippines/western-visayas/iloilo/plazuela-de-iloilo",
+    "https://reclub.co/clubs/@pototan-pickleball-club",
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.pickleheads.com/courts/ph/western-visayas/philippines/sinadya-pickleball-courts-at-vista-mall-iloilo",
+      "score": 13
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/ko/communities/iloilo-city-philippines-423",
+      "score": 11
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.facebook.com/61583075104581",
+    "https://www.tiktok.com/@mypinaylife/video/7473310252105026859",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.reddit.com/r/Iloilo/comments/1b4kr4m/pickleball_tennis/",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.facebook.com/flipsenina/posts/pickle-balls-newest-home-is-pickle-point-iloilo-and-sport-para-sa-mga-jowable-es/1315409387251619/",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DTz-81Rjegz/",
+    "https://www.facebook.com/61583075104581",
+    "https://www.tiktok.com/@mypinaylife/video/7473310252105026859",
+    "https://www.instagram.com/reel/DITvoL2Bdov/",
+    "https://www.facebook.com/BMJoAnnGerminanda/posts/wow-miagaopickleball-na-kita-sa-miagao-atty-bm-rica-jane-l-garin-dr-janette-lore/887129890967457/",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.facebook.com/smcityiloilo/posts/-new-sport-unlocked-pickleball-head-to-sm-city-iloilos-active-hub-and-see-what-t/1090492243117546/",
+    "https://www.facebook.com/picklepointiloilo/videos/daily-grind-at-picklepoint-iloilo-play-train-compete-repeat-all-levels-welcome-b/24542028342144037/",
+    "https://www.facebook.com/picklepointiloilo/",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.instagram.com/p/DARkqK2zPNp/",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.tiktok.com/@mypinaylife/video/7473310252105026859",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1161246628670540/",
+    "https://www.facebook.com/picklepointiloilo/videos/-exciting-news-pickleball-playerspicklepoint-iloilo-is-now-opening-earlier-so-yo/748504994768213/",
+    "https://www.instagram.com/reel/DIQjo6bzlHg/?hl=en",
+    "https://www.facebook.com/p/Sinadya-Pickleball-Vista-Mall-Iloilo-61577937063430/",
+    "https://www.facebook.com/iloilopickleball/posts/outdoor-pickleball-courts-at-oton-iloilocongratulations/572487082608032/",
+    "https://www.facebook.com/groups/514709697054264/posts/1486602109865013/",
+    "https://www.facebook.com/groups/1427031310951241/posts/4334297986891211/",
+    "https://www.tiktok.com/@mypinaylife/video/7473310252105026859",
+    "https://www.facebook.com/padibeachoton/",
+    "https://www.facebook.com/picklepointiloilo/videos/-exciting-news-pickleball-playerspicklepoint-iloilo-is-now-opening-earlier-so-yo/748504994768213/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/oton/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/oton/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/iloilo/oton/scrape-state.json"
+}

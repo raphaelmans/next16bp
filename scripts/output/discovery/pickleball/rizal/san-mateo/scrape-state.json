@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:58:22.297Z",
+  "updatedAt": "2026-03-10T05:58:55.557Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "moncarlo village basketball court|san mateo|rizal",
+      "lastRowName": "Moncarlo Village Basketball Court"
+    },
+    "https://app.sports360.ph/sportshub/pickle-camp": {
+      "canonicalUrl": "https://app.sports360.ph/sportshub/pickle-camp",
+      "latestUrl": "https://app.sports360.ph/sportshub/pickle-camp",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball": {
+      "canonicalUrl": "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+      "latestUrl": "https://reclub.co/id/clubs/@sanmateo-greenland-pickleball",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@san-mateo-pickleball-movement": {
+      "canonicalUrl": "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+      "latestUrl": "https://reclub.co/clubs/@san-mateo-pickleball-movement",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/us/california/san-mateo": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/us/california/san-mateo",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/san-mateo",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.sanmateoelks1112.org/copy-of-handball": {
+      "canonicalUrl": "https://www.sanmateoelks1112.org/copy-of-handball",
+      "latestUrl": "https://www.sanmateoelks1112.org/copy-of-handball",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://pickleballsanmateo.com/": {
+      "canonicalUrl": "https://pickleballsanmateo.com/",
+      "latestUrl": "https://pickleballsanmateo.com/",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@san-mateo-pickleball-community": {
+      "canonicalUrl": "https://reclub.co/clubs/@san-mateo-pickleball-community",
+      "latestUrl": "https://reclub.co/clubs/@san-mateo-pickleball-community",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/pickleball-clubs.html": {
+      "canonicalUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "latestUrl": "https://www.pickleball.ph/pickleball-clubs.html",
+      "firstDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "lastDiscoveredAt": "2026-03-10T05:58:22.297Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:58:22.297Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "moncarlo village basketball court|san mateo|rizal": {
+      "rowKey": "moncarlo village basketball court|san mateo|rizal",
+      "name": "Moncarlo Village Basketball Court",
+      "city": "SAN MATEO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/san-mateo/moncarlo-village-basketball-court",
+      "firstSeenAt": "2026-03-10T05:58:22.297Z",
+      "lastSeenAt": "2026-03-10T05:58:22.297Z"
+    }
+  }
+}

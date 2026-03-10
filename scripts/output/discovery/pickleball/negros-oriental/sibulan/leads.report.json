@@ -1,0 +1,110 @@
+{
+  "scope": {
+    "provinceName": "Negros Oriental",
+    "provinceSlug": "negros-oriental",
+    "cityName": "Sibulan",
+    "citySlug": "sibulan",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:53:19.816Z",
+  "queries": [
+    "pickleball courts in Negros Oriental Sibulan",
+    "pickleball court Sibulan Negros Oriental",
+    "Sibulan pickleball",
+    "courts in Sibulan Negros Oriental pickleball",
+    "sports center Sibulan Negros Oriental pickleball",
+    "pickleball club Sibulan Negros Oriental",
+    "pickleball reservations Sibulan Negros Oriental",
+    "host-map:cebupickleballcourts.com:Sibulan",
+    "host-map:dumapickleball.com:Sibulan",
+    "site:cebupickleballcourts.com Sibulan Negros Oriental pickleball",
+    "site:dumapickleball.com Sibulan Negros Oriental pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+    "https://tockify.com/ppf.calendar/detail/64/1767283200000",
+    "https://app.court-access.com/",
+    "https://reclub.co/clubs/@hbox-pickleball-sibulan"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/T4L2CQ",
+      "score": 12
+    },
+    {
+      "url": "https://reclub.co/m/1N774D",
+      "score": 12
+    },
+    {
+      "url": "https://reclub.co/m/FZRTMB",
+      "score": 14
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-visayas/sibulan/ace-covered-pickleball-court",
+      "score": 12
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.facebook.com/p/Rally-Pickleball-Court-61581083184292/",
+    "https://www.instagram.com/reel/DTUu2u_EY1k/",
+    "https://www.instagram.com/reel/DOP1czQEg_3/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1454306929623236/",
+    "https://www.facebook.com/61579076858143/posts/after-all-the-rain-retouches-and-long-days-the-court-is-finally-cured-and-ready-/122115165380969228/",
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/p/Rally-Pickleball-Court-61581083184292/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.instagram.com/reel/DTUu2u_EY1k/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/",
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/p/The-Gnarly-Pickleground-61579076858143/",
+    "https://www.instagram.com/reel/DTUu2u_EY1k/",
+    "https://www.facebook.com/100093226993699/posts/come-and-visit-our-pop-up-stall-at-frnds-pickleball-court-sibulan/769368586180701/",
+    "https://www.facebook.com/p/The-Dinkery-Sibulan-61575547363371/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/",
+    "https://www.facebook.com/dino.abiera/posts/pickleball-night-at-sibulan-gym-yes-to-sports-/10159868349019649/",
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.instagram.com/reel/DTUu2u_EY1k/",
+    "https://www.facebook.com/p/Rally-Pickleball-Court-61581083184292/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1454306929623236/",
+    "https://www.facebook.com/p/Rally-Pickleball-Court-61581083184292/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/",
+    "https://www.instagram.com/p/DTspRFPAXCV/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1376390554081541/",
+    "https://www.facebook.com/61575547363371/videos/762909306263280/",
+    "https://www.facebook.com/neil.rio/posts/fks-gymnasium-soft-opening-promo-experience-sibulans-newest-covered-pickleball-c/10235759453743476/",
+    "https://www.tiktok.com/@eatstheweekend/video/7495735688122354952",
+    "https://www.facebook.com/p/Frnds-Pickleball-61578333369272/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1454306929623236/",
+    "https://www.facebook.com/p/The-Dinkery-Sibulan-61575547363371/",
+    "https://www.facebook.com/eiserjon.diputado/videos/dry-run-dink-at-dipzsoft-opening-date-march-8-2026purok-6-magatas-sibulan-divers/1237937151272180/",
+    "https://www.instagram.com/p/DP5qQBmgceW/",
+    "https://www.instagram.com/reel/DOP1czQEg_3/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1451174556603140/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1445877283799534/",
+    "https://www.facebook.com/almystery2017/posts/new-seaside-pickleball-court-with-cafe-in-sibulan-hatag-ko-check-comsec-%EF%B8%8Fpuerto-/1185686317046646/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1416885226698740/",
+    "https://www.facebook.com/groups/1205096034544328/posts/1446040210449908/",
+    "https://www.instagram.com/reel/DTUu2u_EY1k/",
+    "https://www.facebook.com/p/Rally-Pickleball-Court-61581083184292/",
+    "https://www.facebook.com/almystery2017/videos/new-pickleball-court-with-cafe-in-sibulan/1808362939849407/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/sibulan/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/sibulan/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/negros-oriental/sibulan/scrape-state.json"
+}

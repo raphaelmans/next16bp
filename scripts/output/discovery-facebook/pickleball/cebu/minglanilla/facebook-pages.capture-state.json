@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:cebu:minglanilla",
+  "createdAt": "2026-03-10T05:43:07.128Z",
+  "updatedAt": "2026-03-10T05:45:04.317Z",
+  "urls": {
+    "https://facebook.com/61585933167646": {
+      "canonicalUrl": "https://facebook.com/61585933167646",
+      "latestUrl": "https://www.facebook.com/61585933167646/",
+      "firstCapturedAt": "2026-03-10T05:43:11.572Z",
+      "lastCapturedAt": "2026-03-10T05:43:11.572Z",
+      "status": "captured",
+      "title": "Pals’ Pickleball Court | Minglanilla | Facebook",
+      "venueName": "Pals’ Pickleball Court",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/61586794404698": {
+      "canonicalUrl": "https://facebook.com/61586794404698",
+      "latestUrl": "https://www.facebook.com/61586794404698",
+      "firstCapturedAt": "2026-03-10T05:43:31.350Z",
+      "lastCapturedAt": "2026-03-10T05:43:31.350Z",
+      "status": "captured",
+      "title": "South Side Pickle | Minglanilla | Facebook",
+      "venueName": "South Side Pickle",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/cebupickleball": {
+      "canonicalUrl": "https://facebook.com/cebupickleball",
+      "latestUrl": "https://www.facebook.com/cebupickleball/",
+      "firstCapturedAt": "2026-03-10T05:43:44.618Z",
+      "lastCapturedAt": "2026-03-10T05:43:44.618Z",
+      "status": "captured",
+      "title": "Cebu Pickleball | Facebook",
+      "venueName": "Cebu Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/matchpoint.cebu": {
+      "canonicalUrl": "https://facebook.com/matchpoint.cebu",
+      "latestUrl": "https://www.facebook.com/matchpoint.cebu/",
+      "firstCapturedAt": "2026-03-10T05:44:00.480Z",
+      "lastCapturedAt": "2026-03-10T05:44:00.480Z",
+      "status": "captured",
+      "title": "Match Point Badminton and Pickleball Court Cebu | Facebook",
+      "venueName": "Match Point Badminton and Pickleball Court Cebu",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389": {
+      "canonicalUrl": "https://facebook.com/p/Linkers-Pickleball-Court-61564986929389",
+      "latestUrl": "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+      "firstCapturedAt": "2026-03-10T05:44:25.911Z",
+      "lastCapturedAt": "2026-03-10T05:44:25.911Z",
+      "status": "captured",
+      "title": "Linkers Pickleball Court | Cebu City | Facebook",
+      "venueName": "Linkers Pickleball Court",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/p/HQ-Pickleball-61585259447279": {
+      "canonicalUrl": "https://facebook.com/p/HQ-Pickleball-61585259447279",
+      "latestUrl": "https://www.facebook.com/p/HQ-Pickleball-61585259447279/",
+      "firstCapturedAt": "2026-03-10T05:44:45.811Z",
+      "lastCapturedAt": "2026-03-10T05:44:45.811Z",
+      "status": "captured",
+      "title": "HQ Pickleball | Cebu City | Facebook",
+      "venueName": "HQ Pickleball",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

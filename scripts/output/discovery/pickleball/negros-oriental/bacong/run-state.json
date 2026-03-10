@@ -1,0 +1,88 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:negros-oriental:bacong",
+  "createdAt": "2026-03-10T06:17:05.568Z",
+  "updatedAt": "2026-03-10T06:18:57.118Z",
+  "scope": {
+    "provinceSlug": "negros-oriental",
+    "citySlug": "bacong",
+    "provinceName": "Negros Oriental",
+    "cityName": "Bacong",
+    "sportSlug": "pickleball"
+  },
+  "importedPlaceIds": [
+    "a32f7459-c9e2-490f-9758-06f8628510ab"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:17:05.574Z",
+      "finishedAt": "2026-03-10T06:17:29.931Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:17:29.931Z",
+      "finishedAt": "2026-03-10T06:17:51.432Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:17:51.433Z",
+      "finishedAt": "2026-03-10T06:18:25.733Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:18:26.275Z",
+      "finishedAt": "2026-03-10T06:18:55.373Z",
+      "lastError": null,
+      "notes": "processed 1 approved rows sequentially"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T06:18:55.373Z",
+      "lastError": null,
+      "notes": "verified 1 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T06:18:55.379Z",
+      "finishedAt": "2026-03-10T06:18:57.118Z",
+      "lastError": null,
+      "notes": "backfilled 1 place ids"
+    }
+  }
+}

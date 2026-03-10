@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:cebu:consolacion:facebook",
   "createdAt": "2026-03-10T03:49:03.149Z",
-  "updatedAt": "2026-03-10T03:52:24.933Z",
+  "updatedAt": "2026-03-10T05:43:07.105Z",
   "scope": {
     "provinceSlug": "cebu",
     "citySlug": "consolacion",
@@ -80,9 +80,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T03:51:54.617Z",
-      "finishedAt": "2026-03-10T03:52:24.933Z",
+      "finishedAt": "2026-03-10T05:43:07.105Z",
       "lastError": null,
-      "notes": "backfilled 1 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

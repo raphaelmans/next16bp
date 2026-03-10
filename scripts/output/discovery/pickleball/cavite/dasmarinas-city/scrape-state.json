@@ -1,0 +1,67 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T04:43:03.928Z",
+  "updatedAt": "2026-03-10T04:43:20.384Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+      "firstDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "lastDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T04:43:03.927Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "dasmarinas pickleball|dasmariñas city|cavite",
+      "lastRowName": "Dasmarinas Pickleball"
+    },
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma": {
+      "canonicalUrl": "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+      "latestUrl": "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+      "firstDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "lastDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:43:03.927Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard": {
+      "canonicalUrl": "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+      "latestUrl": "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+      "firstDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "lastDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:43:03.927Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf": {
+      "canonicalUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "latestUrl": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf",
+      "firstDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "lastDiscoveredAt": "2026-03-10T04:43:03.927Z",
+      "attempts": 0,
+      "lastAttemptedAt": null,
+      "lastStatus": "discovered",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "dasmarinas pickleball|dasmariñas city|cavite": {
+      "rowKey": "dasmarinas pickleball|dasmariñas city|cavite",
+      "name": "Dasmarinas Pickleball",
+      "city": "DASMARIÑAS CITY",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+      "firstSeenAt": "2026-03-10T04:43:03.927Z",
+      "lastSeenAt": "2026-03-10T04:43:03.927Z"
+    }
+  }
+}

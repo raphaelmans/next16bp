@@ -1,0 +1,198 @@
+{
+  "scope": {
+    "provinceName": "Cebu",
+    "provinceSlug": "cebu",
+    "cityName": "Minglanilla",
+    "citySlug": "minglanilla",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:19:20.487Z",
+  "queries": [
+    "site:facebook.com pickleball Minglanilla Cebu",
+    "site:facebook.com \"Minglanilla\" \"Cebu\" \"pickleball\"",
+    "site:facebook.com \"Minglanilla\" \"pickleball club\"",
+    "site:facebook.com \"Minglanilla\" \"pickleball court\"",
+    "site:facebook.com \"Cebu\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/61585933167646/",
+    "https://www.facebook.com/61586794404698",
+    "https://www.facebook.com/cebupickleball/",
+    "https://www.facebook.com/matchpoint.cebu/",
+    "https://www.facebook.com/p/Linkers-Pickleball-Court-61564986929389/",
+    "https://www.facebook.com/p/HQ-Pickleball-61585259447279/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/61585350904444/videos/-coming-soon-our-pickleball-court/1983204162271352/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1405432217094505/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/MinglanillaFlashReport/posts/soon-join-us-for-the-%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%BC%F0%9D%97%B3-%F0%9D%97%A8%F0%9D%97%9F%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%9E-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%9B%F0%9D%97%A8%F0%9D%97%95-%F0%9D%97%BC%F0%9D%97%BB-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%BF%F0%9D%97%B0%F0%9D%97%B5-%F0%9D%9F%AD%F0%9D%9F%B0-%F0%9D%9F%AE%F0%9D%9F%AC%F0%9D%9F%AE%F0%9D%9F%B2-%F0%9D%9F%B5%F0%9D%9F%AC%F0%9D%9F%AC-/1387540853414690/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1410193319951728/",
+      "score": 11
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1363283721309355/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430816531222740/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/61583904333192/posts/%F0%9D%97%A8%F0%9D%97%9F%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%9E-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%9B%F0%9D%97%A8%F0%9D%97%95-%F0%9D%98%97%F0%9D%98%AD%F0%9D%98%A2%F0%9D%98%BA-%F0%9D%98%8A%F0%9D%98%B0%F0%9D%98%AF%F0%9D%98%AF%F0%9D%98%A6%F0%9D%98%A4%F0%9D%98%B5-%F0%9D%98%99%F0%9D%98%A6%F0%9D%98%B1%F0%9D%98%A6%F0%9D%98%A2%F0%9D%98%B5-%F0%9D%98%8C%F0%9D%98%B7%F0%9D%98%A6%F0%9D%98%B3%F0%9D%98%BA-%F0%9D%98%9D%F0%9D%98%AA%F0%9D%98%B4%F0%9D%98%AA%F0%9D%98%B5-%F0%9D%98%8A%F0%9D%98%B0%F0%9D%98%B6%F0%9D%98%AF%F0%9D%98%B5%F0%9D%98%B4the-wait-is-over-join/122099810229130144/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1262436101394118/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1390067881964272/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61585350904444/videos/-coming-soon-our-pickleball-court/1983204162271352/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1405432217094505/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/BelmontOneCebu/posts/soon-join-us-for-the-%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%BC%F0%9D%97%B3-%F0%9D%97%A8%F0%9D%97%9F%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%9E-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%9B%F0%9D%97%A8%F0%9D%97%95-%F0%9D%97%BC%F0%9D%97%BB-%F0%9D%97%A0%F0%9D%97%AE%F0%9D%97%BF%F0%9D%97%B0%F0%9D%97%B5-%F0%9D%9F%AD%F0%9D%9F%B0-%F0%9D%9F%AE%F0%9D%9F%AC%F0%9D%9F%AE%F0%9D%9F%B2-%F0%9D%9F%B5%F0%9D%9F%AC%F0%9D%9F%AC-/1395383002385594/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1413534909617569/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1410193319951728/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1430816531222740/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1363283721309355/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61583904333192/posts/%F0%9D%97%A8%F0%9D%97%9F%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%9E-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%9B%F0%9D%97%A8%F0%9D%97%95-%F0%9D%98%97%F0%9D%98%AD%F0%9D%98%A2%F0%9D%98%BA-%F0%9D%98%8A%F0%9D%98%B0%F0%9D%98%AF%F0%9D%98%AF%F0%9D%98%A6%F0%9D%98%A4%F0%9D%98%B5-%F0%9D%98%99%F0%9D%98%A6%F0%9D%98%B1%F0%9D%98%A6%F0%9D%98%A2%F0%9D%98%B5-%F0%9D%98%8C%F0%9D%98%B7%F0%9D%98%A6%F0%9D%98%B3%F0%9D%98%BA-%F0%9D%98%9D%F0%9D%98%AA%F0%9D%98%B4%F0%9D%98%AA%F0%9D%98%B5-%F0%9D%98%8A%F0%9D%98%B0%F0%9D%98%B6%F0%9D%98%AF%F0%9D%98%B5%F0%9D%98%B4the-wait-is-over-join/122099810229130144/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1410193319951728/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/MinglanillaFlashReport/posts/good-news-minglanillahanon-calling-out-pickleball-players-in-mingla-naa-tay-temp/1224416726393771/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1408348733469520/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/594979851482545/posts/1665524027761450/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1363283721309355/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/congsamsamgullas/posts/%F0%9D%97%A5%F0%9D%97%98-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%A2%F0%9D%97%99-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97%F0%9D%97%98%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%A2%F0%9D%97%99-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%98%F0%9D%97%AB%F0%9D%97%96%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%98%F0%9D%97%97-%F0%9D%97%99%F0%9D%97%A2%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%A3%F0%9D%97%A2%F0%9D%97%A5/1432188324929356/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2678655009069039/posts/4146245892309936/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/cebupickleball/videos/sunday-afternoon-pickleball/766204574738943/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/starmalltalisaycebu/posts/leaving-2025-with-laughs-rallies-and-calories-burned-ready-for-more-schedule-you/1415149987281807/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61585350904444/videos/-coming-soon-our-pickleball-court/1983204162271352/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61585933167646/posts/something-big-is-hitting-the-kitchen-in-minglanilla%EF%B8%8Fpals-pickleball-court-is-off/122105773839197772/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1405432217094505/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1363283721309355/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/congsamsamgullas/posts/%F0%9D%97%A5%F0%9D%97%98-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%A2%F0%9D%97%99-%F0%9D%97%A3%F0%9D%97%94%F0%9D%97%97%F0%9D%97%98%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%9A%F0%9D%97%A5%F0%9D%97%94%F0%9D%97%A1%F0%9D%97%97-%F0%9D%97%A2%F0%9D%97%A3%F0%9D%97%98%F0%9D%97%A1%F0%9D%97%9C%F0%9D%97%A1%F0%9D%97%9A-%F0%9D%97%A2%F0%9D%97%99-%F0%9D%97%A3%F0%9D%97%9C%F0%9D%97%96%F0%9D%97%9E%F0%9D%97%9F%F0%9D%97%98%F0%9D%97%95%F0%9D%97%94%F0%9D%97%9F%F0%9D%97%9F-%F0%9D%97%96%F0%9D%97%A2%F0%9D%97%A8%F0%9D%97%A5%F0%9D%97%A7-%F0%9D%97%98%F0%9D%97%AB%F0%9D%97%96%F0%9D%97%9C%F0%9D%97%A7%F0%9D%97%98%F0%9D%97%97-%F0%9D%97%99%F0%9D%97%A2%F0%9D%97%A5-%F0%9D%97%A6%F0%9D%97%A3%F0%9D%97%A2%F0%9D%97%A5/1432188324929356/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/proudbisayabai/posts/naka-pickleball-na-ba-ang-tanan-newly-opened-ang-nomads-pickleball-your-newest-g/1510477750864428/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/MinglanillaFlashReport/posts/good-news-minglanillahanon-calling-out-pickleball-players-in-mingla-naa-tay-temp/1224416726393771/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1413534909617569/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61586748253956/posts/kitchenline-how-a-doctor-lawyer-built-cebus-first-real-courtboth-already-respect/122109908265224941/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/darsaquino29/videos/quisina-pickleball-cebu/1316219467005579/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/keetapublications/posts/kitchenline-pickleball-is-where-pickleball-gets-real-cebus-first-usapa-standard-/1409760644496898/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4132038270417716/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/seasidehavencebu/posts/our-pickleball-court-is-now-officially-open-to-rent-for-only-p150hour-open-9am-1/1076455260844722/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1247467082891020/posts/1379664443004616/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4122919991329544/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/minglanilla/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/cebu/minglanilla/facebook-pages.state.json"
+}

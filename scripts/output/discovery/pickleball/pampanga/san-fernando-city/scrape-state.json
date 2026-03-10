@@ -1,0 +1,91 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:12:35.101Z",
+  "updatedAt": "2026-03-10T05:13:00.473Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga": {
+      "canonicalUrl": "https://www.pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga",
+      "latestUrl": "https://www.pickletrip.com/all/philippines/central-luzon/san-fernando/sm-city-pampanga",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@san-fernando-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "jungle base fitness|san fernando|central luzon",
+      "lastRowName": "Jungle Base Fitness"
+    },
+    "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA": {
+      "canonicalUrl": "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA",
+      "latestUrl": "https://m.yelp.com/search?find_desc=Indoor+Pickleball+Courts&find_loc=San+Fernando+Valley%2C+CA",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@pickleball-world": {
+      "canonicalUrl": "https://reclub.co/clubs/@pickleball-world",
+      "latestUrl": "https://reclub.co/clubs/@pickleball-world",
+      "firstDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "lastDiscoveredAt": "2026-03-10T05:12:35.099Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:12:35.099Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "jungle base fitness|san fernando|central luzon": {
+      "rowKey": "jungle base fitness|san fernando|central luzon",
+      "name": "Jungle Base Fitness",
+      "city": "San Fernando",
+      "province": "Central Luzon",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/central-luzon/san-fernando/jungle-base-fitness",
+      "firstSeenAt": "2026-03-10T05:12:35.099Z",
+      "lastSeenAt": "2026-03-10T05:12:35.099Z"
+    }
+  }
+}

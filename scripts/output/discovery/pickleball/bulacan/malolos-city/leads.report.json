@@ -1,0 +1,118 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Malolos City",
+    "citySlug": "malolos-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:16:27.298Z",
+  "queries": [
+    "pickleball courts in Bulacan Malolos City",
+    "pickleball court Malolos City Bulacan",
+    "Malolos City pickleball",
+    "courts in Malolos City Bulacan pickleball",
+    "sports center Malolos City Bulacan pickleball",
+    "pickleball club Malolos City Bulacan",
+    "pickleball reservations Malolos City Bulacan",
+    "host-map:cebupickleballcourts.com:Malolos City",
+    "host-map:cebupickleballcourts.com:Malolos",
+    "host-map:dumapickleball.com:Malolos City",
+    "host-map:dumapickleball.com:Malolos",
+    "site:cebupickleballcourts.com Malolos City Bulacan pickleball",
+    "site:dumapickleball.com Malolos City Bulacan pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/philippines/philippines/bulacan-sports-complex",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+    "https://booking.page/en/company/page/picklefit",
+    "https://reclub.co/ko/clubs/@city-of-malolos-pickleball-club",
+    "https://reclub.co/zh-hant/clubs/@city-of-malolos-pickleball-club",
+    "https://www.pickletrip.com/all/philippines/central-luzon/malolos-city/pet-friendly-rentals",
+    "https://www.pickleheads.com/courts/ph/central-luzon/malolos",
+    "https://playtimescheduler.com/region/malolos-luzon",
+    "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/WUE003",
+      "score": 11
+    },
+    {
+      "url": "https://booking.page/en/company/page/picklefit",
+      "score": 8
+    },
+    {
+      "url": "https://www.pickleheads.com/courts/ph/central-luzon/malolos/citywalk-badminton-sports-center",
+      "score": 10
+    },
+    {
+      "url": "https://jcassportsalley.simplybook.me/",
+      "score": 3
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 10
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.playpickleball.com/play-pickleball-near-me/philippines-bulacan-malolos-city/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/1571632833391398/",
+    "https://www.facebook.com/p/PickleFit-61579610165193/",
+    "https://www.facebook.com/hellocoachanne/videos/malolos-bulacan-pickleball-court/1407771737814062/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.instagram.com/cityofmalolos.pickleballclub/",
+    "https://www.playpickleball.com/play-pickleball-near-me/philippines-bulacan-malolos-city/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/1571632833391398/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4370092339945640/",
+    "https://www.playpickleball.com/pickleball-events/details/philippines-bulacan-malolos-city-paddle-up-metro-north-pickleball-demo-clinic/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.playpickleball.com/play-pickleball-near-me/philippines-bulacan-malolos-city/",
+    "https://www.instagram.com/p/DOyMhkmE5EZ/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/tomorrows-the-big-day-join-us-at-match-point-racket-club-for-our-very-first-op-o/1091205503203950/",
+    "https://www.facebook.com/hellocoachanne/videos/malolos-bulacan-pickleball-court/1407771737814062/",
+    "https://www.facebook.com/p/PickleFit-61579610165193/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.playpickleball.com/play-pickleball-near-me/philippines-bulacan-malolos-city/",
+    "https://www.instagram.com/reel/DVX0rOuERIb/",
+    "https://www.facebook.com/hellocoachanne/videos/malolos-bulacan-pickleball-court/1407771737814062/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/1571632833391398/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.facebook.com/61567383417002/videos/1699954850971891/",
+    "https://www.instagram.com/reel/DRi45SYk2_2/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/1849505572617456/",
+    "https://www.instagram.com/p/DTsKuwAFCYK/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4198932953728247/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.playpickleball.com/play-pickleball-near-me/philippines-bulacan-malolos-city/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4291478507807024/",
+    "https://www.facebook.com/cityofmalolospickleballclub/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/1571632833391398/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4192650911023118/",
+    "https://www.instagram.com/p/DTiLJLYAe4-/",
+    "https://www.facebook.com/cityofmalolospickleballclub/videos/vg-alex-castro-invites-you-to-play-pickleballburn-calories-and-stay-healthythank/1108627516782402/",
+    "https://www.instagram.com/p/DP7ypy9E7Zv/",
+    "https://www.facebook.com/groups/philippinepickleballfederation/posts/1330914461703755/",
+    "https://www.instagram.com/reel/DVm6fr4DQ9k/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/malolos-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/malolos-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/bulacan/malolos-city/scrape-state.json"
+}

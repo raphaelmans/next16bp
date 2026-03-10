@@ -1,0 +1,137 @@
+{
+  "scope": {
+    "provinceName": "Rizal",
+    "provinceSlug": "rizal",
+    "cityName": "Rodriguez (Montalban)",
+    "citySlug": "rodriguez-montalban",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T07:11:04.180Z",
+  "queries": [
+    "pickleball courts in Rizal Rodriguez (Montalban)",
+    "pickleball court Rodriguez (Montalban) Rizal",
+    "Rodriguez (Montalban) pickleball",
+    "courts in Rodriguez (Montalban) Rizal pickleball",
+    "sports center Rodriguez (Montalban) Rizal pickleball",
+    "pickleball club Rodriguez (Montalban) Rizal",
+    "pickleball reservations Rodriguez (Montalban) Rizal",
+    "host-map:cebupickleballcourts.com:Rodriguez (Montalban)",
+    "host-map:dumapickleball.com:Rodriguez (Montalban)",
+    "site:cebupickleballcourts.com Rodriguez (Montalban) Rizal pickleball",
+    "site:dumapickleball.com Rodriguez (Montalban) Rizal pickleball"
+  ],
+  "emittedUrls": [
+    "https://reclub.co/clubs/@rodriguezrizalpickleballclub",
+    "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://reclub.co/m/2BF4XR",
+      "score": 12
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/2BF4XR",
+      "score": 12
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "score": 4
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/2BF4XR",
+      "score": 12
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/TVSVQD",
+      "score": 11
+    },
+    {
+      "url": "https://reclub.co/m/2BF4XR",
+      "score": 12
+    },
+    {
+      "url": "https://www.milo.com.ph/find-sport-center",
+      "score": 0
+    },
+    {
+      "url": "https://reclub.co/m/TVSVQD",
+      "score": 11
+    },
+    {
+      "url": "https://m.yelp.com/search?cflt=badminton&find_loc=Rodriguez%2C+Rizal",
+      "score": 4
+    },
+    {
+      "url": "https://reclub.co/m/JIK7S1",
+      "score": 12
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4301860926768782/",
+    "https://www.facebook.com/groups/1749955042372500/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4179028715718671/",
+    "https://www.instagram.com/p/DU5rcYvk9_m/",
+    "https://www.instagram.com/reel/DTHLZ1DAQC6/",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4179028715718671/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4301860926768782/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4116813688606841/",
+    "https://www.facebook.com/61584050525455/posts/only-4-days-to-go-before-the-newest-pickleball-court-in-montalban-opensare-you-r/122100530979135017/",
+    "https://www.tiktok.com/discover/private-resort-in-montalban-rizal-with-basketball-court",
+    "https://www.instagram.com/p/DU5tvrHk8hF/",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4301860926768782/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4179028715718671/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4116813688606841/",
+    "https://www.facebook.com/61584050525455/posts/only-4-days-to-go-before-the-newest-pickleball-court-in-montalban-opensare-you-r/122100530979135017/",
+    "https://www.tiktok.com/@roelandbruce_/video/7579863805275032839",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4179028715718671/",
+    "https://www.facebook.com/PicklePaulOfficial/posts/solid-pickleball-games-with-rrpc-sobrang-saya-at-daming-natutunan-sa-dayo-series/122342052548002531/",
+    "https://www.facebook.com/61584050525455/",
+    "https://www.facebook.com/61583431361894/videos/pwede-sa-lahat-ng-beginners-kahit-wala-kang-alam-sa-pickleball-at-wala-ka-ring-s/927776372995593/",
+    "https://www.instagram.com/explore/locations/957631290762966/vensand-pickleball-hub/nearby/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4116813688606841/",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4301860926768782/",
+    "https://www.facebook.com/61583431361894/videos/pwede-sa-lahat-ng-beginners-kahit-wala-kang-alam-sa-pickleball-at-wala-ka-ring-s/927776372995593/",
+    "https://www.facebook.com/groups/1749955042372500/",
+    "https://www.facebook.com/roelandbruce3/posts/athlete-central-is-now-the-biggest-pickleball-facility-in-rizal-with-11-pickleba/1402541394561701/",
+    "https://www.instagram.com/explore/locations/957631290762966/vensand-pickleball-hub/nearby/",
+    "https://www.facebook.com/groups/1749955042372500/",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/61583431361894/videos/walang-instant-sa-improvementpero-mas-madali-kapag-may-tamang-guide-kung-gusto-m/839551209046482/",
+    "https://www.instagram.com/p/DVnHvCdk1N-/",
+    "https://www.facebook.com/61583431361894/videos/pwede-sa-lahat-ng-beginners-kahit-wala-kang-alam-sa-pickleball-at-wala-ka-ring-s/927776372995593/",
+    "https://www.facebook.com/groups/montalbanproperty/posts/25499615139732588/",
+    "https://www.facebook.com/61583431361894/videos/lahat-ng-magaling-naging-beginner-din-simulan-mo-ang-pickleball-journey-mo-kasam/1911298189477505/",
+    "https://www.facebook.com/p/Pickleball-Mania-Montalban-61584050525455/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4301860926768782/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4116813688606841/",
+    "https://www.facebook.com/61584050525455/posts/only-4-days-to-go-before-the-newest-pickleball-court-in-montalban-opensare-you-r/122100530979135017/",
+    "https://www.reddit.com/r/casualbataan/comments/1raq23l/pickleballtennis_club_for_beginners/",
+    "https://www.tiktok.com/@dayanaraalviar.vlogs/video/7591818665918565640",
+    "https://www.facebook.com/p/Vensand-Pickleball-Hub-61585422807721/"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/rodriguez-montalban/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/rodriguez-montalban/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/rizal/rodriguez-montalban/scrape-state.json"
+}

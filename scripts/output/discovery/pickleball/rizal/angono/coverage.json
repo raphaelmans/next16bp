@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T07:12:20.606Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 9,
+  "scrapedUrls": 2,
+  "noDataUrls": 7,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "richmond angono tennis court|angono|rizal",
+      "name": "Richmond Angono Tennis Court",
+      "city": "ANGONO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/richmond-angono-tennis-court",
+      "firstSeenAt": "2026-03-10T07:12:20.606Z",
+      "lastSeenAt": "2026-03-10T07:12:20.606Z"
+    },
+    {
+      "rowKey": "angono tennis club|angono|rizal",
+      "name": "Angono Tennis Club",
+      "city": "ANGONO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/angono/angono-tennis-club",
+      "firstSeenAt": "2026-03-10T07:12:20.606Z",
+      "lastSeenAt": "2026-03-10T07:12:20.606Z"
+    }
+  ]
+}

@@ -1,0 +1,214 @@
+{
+  "scope": {
+    "provinceName": "Bulacan",
+    "provinceSlug": "bulacan",
+    "cityName": "Meycauayan City",
+    "citySlug": "meycauayan-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:52:01.518Z",
+  "queries": [
+    "site:facebook.com pickleball Meycauayan City Bulacan",
+    "site:facebook.com \"Meycauayan City\" \"Bulacan\" \"pickleball\"",
+    "site:facebook.com \"Meycauayan City\" \"pickleball club\"",
+    "site:facebook.com \"Meycauayan City\" \"pickleball court\"",
+    "site:facebook.com \"Bulacan\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/MetroGatePickleballClub/",
+    "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365454837076057/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363739713914236/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2109800209774648/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4199471147007761/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4118624165092460/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4197562597198616/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369806733307534/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1266428534819015/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365454837076057/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363739713914236/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4118624165092460/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4197562597198616/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4199471147007761/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4369806733307534/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2109800209774648/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3988023684819176/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4118624165092460/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2109800209774648/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2152023752218960/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2005627306858606/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365454837076057/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4197562597198616/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/1997098067711530/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2105457550208914/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363739713914236/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4199471147007761/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4365454837076057/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1708966709858002/posts/2005627306858606/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4118624165092460/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4197562597198616/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4363739713914236/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4118734668414743/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3941263752828503/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214516962169846/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3880342585587287/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4357421911212683/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4208220446132831/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/2159314104566548/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4348961592058715/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376767342611473/",
+      "score": 14
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4361829544105253/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1466062904855576/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4344396399181901/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4263224077299134/",
+      "score": 12
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/bulacan/meycauayan-city/facebook-pages.state.json"
+}

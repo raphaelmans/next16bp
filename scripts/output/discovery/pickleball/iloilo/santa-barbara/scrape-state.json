@@ -1,0 +1,127 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T05:21:40.194Z",
+  "updatedAt": "2026-03-10T05:22:21.510Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.santabarbarapickleball.com/": {
+      "canonicalUrl": "https://www.santabarbarapickleball.com/",
+      "latestUrl": "https://www.santabarbarapickleball.com/",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://sbparksandrec.santabarbaraca.gov/sports-facilities/municipal-tennis-and-pickleball-center": {
+      "canonicalUrl": "https://sbparksandrec.santabarbaraca.gov/sports-facilities/municipal-tennis-and-pickleball-center",
+      "latestUrl": "https://sbparksandrec.santabarbaraca.gov/sports-facilities/municipal-tennis-and-pickleball-center",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://thepicklr.com/location/santa-barbara": {
+      "canonicalUrl": "https://thepicklr.com/location/santa-barbara",
+      "latestUrl": "https://thepicklr.com/location/santa-barbara/",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/us/california/santa-barbara": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/us/california/santa-barbara",
+      "latestUrl": "https://www.pickleheads.com/courts/us/california/santa-barbara",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://m.yelp.com/biz/santa-barbara-pickleball-santa-barbara": {
+      "canonicalUrl": "https://m.yelp.com/biz/santa-barbara-pickleball-santa-barbara",
+      "latestUrl": "https://m.yelp.com/biz/santa-barbara-pickleball-santa-barbara",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://santabarbaraca.com/businesses/crush-courts-pickleball-social-club": {
+      "canonicalUrl": "https://santabarbaraca.com/businesses/crush-courts-pickleball-social-club",
+      "latestUrl": "https://santabarbaraca.com/businesses/crush-courts-pickleball-social-club/",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "athletes point sports center|iloilo city|iloilo",
+      "lastRowName": "Athletes Point Sports Center"
+    },
+    "https://reclub.co/clubs/@iloilo-pickleball": {
+      "canonicalUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "latestUrl": "https://reclub.co/clubs/@iloilo-pickleball",
+      "firstDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "lastDiscoveredAt": "2026-03-10T05:21:40.194Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T05:21:40.194Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "athletes point sports center|iloilo city|iloilo": {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T05:21:40.194Z",
+      "lastSeenAt": "2026-03-10T05:21:40.194Z"
+    }
+  }
+}

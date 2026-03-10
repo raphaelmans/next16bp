@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T04:45:22.854Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 6,
+  "scrapedUrls": 2,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "south city homes recreation center|city of biñan|laguna",
+      "name": "South City Homes Recreation Center",
+      "city": "CITY OF BIÑAN",
+      "province": "LAGUNA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "firstSeenAt": "2026-03-10T04:45:22.854Z",
+      "lastSeenAt": "2026-03-10T04:45:22.854Z"
+    },
+    {
+      "rowKey": "pickleball hq|city of biñan|laguna",
+      "name": "Pickleball Hq",
+      "city": "CITY OF BIÑAN",
+      "province": "LAGUNA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "firstSeenAt": "2026-03-10T04:45:22.854Z",
+      "lastSeenAt": "2026-03-10T04:45:22.854Z"
+    }
+  ]
+}

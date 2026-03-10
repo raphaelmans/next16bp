@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:bulacan:santa-maria",
+  "createdAt": "2026-03-10T06:52:52.633Z",
+  "updatedAt": "2026-03-10T06:54:20.542Z",
+  "urls": {
+    "https://facebook.com/thepickleballcentersantamaria": {
+      "canonicalUrl": "https://facebook.com/thepickleballcentersantamaria",
+      "latestUrl": "https://www.facebook.com/thepickleballcentersantamaria/",
+      "firstCapturedAt": "2026-03-10T06:52:54.419Z",
+      "lastCapturedAt": "2026-03-10T06:52:54.419Z",
+      "status": "captured",
+      "title": "The Pickleball Center | Santa Maria | Facebook",
+      "venueName": "The Pickleball Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/people/SMPC-Santa-Maria-Pickleball-Club/61581715238133": {
+      "canonicalUrl": "https://facebook.com/people/SMPC-Santa-Maria-Pickleball-Club/61581715238133",
+      "latestUrl": "https://www.facebook.com/people/SMPC-Santa-Maria-Pickleball-Club/61581715238133/",
+      "firstCapturedAt": "2026-03-10T06:53:10.770Z",
+      "lastCapturedAt": "2026-03-10T06:53:10.770Z",
+      "status": "captured",
+      "title": "SMPC - Santa Maria Pickleball Club | Facebook",
+      "venueName": "SMPC - Santa Maria Pickleball Club",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/thepickleballcentersantamaria?locale=en_GB": {
+      "canonicalUrl": "https://facebook.com/thepickleballcentersantamaria?locale=en_GB",
+      "latestUrl": "https://www.facebook.com/thepickleballcentersantamaria/?locale=en_GB",
+      "firstCapturedAt": "2026-03-10T06:53:24.436Z",
+      "lastCapturedAt": "2026-03-10T06:53:24.436Z",
+      "status": "captured",
+      "title": "The Pickleball Center | Santa Maria | Facebook",
+      "venueName": "The Pickleball Center",
+      "confidence": "high",
+      "importStatus": "review",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/thepickleballcentersantamaria?locale=zh_CN": {
+      "canonicalUrl": "https://facebook.com/thepickleballcentersantamaria?locale=zh_CN",
+      "latestUrl": "https://www.facebook.com/thepickleballcentersantamaria/?locale=zh_CN",
+      "firstCapturedAt": "2026-03-10T06:53:40.580Z",
+      "lastCapturedAt": "2026-03-10T06:53:40.580Z",
+      "status": "captured",
+      "title": "The Pickleball Center | Santa Maria | Facebook",
+      "venueName": "The Pickleball Center",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "The Pickleball Center"
+    },
+    "https://facebook.com/890431384163758": {
+      "canonicalUrl": "https://facebook.com/890431384163758",
+      "latestUrl": "https://www.facebook.com/890431384163758/",
+      "firstCapturedAt": "2026-03-10T06:53:56.592Z",
+      "lastCapturedAt": "2026-03-10T06:53:56.592Z",
+      "status": "captured",
+      "title": "Sundown Pickleball Court | Santa Maria | Facebook",
+      "venueName": "Sundown Pickleball Court",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Sundown Pickleball Court"
+    },
+    "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002": {
+      "canonicalUrl": "https://facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002",
+      "latestUrl": "https://www.facebook.com/p/Bulacan-Sports-Complex-Pickleball-Club-61567383417002/",
+      "firstCapturedAt": "2026-03-10T06:54:09.519Z",
+      "lastCapturedAt": "2026-03-10T06:54:09.519Z",
+      "status": "captured",
+      "title": "Bulacan Sports Complex Pickleball Club | Malolos | Facebook",
+      "venueName": "Bulacan Sports Complex Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

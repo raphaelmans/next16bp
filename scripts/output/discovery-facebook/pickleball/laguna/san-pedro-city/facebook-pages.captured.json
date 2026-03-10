@@ -1,0 +1,138 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "laguna",
+    "citySlug": "san-pedro-city",
+    "provinceName": "Laguna",
+    "cityName": "San Pedro City"
+  },
+  "generatedAt": "2026-03-10T05:56:58.297Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/p/Urban-Rally-61579597994873/",
+      "canonicalUrl": "https://facebook.com/p/Urban-Rally-61579597994873",
+      "capturedAt": "2026-03-10T05:53:59.138Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Unexpected token '#', \"### Error\n\"... is not valid JSON"
+    },
+    {
+      "url": "https://www.facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+      "capturedAt": "2026-03-10T05:55:13.686Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/photo.php?fbid=1328656322623778&set=a.335872201902200&type=3",
+        "title": "Facebook",
+        "bodyText": "Log In\nForgot Account?\nCongresswoman Ann Matibag\nFebruary 3\n \n·\nAll reactions:\n3\nLike\nComment\nComments\nNo comments yet\nBe the first to comment.\nSee more on Facebook\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fphoto.php%3Ffbid%3D1328656322623778%26set%3Da.335872201902200%26type%3D3",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/?__tn__=*F",
+          "https://www.facebook.com/CongresswomanAnnMatibag?__tn__=%3C%3C*F",
+          "https://www.facebook.com/CongresswomanAnnMatibag?__tn__=-UC*F",
+          "https://www.facebook.com/photo/?fbid=1328656322623778&set=a.1327759656046778&__tn__=%2CO*F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "",
+        "ogDescription": ""
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "This Facebook post is by Congresswoman Ann Matibag (a politician) and contains no evidence of a physical pickleball venue, address, or contact details within the requested scope. Not a venue listing.",
+        "name": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "Visible page text: 'Congresswoman Ann Matibag'",
+          "Visible page text: 'February 3'",
+          "No address, location, phone, email, website, Instagram, amenities, or court count present in the provided page content",
+          "Known outbound link: https://www.facebook.com/CongresswomanAnnMatibag (indicates a political/public figure page rather than a venue)"
+        ]
+      },
+      "error": null
+    },
+    {
+      "url": "https://www.facebook.com/winartpickleballclub/",
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "capturedAt": "2026-03-10T05:55:28.626Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Failed after 3 attempts. Last error: Cannot connect to API: Connect Timeout Error (attempted addresses: 172.66.0.243:443, 162.159.140.245:443, timeout: 10000ms)"
+    },
+    {
+      "url": "https://www.facebook.com/courtshaveoceanviews/",
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "capturedAt": "2026-03-10T05:56:16.496Z",
+      "payload": {
+        "pageUrl": "https://www.facebook.com/courtshaveoceanviews/",
+        "title": "Pickleball Laguna Beach Players | Facebook",
+        "bodyText": "Log In\nForgot Account?\nPickleball Laguna Beach Players \n386 followers • 2 following\nMore\nPosts\nAbout\nPhotos\nIntro\nThis page is for PickleBall players, especially those in Laguna Beach. Created to help set up games w\nPage · Community\n+1 949-466-7579\nPhotos\nSee all photos\nPrivacy\n \n · Terms\n \n · Advertising\n \n · Ad Choices \n \n · Cookies\n \n · More\nPickleball Laguna Beach Players\nOctober 5, 2024\n \n·\nCalling all Pickleball players come by the only exclusive Pickleball only Shop in Orange County Pickleball First.  We have a new shop opening this Saturday October 5th in Dana Point, CA. Brands onsite, giveaways, raffles, demo paddles and more ! Information below:\nAll reactions:\n1\nLike\nComment\nSee more from Pickleball Laguna Beach Players\nEmail or phone number\nPassword\nLog In\nForgot password?\nor\nCreate new account",
+        "links": [
+          "https://www.facebook.com/login/device-based/regular/login/?login_attempt=1&next=https%3A%2F%2Fwww.facebook.com%2Fcourtshaveoceanviews%2F",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar",
+          "https://www.facebook.com/photo/?fbid=587158390181935&set=a.587158373515270",
+          "https://www.facebook.com/photo/?fbid=587158386848602&set=a.587158360181938&__tn__=%3C",
+          "https://www.facebook.com/courtshaveoceanviews/followers/",
+          "https://www.facebook.com/courtshaveoceanviews/following/",
+          "https://www.facebook.com/courtshaveoceanviews/",
+          "https://www.facebook.com/courtshaveoceanviews/about",
+          "https://www.facebook.com/courtshaveoceanviews/photos",
+          "https://www.facebook.com/courtshaveoceanviews",
+          "https://www.facebook.com/courtshaveoceanviews/photos",
+          "https://www.facebook.com/courtshaveoceanviews/photos",
+          "https://www.facebook.com/photo/?fbid=872550948309343&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=694797199418053&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=694797182751388&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=587158390181935&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=587158386848602&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=1941301659560943&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=1941301096227666&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=1839893259701784&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/photo/?fbid=1500275226996924&set=pb.100066633370206.-2207520000",
+          "https://www.facebook.com/privacy/policy/?entry_point=comet_dropdown",
+          "https://www.facebook.com/policies?ref=pf",
+          "https://www.facebook.com/business/",
+          "https://www.facebook.com/help/568137493302217",
+          "https://www.facebook.com/policies/cookies/",
+          "https://www.facebook.com/courtshaveoceanviews?__cft__[0]=AZbC1vCMkhA2ECWS4W71ouOC6DuuJLU4AYM2YDKNpevY3bgjOjGX0ZyOkrIED6ZPSy88UEXgTGMaPpykWmUszUTY-G1dGpSQvx2xEsBe1_pfJhD04wrCDlcaeRYXmDan1TrOG9SxphY8gJC7Tn01HdYTC77S3V1rS1wdYAdFJzo1yNLYXI1abI1hJYjBj2ZZUAc&__tn__=%3C%3C%2CP-R",
+          "https://www.facebook.com/courtshaveoceanviews?__cft__[0]=AZbC1vCMkhA2ECWS4W71ouOC6DuuJLU4AYM2YDKNpevY3bgjOjGX0ZyOkrIED6ZPSy88UEXgTGMaPpykWmUszUTY-G1dGpSQvx2xEsBe1_pfJhD04wrCDlcaeRYXmDan1TrOG9SxphY8gJC7Tn01HdYTC77S3V1rS1wdYAdFJzo1yNLYXI1abI1hJYjBj2ZZUAc&__tn__=-UC%2CP-R",
+          "https://www.facebook.com/courtshaveoceanviews/posts/pfbid06JcQi1SHSB16zd53wq9LxzSbarANzoqmTpRoHsEpvyxjYHuegQZJFXaxfvNhQTp5l?__cft__[0]=AZbC1vCMkhA2ECWS4W71ouOC6DuuJLU4AYM2YDKNpevY3bgjOjGX0ZyOkrIED6ZPSy88UEXgTGMaPpykWmUszUTY-G1dGpSQvx2xEsBe1_pfJhD04wrCDlcaeRYXmDan1TrOG9SxphY8gJC7Tn01HdYTC77S3V1rS1wdYAdFJzo1yNLYXI1abI1hJYjBj2ZZUAc&__tn__=%2CO%2CP-R",
+          "https://www.facebook.com/recover/initiate?ars=royal_blue_bar"
+        ],
+        "ogTitle": "Pickleball Laguna Beach Players",
+        "ogDescription": "Pickleball Laguna Beach Players. 386 likes. This page is for PickleBall players, especially those in Laguna Beach. Created to help set up games w"
+      },
+      "analysis": {
+        "status": "skip",
+        "confidence": "high",
+        "reason": "This Facebook page is a community/group for PickleBall players (Page · Community) focused on Laguna Beach and contains posts about Orange County/Dana Point (CA). It does not represent a physical venue in San Pedro City, Laguna, Philippines, so it is out of scope.",
+        "name": "Pickleball Laguna Beach Players",
+        "address": null,
+        "phone": "+1 949-466-7579",
+        "email": null,
+        "instagramUrl": null,
+        "websiteUrl": null,
+        "amenities": [],
+        "courtCount": null,
+        "isVenue": false,
+        "isWithinScope": false,
+        "evidence": [
+          "Page title: 'Pickleball Laguna Beach Players'",
+          "Intro text: 'This page is for PickleBall players, especially those in Laguna Beach. Created to help set up games w'",
+          "Page type shown: 'Page · Community'",
+          "Displayed phone: '+1 949-466-7579'",
+          "Post text: 'Calling all Pickleball players come by the only exclusive Pickleball only Shop in Orange County Pickleball First.  We have a new shop opening this Saturday October 5th in Dana Point, CA.'"
+        ]
+      },
+      "error": null
+    }
+  ]
+}

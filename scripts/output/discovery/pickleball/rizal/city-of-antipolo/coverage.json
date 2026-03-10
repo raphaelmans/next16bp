@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T05:01:34.247Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 5,
+  "scrapedUrls": 2,
+  "noDataUrls": 2,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 1,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "sm center antipolo downtown|city of antipolo|rizal",
+      "name": "Sm Center Antipolo Downtown",
+      "city": "CITY OF ANTIPOLO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/sm-center-antipolo-downtown",
+      "firstSeenAt": "2026-03-10T05:01:34.247Z",
+      "lastSeenAt": "2026-03-10T05:01:34.247Z"
+    },
+    {
+      "rowKey": "kingsville hills pickleball club|city of antipolo|rizal",
+      "name": "Kingsville Hills Pickleball Club",
+      "city": "CITY OF ANTIPOLO",
+      "province": "RIZAL",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/antipolo/kingsville-hills-pickleball-club",
+      "firstSeenAt": "2026-03-10T05:01:34.247Z",
+      "lastSeenAt": "2026-03-10T05:01:34.247Z"
+    }
+  ]
+}

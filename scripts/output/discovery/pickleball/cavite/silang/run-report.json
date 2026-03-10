@@ -1,0 +1,84 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "cavite",
+    "citySlug": "silang",
+    "provinceName": "Cavite",
+    "cityName": "Silang"
+  },
+  "importedPlaceIds": [
+    "7551fe79-915c-47fd-b0eb-ee5c039f6ae3"
+  ],
+  "stages": {
+    "discovery": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:07:09.104Z",
+      "finishedAt": "2026-03-10T07:07:31.129Z",
+      "lastError": null,
+      "notes": "runner executed discovery"
+    },
+    "scrape": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:07:31.129Z",
+      "finishedAt": "2026-03-10T07:07:52.053Z",
+      "lastError": null,
+      "notes": "runner executed scrape"
+    },
+    "duplicatePreflight": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:07:52.054Z",
+      "finishedAt": "2026-03-10T07:08:18.758Z",
+      "lastError": null,
+      "notes": "runner executed duplicate preflight"
+    },
+    "importApproved": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:08:19.230Z",
+      "finishedAt": "2026-03-10T07:09:30.991Z",
+      "lastError": null,
+      "notes": "processed 1 approved rows sequentially; skipped 1 out-of-scope rows"
+    },
+    "facebookDiscovery": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookCapture": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookDuplicatePreflight": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "facebookImportApproved": {
+      "status": "pending",
+      "startedAt": null,
+      "finishedAt": null,
+      "lastError": null,
+      "notes": null
+    },
+    "dbVerification": {
+      "status": "completed",
+      "startedAt": null,
+      "finishedAt": "2026-03-10T07:09:30.991Z",
+      "lastError": null,
+      "notes": "verified 1 rows in DB"
+    },
+    "embeddingBackfill": {
+      "status": "completed",
+      "startedAt": "2026-03-10T07:09:30.996Z",
+      "finishedAt": "2026-03-10T07:10:42.172Z",
+      "lastError": null,
+      "notes": "backfilled 1 place ids"
+    }
+  }
+}

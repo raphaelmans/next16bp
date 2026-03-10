@@ -1,0 +1,20 @@
+{
+  "scope": {
+    "sportSlug": "pickleball",
+    "provinceSlug": "metro-manila",
+    "citySlug": "manila",
+    "provinceName": "Metro Manila",
+    "cityName": "Manila"
+  },
+  "generatedAt": "2026-03-10T06:05:31.978Z",
+  "captured": [
+    {
+      "url": "https://www.facebook.com/manilapickleball/",
+      "canonicalUrl": "https://facebook.com/manilapickleball",
+      "capturedAt": "2026-03-10T06:05:20.922Z",
+      "payload": null,
+      "analysis": null,
+      "error": "Command failed: playwright-cli -s=fbcap-metro-manila-manila eval () => JSON.stringify((() => {\n      const links = Array.from(document.querySelectorAll('a[href]'))\n        .map((anchor) => anchor.href)\n        .filter(Boolean)\n        .slice(0, 200);\n      const ogTitle =\n        document.querySelector('meta[property=\"og:title\"]')?.getAttribute('content') ?? '';\n      const ogDescription =\n        document.querySelector('meta[property=\"og:description\"]')?.getAttribute('content') ?? '';\n\n      return {\n        pageUrl: location.href,\n        title: document.title,\n        bodyText: document.body ? document.body.innerText.slice(0, 16000) : '',\n        links,\n        ogTitle,\n        ogDescription,\n      };\n    })())\nEINTR: interrupted system call, uv_cwd\n"
+    }
+  ]
+}

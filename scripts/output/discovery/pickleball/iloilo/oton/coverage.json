@@ -1,0 +1,49 @@
+{
+  "generatedAt": "2026-03-10T04:50:33.978Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 3,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 7,
+  "scrapedUrls": 3,
+  "noDataUrls": 4,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 3,
+  "migratedRows": 0,
+  "pendingMigrationRows": 3,
+  "pending": [
+    {
+      "rowKey": "triple a sports center pickleball courts at vista mall|oton|iloilo",
+      "name": "Triple A Sports Center Pickleball Courts At Vista Mall",
+      "city": "OTON",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/oton/triple-a-sports-center-pickleball-courts-at-vista-mall",
+      "firstSeenAt": "2026-03-10T04:50:33.978Z",
+      "lastSeenAt": "2026-03-10T04:50:33.978Z"
+    },
+    {
+      "rowKey": "sinadya pickleball courts at vista mall iloilo|iloilo city|iloilo",
+      "name": "Sinadya Pickleball Courts At Vista Mall Iloilo",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/philippines/sinadya-pickleball-courts-at-vista-mall-iloilo",
+      "firstSeenAt": "2026-03-10T04:50:33.978Z",
+      "lastSeenAt": "2026-03-10T04:50:33.978Z"
+    },
+    {
+      "rowKey": "athletes point sports center|iloilo city|iloilo",
+      "name": "Athletes Point Sports Center",
+      "city": "ILOILO CITY",
+      "province": "ILOILO",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/western-visayas/iloilo-city/athletes-point-sports-center",
+      "firstSeenAt": "2026-03-10T04:50:33.978Z",
+      "lastSeenAt": "2026-03-10T04:50:33.978Z"
+    }
+  ]
+}

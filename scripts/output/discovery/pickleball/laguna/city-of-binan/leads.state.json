@@ -1,0 +1,105 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:city-of-binan",
+  "createdAt": "2026-03-10T04:44:59.576Z",
+  "updatedAt": "2026-03-10T04:45:22.847Z",
+  "queries": [
+    "pickleball courts in Laguna City of Biñan",
+    "pickleball court City of Biñan Laguna",
+    "City of Biñan pickleball",
+    "courts in City of Biñan Laguna pickleball",
+    "sports center City of Biñan Laguna pickleball",
+    "pickleball club City of Biñan Laguna",
+    "pickleball reservations City of Biñan Laguna",
+    "host-map:cebupickleballcourts.com:City of Biñan",
+    "host-map:dumapickleball.com:City of Biñan",
+    "site:cebupickleballcourts.com City of Biñan Laguna pickleball",
+    "site:dumapickleball.com City of Biñan Laguna pickleball"
+  ],
+  "urls": {
+    "https://pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "pickleball reservations City of Biñan Laguna",
+      "title": "Play Pickleball at South City Homes Recreation Center: Court Information",
+      "snippet": "Everything you need to know about playing Pickleball at South City Homes Recreation Center! View information on courts, open play sessions, reservations, ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 9,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@schrc-pickleball-club-binan": {
+      "canonicalUrl": "https://reclub.co/clubs/@schrc-pickleball-club-binan",
+      "latestUrl": "https://reclub.co/clubs/@schrc-pickleball-club-binan",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "pickleball reservations City of Biñan Laguna",
+      "title": "SCHRC Pickleball Club Biñan",
+      "snippet": "330 activities. 4 indoor courts at South City Homes Recreation Center in Biñan, Laguna. Parking, showers, Diner and food choices available.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan",
+      "latestUrl": "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "City of Biñan pickleball",
+      "title": "SCHRC Pickleball Club Biñan",
+      "snippet": "269개 활동. 4 indoor courts at South City Homes Recreation Center in Biñan, Laguna. Parking, showers, Diner and food choices available.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq": {
+      "canonicalUrl": "https://pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "courts in City of Biñan Laguna pickleball",
+      "title": "Play Pickleball at Pickleball HQ: Court Information",
+      "snippet": "Pickleball HQ is one of the most popular places to play pickleball in Biñan, Calabarzon. There are 5 indoor acrylic courts. These are dedicated courts with ...",
+      "domain": "pickleheads.com",
+      "relevanceScore": 11,
+      "handedOffToScrapeAt": null
+    },
+    "https://globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines": {
+      "canonicalUrl": "https://globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines",
+      "latestUrl": "https://www.globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "City of Biñan pickleball",
+      "title": "Find a Pickleball Court in Biñan, Philippines",
+      "snippet": "There are 0 pickleball courts in Biñan, Philippines. These pickleball courts were all submitted by members of GPN. Use the search below to find a pickleball ...",
+      "domain": "globalpickleball.network",
+      "relevanceScore": 7,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public": {
+      "canonicalUrl": "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public",
+      "latestUrl": "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "sports center City of Biñan Laguna pickleball",
+      "title": "SCHRC TENNIS",
+      "snippet": "South City Homes Recreation Center in Biñan Laguna has 2 shell tennis courts, 4 badminton and pickleball courts. Filipino Comfort Food- Break Point Diner on ...",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://yelp.com/search?cflt=badminton&find_loc=Bi%C3%B1an%2C+Laguna": {
+      "canonicalUrl": "https://yelp.com/search?cflt=badminton&find_loc=Bi%C3%B1an%2C+Laguna",
+      "latestUrl": "https://www.yelp.com/search?cflt=badminton&find_loc=Bi%C3%B1an%2C+Laguna",
+      "firstDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "lastDiscoveredAt": "2026-03-10T04:44:59.577Z",
+      "sourceQuery": "pickleball club City of Biñan Laguna",
+      "title": "THE BEST 10 BADMINTON in BIÑAN, LAGUNA, PHILIPPINES",
+      "snippet": "Top 10 Best Badminton Near Biñan, Laguna - With Real Reviews · 1. Playground Badminton Courts · 2. Power Smash · 3. CKSM Badminton Court · 4. Li-Ning · 5. Dumlao Gym.",
+      "domain": "yelp.com",
+      "relevanceScore": 4,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

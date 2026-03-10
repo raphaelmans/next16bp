@@ -2,7 +2,7 @@
   "version": 1,
   "scopeKey": "pickleball:iloilo:pavia:facebook",
   "createdAt": "2026-03-10T03:55:31.063Z",
-  "updatedAt": "2026-03-10T03:58:54.518Z",
+  "updatedAt": "2026-03-10T05:45:25.709Z",
   "scope": {
     "provinceSlug": "iloilo",
     "citySlug": "pavia",
@@ -80,9 +80,9 @@
     "embeddingBackfill": {
       "status": "completed",
       "startedAt": "2026-03-10T03:58:34.670Z",
-      "finishedAt": "2026-03-10T03:58:54.518Z",
+      "finishedAt": "2026-03-10T05:45:25.709Z",
       "lastError": null,
-      "notes": "backfilled 1 facebook place ids"
+      "notes": "all imported facebook rows already have embeddings"
     }
   }
 }

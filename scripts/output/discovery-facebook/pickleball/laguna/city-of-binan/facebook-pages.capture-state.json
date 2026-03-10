@@ -1,0 +1,60 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:city-of-binan",
+  "createdAt": "2026-03-10T05:48:52.082Z",
+  "updatedAt": "2026-03-10T05:50:55.823Z",
+  "urls": {
+    "https://facebook.com/p/Bi%C3%B1an-Laguna-Pickleball-61564356776725": {
+      "canonicalUrl": "https://facebook.com/p/Bi%C3%B1an-Laguna-Pickleball-61564356776725",
+      "latestUrl": "https://www.facebook.com/p/Bi%C3%B1an-Laguna-Pickleball-61564356776725/",
+      "firstCapturedAt": "2026-03-10T05:48:55.247Z",
+      "lastCapturedAt": "2026-03-10T05:48:55.247Z",
+      "status": "captured",
+      "title": "Biñan Laguna Pickleball | Binãn | Facebook",
+      "venueName": "Biñan Laguna Pickleball",
+      "confidence": "high",
+      "importStatus": "ready",
+      "error": null,
+      "outputRowName": "Biñan Laguna Pickleball"
+    },
+    "https://facebook.com/photo.php?fbid=122214845270178080&id=61555342404842&set=a.122098877294178080": {
+      "canonicalUrl": "https://facebook.com/photo.php?fbid=122214845270178080&id=61555342404842&set=a.122098877294178080",
+      "latestUrl": "https://www.facebook.com/photo.php?fbid=122214845270178080&set=a.122098877294178080&id=61555342404842",
+      "firstCapturedAt": "2026-03-10T05:49:39.330Z",
+      "lastCapturedAt": "2026-03-10T05:49:39.330Z",
+      "status": "captured",
+      "title": "Facebook",
+      "venueName": "Teak Wood Golf Driving Range",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/winartpickleballclub": {
+      "canonicalUrl": "https://facebook.com/winartpickleballclub",
+      "latestUrl": "https://www.facebook.com/winartpickleballclub/",
+      "firstCapturedAt": "2026-03-10T05:49:55.392Z",
+      "lastCapturedAt": "2026-03-10T05:49:55.392Z",
+      "status": "captured",
+      "title": "Winart Riverside Pickleball Club | Lumban | Facebook",
+      "venueName": "Winart Riverside Pickleball Club",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    },
+    "https://facebook.com/courtshaveoceanviews": {
+      "canonicalUrl": "https://facebook.com/courtshaveoceanviews",
+      "latestUrl": "https://www.facebook.com/courtshaveoceanviews/",
+      "firstCapturedAt": "2026-03-10T05:50:32.137Z",
+      "lastCapturedAt": "2026-03-10T05:50:32.137Z",
+      "status": "captured",
+      "title": "Pickleball Laguna Beach Players | Facebook",
+      "venueName": "Pickleball Laguna Beach Players",
+      "confidence": "high",
+      "importStatus": "skip",
+      "error": null,
+      "outputRowName": null
+    }
+  }
+}

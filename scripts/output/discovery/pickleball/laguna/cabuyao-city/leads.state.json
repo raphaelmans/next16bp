@@ -1,0 +1,95 @@
+{
+  "version": 1,
+  "scopeKey": "pickleball:laguna:cabuyao-city",
+  "createdAt": "2026-03-10T06:12:14.154Z",
+  "updatedAt": "2026-03-10T06:12:50.156Z",
+  "queries": [
+    "pickleball courts in Laguna Cabuyao City",
+    "pickleball court Cabuyao City Laguna",
+    "Cabuyao City pickleball",
+    "courts in Cabuyao City Laguna pickleball",
+    "sports center Cabuyao City Laguna pickleball",
+    "pickleball club Cabuyao City Laguna",
+    "pickleball reservations Cabuyao City Laguna",
+    "host-map:cebupickleballcourts.com:Cabuyao City",
+    "host-map:cebupickleballcourts.com:Cabuyao",
+    "host-map:dumapickleball.com:Cabuyao City",
+    "host-map:dumapickleball.com:Cabuyao",
+    "site:cebupickleballcourts.com Cabuyao City Laguna pickleball",
+    "site:dumapickleball.com Cabuyao City Laguna pickleball"
+  ],
+  "urls": {
+    "https://waze.com/live-map/directions/ph/calabarzon/cabuyao-city/pickleball-courts?to=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY": {
+      "canonicalUrl": "https://waze.com/live-map/directions/ph/calabarzon/cabuyao-city/pickleball-courts?to=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY",
+      "latestUrl": "https://www.waze.com/live-map/directions/ph/calabarzon/cabuyao-city/pickleball-courts?to=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "pickleball reservations Cabuyao City Laguna",
+      "title": "Driving directions to Pickleball courts, 9243 Pulo-Diezmo Road, Cabuyao ...",
+      "snippet": "9243 Pulo-Diezmo Road, Cabuyao City, Laguna, Philippines. Open in Waze. Open now: 08:00 - 17:00. Monday08:00 - 17:00. Tuesday08:00 - 17:00.",
+      "domain": "waze.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://waze.com/fy/live-map/directions?from=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY": {
+      "canonicalUrl": "https://waze.com/fy/live-map/directions?from=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY",
+      "latestUrl": "https://www.waze.com/fy/live-map/directions?from=place.ChIJxeKcYBljvTMRQ8G1l1A_-NY",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "pickleball court Cabuyao City Laguna",
+      "title": "Driving directions, live traffic & road conditions updates",
+      "snippet": "Pickleball courts, Cabuyao City address; Pickleball courts, Cabuyao City opening hours. Pickleball courts, 9243 Pulo-Diezmo Road, Cabuyao City, Laguna, ...",
+      "domain": "waze.com",
+      "relevanceScore": 15,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/th/clubs/@picklejar-courts": {
+      "canonicalUrl": "https://reclub.co/th/clubs/@picklejar-courts",
+      "latestUrl": "https://reclub.co/th/clubs/@picklejar-courts",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "pickleball court Cabuyao City Laguna",
+      "title": "Pickle Jar Courts",
+      "snippet": "OPENING SOON Indoor Pickleball Court PDR Business Hub, Pulo-Diezmo Road, Brgy. Pulo, Cabuyao, Laguna 🗺️ https://bit.ly/4fZhbNJ.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/clubs/@picklejar-courts": {
+      "canonicalUrl": "https://reclub.co/clubs/@picklejar-courts",
+      "latestUrl": "https://reclub.co/clubs/@picklejar-courts",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "pickleball club Cabuyao City Laguna",
+      "title": "Pickle Jar Courts",
+      "snippet": "OPENING SOON Indoor Pickleball Court PDR Business Hub, Pulo-Diezmo Road, Brgy. Pulo, Cabuyao, Laguna 🗺️ https://bit.ly/4fZhbNJ.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://reclub.co/zh-hant/clubs/@picklejar-courts": {
+      "canonicalUrl": "https://reclub.co/zh-hant/clubs/@picklejar-courts",
+      "latestUrl": "https://reclub.co/zh-hant/clubs/@picklejar-courts",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "pickleball reservations Cabuyao City Laguna",
+      "title": "Pickle Jar Courts",
+      "snippet": "OPENING SOON Indoor Pickleball Court PDR Business Hub, Pulo-Diezmo Road, Brgy. Pulo, Cabuyao, Laguna 🗺️ https://bit.ly/4fZhbNJ.",
+      "domain": "reclub.co",
+      "relevanceScore": 13,
+      "handedOffToScrapeAt": null
+    },
+    "https://milo.com.ph/clinics-by-sport": {
+      "canonicalUrl": "https://milo.com.ph/clinics-by-sport",
+      "latestUrl": "https://www.milo.com.ph/clinics-by-sport",
+      "firstDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "lastDiscoveredAt": "2026-03-10T06:12:14.155Z",
+      "sourceQuery": "sports center Cabuyao City Laguna pickleball",
+      "title": "MILO Best Clinics by Sport",
+      "snippet": "Discover specialized clinics for your favorite sports at Milo Best. Enhance your abilities and excel in your chosen discipline. Enroll today!",
+      "domain": "milo.com.ph",
+      "relevanceScore": 0,
+      "handedOffToScrapeAt": null
+    }
+  }
+}

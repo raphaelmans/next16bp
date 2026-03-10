@@ -1,0 +1,40 @@
+{
+  "generatedAt": "2026-03-10T07:07:31.132Z",
+  "startUrl": "https://kudoscourts.com/",
+  "dbCoverageEnabled": false,
+  "phLocationNormalization": {
+    "enabled": true,
+    "aiEnabled": true,
+    "deterministicResolved": 2,
+    "aiResolved": 0,
+    "unresolved": 0
+  },
+  "discoveredUrls": 8,
+  "scrapedUrls": 2,
+  "noDataUrls": 6,
+  "failedUrls": 0,
+  "pendingDiscoveryUrls": 0,
+  "discoveredRows": 2,
+  "migratedRows": 0,
+  "pendingMigrationRows": 2,
+  "pending": [
+    {
+      "rowKey": "south forbes villas pickleball|silang|cavite",
+      "name": "South Forbes Villas Pickleball",
+      "city": "SILANG",
+      "province": "CAVITE",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/silang/south-forbes-villas-pickleball",
+      "firstSeenAt": "2026-03-10T07:07:31.132Z",
+      "lastSeenAt": "2026-03-10T07:07:31.132Z"
+    },
+    {
+      "rowKey": "the riviera sports and country club inc|port area|metro manila",
+      "name": "The Riviera Sports And Country Club Inc",
+      "city": "PORT AREA",
+      "province": "METRO MANILA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/philippines/the-riviera-sports-and-country-club-inc",
+      "firstSeenAt": "2026-03-10T07:07:31.132Z",
+      "lastSeenAt": "2026-03-10T07:07:31.132Z"
+    }
+  ]
+}

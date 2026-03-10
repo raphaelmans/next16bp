@@ -1,0 +1,112 @@
+{
+  "scope": {
+    "provinceName": "Cavite",
+    "provinceSlug": "cavite",
+    "cityName": "Dasmariñas City",
+    "citySlug": "dasmarinas-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T04:42:15.456Z",
+  "queries": [
+    "pickleball courts in Cavite Dasmariñas City",
+    "pickleball court Dasmariñas City Cavite",
+    "Dasmariñas City pickleball",
+    "courts in Dasmariñas City Cavite pickleball",
+    "sports center Dasmariñas City Cavite pickleball",
+    "pickleball club Dasmariñas City Cavite",
+    "pickleball reservations Dasmariñas City Cavite",
+    "host-map:cebupickleballcourts.com:Dasmariñas City",
+    "host-map:cebupickleballcourts.com:Dasmariñas",
+    "host-map:dumapickleball.com:Dasmariñas City",
+    "host-map:dumapickleball.com:Dasmariñas",
+    "site:cebupickleballcourts.com Dasmariñas City Cavite pickleball",
+    "site:dumapickleball.com Dasmariñas City Cavite pickleball"
+  ],
+  "emittedUrls": [
+    "https://www.pickleheads.com/courts/ph/calabarzon/dasmarinas/dasmarinas-pickleball",
+    "https://ticketwaveph.com/products/the-pickle-yard-dasma",
+    "https://reclub.co/clubs/@dasmarinas-cavite-pickle-yard",
+    "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_05.15.24.pdf"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedAlreadyScraped": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://globalpickleballfederation.org/news/by-popular-demand-philippine-malls-add-pickleball-courts-for-active-healthier-living/",
+      "score": 4
+    },
+    {
+      "url": "https://www.tobys.com/?srsltid=AfmBOorCftK2R3zmX54q_DoqnkbSpVkX5tTDhF-jykrMryT23huk-Ph0",
+      "score": 5
+    },
+    {
+      "url": "https://reclub.co/communities/cavite-philippines-553",
+      "score": 11
+    },
+    {
+      "url": "https://theorchardgolf.com/1st-member-guest-pickleball-tournament-march-23-2025/",
+      "score": 10
+    },
+    {
+      "url": "https://www.pickleball.ph/uploads/1/2/5/9/125919777/places_to_play_10.25.23.pdf",
+      "score": 4
+    }
+  ],
+  "skippedLeadOnly": [
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/p/The-Pickle-Yard-Dasma-61575648282287/",
+    "https://www.reddit.com/r/cavite/comments/1jxdq59/pickle_yard_in_dasma/?tl=en",
+    "https://www.facebook.com/61575648282287/videos/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%9C%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%9E-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E-%F0%9D%90%98%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A6%F0%9D%90%9A-what-makes-the-pic/724771927385742/",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.facebook.com/VistaMallDasmarinas/videos/pickleball-is-on-at-vista-mall-dasmari%C3%B1as-grab-your-paddle-bring-your-energy-and/770101802563800/",
+    "https://www.instagram.com/reel/DONwLptjq6K/",
+    "https://www.tiktok.com/discover/pickleball-court-dasmarinas-cavite",
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/VistaMallDasmarinas/videos/pickleball-is-on-at-vista-mall-dasmari%C3%B1as-grab-your-paddle-bring-your-energy-and/770101802563800/",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.facebook.com/p/The-Pickle-Yard-Dasma-61575648282287/",
+    "https://www.facebook.com/61575648282287/videos/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%9C%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%9E-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E-%F0%9D%90%98%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A6%F0%9D%90%9A-what-makes-the-pic/724771927385742/",
+    "https://www.instagram.com/reel/DUUixhBD58e/",
+    "https://www.reddit.com/r/PickleballPhilippines/comments/1o1d5g0/lf_kalaro_and_court_recommendations_dasma/",
+    "https://www.facebook.com/groups/715531645611475/posts/2025055201325773/",
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/p/The-Pickle-Yard-Dasma-61575648282287/",
+    "https://www.facebook.com/VistaMallDasmarinas/videos/pickleball-is-on-at-vista-mall-dasmari%C3%B1as-grab-your-paddle-bring-your-energy-and/770101802563800/",
+    "https://www.instagram.com/p/C3jWdSRAlDq/?hl=en",
+    "https://www.reddit.com/r/cavite/comments/1jxdq59/pickle_yard_in_dasma/?tl=en",
+    "https://www.facebook.com/DasmarinasPickleball/videos/summer-pickleball-clinic-with-dasmarinas-pickleballat-rcourt-robinsons-dasmarina/1187522375963771/",
+    "https://www.facebook.com/groups/715531645611475/posts/2025055201325773/",
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/61575648282287/videos/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%9C%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%9E-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E-%F0%9D%90%98%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A6%F0%9D%90%9A-what-makes-the-pic/724771927385742/",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.facebook.com/groups/715531645611475/posts/2025055201325773/",
+    "https://www.facebook.com/VistaMallDasmarinas/videos/pickleball-is-on-at-vista-mall-dasmari%C3%B1as-grab-your-paddle-bring-your-energy-and/770101802563800/",
+    "https://www.instagram.com/reel/DONwLptjq6K/",
+    "https://www.facebook.com/p/The-Pickle-Yard-Dasma-61575648282287/",
+    "https://www.tiktok.com/discover/pickleball-court-dasmarinas-cavite",
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/61575648282287/videos/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%9C%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%9E-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E-%F0%9D%90%98%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A6%F0%9D%90%9A-what-makes-the-pic/724771927385742/",
+    "https://www.instagram.com/p/DSv9YL2iDyT/",
+    "https://www.facebook.com/groups/768252608164220/",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.facebook.com/61575648282287/videos/%F0%9D%90%83%F0%9D%90%88%F0%9D%90%92%F0%9D%90%82%F0%9D%90%8E%F0%9D%90%95%F0%9D%90%84%F0%9D%90%91-%F0%9D%90%93%F0%9D%90%87%F0%9D%90%84-%F0%9D%90%93%F0%9D%90%87%F0%9D%90%91%F0%9D%90%88%F0%9D%90%8B%F0%9D%90%8B-%F0%9D%90%8E%F0%9D%90%85-%F0%9D%90%8F%F0%9D%90%88%F0%9D%90%82%F0%9D%90%8A%F0%9D%90%8B%F0%9D%90%84%F0%9D%90%81%F0%9D%90%80%F0%9D%90%8B%F0%9D%90%8B-%F0%9D%90%9A%F0%9D%90%AD-%F0%9D%90%93%F0%9D%90%87%F0%9D%90%84-%F0%9D%90%8F%F0%9D%90%88%F0%9D%90%82%F0%9D%90%8A%F0%9D%90%8B%F0%9D%90%84-%F0%9D%90%98%F0%9D%90%80%F0%9D%90%91%F0%9D%90%83-%F0%9D%90%83%F0%9D%90%80%F0%9D%90%92%F0%9D%90%8C%F0%9D%90%80-ready-to-learn-play-a/1246310130516960/",
+    "https://www.facebook.com/DasmarinasPickleball/",
+    "https://www.facebook.com/groups/768252608164220/",
+    "https://www.facebook.com/61575648282287/videos/-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%81%F0%9D%90%9E%F0%9D%90%AC%F0%9D%90%AD-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E%F0%9D%90%9B%F0%9D%90%9A%F0%9D%90%A5%F0%9D%90%A5-%F0%9D%90%85%F0%9D%90%9A%F0%9D%90%9C%F0%9D%90%A2%F0%9D%90%A5%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%B2-%F0%9D%90%A2%F0%9D%90%A7-%F0%9D%90%82%F0%9D%90%9A%F0%9D%90%AF%F0%9D%90%A2%F0%9D%90%AD%F0%9D%90%9E-%F0%9D%90%93%F0%9D%90%A1%F0%9D%90%9E-%F0%9D%90%8F%F0%9D%90%A2%F0%9D%90%9C%F0%9D%90%A4%F0%9D%90%A5%F0%9D%90%9E-%F0%9D%90%98%F0%9D%90%9A%F0%9D%90%AB%F0%9D%90%9D-%F0%9D%90%83%F0%9D%90%9A%F0%9D%90%AC%F0%9D%90%A6%F0%9D%90%9A-what-makes-the-pic/724771927385742/",
+    "https://www.reddit.com/r/cavite/comments/1jxdq59/pickle_yard_in_dasma/?tl=en",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.instagram.com/p/C3jWdSRAlDq/?hl=en",
+    "https://www.facebook.com/groups/715531645611475/posts/1971092353388725/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4347555828865958/",
+    "https://www.facebook.com/groups/2723933654561525/posts/4370733999881474/",
+    "https://www.facebook.com/VistaMallDasmarinas/videos/pickleball-is-on-at-vista-mall-dasmari%C3%B1as-grab-your-paddle-bring-your-energy-and/770101802563800/",
+    "https://www.instagram.com/reel/DONwLptjq6K/",
+    "https://www.facebook.com/groups/715531645611475/posts/2025055201325773/",
+    "https://www.tiktok.com/@engrmac_/video/7543893947916029192",
+    "https://www.tiktok.com/discover/private-court-pickleball-in-cavite"
+  ],
+  "failedQueries": [],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/dasmarinas-city/leads.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/dasmarinas-city/leads.state.json",
+  "scrapeStatePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery/pickleball/cavite/dasmarinas-city/scrape-state.json"
+}

@@ -1,0 +1,65 @@
+{
+  "fixtureName": "obvious-remove",
+  "cases": [
+    {
+      "evidence": {
+        "placeId": "11111111-1111-4111-8111-111111111111",
+        "trackingBucket": "curated_place",
+        "placeType": "CURATED",
+        "organizationId": null,
+        "slug": "test-clubs",
+        "name": "Test Clubs",
+        "address": "123 Sample Street",
+        "city": "CEBU CITY",
+        "province": "CEBU",
+        "country": "PH",
+        "claimStatus": "UNCLAIMED",
+        "verificationStatus": "NONE",
+        "activeCourtCount": 1,
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
+        "photoCount": 0,
+        "hasContactDetails": false,
+        "baselineFlags": ["nonprod_slug", "missing_trust_signal"],
+        "baselineSuggestion": {
+          "label": "remove",
+          "reasonCode": "nonprod_or_test"
+        }
+      },
+      "expected": {
+        "label": "remove",
+        "reasonCode": "nonprod_or_test"
+      }
+    },
+    {
+      "evidence": {
+        "placeId": "22222222-2222-4222-8222-222222222222",
+        "trackingBucket": "org_created_place",
+        "placeType": "RESERVABLE",
+        "organizationId": "33333333-3333-4333-8333-333333333333",
+        "slug": "your-venue",
+        "name": "Your Venue",
+        "address": "456 Placeholder Avenue",
+        "city": "CEBU CITY",
+        "province": "CEBU",
+        "country": "PH",
+        "claimStatus": "CLAIMED",
+        "verificationStatus": "UNVERIFIED",
+        "activeCourtCount": 2,
+        "activeCourtLabels": ["Court A", "Court B"],
+        "activeSports": ["pickleball"],
+        "photoCount": 1,
+        "hasContactDetails": true,
+        "baselineFlags": ["generic_slug", "generic_name"],
+        "baselineSuggestion": {
+          "label": "remove",
+          "reasonCode": "generic_or_placeholder"
+        }
+      },
+      "expected": {
+        "label": "remove",
+        "reasonCode": "generic_or_placeholder"
+      }
+    }
+  ]
+}

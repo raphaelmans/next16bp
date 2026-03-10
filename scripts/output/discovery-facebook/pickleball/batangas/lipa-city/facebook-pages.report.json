@@ -1,0 +1,199 @@
+{
+  "scope": {
+    "provinceName": "Batangas",
+    "provinceSlug": "batangas",
+    "cityName": "Lipa City",
+    "citySlug": "lipa-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T05:34:49.726Z",
+  "queries": [
+    "site:facebook.com pickleball Lipa City Batangas",
+    "site:facebook.com \"Lipa City\" \"Batangas\" \"pickleball\"",
+    "site:facebook.com \"Lipa City\" \"pickleball club\"",
+    "site:facebook.com \"Lipa City\" \"pickleball court\"",
+    "site:facebook.com \"Batangas\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/p/Banay-Banay-Pickleball-61577112863684/",
+    "https://www.facebook.com/LipaRacketClub/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Club-61566591501722/",
+    "https://www.facebook.com/p/Batangas-Pickleball-Arena-61578531977462/",
+    "https://www.facebook.com/p/Batangas-City-Pickleball-Club-61575645631229/",
+    "https://www.facebook.com/p/EJs-Pickleball-Lounge-61579049522050/",
+    "https://www.facebook.com/474219265766513"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374827216138819/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4101905356764341/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/your-new-home-court-is-now-open-%F0%9D%97%9F%F0%9D%97%B6%F0%9D%97%BD%F0%9D%97%AE-%F0%9D%97%A5%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81-%F0%9D%97%96%F0%9D%97%B9%F0%9D%98%82%F0%9D%97%AF-is-officially-welcoming-players/873961585391701/",
+      "score": 6
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4149109715377238/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/look-something-big-is-coming-to-lipa-from-smashes-to-pickleball-rallies-your-new/867865142668012/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/255367121210660/posts/25513552388298785/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4114753362146207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4266620950292780/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135864206701789/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374827216138819/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4101905356764341/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/look-something-big-is-coming-to-lipa-from-smashes-to-pickleball-rallies-your-new/867865142668012/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4149109715377238/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4150803171874559/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4114753362146207/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3909878869300325/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3617521218536093/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4135864206701789/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4376813522606855/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/your-new-home-court-is-now-open-%F0%9D%97%9F%F0%9D%97%B6%F0%9D%97%BD%F0%9D%97%AE-%F0%9D%97%A5%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81-%F0%9D%97%96%F0%9D%97%B9%F0%9D%98%82%F0%9D%97%AF-is-officially-welcoming-players/873961585391701/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/look-something-big-is-coming-to-lipa-from-smashes-to-pickleball-rallies-your-new/867865142668012/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4149109715377238/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3914669108821301/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374827216138819/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3909878869300325/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/HelloLipa/posts/the-pickleball-zone-has-been-officially-launched-and-opened-in-biz-hub-at-lima-e/1123383779146697/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4101905356764341/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3617521218536093/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4149109715377238/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61569530074575/posts/banaybanay-pickleball-courtthe-home-of-palakol-in-lipa-city-schedule-your-palako/122154892496651002/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/look-something-big-is-coming-to-lipa-from-smashes-to-pickleball-rallies-your-new/867865142668012/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4374827216138819/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/alaehlipa4217/posts/your-new-home-court-is-now-open-%F0%9D%97%9F%F0%9D%97%B6%F0%9D%97%BD%F0%9D%97%AE-%F0%9D%97%A5%F0%9D%97%AE%F0%9D%97%B0%F0%9D%97%B8%F0%9D%97%B2%F0%9D%98%81-%F0%9D%97%96%F0%9D%97%B9%F0%9D%98%82%F0%9D%97%AF-is-officially-welcoming-players/873961585391701/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/61569530074575/photos/banaybanay-pickleball-courtthe-home-of-palakol-in-lipa-city-schedule-your-palako/122154892484651002/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4101905356764341/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3909878869300325/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1297774018351133/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4364593347162206/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/3986582498296628/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/61566591501722/videos/1884617698834785/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1299407198187815/",
+      "score": 14
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/lipa-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/batangas/lipa-city/facebook-pages.state.json"
+}

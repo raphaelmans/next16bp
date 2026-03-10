@@ -1,0 +1,100 @@
+{
+  "version": 1,
+  "startUrl": "https://kudoscourts.com/",
+  "createdAt": "2026-03-10T04:45:22.854Z",
+  "updatedAt": "2026-03-10T04:45:36.947Z",
+  "urls": {
+    "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "south city homes recreation center|city of biñan|laguna",
+      "lastRowName": "South City Homes Recreation Center"
+    },
+    "https://reclub.co/clubs/@schrc-pickleball-club-binan": {
+      "canonicalUrl": "https://reclub.co/clubs/@schrc-pickleball-club-binan",
+      "latestUrl": "https://reclub.co/clubs/@schrc-pickleball-club-binan",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan": {
+      "canonicalUrl": "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan",
+      "latestUrl": "https://reclub.co/ko/clubs/@schrc-pickleball-club-binan",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq": {
+      "canonicalUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "latestUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 2,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "scraped",
+      "lastError": null,
+      "lastRowKey": "pickleball hq|city of biñan|laguna",
+      "lastRowName": "Pickleball Hq"
+    },
+    "https://www.globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines": {
+      "canonicalUrl": "https://www.globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines",
+      "latestUrl": "https://www.globalpickleball.network/pickleball-courts/courts/city/23961-binan-philippines",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    },
+    "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public": {
+      "canonicalUrl": "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public",
+      "latestUrl": "https://reclub.co/clubs/@south-city-homes-recreation-center-tennis-open-to-public",
+      "firstDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "lastDiscoveredAt": "2026-03-10T04:45:22.854Z",
+      "attempts": 1,
+      "lastAttemptedAt": "2026-03-10T04:45:22.854Z",
+      "lastStatus": "no_data",
+      "lastError": null,
+      "lastRowKey": null,
+      "lastRowName": null
+    }
+  },
+  "rows": {
+    "south city homes recreation center|city of biñan|laguna": {
+      "rowKey": "south city homes recreation center|city of biñan|laguna",
+      "name": "South City Homes Recreation Center",
+      "city": "CITY OF BIÑAN",
+      "province": "LAGUNA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/south-city-homes-recreation-center",
+      "firstSeenAt": "2026-03-10T04:45:22.854Z",
+      "lastSeenAt": "2026-03-10T04:45:22.854Z"
+    },
+    "pickleball hq|city of biñan|laguna": {
+      "rowKey": "pickleball hq|city of biñan|laguna",
+      "name": "Pickleball Hq",
+      "city": "CITY OF BIÑAN",
+      "province": "LAGUNA",
+      "sourceUrl": "https://www.pickleheads.com/courts/ph/calabarzon/binan/pickleball-hq",
+      "firstSeenAt": "2026-03-10T04:45:22.854Z",
+      "lastSeenAt": "2026-03-10T04:45:22.854Z"
+    }
+  }
+}

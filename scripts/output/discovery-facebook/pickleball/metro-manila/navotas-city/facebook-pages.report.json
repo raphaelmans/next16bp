@@ -1,0 +1,218 @@
+{
+  "scope": {
+    "provinceName": "Metro Manila",
+    "provinceSlug": "metro-manila",
+    "cityName": "Navotas City",
+    "citySlug": "navotas-city",
+    "sportSlug": "pickleball"
+  },
+  "generatedAt": "2026-03-10T06:05:32.137Z",
+  "queries": [
+    "site:facebook.com pickleball Navotas City Metro Manila",
+    "site:facebook.com \"Navotas City\" \"Metro Manila\" \"pickleball\"",
+    "site:facebook.com \"Navotas City\" \"pickleball club\"",
+    "site:facebook.com \"Navotas City\" \"pickleball court\"",
+    "site:facebook.com \"Metro Manila\" \"pickleball\""
+  ],
+  "emittedUrls": [
+    "https://www.facebook.com/casadeavillas/",
+    "https://www.facebook.com/manilapickleball/"
+  ],
+  "skippedAlreadyDiscovered": [],
+  "skippedLowRelevance": [
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4377630212525186/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362364664051741/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4106075113014032/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4378924115729129/",
+      "score": 8
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4366899366931604/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1457324449062755/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/dumaguetepickleball/posts/843099308511539/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4370013076620233/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4232851230336419/",
+      "score": 9
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362364664051741/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2724777374551857/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/1347503615753311/posts/2345934602576869/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339452729676268/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4131476473807229/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4074196812868529/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4128258140795729/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/335535041196318/posts/1404932104256601/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4294928410795367/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362364664051741/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1457324449062755/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/100087110356633/posts/late-post-but-full-of-gratitude-were-truly-honored-to-have-received-this-certifi/723970237183315/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4336011580020383/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4131476473807229/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/pickaballcourt/videos/a-little-stretch-a-little-sweat-a-lot-of-fun-%EF%B8%8Fcome-play-pickleball-with-us-at-pi/787764370990792/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4343019652652909/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4355025934785614/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4245540512400824/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4294928410795367/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/casadeavillas/posts/game-on-were-officially-launching-our-all-new-sports-club-a-multi-sport-destinat/737739605675008/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4362364664051741/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/philippinepickleballfederation/posts/1457324449062755/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4232851230336419/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/1419035955126012/posts/2724777374551857/",
+      "score": 17
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4336011580020383/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4131476473807229/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4270086949946180/",
+      "score": 15
+    },
+    {
+      "url": "https://www.facebook.com/61567306075454/posts/from-mindanao-to-para%C3%B1aque-welcome-to-the-pickle-yardso-glad-to-share-the-courts/122194166846576869/",
+      "score": 13
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4349685108653030/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4373849249569949/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4330564827231725/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4214407705514105/",
+      "score": 10
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4331493437138864/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4356832681271606/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4339942552960619/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/2723933654561525/posts/4119934714961405/",
+      "score": 12
+    },
+    {
+      "url": "https://www.facebook.com/groups/715531645611475/posts/1838746089956686/",
+      "score": 10
+    }
+  ],
+  "outputPath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/navotas-city/facebook-pages.urls.txt",
+  "statePath": "/Users/raphaelm/Documents/Coding/boilerplates/next16bp/scripts/output/discovery-facebook/pickleball/metro-manila/navotas-city/facebook-pages.state.json"
+}
