@@ -802,7 +802,7 @@ async function main() {
           ]
         : await resolveDefaultCuratedDiscoveryScopes();
 
-    const results = [];
+    const results: Awaited<ReturnType<typeof runScope>>[] = [];
     for (const scope of scopes) {
       console.log(`\n=== RUN ${scope.provinceSlug} / ${scope.citySlug} ===`);
       const result = await runScope(db, repository, scope);

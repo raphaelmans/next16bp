@@ -1018,7 +1018,7 @@ async function main() {
       return;
     }
 
-    const results = [];
+    const results: Awaited<ReturnType<typeof runScope>>[] = [];
     for (const scope of scopes) {
       console.log(
         `\n=== FACEBOOK RUN ${scope.provinceSlug} / ${scope.citySlug} ===`,
