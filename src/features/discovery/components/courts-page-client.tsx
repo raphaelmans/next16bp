@@ -149,8 +149,11 @@ function CourtsPageContent({
   locationRouteScope = "none",
   initialResolvedLocation,
 }: CourtsPageContentProps) {
-  const { isSearchNavigationPending, finishSearchNavigation } =
-    useSearchNavigationProgress();
+  const {
+    isSearchNavigationPending,
+    finishSearchNavigation,
+    startSearchNavigation,
+  } = useSearchNavigationProgress();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const { data: sports = [] } = useQueryDiscoverySports();
@@ -164,11 +167,21 @@ function CourtsPageContent({
   const [hasMeasuredResultsAnchor, setHasMeasuredResultsAnchor] =
     useState(false);
   const [isResultsAnchorVisible, setIsResultsAnchorVisible] = useState(false);
+  const [pendingPage, setPendingPage] = useState<number | null>(null);
   const [shouldScrollToResults, setShouldScrollToResults] = useState(false);
 
   useEffect(() => {
     finishSearchNavigation();
   }, [finishSearchNavigation]);
+
+  useEffect(() => {
+    if (pendingPage === null || filters.page !== pendingPage) {
+      return;
+    }
+
+    setPendingPage(null);
+    finishSearchNavigation();
+  }, [filters.page, finishSearchNavigation, pendingPage]);
 
   const queueResultsScroll = useCallback(() => {
     setShouldScrollToResults(true);
@@ -377,13 +390,15 @@ function CourtsPageContent({
   const total = initialData.total;
   const page = filters.page;
   const limit = initialData.limit;
+  const displayPage = pendingPage ?? page;
+  const isPaginationPending = pendingPage !== null && pendingPage !== page;
   const totalPages = limit > 0 ? Math.ceil(total / limit) : 1;
   const paginationItems = useMemo(
-    () => buildPaginationItems(page, totalPages),
-    [page, totalPages],
+    () => buildPaginationItems(displayPage, totalPages),
+    [displayPage, totalPages],
   );
-  const startIndex = total === 0 ? 0 : (page - 1) * limit + 1;
-  const endIndex = Math.min(page * limit, total);
+  const startIndex = total === 0 ? 0 : (displayPage - 1) * limit + 1;
+  const endIndex = Math.min(displayPage * limit, total);
   const { data: provincesCities } = usePHProvincesCitiesQuery();
 
   const locationLabel = useMemo(() => {
@@ -501,6 +516,19 @@ function CourtsPageContent({
     [pathname, searchParams],
   );
 
+  const handlePaginationNavigate = useCallback(
+    (targetPage: number) => {
+      if (targetPage === page || isPaginationPending) {
+        return;
+      }
+
+      setPendingPage(targetPage);
+      queueResultsScroll();
+      startSearchNavigation();
+    },
+    [isPaginationPending, page, queueResultsScroll, startSearchNavigation],
+  );
+
   const filterProps = {
     amenities: staged.amenities ?? undefined,
     province: staged.province ?? effectiveProvince ?? undefined,
@@ -612,15 +640,20 @@ function CourtsPageContent({
             {totalPages > 1 && (
               <div className="flex flex-col items-center gap-3 pt-2">
                 <Pagination>
-                  <PaginationContent>
+                  <PaginationContent
+                    className={cn(isPaginationPending && "pointer-events-none")}
+                  >
                     <PaginationItem>
                       <PaginationPrevious
-                        href={buildPaginationHref(Math.max(1, page - 1))}
+                        href={buildPaginationHref(Math.max(1, displayPage - 1))}
+                        onNavigate={() =>
+                          handlePaginationNavigate(Math.max(1, displayPage - 1))
+                        }
+                        prefetch={true}
                         scroll={false}
-                        aria-disabled={page === 1}
-                        onClick={queueResultsScroll}
+                        aria-disabled={displayPage === 1}
                         className={
-                          page === 1
+                          displayPage === 1 || isPaginationPending
                             ? "pointer-events-none opacity-50"
                             : "cursor-pointer"
                         }
@@ -631,10 +664,16 @@ function CourtsPageContent({
                         <PaginationItem key={`page-${item.page}`}>
                           <PaginationLink
                             href={buildPaginationHref(item.page)}
+                            onNavigate={() =>
+                              handlePaginationNavigate(item.page)
+                            }
+                            prefetch={true}
                             scroll={false}
-                            onClick={queueResultsScroll}
-                            isActive={page === item.page}
-                            className="cursor-pointer"
+                            isActive={displayPage === item.page}
+                            className={cn(
+                              "cursor-pointer",
+                              isPaginationPending && "pointer-events-none",
+                            )}
                           >
                             {item.page}
                           </PaginationLink>
@@ -648,13 +687,18 @@ function CourtsPageContent({
                     <PaginationItem>
                       <PaginationNext
                         href={buildPaginationHref(
-                          Math.min(totalPages, page + 1),
+                          Math.min(totalPages, displayPage + 1),
                         )}
+                        onNavigate={() =>
+                          handlePaginationNavigate(
+                            Math.min(totalPages, displayPage + 1),
+                          )
+                        }
+                        prefetch={true}
                         scroll={false}
-                        aria-disabled={page === totalPages}
-                        onClick={queueResultsScroll}
+                        aria-disabled={displayPage === totalPages}
                         className={
-                          page === totalPages
+                          displayPage === totalPages || isPaginationPending
                             ? "pointer-events-none opacity-50"
                             : "cursor-pointer"
                         }

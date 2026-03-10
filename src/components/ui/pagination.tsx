@@ -43,7 +43,7 @@ type PaginationLinkProps = {
   Partial<
     Pick<
       React.ComponentProps<typeof Link>,
-      "href" | "prefetch" | "replace" | "scroll"
+      "href" | "onNavigate" | "prefetch" | "replace" | "scroll"
     >
   >;
 
@@ -51,6 +51,7 @@ function PaginationLink({
   className,
   href,
   isActive,
+  onNavigate,
   prefetch,
   replace,
   scroll,
@@ -73,6 +74,7 @@ function PaginationLink({
         data-active={isActive}
         className={linkClassName}
         href={href}
+        onNavigate={onNavigate}
         prefetch={prefetch}
         replace={replace}
         scroll={scroll}
