@@ -40,7 +40,15 @@ import {
 } from "@/features/reservation/components/payment-proof-form";
 import { ReservationActionsCard } from "@/features/reservation/components/reservation-actions-card";
 import { ReservationExpired } from "@/features/reservation/components/reservation-expired";
-import { ReservationDetailSkeleton } from "@/features/reservation/components/skeletons/reservation-detail-skeleton";
+import {
+  ActivityTimelineSkeleton,
+  BookingDetailsCardSkeleton,
+  CourtOwnerCardSkeleton,
+  GroupItemsCardSkeleton,
+  GroupSummaryCardSkeleton,
+  ReservationActionsCardSkeleton,
+  StatusBannerSkeleton,
+} from "@/features/reservation/components/skeletons";
 import { StatusBanner } from "@/features/reservation/components/status-banner";
 import { TermsCheckbox } from "@/features/reservation/components/terms-checkbox";
 import {
@@ -360,12 +368,47 @@ export default function ReservationDetailPage({
     }
   };
 
-  const isLoading = isLoadingReservation || isLoadingLinkedDetail;
-
-  if (isLoading) {
+  if (isLoadingReservation) {
     return (
       <Container className="py-6">
-        <ReservationDetailSkeleton />
+        <PageHeader
+          title="Reservation"
+          description="Track status, payment, venue details, and owner updates without leaving this page."
+          breadcrumbs={[
+            { label: "My Reservations", href: appRoutes.reservations.base },
+            { label: "Reservation" },
+          ]}
+          backHref={appRoutes.reservations.base}
+          actions={
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={handleRefresh}
+              disabled={isRefreshing}
+            >
+              <RefreshCw
+                className={`h-4 w-4 mr-2 ${
+                  isRefreshing ? "animate-spin" : ""
+                }`}
+              />
+              Refresh
+            </Button>
+          }
+        />
+
+        <StatusBannerSkeleton />
+
+        <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
+          <div className="lg:col-span-2 space-y-6">
+            <BookingDetailsCardSkeleton />
+            <CourtOwnerCardSkeleton />
+            <ActivityTimelineSkeleton />
+          </div>
+          <div className="space-y-4">
+            {isLoadingLinkedDetail ? <GroupSummaryCardSkeleton /> : null}
+            <ReservationActionsCardSkeleton />
+          </div>
+        </div>
       </Container>
     );
   }
@@ -576,7 +619,12 @@ export default function ReservationDetailPage({
                 />
               ) : null}
 
-              {isGroupReservation ? (
+              {isLoadingLinkedDetail ? (
+                <>
+                  <BookingDetailsCardSkeleton />
+                  <ReservationActionsCardSkeleton />
+                </>
+              ) : isGroupReservation ? (
                 <>
                   <Card>
                     <CardHeader>
@@ -836,7 +884,9 @@ export default function ReservationDetailPage({
                 </CardContent>
               </Card>
 
-              {groupData ? (
+              {isLoadingLinkedDetail ? (
+                <GroupItemsCardSkeleton />
+              ) : groupData ? (
                 <Card>
                   <CardHeader>
                     <CardTitle>Group Items</CardTitle>
@@ -888,7 +938,9 @@ export default function ReservationDetailPage({
         </div>
 
         <div className="space-y-4">
-          {groupData ? (
+          {isLoadingLinkedDetail ? (
+            <GroupSummaryCardSkeleton />
+          ) : groupData ? (
             <Card>
               <CardHeader>
                 <CardTitle>Summary</CardTitle>
