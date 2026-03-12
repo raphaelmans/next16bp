@@ -106,6 +106,9 @@ export const AdminCourtFiltersSchema = z.object({
   placeType: PlaceTypeFilterEnum.optional(),
   claimStatus: ClaimStatusFilterEnum.optional(),
   featured: z.boolean().optional(),
+  source: z
+    .enum(["user_submitted", "organization_managed", "admin_curated"])
+    .optional(),
   province: S.place.province.optional(),
   city: S.place.city.optional(),
   search: S.place.searchQuery.optional(),

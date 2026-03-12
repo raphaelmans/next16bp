@@ -205,6 +205,7 @@ export function AdminPlacesList({
     city: cityFilter,
     claimStatus: claimStatusFilter,
     featured: featuredFilter,
+    source: sourceFilter,
     search: debouncedSearch || undefined,
     sortBy,
     sortOrder,
@@ -212,11 +213,7 @@ export function AdminPlacesList({
     limit: 10,
   });
 
-  const filteredCourts = React.useMemo(() => {
-    if (!courtsData?.courts) return [];
-    if (sourceFilter === "all") return courtsData.courts;
-    return courtsData.courts.filter((court) => court.source === sourceFilter);
-  }, [courtsData?.courts, sourceFilter]);
+  const filteredCourts = courtsData?.courts ?? [];
 
   const toggleStatusMutation = useMutToggleCourtStatus();
   const deletePlaceMutation = useMutDeleteAdminPlace();
@@ -545,13 +542,17 @@ export function AdminPlacesList({
                             variant={
                               place.source === "user_submitted"
                                 ? "outline"
-                                : "secondary"
+                                : place.source === "organization_managed"
+                                  ? "default"
+                                  : "secondary"
                             }
                             className="text-[10px]"
                           >
                             {place.source === "user_submitted"
                               ? "User Submitted"
-                              : "Admin Curated"}
+                              : place.source === "organization_managed"
+                                ? "Org Managed"
+                                : "Admin Curated"}
                           </Badge>
                         </TableCell>
                         <TableCell>

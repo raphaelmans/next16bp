@@ -21,7 +21,10 @@ export type ClaimStatusFilter =
   | "removal_requested";
 export type FeaturedFilter = "all" | "featured" | "not_featured";
 
-export type CourtSource = "user_submitted" | "admin_curated";
+export type CourtSource =
+  | "user_submitted"
+  | "organization_managed"
+  | "admin_curated";
 
 export interface AdminCourt {
   id: string;
@@ -94,6 +97,7 @@ interface UseAdminCourtsOptions {
   city?: string | "all";
   claimStatus?: ClaimStatusFilter | "all";
   featured?: FeaturedFilter;
+  source?: CourtSource | "all";
   search?: string;
   sortBy?: CourtSortBy;
   sortOrder?: SortOrder;
@@ -123,6 +127,18 @@ const toClaimStatusFilter = (value: string | null | undefined) => {
 
 const toIsoString = (value: string | Date) =>
   value instanceof Date ? value.toISOString() : value;
+
+const getCourtSource = ({
+  organizationId,
+  submittedByUserId,
+}: {
+  organizationId: string | null;
+  submittedByUserId?: string | null;
+}): CourtSource => {
+  if (submittedByUserId) return "user_submitted";
+  if (organizationId) return "organization_managed";
+  return "admin_curated";
+};
 
 const toAdminCourt = (
   place: {
@@ -157,7 +173,10 @@ const toAdminCourt = (
   organizationName: organizationName ?? undefined,
   claimStatus: toClaimStatusFilter(place.claimStatus),
   featuredRank: place.featuredRank ?? 0,
-  source: submittedByUserId ? "user_submitted" : "admin_curated",
+  source: getCourtSource({
+    organizationId: place.organizationId,
+    submittedByUserId,
+  }),
   createdAt: toIsoString(place.createdAt),
   updatedAt: toIsoString(place.updatedAt),
 });
@@ -177,6 +196,7 @@ export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
     city,
     claimStatus,
     featured,
+    source,
     search,
     sortBy = "createdAt",
     sortOrder = "desc",
@@ -210,6 +230,7 @@ export function useModAdminCourts(options: UseAdminCourtsOptions = {}) {
       city: city && city !== "all" ? city : undefined,
       claimStatus: claimStatusInput,
       featured: featuredInput,
+      source: source && source !== "all" ? source : undefined,
       search: search || undefined,
       sortBy,
       sortOrder,

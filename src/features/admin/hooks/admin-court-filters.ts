@@ -57,7 +57,12 @@ export function useModAdminCourtFilters() {
   const setSource = (value: string) =>
     setFilters({
       source:
-        value === "all" ? null : (value as "user_submitted" | "admin_curated"),
+        value === "all"
+          ? null
+          : (value as
+              | "user_submitted"
+              | "organization_managed"
+              | "admin_curated"),
       page: 1,
     });
 
@@ -142,7 +147,10 @@ export function useModAdminCourtFilters() {
         batch.source !== undefined
           ? batch.source === "all"
             ? null
-            : (batch.source as "user_submitted" | "admin_curated")
+            : (batch.source as
+                | "user_submitted"
+                | "organization_managed"
+                | "admin_curated")
           : undefined,
       sortBy:
         batch.sortBy !== undefined

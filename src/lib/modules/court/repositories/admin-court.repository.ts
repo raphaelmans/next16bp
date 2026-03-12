@@ -6,6 +6,8 @@ import {
   eq,
   gt,
   ilike,
+  isNotNull,
+  isNull,
   lte,
   type SQL,
   sql,
@@ -384,6 +386,16 @@ export class AdminCourtRepository implements IAdminCourtRepository {
 
     if (filters.search) {
       conditions.push(ilike(place.name, `%${filters.search}%`));
+    }
+
+    if (filters.source === "user_submitted") {
+      conditions.push(isNotNull(courtSubmission.submittedByUserId));
+    } else if (filters.source === "organization_managed") {
+      conditions.push(isNull(courtSubmission.submittedByUserId));
+      conditions.push(isNotNull(place.organizationId));
+    } else if (filters.source === "admin_curated") {
+      conditions.push(isNull(courtSubmission.submittedByUserId));
+      conditions.push(isNull(place.organizationId));
     }
 
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;

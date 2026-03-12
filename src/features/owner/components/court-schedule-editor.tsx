@@ -288,6 +288,7 @@ export function CourtScheduleEditor({
     isCopying,
     courts,
     validation,
+    saveAttempted,
     handleAddRow,
     handleRemoveRow,
     handleRowChange,
@@ -403,13 +404,13 @@ export function CourtScheduleEditor({
                         )}
                       </div>
 
-                      {/* Validation badges */}
+                      {/* Validation badges — warnings deferred until save attempt */}
                       {errorCount > 0 && (
                         <Badge variant="destructive" className="ml-1">
                           {errorCount} {errorCount === 1 ? "error" : "errors"}
                         </Badge>
                       )}
-                      {warningCount > 0 && (
+                      {saveAttempted && warningCount > 0 && (
                         <Badge variant="warning" className="ml-1">
                           {warningCount}{" "}
                           {warningCount === 1 ? "warning" : "warnings"}
@@ -456,9 +457,13 @@ export function CourtScheduleEditor({
                             hasInvalidTime ? "Invalid time" : null,
                             overlapsHours ? "Hours overlap" : null,
                             overlapsPricing ? "Pricing overlap" : null,
-                            missingPrice ? "Needs price" : null,
-                            closedWithPrice ? "Closed + priced" : null,
-                            isOvernight ? "Overnight" : null,
+                            saveAttempted && missingPrice
+                              ? "Needs price"
+                              : null,
+                            saveAttempted && closedWithPrice
+                              ? "Closed + priced"
+                              : null,
+                            saveAttempted && isOvernight ? "Overnight" : null,
                           ].filter(Boolean) as string[];
 
                           return (

@@ -60,6 +60,7 @@ export const useCourtScheduleEditor = ({
   });
   const [hasInitialized, setHasInitialized] = React.useState(false);
   const [openDays, setOpenDays] = React.useState<number[]>(() => [...DAY_KEYS]);
+  const [saveAttempted, setSaveAttempted] = React.useState(false);
 
   React.useEffect(() => {
     if (hoursLoading || rulesLoading || hasInitialized) return;
@@ -191,6 +192,8 @@ export const useCourtScheduleEditor = ({
   );
 
   const handleSave = React.useCallback(async () => {
+    setSaveAttempted(true);
+
     if (validation.hasBlockingIssues) {
       toast.error("Resolve overlapping or invalid blocks before saving.");
       return;
@@ -253,6 +256,7 @@ export const useCourtScheduleEditor = ({
     isCopying,
     courts,
     validation,
+    saveAttempted,
     handleAddRow,
     handleRemoveRow,
     handleRowChange,

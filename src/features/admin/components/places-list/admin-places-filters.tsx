@@ -315,12 +315,13 @@ export function AdminPlacesFilters(props: AdminPlacesFiltersProps) {
             }))
           }
         >
-          <SelectTrigger className="w-[170px]">
+          <SelectTrigger className="w-[190px]">
             <SelectValue placeholder="All Sources" />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Sources</SelectItem>
             <SelectItem value="user_submitted">User Submitted</SelectItem>
+            <SelectItem value="organization_managed">Org Managed</SelectItem>
             <SelectItem value="admin_curated">Admin Curated</SelectItem>
           </SelectContent>
         </Select>
