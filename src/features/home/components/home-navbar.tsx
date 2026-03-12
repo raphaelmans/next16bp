@@ -6,10 +6,11 @@ import { HomeNavbarAuthActionsLoader } from "./home-navbar-auth-actions-loader";
 
 export function HomeNavbar() {
   return (
-    <nav className="fixed top-[max(1rem,env(safe-area-inset-top))] left-4 right-4 z-50 rounded-xl border border-border/60 bg-background/95 px-4 shadow-md backdrop-blur-md">
-      <div className="flex min-h-16 items-center gap-3">
+    <nav className="fixed top-[max(1rem,env(safe-area-inset-top))] left-2 right-2 sm:left-4 sm:right-4 z-50 rounded-xl border border-border/60 bg-background/95 px-2.5 sm:px-3 md:px-4 shadow-md backdrop-blur-md">
+      <div className="flex min-h-12 sm:min-h-14 md:min-h-16 items-center gap-1.5 sm:gap-2 md:gap-3">
         <Link href={appRoutes.index.base} className="flex items-center gap-2">
-          <KudosLogo size={36} variant="full" />
+          <KudosLogo size={28} variant="full" className="sm:hidden" />
+          <KudosLogo size={36} variant="full" className="hidden sm:flex" />
         </Link>
 
         <form

@@ -75,8 +75,12 @@ export function HomeNavbarAuthActions({
   if (variant === "mobile") {
     return (
       <>
-        <Button variant="ghost" asChild className="font-heading text-primary">
-          <Link href={appRoutes.courts.base}>Browse</Link>
+        <Button
+          variant="ghost"
+          asChild
+          className="font-heading text-primary text-xs sm:text-sm"
+        >
+          <Link href={listYourVenueHref}>List Venue</Link>
         </Button>
         <UserDropdown
           user={user}
@@ -125,10 +129,18 @@ function DesktopGuestActions() {
 function MobileGuestActions() {
   return (
     <>
-      <Button variant="ghost" asChild className="font-heading text-primary">
-        <Link href={appRoutes.courts.base}>Browse</Link>
+      <Button
+        variant="ghost"
+        asChild
+        className="font-heading text-primary text-xs sm:text-sm"
+      >
+        <Link href={appRoutes.ownersGetStarted.base}>List Venue</Link>
       </Button>
-      <Button variant="outline" asChild className="font-heading">
+      <Button
+        variant="outline"
+        asChild
+        className="font-heading text-xs sm:text-sm"
+      >
         <Link href={appRoutes.login.base}>Sign In</Link>
       </Button>
     </>
