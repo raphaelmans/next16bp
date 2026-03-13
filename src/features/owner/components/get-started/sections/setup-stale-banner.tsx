@@ -1,6 +1,5 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 
 interface SetupStaleBannerProps {
   isFetching: boolean;
@@ -23,8 +22,8 @@ export function SetupStaleBanner({
             size="sm"
             onClick={onRefresh}
             disabled={isFetching}
+            loading={isFetching}
           >
-            {isFetching && <Spinner className="mr-2" />}
             Refresh
           </Button>
         </div>

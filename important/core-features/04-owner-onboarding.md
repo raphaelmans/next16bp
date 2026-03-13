@@ -1,83 +1,90 @@
-# Owner Onboarding
+# Owner Setup & Go Live
 
 ## Purpose
 
-The onboarding flow converts a new signup into a fully operational venue. It is the most critical conversion funnel on the platform — if an owner does not complete setup, the platform gains no supply.
+This doc explains how an owner moves from a fresh account to a venue that is visible, operational, and able to handle real reservation traffic.
 
-## Entry Points
+## Current Guide Narrative
 
-Two parallel experiences backed by the same underlying status tracking:
+The latest owner setup guide follows this sequence:
 
-| Surface | Style | Best For |
-|---------|-------|----------|
-| **Setup Wizard** | Linear, step-by-step with progress bar | First-time users who need guidance |
-| **Hub View** | Card grid, non-linear, pick any task | Returning users who want to jump to a specific step |
+1. Create the organization and add the venue.
+2. Configure courts and availability.
+3. Verify the venue and build trust.
+4. Turn on notifications.
+5. Invite the team.
+6. Handle reservations and go live.
 
-Both are accessible from the "Get Started" nav item, which appears while setup is incomplete and disappears once complete.
+That is the narrative a new owner should understand first. The exact wizard and dashboard mechanics sit underneath it.
 
-## Wizard Steps
+## Current Entry Points
 
-7 steps in fixed order. The first three are mandatory (no skip). The next three can be skipped during the wizard but must eventually be completed for the venue to go live.
+Two owner setup surfaces still exist:
 
-### Step 1: Create Organization — Required
+- a guided setup wizard
+- a non-linear get-started hub view
 
-The user provides an organization name. A URL slug is auto-generated. Once created, the organization is the top-level entity that owns venues, courts, and team memberships.
+Both are driven by the same setup-status domain, but they serve different behaviors: first-time guided completion versus targeted return visits.
 
-### Step 2: Add or Claim a Venue — Required
+## Setup Flow
 
-Two paths:
+### 1. Create Organization
 
-- **Add New Venue:** Fill out a form with venue name, address, city, province, coordinates, website, social links, phone, and amenities. The venue is created immediately.
-- **Claim Existing Venue:** Search for a curated/unclaimed venue by name and submit an ownership claim. The claim goes through admin review. The owner must wait for approval before proceeding to courts.
+The owner creates the organization container that will hold venues, courts, team membership, payment methods, and developer integrations.
 
-### Step 3: Add Courts — Required
+### 2. Add Or Claim A Venue
 
-Select a sport, enter a court label, optionally set a tier label. The venue is pre-selected if there is only one. At least one active court must exist to proceed.
+Owners can either:
 
-If the user chose the claim path and the claim is still pending, this step is blocked.
+- create a new venue directly
+- claim an existing curated venue and wait for admin review
 
-### Step 4: Schedule & Pricing — Skippable
+The claim path is still operationally different because review timing affects how quickly the owner can keep moving.
 
-Configure operating hours per day of the week with time blocks and hourly rates. Optionally configure add-ons (extras players can purchase). Both schedule and pricing must be saved for the court to be considered "ready."
+### 3. Add Courts
 
-### Step 5: Payment Method — Skippable
+Courts define the actual inventory that players can eventually book. Without at least one court, the venue cannot progress toward online booking readiness.
 
-Add at least one organization payment method (mobile wallet or bank). The first active method can be set as default for player payment instructions.
+### 4. Configure Availability And Pricing
 
-### Step 6: Venue Verification — Skippable
+Once courts exist, the owner can publish time windows, hourly rates, and related booking rules. This is what turns a visible listing into something that can accept real booking requests.
 
-Upload proof-of-ownership documents. Submission goes through asynchronous admin review. The owner sees "PENDING" status and can continue setup while waiting.
+### 5. Add A Payment Method
 
-### Step 7: Complete — Terminal
+The current payment model is still external/manual, so owners must configure at least one organization payment method before paid reservations can work end to end.
 
-Celebration screen with two options: Import Bookings (optional CSV import) or Go to Dashboard. No automatic redirect.
+### 6. Submit Verification
 
-## What Makes Setup "Complete"?
+Verification is the trust step that allows the venue to move from a basic listing into a stronger public and operational state.
 
-All of the following must be true:
+### 7. Turn On Notifications And Invite Team
 
-- Organization exists
-- At least one venue exists
-- Venue is verified (admin approved)
-- At least one court is "ready" (has both schedule and pricing)
-- At least one payment method is active
+The public guide now treats notifications and team access as part of going live, not as optional footnotes after setup. That is the correct product framing even though the current UX still surfaces parts of this later than ideal.
 
-## Auto-Skip Behavior
+### 8. Handle Reservations
 
-When a user enters the wizard at step 1 and that step is already complete, the wizard automatically jumps forward to the first incomplete step. This fires once per session to prevent loops.
+Once the listing, courts, availability, payment method, and verification path are in place, the owner can review reservation requests, coordinate payment, and confirm bookings from the owner portal.
 
-## Hub View (Non-Linear Alternative)
+## Discoverable Vs Fully Reservable
 
-The hub displays the same tasks as individual cards: Create Organization, Add Venue, Claim Listing, Configure Courts, Payment Method Reminder, Verify Venue, Import Bookings, and a Setup Complete banner. Each card opens an overlay for that specific task.
+These are not the same milestone:
 
-## What Happens After Setup
+- A venue can be discoverable once its public listing is complete enough to help players find and assess it.
+- A venue becomes fully online-reservable only when the operational prerequisites are satisfied, including ready courts, payment method support, and the relevant owner controls.
 
-After completing the wizard:
+## Current UX Reality
 
-- The "Get Started" nav item disappears
-- The owner lands on the booking management dashboard
-- There is **no prompt to invite team members**
-- There is **no in-wizard notification activation step** (dashboard warning exists later if zero recipients are enabled)
-- There is **no guided "next steps" experience**
-- There is **no "your venue is live" celebration email or banner**
-- There is **no clarity on when the venue becomes visible to players**
+The owner guide framing is ahead of the current UX in a few places:
+
+- notifications are still not activated inside a dedicated wizard completion step
+- team invitation is still not a first-class completion handoff
+- claim-path delay remains a real blocker for some owners
+
+Those mismatches belong in [12-gap-analysis.md](./12-gap-analysis.md), not in the primary owner narrative.
+
+## Related Docs
+
+- [03-venue-and-court-management.md](./03-venue-and-court-management.md) for listing quality and court readiness
+- [05-team-access-permissions.md](./05-team-access-permissions.md) for delegation
+- [06-notification-system.md](./06-notification-system.md) for routing and delivery
+- [09-payments.md](./09-payments.md) for payment readiness

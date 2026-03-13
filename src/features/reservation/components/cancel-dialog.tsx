@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+
 import { Textarea } from "@/components/ui/textarea";
 import { useMutCancelReservation } from "../hooks";
 
@@ -86,9 +86,8 @@ export function CancelDialog({
           <Button
             variant="destructive"
             onClick={handleCancel}
-            disabled={cancelMutation.isPending}
+            loading={cancelMutation.isPending}
           >
-            {cancelMutation.isPending && <Spinner />}
             Cancel Reservation
           </Button>
         </DialogFooter>

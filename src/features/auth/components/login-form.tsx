@@ -19,7 +19,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
+
 import { type LoginDTO, LoginSchema } from "@/lib/modules/auth/dtos";
 import { useMutAuthLogin, useMutAuthLoginWithGoogle } from "../hooks";
 import { GoogleSignInButton } from "./google-sign-in-button";
@@ -158,8 +158,8 @@ export function LoginForm({
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {submitting && <Spinner />} Sign In
+          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={submitting}>
+            Sign In
           </Button>
 
           <div className="text-muted-foreground text-sm">

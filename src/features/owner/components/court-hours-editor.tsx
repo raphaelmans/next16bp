@@ -320,8 +320,8 @@ export function CourtHoursEditor({
             type="button"
             onClick={handleSave}
             disabled={saveHours.isPending}
+            loading={saveHours.isPending}
           >
-            {saveHours.isPending && <Spinner />}
             {primaryActionLabel}
           </Button>
         </div>

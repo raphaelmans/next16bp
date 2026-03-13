@@ -39,7 +39,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { PageHeader } from "@/components/ui/page-header";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
@@ -472,8 +471,8 @@ export default function NewCuratedCourtPage() {
                 onClick={handlePreview}
                 disabled={googleUrl.trim().length === 0 || isPreviewing}
                 className="w-full"
+                loading={isPreviewing}
               >
-                {isPreviewing && <Spinner />}
                 Locate
               </Button>
 
@@ -809,8 +808,11 @@ export default function NewCuratedCourtPage() {
             <Button type="button" variant="outline" asChild>
               <Link href={appRoutes.admin.courts.base}>Cancel</Link>
             </Button>
-            <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting && <Spinner className="mr-2" />}
+            <Button
+              type="submit"
+              disabled={isSubmitDisabled}
+              loading={submitting}
+            >
               Create Venue
             </Button>
           </div>

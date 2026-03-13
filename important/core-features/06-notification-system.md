@@ -1,69 +1,45 @@
-# Notification System
+# Notification System (Operational Reference)
+
+_Supporting operational reference. Read after the primary owner docs in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-Reservation operations only work if owners and players receive lifecycle signals quickly. The notification system handles inbox items plus async delivery jobs for push/email/SMS channels.
+Reservation operations only work if the right owner-side recipients and players receive lifecycle signals quickly. The notification system combines inbox items with async delivery jobs for push, email, and SMS-capable channels.
 
-## Notification Channels
+## Channels
 
-| Channel | What the User Experiences | Status |
-|---------|--------------------------|:-:|
-| **In-App Inbox** | Bell icon + unread badge, latest notifications list, mark-read actions | Fully implemented |
-| **Web Push** | Browser push for subscribed devices | Fully implemented |
-| **Mobile Push** | Native push for registered mobile tokens | Fully implemented |
-| **Email** | HTML lifecycle emails | Partial |
-| **SMS** | Text fallback/summary notifications | Partial |
+| Channel | Current Role |
+|---------|--------------|
+| In-app inbox | Core notification record and unread state |
+| Web push | Browser/device push for subscribed users |
+| Mobile push | Native push for registered mobile tokens |
+| Email | Partial lifecycle coverage |
+| SMS | Partial lifecycle coverage |
 
-## Reservation Event Coverage
+## Reservation Coverage
 
-For reservation lifecycle events, channels are event-specific:
+Current delivery is still uneven:
 
-| Event Family | Who Gets Notified | Email/SMS | Push + Inbox |
-|--------------|-------------------|:-:|:-:|
-| `reservation.created` + `reservation_group.created` | Owner + opted-in members | Yes | Yes |
-| `reservation.awaiting_payment` (+ group variant) | Player | No | Yes |
-| `reservation.payment_marked` (+ group variant) | Owner + opted-in members | No | Yes |
-| `reservation.confirmed` (+ group variant) | Player | No | Yes |
-| `reservation.rejected` (+ group variant) | Player | No | Yes |
-| `reservation.cancelled` (+ group variant) | Owner + opted-in members | No | Yes |
-| `reservation.ping_owner` | Owner + opted-in members | No | Yes |
+- new booking events have the broadest multi-channel coverage
+- follow-up lifecycle events lean heavily on push + inbox
+- expiration still lacks an owner-facing notification path
 
-Notes:
-- Email/SMS is currently concentrated on "new booking" reservation events.
-- Expiration events still do not generate owner-facing notifications.
+## Who Receives Owner-Side Reservation Notifications
 
-## Non-Reservation Notification Coverage
+Three conditions are applied:
 
-Admin/verification flows also use notifications:
-- Verification requested/reviewed
-- Claim reviewed
-
-Those flows support push and email/SMS content generation where applicable.
-
-## Who Receives Reservation Notifications?
-
-Three filters are applied:
-
-1. **Permission eligibility**: user must have `reservation.notification.receive` (owner is implicitly eligible).
-2. **Organization opt-in preference**: `reservationOpsEnabled` must be true for that user/org.
-3. **Channel availability**: push subscription/token, email address, phone number, and channel flags determine which jobs are enqueued.
-
-## Notification Preferences UI
-
-Current owner-side behavior:
-- Routing toggle for reservation lifecycle notifications.
-- Enabled-recipient count.
-- Warning if no recipients are enabled.
-- Permission-aware messaging when user cannot manage routing.
-
-## Delivery Reliability
-
-- Notification jobs are persisted first, then dispatched asynchronously.
-- Dispatch is retried with backoff up to retry limits.
-- Idempotency keys prevent duplicate delivery jobs.
+1. user has `reservation.notification.receive` or is the implicit owner
+2. organization preference `reservationOpsEnabled` is on
+3. the selected channel is actually available for that user
 
 ## Current UX Reality
 
-- There is still no dedicated "enable notifications" step inside wizard completion.
-- Dashboard now surfaces a reservation routing warning when no recipients are enabled.
-- Team members still need to separately enable routing and push permissions themselves.
+- reservation-routing configuration exists in the owner experience
+- dashboard warnings surface the zero-recipient state
+- notification activation is still not part of a dedicated wizard completion step
+- push permission still sits separately from the routing toggle
+
+## Related Docs
+
+- [04-owner-onboarding.md](./04-owner-onboarding.md) for the guide-level go-live framing
+- [12-gap-analysis.md](./12-gap-analysis.md) for the known onboarding and coverage gaps

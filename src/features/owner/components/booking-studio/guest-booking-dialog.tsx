@@ -239,10 +239,8 @@ export const GuestBookingDialog = React.memo(function GuestBookingDialog({
             <Button
               type="submit"
               disabled={isSubmitting || guestBookingForm.formState.isSubmitting}
+              loading={isSubmitting || guestBookingForm.formState.isSubmitting}
             >
-              {(isSubmitting || guestBookingForm.formState.isSubmitting) && (
-                <Spinner />
-              )}
               {getBlockCtaLabel("GUEST_BOOKING")}
             </Button>
           </DialogFooter>

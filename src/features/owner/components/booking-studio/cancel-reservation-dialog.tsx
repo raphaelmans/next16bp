@@ -14,7 +14,6 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { useMutCancelReservation } from "@/features/owner/hooks/reservations";
 import { useBookingStudio } from "./booking-studio-provider";
@@ -128,8 +127,9 @@ export const CancelReservationDialog = React.memo(
                 variant="destructive"
                 disabled={!reason.trim() || cancelMutation.isPending}
                 onClick={handleCancel}
+                loading={cancelMutation.isPending}
               >
-                {cancelMutation.isPending && <Spinner />} Cancel Reservation
+                Cancel Reservation
               </Button>
             )}
             <Button variant="outline" onClick={handleClose}>

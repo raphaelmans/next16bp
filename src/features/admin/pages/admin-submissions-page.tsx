@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
@@ -242,15 +241,10 @@ export default function AdminSubmissionsPage() {
                         size="sm"
                         onClick={() => handleApprove(submission.id)}
                         disabled={approveMutation.isPending}
+                        loading={approveMutation.isPending}
                       >
-                        {approveMutation.isPending ? (
-                          <Spinner />
-                        ) : (
-                          <>
-                            <Check className="mr-1 h-3 w-3" />
-                            Approve
-                          </>
-                        )}
+                        <Check className="mr-1 h-3 w-3" />
+                        Approve
                       </Button>
                       <Button
                         size="sm"
@@ -312,8 +306,9 @@ export default function AdminSubmissionsPage() {
               variant="destructive"
               onClick={handleRejectConfirm}
               disabled={rejectMutation.isPending || !rejectReason.trim()}
+              loading={rejectMutation.isPending}
             >
-              {rejectMutation.isPending ? <Spinner /> : "Reject"}
+              Reject
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -343,8 +338,9 @@ export default function AdminSubmissionsPage() {
               variant="destructive"
               onClick={handleBanConfirm}
               disabled={banMutation.isPending || !banReason.trim()}
+              loading={banMutation.isPending}
             >
-              {banMutation.isPending ? <Spinner /> : "Ban User"}
+              Ban User
             </Button>
           </DialogFooter>
         </DialogContent>

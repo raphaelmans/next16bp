@@ -62,7 +62,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 // ============================================================================
@@ -1032,9 +1031,7 @@ export const PromptInputSubmit = ({
 
   let Icon = <CornerDownLeftIcon className="size-4" />;
 
-  if (status === "submitted") {
-    Icon = <Spinner />;
-  } else if (status === "streaming") {
+  if (status === "streaming") {
     Icon = <SquareIcon className="size-4" />;
   } else if (status === "error") {
     Icon = <XIcon className="size-4" />;
@@ -1057,6 +1054,7 @@ export const PromptInputSubmit = ({
       size={size}
       type={isGenerating && onStop ? "button" : "submit"}
       variant={variant}
+      loading={status === "submitted"}
       {...props}
     >
       {children ?? Icon}

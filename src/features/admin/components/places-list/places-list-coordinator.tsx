@@ -57,7 +57,6 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import {
   Table,
   TableBody,
@@ -1135,8 +1134,8 @@ export function AdminPlacesList({
                 deletePlaceMutation.isPending || !deleteConfirmationMatches
               }
               className="bg-destructive text-white hover:bg-destructive/90"
+              loading={deletePlaceMutation.isPending}
             >
-              {deletePlaceMutation.isPending && <Spinner className="mr-2" />}
               Delete {entityName}
             </AlertDialogAction>
           </AlertDialogFooter>

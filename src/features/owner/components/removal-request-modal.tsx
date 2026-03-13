@@ -21,7 +21,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+
 import { Textarea } from "@/components/ui/textarea";
 import { type RemovalRequestFormData, removalRequestSchema } from "../schemas";
 
@@ -146,8 +146,8 @@ export function RemovalRequestModal({
               type="submit"
               variant="destructive"
               disabled={isSubmitDisabled}
+              loading={submitting}
             >
-              {submitting && <Spinner className="h-4 w-4 mr-2" />}
               Submit Request
             </Button>
           </DialogFooter>

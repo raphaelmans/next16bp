@@ -18,7 +18,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
+
 import {
   useMutUpdateProfile,
   useMutUploadAvatar,
@@ -154,8 +154,7 @@ export function ProfileForm() {
                 Form dirty: {isDirty ? "Yes" : "No"}
               </p>
             )}
-            <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting && <Spinner />}
+            <Button type="submit" disabled={isSubmitDisabled} loading={submitting}>
               Save Changes
             </Button>
           </div>

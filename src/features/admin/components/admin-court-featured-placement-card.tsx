@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 
 type AdminCourtFeaturedPlacementCardProps = {
   featuredRankInput: string;
@@ -60,8 +59,8 @@ export function AdminCourtFeaturedPlacementCard({
             type="button"
             onClick={onSaveFeaturedRank}
             disabled={isSavingFeaturedRank || isUpdating}
+            loading={isSavingFeaturedRank}
           >
-            {isSavingFeaturedRank ? <Spinner className="mr-2" /> : null}
             Save featured rank
           </Button>
         </div>
@@ -82,8 +81,8 @@ export function AdminCourtFeaturedPlacementCard({
             type="button"
             onClick={onSaveProvinceRank}
             disabled={isSavingProvinceRank || isUpdating}
+            loading={isSavingProvinceRank}
           >
-            {isSavingProvinceRank ? <Spinner className="mr-2" /> : null}
             Save province rank
           </Button>
         </div>

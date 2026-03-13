@@ -328,8 +328,8 @@ export function PlaceForm({
                 onClick={handlePreview}
                 disabled={googleUrl.trim().length === 0 || isPreviewing}
                 className="w-full"
+                loading={isPreviewing}
               >
-                {isPreviewing && <Spinner />}
                 Preview
               </Button>
 
@@ -435,8 +435,7 @@ export function PlaceForm({
         <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button type="submit" disabled={isSubmitDisabled}>
-          {submitting && <Spinner />}
+        <Button type="submit" disabled={isSubmitDisabled} loading={submitting}>
           {isEditing ? "Save Changes" : "Create Venue"}
         </Button>
       </div>

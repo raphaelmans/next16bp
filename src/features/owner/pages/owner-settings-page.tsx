@@ -24,7 +24,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { PortalPreferenceCard } from "@/features/auth/components";
 import { WebPushSettingsCard } from "@/features/notifications/components/web-push-settings";
@@ -384,8 +383,11 @@ export default function OwnerSettingsPage() {
 
               {/* Save Button */}
               <div className="flex justify-end">
-                <Button type="submit" disabled={isOrgSubmitDisabled}>
-                  {orgSubmitting && <Spinner className="h-4 w-4 mr-2" />}
+                <Button
+                  type="submit"
+                  disabled={isOrgSubmitDisabled}
+                  loading={orgSubmitting}
+                >
                   Save Changes
                 </Button>
               </div>

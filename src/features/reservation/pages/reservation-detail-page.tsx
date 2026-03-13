@@ -28,7 +28,7 @@ import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { PageHeader } from "@/components/ui/page-header";
-import { Spinner } from "@/components/ui/spinner";
+
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
 import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
@@ -695,19 +695,13 @@ export default function ReservationDetailPage({
                     size="lg"
                     disabled={
                       !termsAccepted ||
-                      markPaymentLinked.isPending ||
                       isPaymentPanelBusy
                     }
+                    loading={markPaymentLinked.isPending}
                     onClick={handleGroupPaymentSubmit}
                   >
-                    {markPaymentLinked.isPending ? (
-                      <Spinner />
-                    ) : (
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                    )}
-                    {markPaymentLinked.isPending
-                      ? "Submitting"
-                      : "Submit Group Payment"}
+                    <CheckCircle className="mr-2 h-4 w-4" />
+                    Submit Group Payment
                   </Button>
                 </>
               ) : (
@@ -772,15 +766,12 @@ export default function ReservationDetailPage({
                     <Button
                       type="submit"
                       disabled={isSubmitDisabled}
+                      loading={isPaymentSubmitting}
                       className="w-full"
                       size="lg"
                     >
-                      {isPaymentSubmitting ? (
-                        <Spinner />
-                      ) : (
-                        <CheckCircle className="mr-2 h-4 w-4" />
-                      )}
-                      {isPaymentSubmitting ? "Confirming" : "I Have Paid"}
+                      <CheckCircle className="mr-2 h-4 w-4" />
+                      I Have Paid
                     </Button>
 
                     <p className="text-xs text-muted-foreground text-center">

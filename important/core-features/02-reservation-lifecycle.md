@@ -1,125 +1,117 @@
-# Reservation Lifecycle
+# Player Booking & Reservation Tracking
 
 ## Purpose
 
-A reservation is the central object that connects a player, a court, and payment verification. This document describes the persisted status model and the real transitions used in code.
+This doc picks up where discovery ends: the player has chosen a slot and needs a clear path from selection to a tracked reservation.
 
-## Reservation States (Source of Truth)
+## Current Guide Narrative
 
-```
-CREATED ──→ AWAITING_PAYMENT ──→ PAYMENT_MARKED_BY_USER ──→ CONFIRMED
-   │              │                        │                      │
-   │              │                        │                      └──→ (shown under Past when end time has passed)
-   │              │                        │
-   ├──────────────┴────────────────────────┴──→ CANCELLED
-   │
-   └──────────────────────────────────────────→ EXPIRED
+The latest booking guide centers a simple player story:
+
+1. Browse as a guest and choose a slot.
+2. Sign in or create an account without losing booking context.
+3. Review the booking and complete any missing profile fields.
+4. Submit a reservation request.
+5. Track the reservation in My Reservations while the owner reviews it.
+6. Watch the status update into an upcoming booking after the owner confirms it.
+
+This is the narrative layer users see. The persisted state model below is the implementation layer that makes the narrative real.
+
+## Reservation States
+
+```text
+CREATED -> AWAITING_PAYMENT -> PAYMENT_MARKED_BY_USER -> CONFIRMED
+   |              |                        |
+   |              |                        +-> CANCELLED
+   |              +------------------------+
+   +--------------------------------------------> EXPIRED
 ```
 
 | State | Meaning | Who Triggers It |
-|-------|---------|----------------|
-| **CREATED** | Booking request submitted. Waiting for owner action. | Player (or staff via guest booking/import) |
-| **AWAITING_PAYMENT** | Owner accepted a paid booking. Waiting for player payment. | Owner |
-| **PAYMENT_MARKED_BY_USER** | Player submitted payment proof/reference. Waiting for owner confirmation. | Player |
-| **CONFIRMED** | Booking is confirmed and locked in. | Owner (accept free booking, confirm payment, or mark paid offline) |
-| **CANCELLED** | Booking was cancelled by player or cancelled by owner rejection flow. | Player or Owner |
-| **EXPIRED** | Booking timed out without required action. | System |
+|-------|---------|-----------------|
+| `CREATED` | Reservation request submitted and waiting for owner action | Player or owner/staff guest-booking flow |
+| `AWAITING_PAYMENT` | Owner accepted a paid booking and is waiting for external payment | Owner |
+| `PAYMENT_MARKED_BY_USER` | Player submitted payment proof/reference | Player |
+| `CONFIRMED` | Reservation is accepted and active | Owner |
+| `CANCELLED` | Reservation was cancelled or rejected before confirmation | Player or owner |
+| `EXPIRED` | Reservation timed out without the required next action | System |
 
 Notes:
-- There is no persisted `COMPLETED` status in the database.
-- There is no persisted `REJECTED` status; owner rejection is represented as `CANCELLED` plus rejection event/reason metadata.
 
-## Happy Path (Paid Booking)
+- There is no persisted `COMPLETED` database status.
+- There is no separate persisted `REJECTED` status; owner rejection resolves to `CANCELLED` plus event/reason context.
 
-### Player Perspective
+## Player Booking Flow
 
-1. Player selects a slot (can span midnight/week boundary if contiguous hourly availability exists).
-2. Player confirms booking → **CREATED**.
-3. Owner accepts → **AWAITING_PAYMENT** (player notified).
-4. Player pays externally and submits proof/reference → **PAYMENT_MARKED_BY_USER**.
-5. Owner confirms payment → **CONFIRMED** (player notified).
-6. After play date passes, the reservation still remains **CONFIRMED** but appears in "Past" UI views based on end time.
+### 1. Slot Selection
 
-### Owner Perspective
+The player starts on a venue or court booking surface, chooses an available time, and can extend the booking across midnight when contiguous hourly slots are available.
 
-1. Owner receives a new booking notification.
-2. Owner reviews booking details and accepts.
-3. Owner waits for player payment proof.
-4. Owner confirms payment.
+### 2. Auth Handoff
 
-## Alternative Flows
+Guests can explore availability first, but the reservation cannot be submitted until the player signs in or creates an account. The flow keeps booking context so the user does not start over after authentication.
 
-### Free Booking (Total Price = 0)
+### 3. Booking Review And Profile Completion
 
-If total price is zero, owner acceptance moves the booking directly:
+Before confirmation, the player reviews:
 
-1. **CREATED** → **CONFIRMED**
-2. No payment hold or player proof step.
+- court and venue
+- date and time
+- pricing and add-ons
+- terms acceptance
 
-### Paid Offline (Owner Action)
+If the player profile is incomplete, the flow blocks confirmation until the required profile fields are filled in.
 
-Owner can use "Mark as Paid & Confirmed" for paid bookings in **CREATED** state:
+### 4. Submit Reservation Request
 
-1. Owner selects an active organization payment method.
-2. Owner enters a payment reference.
-3. Reservation moves directly to **CONFIRMED**.
+Submitting creates a reservation in `CREATED`. In the common owner-reviewed flow, this means the request was recorded successfully, not that it is already confirmed.
+
+### 5. Track It In My Reservations
+
+After submission, the player can return to:
+
+- reservation detail
+- My Reservations pending state buckets
+- follow-up payment surfaces when applicable
+
+### 6. Wait For The Owner Decision
+
+If the owner accepts a paid booking, the reservation moves into the payment path. If the owner accepts a free booking, it can move directly to `CONFIRMED`.
+
+## Payment And Confirmation Branches
+
+### Paid Booking
+
+1. `CREATED`
+2. owner accepts -> `AWAITING_PAYMENT`
+3. player pays externally and submits proof -> `PAYMENT_MARKED_BY_USER`
+4. owner verifies payment -> `CONFIRMED`
+
+### Free Booking
+
+1. `CREATED`
+2. owner accepts -> `CONFIRMED`
+
+### Owner-Collected Offline Payment
+
+Owners can also confirm a paid booking directly from `CREATED` by selecting a payment method and recording the payment reference in the owner workflow.
 
 ## Negative Paths
 
-### Owner Does Not Respond
+- Owner does not respond in time -> `EXPIRED`
+- Player does not pay within the hold window -> `EXPIRED`
+- Player cancels before confirmation -> `CANCELLED`
+- Owner rejects before confirmation -> `CANCELLED`
 
-If owner does not act before the acceptance expiry window:
-- **CREATED** → **EXPIRED**
-- Slot is released.
-- Owner expiration notification is still a known gap.
+## Reservation Groups And Related Flows
 
-### Player Does Not Pay in Time
+- Multi-court bookings share the same lifecycle pattern at the reservation-group level.
+- Guest bookings created by owners/managers enter the same reservation system, with a different creation path.
+- Chat, payment proof, and open-play creation all hang off this reservation lifecycle rather than replacing it.
 
-If player does not pay before payment-hold expiry:
-- **AWAITING_PAYMENT** (and timeout-eligible pre-confirmed payment states) → **EXPIRED**
+## Related Docs
 
-### Player Cancels
-
-Player can cancel before confirmation:
-- Allowed from **CREATED**, **AWAITING_PAYMENT**, **PAYMENT_MARKED_BY_USER**
-- Result: **CANCELLED**
-
-### Owner Rejects
-
-Owner rejection is available before confirmation:
-- Allowed from **CREATED**, **AWAITING_PAYMENT**, **PAYMENT_MARKED_BY_USER**
-- Result: **CANCELLED** (with owner-provided reason/event context)
-- Player is notified via inbox/push.
-
-## Reservation Groups
-
-Players can book multiple courts in one group:
-- One reservation group contains multiple reservation rows.
-- Group lifecycle mirrors single lifecycle (`created`, `awaiting_payment`, `payment_marked`, `confirmed`, `rejected/cancelled` event families).
-- Payment is consolidated at the group level.
-- Owner actions can be applied to the whole group.
-
-## Guest Bookings (Owner-Created)
-
-Owners/managers can create bookings for walk-ins or phone bookings:
-- Requires `reservation.guest_booking`.
-- Reservation enters the same lifecycle as normal player bookings.
-
-## Reservation Management (Owner UI)
-
-Owner tabs:
-
-| Tab | What It Shows |
-|-----|--------------|
-| **Inbox** | Pending items: `CREATED`, `AWAITING_PAYMENT`, `PAYMENT_MARKED_BY_USER` |
-| **Upcoming** | `CONFIRMED` reservations whose end time is in the future |
-| **Past** | `CONFIRMED` reservations whose end time is in the past |
-| **Cancelled** | `CANCELLED` and `EXPIRED` |
-
-## Key Business Rules
-
-- One court cannot have overlapping active reservations.
-- Slots are held at creation and released on cancellation/expiration.
-- Paid booking acceptance requires payment method support at organization level.
-- Venue must be verified and reservations-enabled for booking.
-- Hourly booking ranges can cross midnight (including cross-week boundaries) when every intervening slot is available.
+- [09-payments.md](./09-payments.md) for the manual payment branch
+- [08-chat-and-messaging.md](./08-chat-and-messaging.md) for reservation chat
+- [07-open-play.md](./07-open-play.md) for social booking after reservation creation
+- [99-source-files.md](./99-source-files.md) for the source map

@@ -1,128 +1,79 @@
-# Accounts & Profiles
+# Accounts & Profiles (Operational Reference)
+
+_Supporting operational reference. Read after the primary player and owner docs in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-Every user on the platform has an account. The account system handles authentication, profile management, portal preferences, and cross-portal identity (a single user can be both a player and a venue owner).
+Accounts tie together authentication, profile completeness, reservation ownership, saved venues, and the user's preferred portal context.
 
 ## Authentication
 
-### Sign Up / Sign In
+Current auth paths include:
 
-- **Email + password** — Standard registration and login
-- **Magic link** — Passwordless login via a link sent to the user's email
-- **Social login** — Supported via identity providers
+- email and password
+- magic link
+- Google OAuth
 
-### Post-Login Routing
+## Post-Login Routing And Portal Preference
 
-After logging in, the system checks the user's portal preference (player or owner) and redirects accordingly:
+Portal context is still a first-class concept, but it is more explicit than the older dropdown-toggle story.
 
-- **Player preference:** Redirected to `/home` (player dashboard)
-- **Owner preference:** Redirected to `/owner` (owner dashboard)
-- **First-time user:** Defaults to the player portal
+Current shape:
 
-### Owner Registration
-
-A separate registration path exists for users who intend to list a venue. This sets their portal preference to "owner" and routes them into the onboarding wizard after signup.
+- post-login routing respects the saved default portal when possible
+- the app includes a dedicated portal switcher component
+- the profile/account area includes a default-portal preference card
+- the user dropdown mainly exposes shortcuts such as Saved Venues, My Reservations, Profile, and owner/admin entry points
 
 ## Player Profile
 
-Accessible from the account menu or `/account/profile`.
+The profile remains important because booking requires a complete player identity. The flow depends on required profile fields such as name, email, and phone before reservation confirmation can complete.
 
-**What the player manages:**
-- Full name
-- Email address
-- Phone number
-- Avatar photo (upload/change)
+## Player Home
 
-**Profile completeness matters:** Players cannot complete a booking without a name, email, and phone number. If the profile is incomplete, the booking flow prompts them to fill in the missing fields.
+Current quick actions are:
 
-## Player Home Page
+- Find Courts
+- My Reservations
+- Profile
 
-The player's landing page after login.
+Additional cards appear only when relevant:
 
-**What the player sees:**
-- Welcome greeting with their name
-- Profile completion banner (if incomplete)
-- Quick action cards: Find Courts, My Reservations, Profile, Venue Setup (for becoming an owner)
-- Upcoming reservations widget showing the next 3–5 bookings with court, venue, date/time, and status
-- "View All" link to the full reservations list
+- owners get Venue Dashboard
+- admins get Admin Dashboard
 
-## Portal Preference
+## My Reservations
 
-Users who are both players and venue owners can switch between portals:
+The player reservation area still groups bookings into:
 
-- A toggle in the user dropdown menu switches between "Player" and "Owner" mode
-- The preference is saved so the correct portal loads on next login
-- The platform remembers the last-used portal per device
+- Pending
+- Upcoming
+- Past
+- Cancelled
 
-**Business purpose:** Many venue owners also play sports. The dual-portal design lets them manage their venue and book courts at other venues without separate accounts.
+Reservation detail remains the main place to review booking status, payment steps, reservation chat, and related follow-up actions.
 
-## My Reservations (Player)
+## Saved Venues
 
-The player's reservation management page.
-
-**Reservation views:**
-- **Pending** — Created / awaiting payment / payment-marked reservations requiring follow-up
-- **Upcoming** — Confirmed reservations with future end time
-- **Past** — Confirmed reservations with past end time
-- **Cancelled** — Cancelled or expired reservations
-
-**Each reservation shows:**
-- Reservation ID
-- Court and venue name
-- Date and time
-- Status badge (color-coded)
-- Amount
-- Available actions (pay, cancel, view details)
-
-**Reservation detail page includes:**
-- Full booking information (court, venue, date, time, duration, sport, price breakdown)
-- Current status with explanation
-- Payment information (if applicable): method used, proof uploaded, payment status
-- Owner contact information for paid bookings
-- Chat widget to message the venue
-- Actions: Cancel reservation, Ping owner (send nudge), Create Open Play from this reservation
-
-## Saved Venues (Bookmarks)
-
-Players can save/bookmark venues and return to them later:
-
-- Heart/save action on discovery cards and venue surfaces
-- Dedicated `/saved-venues` page with pagination
-- Per-user bookmark storage linked to profile
+Players can bookmark venues from public discovery surfaces and return to them from the dedicated Saved Venues page.
 
 ## Invitations
 
-When a venue owner invites someone to their team, the invitee receives an email with a link. The acceptance flow:
+Organization invitations are now code-entry driven:
 
-1. Click the link → land on the invitation acceptance page
-2. If not logged in: prompted to register or sign in (email must match the invitation)
-3. See invitation details: organization name, assigned role, listed permissions
-4. Accept or Decline
-5. On accept: immediately gain access to the owner portal with the assigned role
+1. invitee signs in with the matching email
+2. invitee enters the invitation code from the email
+3. invitee accepts or declines
 
-## Notification Preferences (Player Side)
+The current acceptance page is a lightweight access-confirmation flow, not a rich pre-acceptance preview of organization, role, and permissions.
 
-On the profile page, players can:
+## PWA And Browser Context
 
-- Toggle browser notification settings (enable/disable)
-- See the current browser permission state (granted, denied, not asked)
-- Default portal preference card showing the saved preference
+The app still includes install-prompt handling and browser-based notification/push support for supported environments.
 
-## Progressive Web App (PWA)
+## What Account Features Still Do Not Cover
 
-The platform supports installation as a PWA:
-
-- **Install prompt** appears after a few seconds on supported browsers
-- iOS users see instructions for "Share → Add to Home Screen"
-- Once installed, the app launches as a standalone experience without the browser bar
-- Supports push notifications and offline access via service worker
-
-**Business purpose:** In markets where app store discovery is less reliable, PWA installation gives the platform a native-app feel without requiring an app store listing.
-
-## What Account Features Do NOT Cover (Currently)
-
-- **No password reset flow documented in the UI** — relies on the auth provider's built-in flow
-- **No account deletion** — users cannot delete their own account from the UI
-- **No booking history export** — players cannot download their reservation history
-- **No notification history page** — notifications are only accessible via the bell dropdown (up to 20 items)
+- no self-serve account deletion
+- no reservation-history export
+- no dedicated notification-history page beyond the inbox/bell surfaces
+- recovery and reset flows remain provider-driven rather than deeply productized

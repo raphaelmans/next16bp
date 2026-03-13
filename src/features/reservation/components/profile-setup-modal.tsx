@@ -15,7 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
+
 import { useMutUpdateProfile } from "@/features/reservation/hooks";
 
 const profileSetupSchema = z
@@ -109,8 +109,7 @@ export function ProfileSetupModal({
           />
 
           <div className="flex justify-end pt-2">
-            <Button type="submit" disabled={submitting || !isValid}>
-              {submitting && <Spinner />}
+            <Button type="submit" disabled={!isValid} loading={submitting}>
               Save & Continue
             </Button>
           </div>

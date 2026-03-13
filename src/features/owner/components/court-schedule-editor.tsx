@@ -263,6 +263,12 @@ function ScheduleSlotRow({
   );
 }
 
+/* ─── Types ─── */
+
+export type ScheduleSaveHandle = {
+  save: () => Promise<boolean>;
+};
+
 /* ─── Main component ─── */
 
 interface CourtScheduleEditorProps {
@@ -270,6 +276,10 @@ interface CourtScheduleEditorProps {
   organizationId?: string | null;
   primaryActionLabel?: string;
   onSaved?: () => void;
+  /** Embedded mode: no Card wrapper, no save button */
+  embedded?: boolean;
+  /** Ref for external save trigger in embedded mode */
+  saveHandle?: React.RefObject<ScheduleSaveHandle | null>;
 }
 
 export function CourtScheduleEditor({
@@ -277,6 +287,8 @@ export function CourtScheduleEditor({
   organizationId,
   primaryActionLabel = "Save schedule",
   onSaved,
+  embedded,
+  saveHandle,
 }: CourtScheduleEditorProps) {
   const [copyOpen, setCopyOpen] = React.useState(false);
   const [activeDay, setActiveDay] = React.useState<string>("");
@@ -299,12 +311,23 @@ export function CourtScheduleEditor({
   } = useCourtScheduleEditor({
     courtId,
     organizationId,
-    onSaved,
+    onSaved: embedded ? undefined : onSaved,
     onCopyComplete: () => {
       setCopyOpen(false);
       setActiveDay("0");
     },
   });
+
+  // Expose save handle for embedded (combined) mode
+  React.useEffect(() => {
+    if (!saveHandle) return;
+    saveHandle.current = isLoading
+      ? null
+      : { save: () => handleSave({ silent: true }) };
+    return () => {
+      if (saveHandle) saveHandle.current = null;
+    };
+  }, [saveHandle, isLoading, handleSave]);
 
   if (isLoading) {
     return (
@@ -314,207 +337,225 @@ export function CourtScheduleEditor({
     );
   }
 
+  const scheduleContent = (
+    <>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-heading font-semibold">
+            Schedule & Pricing
+          </h3>
+          <p className="text-sm text-muted-foreground">
+            Set opening hours and PHP rates for each day.
+          </p>
+        </div>
+      </div>
+
+      {validation.hasBlockingIssues && (
+        <Alert variant="destructive">
+          <AlertTitle>Fix schedule conflicts</AlertTitle>
+          <AlertDescription>
+            Resolve overlapping or invalid time blocks before saving.
+          </AlertDescription>
+        </Alert>
+      )}
+
+      <div className="flex flex-wrap gap-2">
+        <Button
+          type="button"
+          variant="outline"
+          onClick={() => setCopyOpen(true)}
+          disabled={!organizationId || courts.length <= 1}
+        >
+          Copy schedule from another court
+        </Button>
+      </div>
+
+      <div className="rounded-xl border p-2">
+        <Accordion
+          type="single"
+          collapsible
+          value={activeDay}
+          onValueChange={(v) => setActiveDay(v)}
+        >
+          {DAY_OPTIONS.map((day) => {
+            const dayRows = rowsByDay[day.value] ?? [];
+            const hasSlots = dayRows.length > 0;
+
+            const errorCount = dayRows.filter(
+              (row) =>
+                validation.invalidRows.has(row.id) ||
+                validation.overlappingHours.has(row.id) ||
+                validation.overlappingPricing.has(row.id),
+            ).length;
+            const warningCount = dayRows.filter(
+              (row) =>
+                validation.openWithoutPrice.has(row.id) ||
+                validation.overnightRows.has(row.id),
+            ).length;
+
+            const isExpanded = activeDay === String(day.value);
+
+            return (
+              <AccordionItem key={day.value} value={String(day.value)}>
+                <AccordionTrigger className="px-2 hover:no-underline">
+                  <div className="flex items-center gap-3">
+                    {/* Circular day badge */}
+                    <span
+                      className={cn(
+                        "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
+                        hasSlots
+                          ? "bg-teal-100 text-teal-700"
+                          : "bg-muted text-muted-foreground",
+                      )}
+                    >
+                      {DAY_INITIALS[day.value]}
+                    </span>
+
+                    {/* Day name + summary */}
+                    <div className="flex flex-col items-start gap-0.5">
+                      <span className="text-sm font-medium">{day.label}</span>
+                      {!isExpanded && hasSlots && (
+                        <span className="text-xs text-muted-foreground">
+                          {buildDaySummary(dayRows)}
+                        </span>
+                      )}
+                      {!isExpanded && !hasSlots && (
+                        <span className="text-xs text-muted-foreground italic">
+                          Set a schedule
+                        </span>
+                      )}
+                    </div>
+
+                    {/* Validation badges — warnings deferred until save attempt */}
+                    {errorCount > 0 && (
+                      <Badge variant="destructive" className="ml-1">
+                        {errorCount} {errorCount === 1 ? "error" : "errors"}
+                      </Badge>
+                    )}
+                    {saveAttempted && warningCount > 0 && (
+                      <Badge variant="warning" className="ml-1">
+                        {warningCount}{" "}
+                        {warningCount === 1 ? "warning" : "warnings"}
+                      </Badge>
+                    )}
+                  </div>
+                </AccordionTrigger>
+
+                <AccordionContent className="px-2">
+                  {dayRows.length === 0 ? (
+                    <div className="flex justify-center py-4">
+                      <Button
+                        type="button"
+                        variant="outline"
+                        onClick={() => handleAddRow(day.value)}
+                      >
+                        <CirclePlus className="mr-2 h-4 w-4" />
+                        Add block
+                      </Button>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      {dayRows.map((row, idx) => {
+                        const hasInvalidTime = validation.invalidRows.has(
+                          row.id,
+                        );
+                        const overlapsHours = validation.overlappingHours.has(
+                          row.id,
+                        );
+                        const overlapsPricing =
+                          validation.overlappingPricing.has(row.id);
+                        const missingPrice = validation.openWithoutPrice.has(
+                          row.id,
+                        );
+                        const closedWithPrice = validation.closedWithPrice.has(
+                          row.id,
+                        );
+                        const isOvernight = validation.overnightRows.has(
+                          row.id,
+                        );
+                        const hasError =
+                          hasInvalidTime || overlapsHours || overlapsPricing;
+
+                        const issueLabels = [
+                          hasInvalidTime ? "Invalid time" : null,
+                          overlapsHours ? "Hours overlap" : null,
+                          overlapsPricing ? "Pricing overlap" : null,
+                          saveAttempted && missingPrice ? "Needs price" : null,
+                          saveAttempted && closedWithPrice
+                            ? "Closed + priced"
+                            : null,
+                          saveAttempted && isOvernight ? "Overnight" : null,
+                        ].filter(Boolean) as string[];
+
+                        return (
+                          <ScheduleSlotRow
+                            key={row.id}
+                            row={row}
+                            dayValue={day.value}
+                            isLast={idx === dayRows.length - 1}
+                            hasError={hasError}
+                            issueLabels={issueLabels}
+                            validation={validation}
+                            onRowChange={handleRowChange}
+                            onHourlyRateInput={handleHourlyRateInput}
+                            onApplyToAll={handleApplyToAll}
+                            onRemoveRow={handleRemoveRow}
+                            onAddRow={handleAddRow}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                </AccordionContent>
+              </AccordionItem>
+            );
+          })}
+        </Accordion>
+      </div>
+    </>
+  );
+
+  const copyDialog = (
+    <CourtConfigCopyDialog
+      open={copyOpen}
+      onOpenChange={setCopyOpen}
+      title="Copy schedule"
+      description="Copy hours and pricing from another court. This will replace the current schedule."
+      courts={courts}
+      currentCourtId={courtId}
+      isSubmitting={isCopying}
+      onConfirm={handleCopySchedule}
+    />
+  );
+
+  if (embedded) {
+    return (
+      <>
+        {scheduleContent}
+        {copyDialog}
+      </>
+    );
+  }
+
   return (
     <Card>
       <CardContent className="p-6 space-y-5">
-        <div className="flex flex-wrap items-start justify-between gap-3">
-          <div className="space-y-1">
-            <h3 className="text-lg font-heading font-semibold">
-              Schedule & Pricing
-            </h3>
-            <p className="text-sm text-muted-foreground">
-              Set opening hours and PHP rates for each day.
-            </p>
-          </div>
-        </div>
-
-        {validation.hasBlockingIssues && (
-          <Alert variant="destructive">
-            <AlertTitle>Fix schedule conflicts</AlertTitle>
-            <AlertDescription>
-              Resolve overlapping or invalid time blocks before saving.
-            </AlertDescription>
-          </Alert>
-        )}
-
-        <div className="flex flex-wrap gap-2">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => setCopyOpen(true)}
-            disabled={!organizationId || courts.length <= 1}
-          >
-            Copy schedule from another court
-          </Button>
-        </div>
-
-        <div className="rounded-xl border p-2">
-          <Accordion
-            type="single"
-            collapsible
-            value={activeDay}
-            onValueChange={(v) => setActiveDay(v)}
-          >
-            {DAY_OPTIONS.map((day) => {
-              const dayRows = rowsByDay[day.value] ?? [];
-              const hasSlots = dayRows.length > 0;
-
-              const errorCount = dayRows.filter(
-                (row) =>
-                  validation.invalidRows.has(row.id) ||
-                  validation.overlappingHours.has(row.id) ||
-                  validation.overlappingPricing.has(row.id),
-              ).length;
-              const warningCount = dayRows.filter(
-                (row) =>
-                  validation.openWithoutPrice.has(row.id) ||
-                  validation.overnightRows.has(row.id),
-              ).length;
-
-              const isExpanded = activeDay === String(day.value);
-
-              return (
-                <AccordionItem key={day.value} value={String(day.value)}>
-                  <AccordionTrigger className="px-2 hover:no-underline">
-                    <div className="flex items-center gap-3">
-                      {/* Circular day badge */}
-                      <span
-                        className={cn(
-                          "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
-                          hasSlots
-                            ? "bg-teal-100 text-teal-700"
-                            : "bg-muted text-muted-foreground",
-                        )}
-                      >
-                        {DAY_INITIALS[day.value]}
-                      </span>
-
-                      {/* Day name + summary */}
-                      <div className="flex flex-col items-start gap-0.5">
-                        <span className="text-sm font-medium">{day.label}</span>
-                        {!isExpanded && hasSlots && (
-                          <span className="text-xs text-muted-foreground">
-                            {buildDaySummary(dayRows)}
-                          </span>
-                        )}
-                        {!isExpanded && !hasSlots && (
-                          <span className="text-xs text-muted-foreground italic">
-                            Set a schedule
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Validation badges — warnings deferred until save attempt */}
-                      {errorCount > 0 && (
-                        <Badge variant="destructive" className="ml-1">
-                          {errorCount} {errorCount === 1 ? "error" : "errors"}
-                        </Badge>
-                      )}
-                      {saveAttempted && warningCount > 0 && (
-                        <Badge variant="warning" className="ml-1">
-                          {warningCount}{" "}
-                          {warningCount === 1 ? "warning" : "warnings"}
-                        </Badge>
-                      )}
-                    </div>
-                  </AccordionTrigger>
-
-                  <AccordionContent className="px-2">
-                    {dayRows.length === 0 ? (
-                      <div className="flex justify-center py-4">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          onClick={() => handleAddRow(day.value)}
-                        >
-                          <CirclePlus className="mr-2 h-4 w-4" />
-                          Add block
-                        </Button>
-                      </div>
-                    ) : (
-                      <div className="space-y-2">
-                        {dayRows.map((row, idx) => {
-                          const hasInvalidTime = validation.invalidRows.has(
-                            row.id,
-                          );
-                          const overlapsHours = validation.overlappingHours.has(
-                            row.id,
-                          );
-                          const overlapsPricing =
-                            validation.overlappingPricing.has(row.id);
-                          const missingPrice = validation.openWithoutPrice.has(
-                            row.id,
-                          );
-                          const closedWithPrice =
-                            validation.closedWithPrice.has(row.id);
-                          const isOvernight = validation.overnightRows.has(
-                            row.id,
-                          );
-                          const hasError =
-                            hasInvalidTime || overlapsHours || overlapsPricing;
-
-                          const issueLabels = [
-                            hasInvalidTime ? "Invalid time" : null,
-                            overlapsHours ? "Hours overlap" : null,
-                            overlapsPricing ? "Pricing overlap" : null,
-                            saveAttempted && missingPrice
-                              ? "Needs price"
-                              : null,
-                            saveAttempted && closedWithPrice
-                              ? "Closed + priced"
-                              : null,
-                            saveAttempted && isOvernight ? "Overnight" : null,
-                          ].filter(Boolean) as string[];
-
-                          return (
-                            <ScheduleSlotRow
-                              key={row.id}
-                              row={row}
-                              dayValue={day.value}
-                              isLast={idx === dayRows.length - 1}
-                              hasError={hasError}
-                              issueLabels={issueLabels}
-                              validation={validation}
-                              onRowChange={handleRowChange}
-                              onHourlyRateInput={handleHourlyRateInput}
-                              onApplyToAll={handleApplyToAll}
-                              onRemoveRow={handleRemoveRow}
-                              onAddRow={handleAddRow}
-                            />
-                          );
-                        })}
-                      </div>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-              );
-            })}
-          </Accordion>
-        </div>
+        {scheduleContent}
 
         <div className="flex justify-end">
           <Button
             type="button"
-            onClick={handleSave}
+            onClick={() => handleSave()}
             disabled={isSaving}
             className="w-full sm:w-auto"
+            loading={isSaving}
           >
-            {isSaving && <Spinner />}
             {primaryActionLabel}
           </Button>
         </div>
       </CardContent>
 
-      <CourtConfigCopyDialog
-        open={copyOpen}
-        onOpenChange={setCopyOpen}
-        title="Copy schedule"
-        description="Copy hours and pricing from another court. This will replace the current schedule."
-        courts={courts}
-        currentCourtId={courtId}
-        isSubmitting={isCopying}
-        onConfirm={handleCopySchedule}
-      />
+      {copyDialog}
     </Card>
   );
 }

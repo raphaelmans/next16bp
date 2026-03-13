@@ -18,7 +18,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
 import type { PlaceClaimStatus } from "@/features/discovery/hooks";
 import type {
   ClaimFormData,
@@ -143,8 +142,11 @@ export function PlaceDetailListingHelpCard({
                       >
                         Cancel
                       </Button>
-                      <Button type="submit" disabled={claimDisabled}>
-                        {claimSubmitting && <Spinner />}
+                      <Button
+                        type="submit"
+                        disabled={claimDisabled}
+                        loading={claimSubmitting}
+                      >
                         Submit claim
                       </Button>
                     </DialogFooter>
@@ -231,8 +233,11 @@ export function PlaceDetailListingHelpCard({
                       >
                         Cancel
                       </Button>
-                      <Button type="submit" disabled={removalDisabled}>
-                        {removalSubmitting && <Spinner />}
+                      <Button
+                        type="submit"
+                        disabled={removalDisabled}
+                        loading={removalSubmitting}
+                      >
                         Submit request
                       </Button>
                     </DialogFooter>

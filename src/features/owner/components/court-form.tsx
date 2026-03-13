@@ -15,7 +15,7 @@ import {
 } from "@/components/form";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
+
 import {
   type CourtFormData,
   courtFormSchema,
@@ -292,8 +292,11 @@ export function CourtForm({
               Save as Draft
             </Button>
           )}
-          <Button type="submit" disabled={isSubmitDisabled}>
-            {submitting && <Spinner />}
+          <Button
+            type="submit"
+            disabled={isSubmitDisabled}
+            loading={submitting}
+          >
             {primaryActionLabel ??
               (isEditing ? "Save Changes" : "Create Court")}
           </Button>

@@ -9,7 +9,6 @@ import { toast } from "@/common/toast";
 import { getClientErrorMessage } from "@/common/toast/errors";
 import { StandardFormInput, StandardFormProvider } from "@/components/form";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutOrganizationCreate } from "@/features/organization/hooks";
 
 const organizationFormSchema = z.object({
@@ -94,8 +93,12 @@ export function OrganizationForm({
               Cancel
             </Button>
           )}
-          <Button type="submit" className="flex-1" disabled={isSubmitDisabled}>
-            {submitting && <Spinner />}
+          <Button
+            type="submit"
+            className="flex-1"
+            disabled={isSubmitDisabled}
+            loading={submitting}
+          >
             Create Organization
           </Button>
         </div>

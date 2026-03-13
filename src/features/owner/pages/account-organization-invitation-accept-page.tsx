@@ -9,7 +9,6 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
 import { useQueryAuthSession } from "@/features/auth";
 import {
   useMutAcceptOrganizationInvitation,
@@ -171,10 +170,8 @@ export default function AccountOrganizationInvitationAcceptPage({
               type="button"
               onClick={handleAccept}
               disabled={isPending || state !== "idle"}
+              loading={acceptInvitation.isPending}
             >
-              {acceptInvitation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Accept invitation
             </Button>
             <Button
@@ -182,10 +179,8 @@ export default function AccountOrganizationInvitationAcceptPage({
               variant="outline"
               onClick={handleDecline}
               disabled={isPending || state !== "idle"}
+              loading={declineInvitation.isPending}
             >
-              {declineInvitation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Decline
             </Button>
             <Button

@@ -29,7 +29,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Spinner } from "@/components/ui/spinner";
+
 import {
   type RequestEmailOtpDTO,
   RequestEmailOtpSchema,
@@ -202,8 +202,9 @@ export function EmailOtpForm({ redirectParam }: EmailOtpFormProps = {}) {
               type="submit"
               className="w-full"
               disabled={isSubmitDisabled}
+              loading={verifySubmitting}
             >
-              {verifySubmitting && <Spinner />} Verify & sign in
+              Verify & sign in
             </Button>
 
             <div className="flex flex-col gap-2 text-sm text-center">
@@ -256,8 +257,8 @@ export function EmailOtpForm({ redirectParam }: EmailOtpFormProps = {}) {
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={requestDisabled}>
-            {requestSubmitting && <Spinner />} Send code
+          <Button type="submit" className="w-full" disabled={requestDisabled} loading={requestSubmitting}>
+            Send code
           </Button>
 
           <div className="text-muted-foreground text-sm">

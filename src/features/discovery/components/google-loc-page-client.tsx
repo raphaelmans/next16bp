@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 
 const SAMPLE_URL = "https://maps.app.goo.gl/6AGA5vZkzKazGswRA";
 
@@ -81,8 +80,8 @@ export default function GoogleLocPocPage() {
               onClick={handlePreview}
               disabled={!canSubmit || isLoading}
               className="w-full"
+              loading={isLoading}
             >
-              {isLoading && <Spinner />}
               Preview
             </Button>
 

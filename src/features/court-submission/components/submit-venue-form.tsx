@@ -42,7 +42,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
 import { useQueryDiscoverySports } from "@/features/discovery/hooks/search";
 import { env } from "@/lib/env";
 import { useMutSubmitCourt, useMutUploadSubmissionPhoto } from "../hooks";
@@ -505,8 +504,9 @@ export function SubmitVenueForm() {
                   disabled={
                     googleLocPreview.isPending || !form.watch("googleMapsLink")
                   }
+                  loading={googleLocPreview.isPending}
                 >
-                  {googleLocPreview.isPending ? <Spinner /> : "Parse"}
+                  Parse
                 </Button>
               </div>
               {form.watch("latitude") && form.watch("longitude") && (
@@ -586,8 +586,13 @@ export function SubmitVenueForm() {
         </CardContent>
       </Card>
 
-      <Button type="submit" className="w-full" disabled={isSubmitting}>
-        {isSubmitting ? <Spinner /> : "Submit Venue"}
+      <Button
+        type="submit"
+        className="w-full"
+        disabled={isSubmitting}
+        loading={isSubmitting}
+      >
+        Submit Venue
       </Button>
     </StandardFormProvider>
   );

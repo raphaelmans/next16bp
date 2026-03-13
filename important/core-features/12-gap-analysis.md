@@ -1,4 +1,6 @@
-# Gap Analysis
+# Gap Analysis (Appendix)
+
+_Appendix for the guide-aligned core-features doc set. Use this to track where current UX or implementation still lags the primary narrative in [00-overview.md](./00-overview.md)._
 
 ## Severity Definitions
 
@@ -121,16 +123,6 @@ Invited members land on the dashboard with no welcome screen, no role explanatio
 **Impact:** Members do not understand their capabilities and do not enable notifications.
 
 **Recommendation:** First-login experience for invited members: show role, list capabilities, prompt notification enablement.
-
----
-
-### P1-06: Viewer Mobile Navigation Is Limited vs Desktop
-
-Viewers now see mobile tabs for Reservations, Studio, and Venues, but still have no "More" sheet and no direct mobile path to dashboard-level context or team page actions.
-
-**Impact:** Significant gap between desktop and mobile experience for Viewers.
-
-**Recommendation:** Give Viewers a "More" menu with accessible pages (Dashboard, Team, Profile) for parity with desktop context.
 
 ---
 

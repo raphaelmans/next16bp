@@ -15,8 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { CourtAddonEditor } from "@/features/owner/components/court-addon-editor";
-import { CourtScheduleEditor } from "@/features/owner/components/court-schedule-editor";
+import { CourtScheduleAndAddonsEditor } from "@/features/owner/components/court-schedule-and-addons-editor";
 import { useQueryOwnerCourtsByPlace } from "@/features/owner/hooks";
 
 interface EditSchedulePricingSheetProps {
@@ -76,16 +75,11 @@ export function EditSchedulePricingSheet({
             </Select>
           )}
 
-          <CourtScheduleEditor
-            courtId={selectedCourtId}
-            organizationId={organizationId}
-            onSaved={onSuccess}
-          />
-
-          <CourtAddonEditor
+          <CourtScheduleAndAddonsEditor
             courtId={selectedCourtId}
             placeId={placeId}
             organizationId={organizationId}
+            onSaved={onSuccess}
           />
         </div>
       </SheetContent>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -50,13 +50,10 @@ export function GoogleSignInButton({
       className="w-full"
       disabled={isLoading}
       onClick={onClick}
+      loading={isLoading}
     >
       <span className="flex items-center justify-center gap-2">
-        {isLoading ? (
-          <Spinner className="text-muted-foreground" />
-        ) : (
-          <GoogleIcon />
-        )}
+        <GoogleIcon />
         {label}
       </span>
     </Button>

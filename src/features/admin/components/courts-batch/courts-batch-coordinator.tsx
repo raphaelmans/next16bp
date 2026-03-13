@@ -46,7 +46,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { PageHeader } from "@/components/ui/page-header";
-import { Spinner } from "@/components/ui/spinner";
 import { AdminNavbar, AdminSidebar } from "@/features/admin";
 import {
   type CuratedCourtBatchResult,
@@ -726,12 +725,9 @@ export default function AdminCourtsBatchView() {
                                 variant="secondary"
                                 onClick={() => handlePreview(field.id, index)}
                                 disabled={!googleUrlValue || isPreviewing}
+                                loading={isPreviewing}
                               >
-                                {isPreviewing ? (
-                                  <Spinner className="mr-2" />
-                                ) : (
-                                  <Plus className="mr-2 h-4 w-4" />
-                                )}
+                                <Plus className="mr-2 h-4 w-4" />
                                 Preview
                               </Button>
                             </div>
@@ -1042,8 +1038,11 @@ export default function AdminCourtsBatchView() {
             <Button variant="outline" asChild>
               <Link href={appRoutes.admin.courts.base}>Back to Venues</Link>
             </Button>
-            <Button type="submit" disabled={isSubmitDisabled}>
-              {submitting && <Spinner />}
+            <Button
+              type="submit"
+              disabled={isSubmitDisabled}
+              loading={submitting}
+            >
               Submit Batch
             </Button>
           </div>

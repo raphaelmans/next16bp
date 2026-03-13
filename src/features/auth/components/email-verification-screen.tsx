@@ -22,7 +22,7 @@ import {
   InputOTPSeparator,
   InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { Spinner } from "@/components/ui/spinner";
+
 import {
   type VerifyEmailOtpDTO,
   VerifyEmailOtpSchema,
@@ -137,8 +137,8 @@ export function EmailVerificationScreen({
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {isVerifying && <Spinner />} Verify
+          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={isVerifying}>
+            Verify
           </Button>
 
           <Button

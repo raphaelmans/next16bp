@@ -33,7 +33,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import {
   type AdminCourtEditFormData,
@@ -171,12 +170,11 @@ export function AdminCourtEditForm({
               }}
               disabled={removePhotoPending || !pendingPhotoId}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={
+                removePhotoPending && pendingPhotoId === removePhotoTargetId
+              }
             >
-              {removePhotoPending && pendingPhotoId === removePhotoTargetId ? (
-                <Spinner className="mr-2" />
-              ) : (
-                <Trash2 className="mr-2 h-4 w-4" />
-              )}
+              <Trash2 className="mr-2 h-4 w-4" />
               Remove Photo
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -305,8 +303,8 @@ export function AdminCourtEditForm({
             onClick={onPreview}
             disabled={googleUrl.trim().length === 0 || isPreviewing}
             className="w-full"
+            loading={isPreviewing}
           >
-            {isPreviewing && <Spinner />}
             Locate
           </Button>
 
@@ -591,12 +589,9 @@ export function AdminCourtEditForm({
                 variant="outline"
                 onClick={() => fileInputRef.current?.click()}
                 disabled={uploadPhotoPending}
+                loading={uploadPhotoPending}
               >
-                {uploadPhotoPending ? (
-                  <Spinner />
-                ) : (
-                  <Plus className="h-4 w-4" />
-                )}
+                <Plus className="h-4 w-4" />
                 <span className="ml-2">Add photo</span>
               </Button>
             </div>
@@ -627,12 +622,9 @@ export function AdminCourtEditForm({
                   onClick={() => setPendingPhotoId(photo.id)}
                   disabled={removePhotoPending}
                   aria-label="Remove photo"
+                  loading={removePhotoPending && pendingPhotoId === photo.id}
                 >
-                  {removePhotoPending && pendingPhotoId === photo.id ? (
-                    <Spinner />
-                  ) : (
-                    <Trash2 className="h-4 w-4" />
-                  )}
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             ))}
@@ -644,8 +636,7 @@ export function AdminCourtEditForm({
         <Button type="button" variant="outline" asChild>
           <Link href={appRoutes.admin.courts.base}>Cancel</Link>
         </Button>
-        <Button type="submit" disabled={isSubmitDisabled}>
-          {submitting && <Spinner />}
+        <Button type="submit" disabled={isSubmitDisabled} loading={submitting}>
           Save Changes
         </Button>
       </div>

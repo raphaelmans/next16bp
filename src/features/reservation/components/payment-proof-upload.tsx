@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+
 import { Textarea } from "@/components/ui/textarea";
 import { useMutUploadPaymentProof } from "../hooks";
 
@@ -165,9 +165,9 @@ export function PaymentProofUpload({
           <Button
             type="submit"
             className="w-full"
-            disabled={!selectedFile || uploadPaymentProof.isPending}
+            disabled={!selectedFile}
+            loading={uploadPaymentProof.isPending}
           >
-            {uploadPaymentProof.isPending && <Spinner />}
             Submit Payment Proof
           </Button>
         </form>

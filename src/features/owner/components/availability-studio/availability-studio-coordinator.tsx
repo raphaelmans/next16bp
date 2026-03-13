@@ -36,7 +36,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   OwnerNavbar,
@@ -1275,7 +1274,13 @@ function OwnerAvailabilityStudioInner() {
         description: getClientErrorMessage(error, "Please try again"),
       });
     }
-  }, [discardImport, draftRowsQueryInput, invalidateImportRowsAndJob, jobId, setJobIdParam]);
+  }, [
+    discardImport,
+    draftRowsQueryInput,
+    invalidateImportRowsAndJob,
+    jobId,
+    setJobIdParam,
+  ]);
 
   // Track which day column committed the range in week view
   const [weekCommittedDayKey, setWeekCommittedDayKey] = React.useState<
@@ -2046,8 +2051,8 @@ function OwnerAvailabilityStudioInner() {
                         onClick={handleSelectionSubmit}
                         className="flex-1"
                         disabled={isCreatingBlock}
+                        loading={isCreatingBlock}
                       >
-                        {isCreatingBlock && <Spinner />}
                         {getBlockCtaLabel(selectionBlockType)}
                       </Button>
                       <Button

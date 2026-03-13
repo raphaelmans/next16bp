@@ -22,7 +22,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
+
 import { useMutUpdateOrganizationMemberPermissions } from "@/features/owner/hooks";
 import {
   DEFAULT_PERMISSIONS_BY_ROLE,
@@ -216,10 +216,8 @@ export function TeamMemberPermissionsSheet({
             type="button"
             onClick={handleSave}
             disabled={!isDirty || updatePermissions.isPending}
+            loading={updatePermissions.isPending}
           >
-            {updatePermissions.isPending && (
-              <Spinner className="mr-2 h-4 w-4" />
-            )}
             Save changes
           </Button>
         </SheetFooter>

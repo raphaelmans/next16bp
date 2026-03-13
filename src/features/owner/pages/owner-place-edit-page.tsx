@@ -322,10 +322,8 @@ export default function EditPlacePage({ placeId }: OwnerPlaceEditPageProps) {
                         !deleteConfirmationMatches
                       }
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                      loading={deletePlaceMutation.isPending}
                     >
-                      {deletePlaceMutation.isPending && (
-                        <Spinner className="h-4 w-4 mr-2" />
-                      )}
                       Delete venue
                     </AlertDialogAction>
                   </AlertDialogFooter>

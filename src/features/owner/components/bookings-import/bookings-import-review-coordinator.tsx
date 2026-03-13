@@ -633,10 +633,8 @@ export default function OwnerBookingsImportReviewView({
                               <Button
                                 onClick={() => handleNormalize("deterministic")}
                                 disabled={normalizeMutation.isPending}
+                                loading={normalizeMutation.isPending}
                               >
-                                {normalizeMutation.isPending && (
-                                  <Spinner className="mr-2 h-4 w-4" />
-                                )}
                                 Parse files
                               </Button>
                             )}
@@ -648,10 +646,8 @@ export default function OwnerBookingsImportReviewView({
                                 aiUsed ||
                                 aiUsageQuery.isLoading
                               }
+                              loading={normalizeMutation.isPending}
                             >
-                              {normalizeMutation.isPending && (
-                                <Spinner className="mr-2 h-4 w-4" />
-                              )}
                               Use AI (one-time)
                             </Button>
                           </div>
@@ -962,10 +958,8 @@ export default function OwnerBookingsImportReviewView({
                       className="w-full"
                       onClick={() => setShowCommitDialog(true)}
                       disabled={!canCommit || commitMutation.isPending}
+                      loading={commitMutation.isPending}
                     >
-                      {commitMutation.isPending && (
-                        <Spinner className="mr-2 h-4 w-4" />
-                      )}
                       Commit {statusCounts.VALID} valid rows
                     </Button>
 
@@ -1007,10 +1001,8 @@ export default function OwnerBookingsImportReviewView({
                   disabled={
                     discardMutation.isPending || job.status === "COMMITTED"
                   }
+                  loading={discardMutation.isPending}
                 >
-                  {discardMutation.isPending && (
-                    <Spinner className="mr-2 h-4 w-4" />
-                  )}
                   Discard import
                 </Button>
               </CardContent>
@@ -1150,10 +1142,8 @@ export default function OwnerBookingsImportReviewView({
             <Button
               onClick={handleSaveEdit}
               disabled={updateRowMutation.isPending}
+              loading={updateRowMutation.isPending}
             >
-              {updateRowMutation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Save
             </Button>
           </DialogFooter>
@@ -1178,10 +1168,8 @@ export default function OwnerBookingsImportReviewView({
             <AlertDialogAction
               onClick={handleDeleteRow}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={deleteRowMutation.isPending}
             >
-              {deleteRowMutation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1203,10 +1191,8 @@ export default function OwnerBookingsImportReviewView({
             <AlertDialogAction
               onClick={handleDiscard}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={discardMutation.isPending}
             >
-              {discardMutation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Discard
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1226,8 +1212,10 @@ export default function OwnerBookingsImportReviewView({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleCommit}>
-              {commitMutation.isPending && <Spinner className="mr-2 h-4 w-4" />}
+            <AlertDialogAction
+              onClick={handleCommit}
+              loading={commitMutation.isPending}
+            >
               Commit
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -1251,10 +1239,10 @@ export default function OwnerBookingsImportReviewView({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleConfirmAiNormalize}>
-              {normalizeMutation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
+            <AlertDialogAction
+              onClick={handleConfirmAiNormalize}
+              loading={normalizeMutation.isPending}
+            >
               Use AI (one-time)
             </AlertDialogAction>
           </AlertDialogFooter>

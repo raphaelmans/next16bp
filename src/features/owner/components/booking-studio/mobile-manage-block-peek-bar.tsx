@@ -13,7 +13,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Spinner } from "@/components/ui/spinner";
 import { BlockInfoDisplay } from "./block-info-display";
 import type { CourtBlockItem } from "./types";
 
@@ -113,6 +112,7 @@ export const MobileManageBlockPeekBar = React.memo(
                   variant="destructive"
                   className="flex-1"
                   disabled={isCancelPending}
+                  loading={isCancelPending}
                   onClick={() => {
                     if (block) {
                       onRemove(block.id);
@@ -121,7 +121,7 @@ export const MobileManageBlockPeekBar = React.memo(
                     }
                   }}
                 >
-                  {isCancelPending && <Spinner />} Remove block
+                  Remove block
                 </Button>
                 {isWalkIn && onConvertWalkIn && (
                   <Button

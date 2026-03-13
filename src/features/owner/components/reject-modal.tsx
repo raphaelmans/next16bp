@@ -12,7 +12,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Spinner } from "@/components/ui/spinner";
+
 import { Textarea } from "@/components/ui/textarea";
 
 interface RejectModalProps {
@@ -103,12 +103,9 @@ export function RejectModal({
               type="submit"
               variant="destructive"
               disabled={isLoading || !reason.trim()}
+              loading={isLoading}
             >
-              {isLoading ? (
-                <Spinner className="h-4 w-4 mr-2" />
-              ) : (
-                <X className="h-4 w-4 mr-2" />
-              )}
+              <X className="h-4 w-4 mr-2" />
               {submitText}
             </Button>
           </DialogFooter>

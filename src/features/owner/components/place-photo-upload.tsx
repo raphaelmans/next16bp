@@ -130,12 +130,9 @@ export function PlacePhotoUpload({
               variant="outline"
               onClick={() => fileInputRef.current?.click()}
               disabled={uploadPhoto.isPending}
+              loading={uploadPhoto.isPending}
             >
-              {uploadPhoto.isPending ? (
-                <Spinner className="h-4 w-4" />
-              ) : (
-                <ImageIcon className="h-4 w-4" />
-              )}
+              <ImageIcon className="h-4 w-4" />
               <span className="ml-2">Add photo</span>
             </Button>
           </>

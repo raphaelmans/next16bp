@@ -1,80 +1,97 @@
 # Source Files
 
-_Engineering reference mapping feature docs to implementation files (code is source of truth)._
+_Engineering reference for the guide-aligned core-features doc set. Code remains the source of truth._
 
-## Discovery & Booking
+## Primary Guide-Aligned Docs
 
-- Discovery pages/cards/hooks: `src/features/discovery/pages/`, `src/features/discovery/components/`, `src/features/discovery/hooks.ts`
-- Availability service (server): `src/lib/modules/availability/services/availability.service.ts`
-- Schedule pricing engine: `src/lib/shared/lib/schedule-availability.ts`
-- Cross-week booking range merge helper: `src/features/discovery/place-detail/helpers/cross-week-range.ts`
-- Booking cart day-window rules (cross-midnight aware): `src/features/discovery/place-detail/helpers/booking-cart-rules.ts`
-- Cross-week tests: `src/__tests__/features/discovery/place-detail/helpers/cross-week-range.test.ts`, `src/__tests__/features/discovery/place-detail/helpers/booking-cart-rules.test.ts`
+### 01. Player Discovery & Venue Shortlisting
 
-## Reservation Lifecycle
+- Public discovery pages and clients: `src/features/discovery/pages/`, `src/features/discovery/components/`
+- Discovery hooks and filters: `src/features/discovery/hooks.ts`, `src/features/discovery/hooks/`
+- Public courts discovery server surface: `src/features/discovery/server/public-courts-discovery.tsx`
+- Venue detail pages and sections: `src/features/discovery/pages/place-detail-page.tsx`, `src/features/discovery/place-detail/components/`
+- Review aggregate and trust signals: `src/features/discovery/place-detail/components/place-detail-review-aggregate-provider.tsx`
+- Map/list surfaces: `src/features/discovery/components/courts-page-client.tsx`, `src/features/discovery/components/court-map.tsx`
+- Availability range helpers: `src/features/discovery/place-detail/helpers/cross-week-range.ts`, `src/features/discovery/place-detail/helpers/booking-cart-rules.ts`
 
-- Reservation status enum: `src/lib/shared/infra/db/schema/enums.ts`
-- Reservation schema: `src/lib/shared/infra/db/schema/reservation.ts`
+### 02. Player Booking & Reservation Tracking
+
+- Reservation status enums and schema: `src/lib/shared/infra/db/schema/enums.ts`, `src/lib/shared/infra/db/schema/reservation.ts`
 - Player reservation service: `src/lib/modules/reservation/services/reservation.service.ts`
 - Owner reservation actions: `src/lib/modules/reservation/services/reservation-owner.service.ts`
 - Reservation status aggregation helpers: `src/lib/modules/reservation/shared/domain.ts`
-- Owner reservation UI (tabs/state buckets): `src/features/owner/pages/owner-reservations-page.tsx`
-- Player reservation tabs/list classification: `src/features/reservation/components/reservation-tabs.tsx`, `src/features/reservation/hooks.ts`
+- Player reservation UI and tabs: `src/features/reservation/pages/`, `src/features/reservation/components/reservation-tabs.tsx`, `src/features/reservation/hooks.ts`
+- Reservation sync and realtime invalidation: `src/features/reservation/sync.ts`
 
-## Venue & Court Management
+### 03. Owner Listing & Venue Operations
 
-- Place management service/router: `src/lib/modules/place/services/place-management.service.ts`, `src/lib/modules/place/place-management.router.ts`
-- Court management service/router: `src/lib/modules/court/services/court-management.service.ts`, `src/lib/modules/court/court-management.router.ts`
-- Court hours service: `src/lib/modules/court-hours/services/court-hours.service.ts`
-- Owner hours editor (overnight split): `src/features/owner/components/court-hours-editor.tsx`
-- Owner schedule editor helpers (overnight normalization): `src/features/owner/components/court-schedule-editor/helpers.ts`
+- Place management service and router: `src/lib/modules/place/services/place-management.service.ts`, `src/lib/modules/place/place-management.router.ts`
+- Court management service and router: `src/lib/modules/court/services/court-management.service.ts`, `src/lib/modules/court/court-management.router.ts`
+- Place verification flows: `src/lib/modules/place-verification/services/`, `src/features/owner/pages/owner-place-verification-page.tsx`
+- QR code surface: `src/features/owner/components/venue-qr-code-dialog.tsx`
 - Booking studio helpers: `src/features/owner/booking-studio/helpers.ts`
 
-## Owner Onboarding
+### 04. Owner Setup & Go Live
 
-- Wizard definitions and steps: `src/features/owner/components/get-started/wizard/wizard-types.ts`, `src/features/owner/components/get-started/wizard/steps/`
-- Wizard helpers/hooks: `src/features/owner/components/get-started/wizard/wizard-helpers.ts`, `src/features/owner/components/get-started/wizard/wizard-hooks.ts`
-- Hub view: `src/features/owner/components/get-started/get-started-view.tsx`
-- Owner setup status domain/use-case/router: `src/lib/modules/owner-setup/shared/domain.ts`, `src/lib/modules/owner-setup/use-cases/get-owner-setup-status.use-case.ts`, `src/lib/modules/owner-setup/owner-setup.router.ts`
+- Wizard definitions and step implementations: `src/features/owner/components/get-started/wizard/wizard-types.ts`, `src/features/owner/components/get-started/wizard/steps/`
+- Wizard helpers and hooks: `src/features/owner/components/get-started/wizard/wizard-helpers.ts`, `src/features/owner/components/get-started/wizard/wizard-hooks.ts`
+- Hub view and get-started client: `src/features/owner/components/get-started/get-started-view.tsx`, `src/features/owner/components/owner-get-started-page-client.tsx`
+- Owner setup status domain/use case/router: `src/lib/modules/owner-setup/shared/domain.ts`, `src/lib/modules/owner-setup/use-cases/get-owner-setup-status.use-case.ts`, `src/lib/modules/owner-setup/owner-setup.router.ts`
 
-## Team Access & Permissions
+## Supporting Operational References
+
+### Team Access & Permissions
 
 - Permission model/defaults: `src/lib/modules/organization-member/shared/permissions.ts`
-- Permission checks/helpers: `src/features/owner/helpers.ts`
-- Permission gate and no-access UI: `src/features/owner/components/permission-gate.tsx`, `src/features/owner/components/no-access-view.tsx`
-- Team page and permission sheets/dialogs: `src/features/owner/pages/owner-team-page.tsx`, `src/features/owner/components/team-invite-dialog.tsx`, `src/features/owner/components/team-member-permissions-sheet.tsx`
-- Owner sidebar nav filtering: `src/features/owner/components/owner-sidebar.tsx`
-- Mobile tabs/more sheet: `src/components/layout/dashboard-bottom-tabs.tsx`, `src/features/owner/components/owner-more-sheet.tsx`
-- Organization member backend service/router: `src/lib/modules/organization-member/services/organization-member.service.ts`, `src/lib/modules/organization-member/organization-member.router.ts`
+- Team management UI: `src/features/owner/pages/owner-team-page.tsx`, `src/features/owner/components/team-invite-dialog.tsx`, `src/features/owner/components/team-member-permissions-sheet.tsx`
+- Permission-aware owner UI: `src/features/owner/components/permission-gate.tsx`, `src/features/owner/components/no-access-view.tsx`, `src/features/owner/helpers.ts`
+- Owner mobile navigation: `src/components/layout/dashboard-bottom-tabs.tsx`, `src/features/owner/components/owner-more-sheet.tsx`
 
-## Notifications
+### Notifications
 
 - Delivery orchestration: `src/lib/modules/notification-delivery/services/notification-delivery.service.ts`
-- Notification event schemas/content builders: `src/lib/modules/notification-delivery/shared/schemas.ts`, `src/lib/modules/notification-delivery/shared/domain.ts`
-- Delivery/recipient repositories: `src/lib/modules/notification-delivery/repositories/`
-- In-app inbox and delivery tables: `src/lib/shared/infra/db/schema/user-notification.ts`, `src/lib/shared/infra/db/schema/notification-delivery-job.ts`
-- Notification bell/inbox UI: `src/features/notifications/components/notification-bell.tsx`, `src/features/notifications/components/notification-inbox.tsx`
-- Web push settings + hook: `src/features/notifications/components/web-push-settings.tsx`, `src/features/notifications/hooks/use-web-push.ts`
-- Owner routing settings: `src/features/owner/components/reservation-notification-routing-settings.tsx`
+- Notification schemas and event builders: `src/lib/modules/notification-delivery/shared/schemas.ts`, `src/lib/modules/notification-delivery/shared/domain.ts`
+- Delivery repositories and job tables: `src/lib/modules/notification-delivery/repositories/`, `src/lib/shared/infra/db/schema/user-notification.ts`, `src/lib/shared/infra/db/schema/notification-delivery-job.ts`
+- Notification UI: `src/features/notifications/components/notification-bell.tsx`, `src/features/notifications/components/notification-inbox.tsx`
+- Web push and routing settings: `src/features/notifications/components/web-push-settings.tsx`, `src/features/notifications/hooks/use-web-push.ts`, `src/features/owner/components/reservation-notification-routing-settings.tsx`
 
-## Payments
+### Open Play
 
-- Organization payment methods service: `src/lib/modules/organization-payment/services/organization-payment.service.ts`
-- Payment providers enums: `src/lib/shared/infra/db/schema/enums.ts`
-- Owner payment methods manager UI: `src/features/owner/components/payment-methods-manager.tsx`
-- Reservation payment pages/actions: `src/features/reservation/pages/reservation-payment-page.tsx`, `src/features/owner/pages/owner-reservations-page.tsx`
+- Open play services and schema: `src/lib/modules/open-play/services/`, `src/lib/shared/infra/db/schema/open-play.ts`, `src/lib/shared/infra/db/schema/external-open-play.ts`
+- Open play pages and components: `src/features/open-play/pages/`, `src/features/open-play/components/`, `src/features/open-play/hooks.ts`
+- Reservation-side open-play setup: `src/features/reservation/components/reservation-actions-card.tsx`, `src/features/reservation/pages/place-booking-page.tsx`
 
-## Accounts & Profiles
+### Chat & Messaging
+
+- Chat services and providers: `src/lib/modules/chat/services/`, `src/lib/modules/chat/providers/`
+- Reservation chat schema: `src/lib/shared/infra/db/schema/reservation-chat.ts`
+- Open-play chat schema: `src/lib/shared/infra/db/schema/open-play-chat.ts`
+- Owner reservation inbox widget: `src/features/chat/components/chat-widget/reservation-inbox-widget.tsx`
+
+### Payments
+
+- Organization payment methods service and DTOs: `src/lib/modules/organization-payment/services/organization-payment.service.ts`, `src/lib/modules/organization-payment/dtos/organization-payment-method.dto.ts`
+- Payment providers enum: `src/lib/shared/infra/db/schema/enums.ts`
+- Payment proof service: `src/lib/modules/payment-proof/services/payment-proof.service.ts`
+- Player payment surfaces: `src/features/reservation/pages/reservation-payment-page.tsx`, `src/features/reservation/components/payment-instructions.tsx`
+- Owner payment review surfaces: `src/features/owner/pages/owner-reservations-page.tsx`, `src/features/owner/pages/owner-reservation-detail-page.tsx`
+
+### Accounts & Profiles
 
 - Auth service/router/repository: `src/lib/modules/auth/services/auth.service.ts`, `src/lib/modules/auth/auth.router.ts`, `src/lib/modules/auth/repositories/auth.repository.ts`
-- Profile page/components: `src/features/account/pages/account-profile-page.tsx`, `src/features/account/components/`
-- Portal switching/dropdowns: `src/features/discovery/components/user-dropdown.tsx`
-- Place bookmark router/service/repository: `src/lib/modules/place-bookmark/place-bookmark.router.ts`, `src/lib/modules/place-bookmark/services/place-bookmark.service.ts`, `src/lib/modules/place-bookmark/repositories/place-bookmark.repository.ts`
-- Bookmark UI + saved venues page: `src/features/discovery/components/bookmark-button.tsx`, `src/features/discovery/pages/saved-venues-page.tsx`
+- Profile and home pages: `src/features/account/pages/account-profile-page.tsx`, `src/features/account/components/`, `src/features/home/components/`
+- Saved venues and bookmarks: `src/lib/modules/place-bookmark/`, `src/features/discovery/components/bookmark-button.tsx`, `src/features/discovery/pages/saved-venues-page.tsx`
+- Portal preference and auth flows: `src/features/auth/components/portal-switcher.tsx`, `src/features/auth/components/portal-preference-card.tsx`, `src/features/auth/components/magic-link-form.tsx`
 
-## Admin Operations
+### Admin Operations
 
-- Admin claims pages/hooks: `src/features/admin/pages/admin-claim-detail-page.tsx`, `src/features/admin/hooks/claims.ts`
-- Admin verification pages/hooks: `src/features/admin/pages/admin-verification-detail-page.tsx`, `src/features/admin/hooks/place-verification.ts`
-- Place verification admin service: `src/lib/modules/place-verification/services/place-verification-admin.service.ts`
-- Claim request schema (review notes): `src/lib/shared/infra/db/schema/claim-request.ts`
+- Admin dashboard stats hooks: `src/features/admin/hooks/organization.ts`
+- Claims pages and hooks: `src/features/admin/pages/admin-claim-detail-page.tsx`, `src/features/admin/hooks/claims.ts`
+- Verification pages and hooks: `src/features/admin/pages/admin-verification-detail-page.tsx`, `src/features/admin/hooks/place-verification.ts`
+- Review moderation: `src/features/admin/components/admin-reviews-list.tsx`
+- Admin tools: `src/features/admin/pages/admin-notification-test-page.tsx`, `src/features/admin/pages/admin-revalidate-page.tsx`
+
+## Related Canonical Doc Sets
+
+- Developer integration overview: `important/developer-integration/00-overview.md`
+- Developer integration source files: `important/developer-integration/99-source-files.md`

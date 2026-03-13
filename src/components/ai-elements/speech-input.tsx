@@ -10,7 +10,6 @@ import {
 } from "react";
 import { createFeatureLogger } from "@/common/logging";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 const logger = createFeatureLogger("ai-elements", "speech-input");
@@ -293,11 +292,14 @@ export const SpeechInput = ({
         )}
         disabled={isDisabled}
         onClick={toggleListening}
+        loading={isProcessing}
         {...props}
       >
-        {isProcessing && <Spinner />}
-        {!isProcessing && isListening && <SquareIcon className="size-4" />}
-        {!(isProcessing || isListening) && <MicIcon className="size-4" />}
+        {isListening ? (
+          <SquareIcon className="size-4" />
+        ) : (
+          <MicIcon className="size-4" />
+        )}
       </Button>
     </div>
   );

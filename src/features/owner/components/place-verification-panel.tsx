@@ -283,10 +283,9 @@ export function PlaceVerificationPanel({
                 disabled={toggleReservations.isPending}
                 onClick={handleToggleReservations}
                 className="min-w-[160px]"
+                loading={toggleReservations.isPending}
               >
-                {toggleReservations.isPending ? (
-                  <Spinner className="mr-2 h-4 w-4" />
-                ) : reservationsEnabled ? (
+                {reservationsEnabled ? (
                   <ToggleLeft className="mr-2 h-4 w-4" />
                 ) : (
                   <ToggleRight className="mr-2 h-4 w-4" />
@@ -391,10 +390,8 @@ export function PlaceVerificationPanel({
                     !reservationCapable ||
                     !isValid
                   }
+                  loading={submitVerification.isPending}
                 >
-                  {submitVerification.isPending && (
-                    <Spinner className="mr-2 h-4 w-4" />
-                  )}
                   Submit for review
                 </Button>
                 <Button

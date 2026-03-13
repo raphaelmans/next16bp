@@ -20,7 +20,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Spinner } from "@/components/ui/spinner";
+
 import { type RegisterDTO, RegisterSchema } from "@/lib/modules/auth/dtos";
 import {
   useMutAuthLoginWithGoogle,
@@ -184,8 +184,8 @@ export function RegisterForm({
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled}>
-            {submitting && <Spinner />} Create Account
+          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={submitting}>
+            Create Account
           </Button>
 
           <div className="text-muted-foreground text-sm">

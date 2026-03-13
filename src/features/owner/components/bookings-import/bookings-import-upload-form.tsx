@@ -33,7 +33,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import {
   useModOwnerInvalidation,
   useMutOwnerImportCreateDraft,
@@ -518,9 +517,12 @@ export function BookingsImportUploadForm({
                 Cancel
               </Button>
             </div>
-            <Button onClick={handleContinue} disabled={!canContinue}>
-              {isUploading ? <Spinner className="mr-2 h-4 w-4" /> : null}
-              {isUploading ? "Uploading" : "Continue"}
+            <Button
+              onClick={handleContinue}
+              disabled={!canContinue}
+              loading={isUploading}
+            >
+              Continue
             </Button>
           </div>
         </CardContent>

@@ -23,7 +23,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Spinner } from "@/components/ui/spinner";
 import {
   useMutAuthLogout,
   useQueryAuthMyOrganizations,
@@ -188,8 +187,8 @@ export function Navbar({ className }: NavbarProps) {
         </Button>
 
         {isResolvingSession ? (
-          <Button variant="outline" className="font-heading" disabled>
-            <Spinner />
+          <Button variant="outline" className="font-heading" disabled loading={true}>
+            &nbsp;
           </Button>
         ) : isAuthenticated ? (
           <UserDropdown
@@ -391,8 +390,8 @@ export function Navbar({ className }: NavbarProps) {
 
             {/* Auth Actions */}
             {isResolvingSession ? (
-              <Button variant="outline" className="w-full" disabled>
-                <Spinner />
+              <Button variant="outline" className="w-full" disabled loading={true}>
+                &nbsp;
               </Button>
             ) : isAuthenticated ? (
               <Button
@@ -400,12 +399,9 @@ export function Navbar({ className }: NavbarProps) {
                 className="w-full justify-start text-destructive hover:text-destructive"
                 onClick={handleSignOut}
                 disabled={isSigningOut}
+                loading={isSigningOut}
               >
-                {isSigningOut ? (
-                  <Spinner className="mr-2" />
-                ) : (
-                  <LogOut className="h-4 w-4 mr-2" />
-                )}
+                <LogOut className="h-4 w-4 mr-2" />
                 Sign Out
               </Button>
             ) : (

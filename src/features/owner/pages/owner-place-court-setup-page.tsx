@@ -19,9 +19,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
-  CourtAddonEditor,
   CourtForm,
-  CourtScheduleEditor,
+  CourtScheduleAndAddonsEditor,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import { PermissionGate } from "@/features/owner/components/permission-gate";
@@ -462,8 +461,9 @@ export default function CourtSetupWizardPage({
 
               {currentStep === "schedule" && (
                 <div className="space-y-4">
-                  <CourtScheduleEditor
+                  <CourtScheduleAndAddonsEditor
                     courtId={courtId}
+                    placeId={placeId}
                     organizationId={organization?.id ?? null}
                     primaryActionLabel="Save & Continue"
                     onSaved={() => {
@@ -473,11 +473,6 @@ export default function CourtSetupWizardPage({
                       }
                       goToStep("publish");
                     }}
-                  />
-                  <CourtAddonEditor
-                    courtId={courtId}
-                    placeId={placeId}
-                    organizationId={organization?.id}
                   />
                   <div className="flex justify-between">
                     <Button

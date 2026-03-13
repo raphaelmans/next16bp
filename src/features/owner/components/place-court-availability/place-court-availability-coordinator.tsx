@@ -39,7 +39,6 @@ import { Calendar } from "@/components/ui/calendar";
 import { Card, CardContent } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { PageHeader } from "@/components/ui/page-header";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import { getOwnerApi } from "@/features/owner/api.runtime";
@@ -1466,8 +1465,8 @@ function OwnerCourtAvailabilityInner({
                       onClick={handleSelectionSubmit}
                       className="flex-1"
                       disabled={isCreatingBlock}
+                      loading={isCreatingBlock}
                     >
-                      {isCreatingBlock && <Spinner />}
                       {getBlockCtaLabel(selectionBlockType)}
                     </Button>
                     <Button

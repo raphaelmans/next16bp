@@ -1,110 +1,88 @@
-# Team Access & Permissions
+# Team Access & Permissions (Operational Reference)
+
+_Supporting operational reference. Read after the primary owner docs in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-Venue owners delegate operational work to staff. Team access controls who can view reservations, take booking actions, manage team members, and manage venue/court configuration.
+Venue owners delegate reservation work, venue operations, and organization management through a mix of role defaults and granular permission flags.
 
-## Role Hierarchy
+## Role Model
 
-| Role | Who Is This? | Default Capabilities |
-|------|-------------|----------------------|
-| **Owner** | Organization owner. Cannot be removed/demoted. | Full access across owner portal. |
-| **Manager** | Trusted staff member invited by owner. | Reservation operations, guest bookings/imports, chat, notification routing opt-in, team management, venue/court management (`place.manage`), and settings access. |
-| **Viewer** | Limited staff role. | Reservation read access only by default. |
-
-The owner is treated as implicitly having all permissions.
+| Role | Description | Default Shape |
+|------|-------------|---------------|
+| Owner | Organization owner | Full access and implicit permission coverage |
+| Manager | Trusted staff member | Operational access across reservations, places, team, chat, and notifications |
+| Viewer | Limited staff member | Read-first access with fewer operational actions |
 
 ## Granular Permissions
 
-7 permission flags exist in the permission model:
+The current permission model centers these flags:
 
-| Permission | What It Unlocks | Owner | Manager (Default) | Viewer (Default) |
-|------------|----------------|:-:|:-:|:-:|
-| `reservation.read` | View reservation list/details | Yes | Yes | Yes |
-| `reservation.update_status` | Accept/confirm/reject reservation lifecycle actions | Yes | Yes | No |
-| `reservation.guest_booking` | Create guest bookings and access imports | Yes | Yes | No |
-| `reservation.chat` | Access reservation chat threads | Yes | Yes | No |
-| `reservation.notification.receive` | Eligible for reservation lifecycle notification routing | Yes | Yes | No |
-| `organization.member.manage` | Invite/edit/revoke members and invitations | Yes | Yes | No |
-| `place.manage` | Edit venues/courts, setup/config pages | Yes | Yes | No |
+| Permission | What It Unlocks |
+|------------|-----------------|
+| `reservation.read` | View reservation list and details |
+| `reservation.update_status` | Accept, confirm, reject, and cancel reservation flows |
+| `reservation.guest_booking` | Create guest bookings and use import-related flows |
+| `reservation.chat` | Join reservation chat threads |
+| `reservation.notification.receive` | Be eligible for routed reservation notifications |
+| `organization.member.manage` | Invite, edit, revoke, and cancel member/invitation access |
+| `place.manage` | Edit venues, courts, availability, and related setup surfaces |
 
-## What Each Role Sees
+## Navigation Reality
 
-### Desktop Sidebar
+### Desktop
 
-| Nav Item | Owner | Manager | Viewer |
-|----------|:-:|:-:|:-:|
-| Dashboard | Yes | Yes | Yes |
-| Get Started (if setup incomplete) | Yes | No | No |
-| Courts (public discovery link) | Yes | Yes | Yes |
-| Venues | Yes | Yes | Yes |
-| Availability Studio | Yes | Yes | Yes |
-| Reservations | Yes | Yes (with `reservation.read`) | Yes (with `reservation.read`) |
-| Imports | Yes | Yes (with `reservation.guest_booking`) | No |
-| Team | Yes | Yes | Yes |
-| Profile | Yes | Yes | Yes |
-| Settings | Yes | Yes | No |
+The owner portal is role- and permission-aware. Dashboard, reservations, studio, team, settings, places, and imports are shown or hidden based on the current member role and permission set.
 
-### Mobile Bottom Navigation
+### Mobile
 
-**Owner / Manager**
+All three organization roles currently get the same top-level tabs:
+
+- Dashboard
 - Reservations
 - Studio
-- Venues
-- More (Dashboard, Team, Settings, Imports)
-- Owner-only nuance: during incomplete setup, "Get Started" can temporarily replace "Reservations" in the tab bar.
+- More
 
-**Viewer**
-- Reservations
-- Studio
-- Venues
-- No "More" sheet.
+The difference is inside the More sheet, where role and permission checks decide whether the user sees Venues, Team, Settings, Imports, and related organization pages.
 
 ## Page-Level Protection
 
-Most action pages enforce RBAC in UI and service layer:
+Most sensitive owner actions are gated in both UI and service/router layers:
 
-- **Owner-only:** create venue, verification entry/review pages.
-- **`place.manage` gated:** venue edit, court create/edit/setup/availability pages.
-- **`reservation.guest_booking` gated:** booking imports pages.
-- **Owner-or-manager:** settings page.
+- `place.manage` for place, court, and availability configuration
+- `reservation.guest_booking` for guest-booking and import workflows
+- `organization.member.manage` for team administration
 
-Current implementation gaps still present:
-- Reservations page shell itself is not wrapped in a page-level `PermissionGate`.
-- Team page shell is accessible, but management actions are gated inside the page.
+Current implementation gaps still matter:
 
-## Team Invitation Journey
+- the reservations page shell is still not wrapped in a full page-level permission gate
+- the team page shell still renders before management actions are blocked
 
-### Inviting a Member
+## Team Invitation Flow
 
-1. Owner (or authorized manager) opens Team.
-2. Clicks "Invite member."
-3. Enters email, selects role, and optionally customizes permissions.
-4. Invitation email is sent (7-day expiry).
+### Invite
 
-### Accepting an Invitation
+1. Authorized member opens Team.
+2. Sends an invitation by email with role and permission selections.
+3. Invitation enters `PENDING` status.
 
-1. Invitee opens link from email.
-2. If not registered, signs up first with the same email.
-3. Reviews org/role/permissions and accepts or declines.
-4. On accept, access is granted immediately.
+### Accept / Decline
 
-### Invitation States
+1. Invitee signs in with the matching email.
+2. Invitee enters the invitation code from the email.
+3. Invitee accepts or declines.
 
-`PENDING → ACCEPTED / DECLINED / EXPIRED / CANCELED`
+Invitation states:
 
-### Security
+`PENDING -> ACCEPTED / DECLINED / EXPIRED / CANCELED`
 
-- Email match is enforced.
-- Invitation token is single-use.
-- Invitation token is stored hashed.
+## Management Actions
 
-## Team Management
+Authorized members can:
 
-Members with `organization.member.manage` can:
-- Change role (Manager/Viewer)
-- Edit permission set
-- Revoke active members
-- Cancel pending invitations
+- change role
+- edit granular permissions
+- revoke members
+- cancel pending invitations
 
-The owner cannot be edited, demoted, or revoked.
+The owner remains non-editable and cannot be demoted or revoked.

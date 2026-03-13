@@ -19,7 +19,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 import {
   type SubmitContactMessageDTO,
   SubmitContactMessageSchema,
@@ -130,8 +129,12 @@ export function ContactUsForm() {
           <p className="text-xs text-muted-foreground">
             Your details stay private and are only used to reply.
           </p>
-          <Button type="submit" size="lg" disabled={isSubmitDisabled}>
-            {submitting && <Spinner className="text-primary-foreground" />}
+          <Button
+            type="submit"
+            size="lg"
+            disabled={isSubmitDisabled}
+            loading={submitting}
+          >
             Send message
           </Button>
         </CardFooter>

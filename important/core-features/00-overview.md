@@ -1,77 +1,67 @@
-# KudosCourts Platform Overview
+# KudosCourts Core Features
 
-## What Is KudosCourts?
+This folder now follows the current public guides narrative first:
 
-KudosCourts is a court booking platform that connects sports venue owners with players looking to reserve courts. It replaces the manual process of messaging venue owners on social media, checking availability over the phone, and sending payment screenshots — with a unified search, book, and pay experience.
+- Players start by finding the right venue by city and sport, then continue into booking and reservation tracking.
+- Owners first care about getting found with an accurate listing, then about setting up operations that let them go live safely.
+- Developers have a separate canonical doc set for system-to-system integration.
 
-## Who Uses It?
+## Current Narrative Source Of Truth
 
-| User Type | Description |
-|-----------|-------------|
-| **Player** | Someone looking to find and book a sports court — badminton, basketball, tennis, pickleball, etc. |
-| **Venue Owner** | A business operator who lists their venue and courts on the platform to receive online bookings. |
-| **Team Member** | A staff person (manager or viewer) invited by the venue owner to help manage bookings. |
-| **Admin** | A platform operator who reviews venue claims, approves verifications, and maintains data quality. |
+Use these as the latest narrative inputs when refreshing this folder:
 
-## The Core Value Loop
+- `src/features/guides/content/guides.ts`
+- `src/features/guides/pages/guides-index-page.tsx`
 
-```
-Venue owners list courts → Players discover and book → Owners confirm and get paid → Players play → Both return
-```
+Runtime behavior still comes from code. If the guides copy and implementation diverge, document the implementation here and record the mismatch in [12-gap-analysis.md](./12-gap-analysis.md).
 
-For this loop to work, three things must happen:
+## Primary Guide-Aligned Reading Path
 
-1. **The venue must be fully set up** — organization, venue, courts, schedule, pricing, payment method, and verification.
-2. **Someone at the venue must be listening** — notifications enabled, team members onboarded.
-3. **Players must find and trust the listing** — discovery, verified badges, transparent pricing.
+| Audience | Primary Question | Document |
+|----------|------------------|----------|
+| Player | How do I find a venue worth opening? | [01-discovery-and-booking.md](./01-discovery-and-booking.md) |
+| Player | How do I move from slot selection to a tracked reservation? | [02-reservation-lifecycle.md](./02-reservation-lifecycle.md) |
+| Owner | How does a venue get found and trusted online? | [03-venue-and-court-management.md](./03-venue-and-court-management.md) |
+| Owner | How does an owner go from zero setup to live operations? | [04-owner-onboarding.md](./04-owner-onboarding.md) |
 
-## Platform Surface Areas
+## Developer Guide Surface
 
-The platform has four distinct portals, each serving a different user:
+Developer integration remains canonical in the adjacent doc set instead of being duplicated here:
 
-| Portal | Entry Point | Purpose |
-|--------|-------------|---------|
-| **Discovery (Public)** | `/`, `/courts`, `/venues` | Browse venues, view courts, check availability, see pricing |
-| **Player (Protected)** | `/home`, `/reservations` | Book courts, manage reservations, pay, chat with owners, join open play sessions |
-| **Owner (Protected)** | `/owner` | Manage venues, courts, reservations, team, settings, payments |
-| **Admin (Protected)** | `/admin` | Review claims, approve verifications, manage platform data |
+- [../developer-integration/00-overview.md](../developer-integration/00-overview.md)
 
-## Feature Map
+## Supporting Operational References
 
-| # | Feature Area | Document |
-|---|-------------|----------|
-| 1 | Discovery & Booking (Player) | [01-discovery-and-booking.md](./01-discovery-and-booking.md) |
-| 2 | Reservation Lifecycle | [02-reservation-lifecycle.md](./02-reservation-lifecycle.md) |
-| 3 | Venue & Court Management (Owner) | [03-venue-and-court-management.md](./03-venue-and-court-management.md) |
-| 4 | Owner Onboarding | [04-owner-onboarding.md](./04-owner-onboarding.md) |
-| 5 | Team Access & Permissions | [05-team-access-permissions.md](./05-team-access-permissions.md) |
-| 6 | Notifications | [06-notification-system.md](./06-notification-system.md) |
-| 7 | Open Play (Social Booking) | [07-open-play.md](./07-open-play.md) |
-| 8 | Chat & Messaging | [08-chat-and-messaging.md](./08-chat-and-messaging.md) |
-| 9 | Payments | [09-payments.md](./09-payments.md) |
-| 10 | Admin Operations | [10-admin-operations.md](./10-admin-operations.md) |
-| 11 | Accounts & Profiles | [11-accounts-and-profiles.md](./11-accounts-and-profiles.md) |
-| 12 | Gap Analysis | [12-gap-analysis.md](./12-gap-analysis.md) |
-| 13 | User Flow Maps | [13-user-flow-maps.md](./13-user-flow-maps.md) |
-| 14 | Source Files | [99-source-files.md](./99-source-files.md) _(engineering reference)_ |
+These docs stay in this folder, but they are secondary references behind the primary player/owner narrative above.
 
-## How Features Connect
+| Area | Document |
+|------|----------|
+| Team roles, permissions, invites | [05-team-access-permissions.md](./05-team-access-permissions.md) |
+| Notification routing and delivery | [06-notification-system.md](./06-notification-system.md) |
+| Social booking and external sessions | [07-open-play.md](./07-open-play.md) |
+| Reservation and open-play chat | [08-chat-and-messaging.md](./08-chat-and-messaging.md) |
+| Offline/manual payment flow | [09-payments.md](./09-payments.md) |
+| Admin review and moderation tools | [10-admin-operations.md](./10-admin-operations.md) |
+| Auth, profiles, reservations, saved venues | [11-accounts-and-profiles.md](./11-accounts-and-profiles.md) |
 
-```
-Discovery ──→ Booking ──→ Reservation Created
-                              │
-              ┌───────────────┼───────────────┐
-              ▼               ▼               ▼
-        Notification    Chat Thread      Payment Flow
-        (to Owner)     (Player↔Owner)   (Player pays)
-              │               │               │
-              ▼               ▼               ▼
-        Owner Confirms ←── Coordination ←── Proof Uploaded
-              │
-              ▼
-        Reservation Confirmed → Player Plays → Loop Continues
+## Appendices
+
+| Type | Document |
+|------|----------|
+| Product and UX gaps | [12-gap-analysis.md](./12-gap-analysis.md) |
+| End-to-end flow maps | [13-user-flow-maps.md](./13-user-flow-maps.md) |
+
+## Source Maps
+
+- [99-source-files.md](./99-source-files.md) for the feature-to-code map used by this folder
+- [../developer-integration/99-source-files.md](../developer-integration/99-source-files.md) for the developer integration source map
+
+## Current Product Loop
+
+```text
+Player discovery -> Venue trust -> Reservation request -> Owner review
+                -> Payment and coordination when needed -> Confirmed play
+                -> Better visibility and repeat usage
 ```
 
-## Documentation Basis
-
-Based on full repository analysis of the KudosCourts codebase (updated March 2026). Written for the product team to support feature discussions, pitch deck preparation, and design work.
+The guide-aligned docs emphasize this loop from the outside in. The supporting references explain the operational systems behind it.

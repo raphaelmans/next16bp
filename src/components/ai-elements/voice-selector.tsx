@@ -32,7 +32,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Spinner } from "@/components/ui/spinner";
 import { cn } from "@/lib/utils";
 
 interface VoiceSelectorContextValue {
@@ -454,19 +453,18 @@ export const VoiceSelectorPreview = ({
     onPlay?.();
   };
 
-  let icon = <PlayIcon className="size-3" />;
-
-  if (loading) {
-    icon = <Spinner className="size-3" />;
-  } else if (playing) {
-    icon = <PauseIcon className="size-3" />;
-  }
+  const icon = playing ? (
+    <PauseIcon className="size-3" />
+  ) : (
+    <PlayIcon className="size-3" />
+  );
 
   return (
     <Button
       aria-label={playing ? "Pause preview" : "Play preview"}
       className={cn("size-6", className)}
       disabled={loading}
+      loading={loading}
       onClick={handleClick}
       size="icon-sm"
       type="button"

@@ -631,8 +631,8 @@ export function PlaceAddonEditor({ placeId }: PlaceAddonEditorProps) {
             type="button"
             onClick={handleSave}
             disabled={saveMutation.isPending}
+            loading={saveMutation.isPending}
           >
-            {saveMutation.isPending && <Spinner />}
             Save add-ons
           </Button>
         </div>

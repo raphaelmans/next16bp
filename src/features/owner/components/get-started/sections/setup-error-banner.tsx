@@ -3,7 +3,6 @@ import { getClientErrorMessage } from "@/common/toast/errors";
 import { Container } from "@/components/layout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Spinner } from "@/components/ui/spinner";
 
 interface SetupErrorBannerProps {
   error: unknown;
@@ -39,8 +38,8 @@ export function SetupErrorBanner({
                   variant="outline"
                   onClick={onRetry}
                   disabled={isFetching}
+                  loading={isFetching}
                 >
-                  {isFetching && <Spinner className="mr-2" />}
                   Retry
                 </Button>
               </div>

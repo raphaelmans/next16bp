@@ -27,7 +27,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
@@ -223,12 +222,9 @@ export default function OwnerPlacesPage() {
               size="sm"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingLogo}
+              loading={isUploadingLogo}
             >
-              {isUploadingLogo ? (
-                <Spinner className="mr-2 h-4 w-4" />
-              ) : (
-                <ImageIcon className="mr-2 h-4 w-4" />
-              )}
+              <ImageIcon className="mr-2 h-4 w-4" />
               {logoUrl ? "Change logo" : "Upload logo"}
             </Button>
           </CardHeader>

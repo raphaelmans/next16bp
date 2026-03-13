@@ -34,7 +34,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import {
   OwnerNavbar,
@@ -549,8 +548,8 @@ export default function OwnerTeamPage() {
             <AlertDialogAction
               onClick={handleRevoke}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={revokeMember.isPending}
             >
-              {revokeMember.isPending && <Spinner className="mr-2 h-4 w-4" />}
               Revoke access
             </AlertDialogAction>
           </AlertDialogFooter>
@@ -580,10 +579,8 @@ export default function OwnerTeamPage() {
             <AlertDialogAction
               onClick={handleCancelInvitation}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={cancelInvitation.isPending}
             >
-              {cancelInvitation.isPending && (
-                <Spinner className="mr-2 h-4 w-4" />
-              )}
               Cancel invitation
             </AlertDialogAction>
           </AlertDialogFooter>

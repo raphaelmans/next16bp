@@ -1,128 +1,89 @@
-# Discovery & Booking (Player Side)
+# Player Discovery & Venue Shortlisting
 
 ## Purpose
 
-This is how players find venues and book courts. It is the top of the conversion funnel — every booking starts here.
+This is the guide-aligned top of the player journey: how someone finds a venue worth opening before they commit to a reservation.
 
-## Landing Page
+## Current Guide Narrative
 
-The public homepage introduces the platform and drives players into the discovery flow.
+The latest public guidance is narrower than the old platform-wide story:
 
-**What the player sees:**
-- Hero section with a search form (search by location or sport)
-- Popular location shortcuts (Manila, Davao City, Cebu City, Dumaguete, Quezon City)
-- Feature overview explaining the before/after of manual booking vs. KudosCourts
-- Featured venues section highlighting curated listings
-- Call-to-action for venue owners to list their spaces
-- FAQ section answering common player questions
+1. Start with a city-and-sport surface, not a broad web search.
+2. Build a shortlist from venues that are already relevant to the player's area and sport.
+3. Open the venue page to judge trust, convenience, and practical fit.
+4. Check availability if it exists, or use the listing details to decide whether the venue is still worth contacting directly.
 
-**Business purpose:** Convert first-time visitors into active searchers. The popular location shortcuts reduce friction for users who do not know what to search for.
+That means discovery still matters even when a venue is not fully online-bookable yet.
 
-## Courts Browse
+## Player Discovery Path
 
-The main discovery surface where players explore available courts.
+### 1. Start With City And Sport
 
-**What the player sees:**
-- Paginated list of courts across all venues
-- Two view modes: list view (cards) and map view (geographic pins)
-- Advanced filters:
-  - Province and City (Philippine location hierarchy)
-  - Sport type (badminton, basketball, tennis, pickleball, etc.)
-  - Amenities (parking, lighting, showers, etc.)
-  - Verification status (Verified Reservable, Curated, Unverified Reservable)
-- Each court card shows: cover image, venue name, sport types, court count, starting price, verification badge
-- Search within results
+The public discovery flow is built around browsing courts and venues by location and sport. The fastest path is usually a city page or a city-plus-sport page rather than a generic homepage search.
 
-**Map view:** Interactive map with markers for each court/venue. Players can zoom, pan, and click markers to see details.
+What matters here:
 
-**Location-based browse:** Players can navigate to location-specific pages (e.g., "Courts in Cebu City" or "Badminton Courts in Manila") which pre-filter results.
+- location fit
+- sport coverage
+- amenity filters
+- verification and reservable signals
+- list and map exploration
 
-**Business purpose:** Help players find courts near them, filtered by what matters (sport, location, amenities). Map view is especially useful for players who think geographically ("What is closest to me?").
+### 2. Use Browse Surfaces To Build A Shortlist
 
-## Venue Detail Page
+The courts discovery surface is where players narrow a broad set of options into a usable shortlist.
 
-When a player clicks on a venue card, they see the full venue profile.
+Current discovery surfaces include:
 
-**What the player sees:**
-- Venue name, address, city, province
-- Verification badge (if verified for online reservations)
-- Organization logo (if the venue belongs to a branded organization)
-- Photo carousel of venue images
-- Contact section (phone number if provided)
-- List of all courts at the venue, each showing:
-  - Court name/label
-  - Sport type
-  - Tier/quality label
-  - Active status
-- Verification messaging — if the venue is not yet available for online booking, the page explains why (pending verification, no payment method, etc.)
+- the public homepage and hero entry points
+- courts browse and filtered location pages
+- list view cards and map view
+- venue cards with summary details and trust signals
 
-**Business purpose:** Build player trust. Verified badges, photos, and transparent information help the player decide if this venue is worth booking.
+The goal at this stage is not to fully decide. It is to rule out weak options quickly.
 
-### Engineering Note: Venue Detail SSR/ISR Caching
+### 3. Open The Venue Page For Trust Signals
 
-- Public venue detail URLs use the `/venues/:placeIdOrSlug` surface, but the request is internally rewritten through the existing `/places/[placeId]` filesystem route.
-- The route has a segment-level `loading.tsx`, so when Next.js has to wait for a fresh server render the player sees the full-page skeleton state.
-- `revalidate = false` alone was not enough to make this dynamic route behave like cached ISR. Without `generateStaticParams()` or `dynamic = "force-static"`, Next.js kept treating unknown dynamic params as on-demand streaming SSR.
-- The symptom was repeated slow loads on the same venue URL, with live responses returning `cache-control: private, no-cache, no-store` and `x-vercel-cache: MISS`.
-- The fix applied in March 2026 was to add `generateStaticParams() { return []; }` to both public place-detail entrypoints so venue pages can be generated on first hit, cached afterward, and still refreshed via the existing `revalidatePath(...)` invalidation flow.
-- Expected behavior after the fix: the first request after a cold hit or explicit invalidation can still stream and show the skeleton, but repeated requests for an unchanged venue should be served from cached static output rather than full SSR every time.
+The venue page is the main trust-building surface. It gives the player enough context to decide whether the venue is real, current, and worth a closer look.
 
-## Court Detail Page
+Players evaluate:
 
-Individual court information within a venue.
+- exact location and map/open-in-maps links
+- photos and venue presentation
+- sport coverage and court inventory
+- review signals
+- verification messaging
+- whether the venue is currently reservable or discovery-only
 
-**What the player sees:**
-- Court name, sport type, tier label
-- Pricing information (per hour)
-- Link to view the full venue
-- Link to view availability/schedule
+### 4. Check Availability And The Next Action
 
-## Venue Schedule Page
+If a venue publishes availability, the player can move directly into the booking path. If not, the discovery value is still real because the player can judge whether the venue deserves a call, message, or later revisit.
 
-Calendar view of court availability at a specific venue.
+The public venue and court detail flows therefore support two valid outcomes:
 
-**What the player sees:**
-- Weekly or date-range calendar showing all courts
-- Time slots color-coded by status (available, booked, blocked)
-- Court selector to filter which courts are shown
-- Time zone aware display
-- Overnight and cross-week range support for contiguous hourly slots (for example, Sunday 11:00 PM to Monday 2:00 AM when windows are continuous)
+- proceed into an online reservation
+- stop at a higher-confidence discovery decision
 
-**Business purpose:** The schedule view is the decision point — "Is the court available when I want to play?" A clear, visual schedule reduces booking abandonment.
+## What Makes Discovery Useful
 
-## Booking Flow
+From the current guides perspective, discovery is not just "find any court." It is "find the right court with enough confidence to act."
 
-The core conversion action — player selects a slot and creates a reservation.
+That confidence comes from combining:
 
-### Happy Path
+- city fit
+- sport fit
+- photos and page completeness
+- reviews and trust indicators
+- practical availability or contactability
 
-1. **Select a time slot** — Player picks an available slot from the schedule view or court detail page. The date picker is time-zone aware, and range selection can span midnight when contiguous slots exist.
-2. **Review booking details** — Court name, venue, date, start time, duration (default 60 minutes, configurable), and live price calculation.
-3. **Select add-ons (optional)** — If the venue offers extras (shoe rental, ball rental, etc.), the player can add them. Each add-on shows its price.
-4. **Multi-court option** — Player can add more courts to the same reservation group for a combined booking.
-5. **Profile check** — The system checks if the player has a complete profile (name, email, phone). If incomplete, prompts the player to fill in missing fields before proceeding.
-6. **Confirm booking** — Player agrees to terms and submits. A reservation is created with status "CREATED."
-7. **Post-booking** — Player sees a confirmation screen with the reservation ID and next steps (payment instructions if applicable).
+## Key Implementation Notes
 
-### Negative Paths
+- Public venue detail URLs are served through the `/venues/:placeIdOrSlug` surface and rely on the cached public place-detail flow.
+- Venue detail pages now support first-hit generation with cache reuse afterward, instead of behaving like repeated on-demand SSR for every unknown dynamic param.
+- Cross-midnight and cross-week availability selection is supported when every hourly slot in the requested range is still contiguous and available.
 
-- **Slot no longer available** — If another player books the same slot before confirmation, the system rejects the request and the player must choose a different time.
-- **Range is not contiguous** — Cross-midnight or cross-week range extension only works when every hourly slot in-between is still available.
-- **Profile incomplete** — Booking is blocked until the player provides name, email, and phone number.
-- **Venue not reservable** — If the venue is not verified, has no payment method, or has reservations disabled, the booking button is not shown. The page explains why.
-- **Past time slot** — Cannot book a slot in the past. Validation prevents this.
+## Related Docs
 
-### Open Play Option
-
-After creating a reservation, the player can optionally convert it into an "Open Play" session — a social feature where other players can join and share the court cost. (See [07-open-play.md](./07-open-play.md) for details.)
-
-## What Makes a Venue Bookable?
-
-For a venue to appear as "reservable" in discovery, all of the following must be true:
-
-- The venue is verified (admin approved the ownership documents)
-- At least one court is active and "ready" (has both schedule and pricing configured)
-- The organization has at least one active payment method
-- Reservations are enabled by the owner (toggle in venue settings)
-
-If any of these are missing, the venue still appears in search results but with messaging explaining why online booking is not available.
+- [02-reservation-lifecycle.md](./02-reservation-lifecycle.md) for the booking handoff after discovery
+- [03-venue-and-court-management.md](./03-venue-and-court-management.md) for the owner-side listing and readiness inputs that shape what players see
+- [99-source-files.md](./99-source-files.md) for the implementation map

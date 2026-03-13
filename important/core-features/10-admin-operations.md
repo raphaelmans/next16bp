@@ -1,73 +1,57 @@
-# Admin Operations
+# Admin Operations (Operational Reference)
+
+_Supporting operational reference. Read after the primary owner docs in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-Admins are platform operators who maintain data quality, approve venue ownership, and ensure trust across the marketplace. They are the bridge between venue owners and the platform's credibility.
+Admin tools support marketplace trust and public-data quality: reviewing claims, reviewing verifications, moderating reviews, and triggering selected operational tools.
 
-## Admin Dashboard
+## Current Admin Snapshot
 
-The admin landing page shows operational health at a glance:
+The admin surface is partly live and partly placeholder:
 
-- **Pending Claims** counter — ownership claims waiting for review
-- **Pending Verifications** counter — venue verification requests in queue
-- **Total Courts** — all courts on the platform
-- **Reservable Courts** — courts that are fully configured and bookable
-- **Active Organizations** — organizations with at least one venue
-- Recent pending claims list with quick filters
-- Recent activity feed showing approvals, rejections, court additions, and deactivations with timestamps
+- pending claim and pending verification counts are live
+- court totals and reservable-court counts are live
+- active-organization count is still placeholder
+- recent activity is still mock data
+- some pending-claim list rows still use placeholder venue/organization labeling
 
 ## Claims Management
 
-When a venue owner claims an existing (curated) venue instead of creating a new one, the claim must be reviewed by an admin.
+Claims review is currently a pending-first workflow, not a fully backfilled all-status queue.
 
-**What admins see:**
-- Tabbed view: All claims, Pending, Approved, Rejected
-- Filter by claim type (Ownership claim vs. Removal request)
-- Search and pagination
-- Each claim shows: venue name, organization name, submission date, claim type badge
+Current admin behavior includes:
 
-**Admin actions:**
-- **Approve** — The venue is assigned to the claiming organization. The owner can now proceed with court setup.
-- **Reject** — The claim is denied. The owner must create a new venue or submit a new claim with better documentation.
-
-**Business impact:** Claims are a critical bottleneck. If admin review takes too long, owners are blocked during onboarding and may abandon the platform. There is currently no SLA tracking or notification to admins about aging claims.
+- pending claims list
+- claim detail surface
+- approve/reject review actions
+- review notes captured on the claim record
 
 ## Venue Verification
 
-Before a venue can accept online bookings, the owner must submit proof of ownership and an admin must approve it.
+Admins can review submitted venue verification requests, inspect owner-supplied notes/documents, and approve or reject with recorded review context.
 
-**What admins see:**
-- Grid view of verification requests
-- Status badges: Pending, Approved, Rejected
-- Venue name, submission date, any notes from the owner
-- Uploaded documents (government IDs, business permits, lease agreements, etc.)
+## Courts And Public Data Tools
 
-**Admin actions:**
-- **Approve** — Venue becomes "VERIFIED." The public listing gets a verified badge. Online reservations become possible.
-- **Reject** — Venue stays unverified. Owner must resubmit.
+Current admin tooling includes:
 
-**Current behavior:** Admin review captures review notes (required on rejection), and these notes are persisted and shown in review detail surfaces.
+- global court-management surfaces
+- selected featured/public-data controls
+- notification test tooling
+- on-demand revalidation tools for cached public pages
 
-## Courts Management
+## Review Moderation
 
-Admins have a global view of all courts on the platform.
+Admin now includes review moderation for place reviews:
 
-**Capabilities:**
-- List all courts across all venues
-- Create or edit courts directly (admin override)
-- Transfer court ownership between organizations
-- Feature courts in search results (make a court "featured" for promotional placement)
-- Toggle court status (active/inactive)
+- filter active vs removed reviews
+- filter by rating
+- remove a review with an optional reason
 
-## Admin Tools
+## What Admin Still Does Not Cover
 
-- **Notification test utility** — Send test notifications to verify the delivery pipeline works.
-- **Data revalidation** — Trigger cache/sync operations when data becomes stale.
-
-## What Admin Does NOT Cover (Currently)
-
-- **No user management.** Admins cannot view, edit, or suspend user accounts.
-- **No dispute resolution.** There is no admin tool for mediating between players and venues (e.g., contested cancellations, payment disputes).
-- **No SLA tracking.** There is no visibility into how long claims or verifications have been pending, no escalation alerts.
-- **No analytics.** No dashboard showing platform growth, booking volumes, or revenue metrics.
-- **No content moderation.** No tools for reviewing venue descriptions, photos, or chat messages for policy violations.
+- no user-account management or suspension tools
+- no dispute-resolution workflow for booking/payment conflicts
+- no SLA/aging workflow for claims and verifications
+- no real analytics dashboard for growth, booking volume, or revenue
+- no broad moderation tooling for venue photos or chat content

@@ -356,8 +356,8 @@ export function CourtPricingEditor({
             type="button"
             onClick={handleSave}
             disabled={saveRules.isPending}
+            loading={saveRules.isPending}
           >
-            {saveRules.isPending && <Spinner />}
             {primaryActionLabel}
           </Button>
         </div>

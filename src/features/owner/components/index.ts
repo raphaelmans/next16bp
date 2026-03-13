@@ -5,6 +5,7 @@ export { CourtForm } from "./court-form";
 export { CourtHoursEditor } from "./court-hours-editor";
 export { CourtPageNav } from "./court-page-nav";
 export { CourtPricingEditor } from "./court-pricing-editor";
+export { CourtScheduleAndAddonsEditor } from "./court-schedule-and-addons-editor";
 export { CourtScheduleEditor } from "./court-schedule-editor";
 export { CourtsEmptyState } from "./courts-empty-state";
 export { CourtsListManager } from "./courts-list-manager";

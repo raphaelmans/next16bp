@@ -1,5 +1,6 @@
 "use client";
 
+import { Loader2Icon } from "lucide-react";
 import { AlertDialog as AlertDialogPrimitive } from "radix-ui";
 import type * as React from "react";
 import { Button } from "@/components/ui/button";
@@ -147,16 +148,33 @@ function AlertDialogAction({
   className,
   variant = "default",
   size = "default",
+  loading = false,
+  disabled,
+  children,
   ...props
 }: React.ComponentProps<typeof AlertDialogPrimitive.Action> &
-  Pick<React.ComponentProps<typeof Button>, "variant" | "size">) {
+  Pick<React.ComponentProps<typeof Button>, "variant" | "size"> & {
+    loading?: boolean;
+  }) {
   return (
     <Button variant={variant} size={size} asChild>
       <AlertDialogPrimitive.Action
         data-slot="alert-dialog-action"
-        className={cn(className)}
+        disabled={disabled || loading}
+        className={cn("relative", className)}
         {...props}
-      />
+      >
+        {loading ? (
+          <>
+            <span className="absolute inset-0 flex items-center justify-center">
+              <Loader2Icon className="size-4 animate-spin" />
+            </span>
+            <span className="contents invisible">{children}</span>
+          </>
+        ) : (
+          children
+        )}
+      </AlertDialogPrimitive.Action>
     </Button>
   );
 }

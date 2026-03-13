@@ -11,7 +11,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Spinner } from "@/components/ui/spinner";
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -60,12 +59,9 @@ export function ConfirmDialog({
             }}
             disabled={isLoading}
             className="bg-success hover:bg-success/90"
+            loading={isLoading}
           >
-            {isLoading ? (
-              <Spinner className="h-4 w-4 mr-2" />
-            ) : (
-              <Check className="h-4 w-4 mr-2" />
-            )}
+            <Check className="h-4 w-4 mr-2" />
             {confirmLabel}
           </AlertDialogAction>
         </AlertDialogFooter>

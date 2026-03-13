@@ -191,61 +191,67 @@ export const useCourtScheduleEditor = ({
     [copyHours, copyRules, courtId, onCopyComplete],
   );
 
-  const handleSave = React.useCallback(async () => {
-    setSaveAttempted(true);
+  const handleSave = React.useCallback(
+    async (opts?: { silent?: boolean }): Promise<boolean> => {
+      setSaveAttempted(true);
 
-    if (validation.hasBlockingIssues) {
-      toast.error("Resolve overlapping or invalid blocks before saving.");
-      return;
-    }
+      if (validation.hasBlockingIssues) {
+        if (!opts?.silent)
+          toast.error("Resolve overlapping or invalid blocks before saving.");
+        return false;
+      }
 
-    const hoursPayload: HoursWindow[] = [];
-    const rulesPayload: RateRule[] = [];
+      const hoursPayload: HoursWindow[] = [];
+      const rulesPayload: RateRule[] = [];
 
-    Object.values(rowsByDay).forEach((rows) => {
-      rows.forEach((row) => {
-        const intervals = buildIntervals(row);
-        if (row.isOpen) {
-          intervals.forEach((interval) => {
-            hoursPayload.push({
-              dayOfWeek: interval.dayOfWeek,
-              startMinute: interval.startMinute,
-              endMinute: interval.endMinute,
+      Object.values(rowsByDay).forEach((rows) => {
+        rows.forEach((row) => {
+          const intervals = buildIntervals(row);
+          if (row.isOpen) {
+            intervals.forEach((interval) => {
+              hoursPayload.push({
+                dayOfWeek: interval.dayOfWeek,
+                startMinute: interval.startMinute,
+                endMinute: interval.endMinute,
+              });
             });
-          });
-        }
+          }
 
-        if (row.hourlyRate !== "") {
-          intervals.forEach((interval) => {
-            rulesPayload.push({
-              dayOfWeek: interval.dayOfWeek,
-              startMinute: interval.startMinute,
-              endMinute: interval.endMinute,
-              hourlyRateCents: Math.round(Number(row.hourlyRate) * 100),
+          if (row.hourlyRate !== "") {
+            intervals.forEach((interval) => {
+              rulesPayload.push({
+                dayOfWeek: interval.dayOfWeek,
+                startMinute: interval.startMinute,
+                endMinute: interval.endMinute,
+                hourlyRateCents: Math.round(Number(row.hourlyRate) * 100),
+              });
             });
-          });
-        }
+          }
+        });
       });
-    });
 
-    try {
-      await Promise.all([
-        saveHours.mutateAsync({ courtId, windows: hoursPayload }),
-        saveRules.mutateAsync({ courtId, rules: rulesPayload }),
-      ]);
-      toast.success("Schedule saved");
-      onSaved?.();
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Failed to save schedule"));
-    }
-  }, [
-    courtId,
-    onSaved,
-    rowsByDay,
-    saveHours,
-    saveRules,
-    validation.hasBlockingIssues,
-  ]);
+      try {
+        await Promise.all([
+          saveHours.mutateAsync({ courtId, windows: hoursPayload }),
+          saveRules.mutateAsync({ courtId, rules: rulesPayload }),
+        ]);
+        if (!opts?.silent) toast.success("Schedule saved");
+        if (!opts?.silent) onSaved?.();
+        return true;
+      } catch (error) {
+        toast.error(getErrorMessage(error, "Failed to save schedule"));
+        return false;
+      }
+    },
+    [
+      courtId,
+      onSaved,
+      rowsByDay,
+      saveHours,
+      saveRules,
+      validation.hasBlockingIssues,
+    ],
+  );
 
   return {
     rowsByDay,

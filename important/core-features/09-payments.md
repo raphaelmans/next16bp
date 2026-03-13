@@ -1,88 +1,68 @@
-# Payments
+# Payments (Operational Reference)
+
+_Supporting operational reference. Read after the primary reservation and owner docs in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-KudosCourts operates in the Philippines where online card payments are not the default for many customers. The payment system is designed around manual/offline payment methods common in the local market — bank transfers, mobile wallets (GCash, Maya), and cash.
+KudosCourts still uses a manual/offline payment model that fits common Philippine booking behavior: the player pays externally, then the platform tracks the payment state and owner confirmation workflow.
 
-## How Payment Works (Happy Path)
+## Standard Paid Booking Flow
 
-1. **Player books a court.** A reservation is created with the total cost calculated from the court's hourly rate multiplied by the duration, plus any selected add-ons.
-2. **Owner accepts the booking.** The reservation moves to "Awaiting Payment." The player is notified.
-3. **Player sees payment instructions.** The payment page shows the owner's configured payment methods — bank account details, mobile wallet numbers — with instructions on how to pay.
-4. **Player transfers payment externally.** The player sends money via GCash, bank app, or another method outside KudosCourts.
-5. **Player uploads proof.** The player enters the reference number, optionally uploads a screenshot, and clicks "I Have Paid."
-6. **Owner verifies payment.** The owner sees the proof (reference number, screenshot) and clicks "Confirm Payment."
-7. **Reservation is confirmed.** Both parties are notified.
+1. Player submits a reservation request.
+2. Owner accepts the paid booking.
+3. Reservation moves to `AWAITING_PAYMENT`.
+4. Player sees the owner's payment instructions and pays outside the platform.
+5. Player marks the reservation as paid and can submit payment proof on the individual reservation flow.
+6. Owner reviews the payment state and confirms the reservation.
 
-## Payment Methods (Owner Configuration)
+## Owner Payment Methods
 
-Owners configure their accepted payment methods in Settings:
+Owners can manage organization payment methods for:
 
-**Bank Account:**
-- Supported banks: BPI, BDO, and other Philippine banks
-- Fields: Account name, account number, instructions
+- mobile wallets such as GCash and Maya
+- bank-transfer style methods
 
-**Mobile Wallet:**
-- Supported: GCash, Maya
-- Fields: Account name, account number, instructions
+Current owner-side UI supports:
 
-Owners can:
-- Add multiple payment methods
-- Set one as default
-- Mark methods as active/inactive
-- Edit details
-- Delete methods
-- Customize the order in which they appear to players
+- add
+- edit
+- activate/deactivate
+- set default
+- delete
 
-## Payment Page (Player Experience)
+The data model stores display order, but the current manager UI does not expose a manual reorder control.
 
-When a player needs to pay:
+## Player Payment Experience
 
-- A countdown timer shows how long they have to complete payment (configurable, typically 15 minutes to 24 hours)
-- All of the owner's active payment methods are listed with full details and instructions
-- Copy-to-clipboard buttons for bank account numbers and payment references
-- Upload form for payment proof:
-  - Reference number (e.g., GCash transaction ID)
-  - Optional notes
-  - Optional file upload (receipt screenshot)
-- Terms and conditions checkbox
-- "I Have Paid" submission button
+The individual reservation payment flow can show:
 
-### Group Payments
+- countdown/expiry timing
+- active owner payment methods and instructions
+- copy actions for account numbers
+- reference number entry
+- notes
+- optional screenshot upload
+- terms acceptance
 
-For multi-court bookings (reservation groups):
-- A single payment covers all courts in the group
-- The payment page shows the itemized breakdown and total
-- One proof submission marks all reservations in the group as paid
+## Group Payment Reality
 
-## Owner Payment Confirmation
+Reservation-group payment handling is currently lighter than the single-reservation proof flow:
 
-When a player marks a reservation as paid:
+- the group payment action does not expose a separate proof-upload form
+- the group submission path marks payable reservations as payment-marked through the group workflow
 
-- The owner receives a notification (push + inbox; no email currently)
-- The reservation list shows the "Payment Marked" status
-- The owner can review the proof (reference number, screenshot) on the reservation detail
-- Actions available:
-  - **Confirm Payment** — For `PAYMENT_MARKED_BY_USER`, moves reservation to `CONFIRMED`
-  - **Reject** — For pre-confirmed statuses, cancels the reservation with owner-provided reason context
-  - **Mark as Paid Offline** — Separate fast path for paid bookings still in `CREATED` (walk-in/cash already collected). Requires active payment method + reference.
+## Owner Confirmation Actions
 
-## Free Bookings
+Owners can currently:
 
-If the booking total is zero, owner acceptance skips payment-hold flow and confirms directly.
+- confirm payment
+- reject/cancel before confirmation
+- mark a paid booking as paid offline and confirm it directly from the owner workflow
 
-## Payment Expiration
+## What The Platform Does Not Handle
 
-If the player does not pay within the allowed window, the reservation expires automatically. The slot becomes available for other players.
-
-## What the Platform Does NOT Handle (Currently)
-
-- **No in-platform payments.** KudosCourts does not process payments through the platform itself. All money moves externally between the player and the venue.
-- **No refund processing.** Refunds, if any, are handled offline between the player and the venue.
-- **No automated payment verification.** The owner must manually verify every payment proof. There is no integration with bank APIs or wallet APIs to auto-confirm.
-- **No platform commission or transaction fees.** The platform does not take a cut of bookings (current model).
-- **No invoicing or receipts.** The platform does not generate formal invoices or payment receipts.
-
-## Business Context
-
-The manual payment flow is intentional — it matches the current behavior in the Philippine sports booking market where GCash transfers and bank screenshots are the standard. Automating this (e.g., integrating GCash API or Stripe for card payments) is a future opportunity but not required for market entry.
+- no in-platform payment processing
+- no automated payment verification
+- no built-in refund processing
+- no platform commission logic in this flow
+- no invoice/receipt generation

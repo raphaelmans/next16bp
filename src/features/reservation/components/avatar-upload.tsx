@@ -4,7 +4,7 @@ import { Camera } from "lucide-react";
 import { useRef } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
+
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string;
@@ -78,9 +78,8 @@ export function AvatarUpload({
           variant="outline"
           size="sm"
           onClick={() => fileInputRef.current?.click()}
-          disabled={isUploading}
+          loading={isUploading}
         >
-          {isUploading && <Spinner />}
           Change Avatar
         </Button>
         <p className="text-xs text-muted-foreground">

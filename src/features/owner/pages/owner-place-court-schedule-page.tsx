@@ -8,9 +8,8 @@ import { Spinner } from "@/components/ui/spinner";
 import { useMutAuthLogout, useQueryAuthSession } from "@/features/auth";
 import { OwnerNavbar, OwnerSidebar } from "@/features/owner";
 import {
-  CourtAddonEditor,
   CourtPageNav,
-  CourtScheduleEditor,
+  CourtScheduleAndAddonsEditor,
   ReservationAlertsPanel,
 } from "@/features/owner/components";
 import {
@@ -116,8 +115,9 @@ export default function CourtSchedulePage({
 
         <CourtPageNav placeId={placeId} courtId={courtId} />
 
-        <CourtScheduleEditor
+        <CourtScheduleAndAddonsEditor
           courtId={courtId}
+          placeId={placeId}
           organizationId={organization?.id ?? null}
           primaryActionLabel="Save schedule"
           onSaved={() => {
@@ -125,12 +125,6 @@ export default function CourtSchedulePage({
               router.push(appRoutes.organization.getStarted);
             }
           }}
-        />
-
-        <CourtAddonEditor
-          courtId={courtId}
-          placeId={placeId}
-          organizationId={organization?.id}
         />
       </div>
     </AppShell>

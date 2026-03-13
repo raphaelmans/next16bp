@@ -16,7 +16,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import type { ClaimType } from "../hooks";
 
@@ -138,8 +137,8 @@ export function ClaimReviewActions({
             }
             className="w-full"
             variant={decision === "approve" ? "default" : "destructive"}
+            loading={isLoading}
           >
-            {isLoading && <Spinner className="mr-2" />}
             {decision === "approve" ? (
               <>
                 <Check className="h-4 w-4 mr-2" />
@@ -197,8 +196,8 @@ export function ClaimReviewActions({
                   ? "bg-destructive hover:bg-destructive/90"
                   : ""
               }
+              loading={isLoading}
             >
-              {isLoading && <Spinner className="mr-2" />}
               Confirm {decision === "approve" ? "Approval" : "Rejection"}
             </AlertDialogAction>
           </AlertDialogFooter>

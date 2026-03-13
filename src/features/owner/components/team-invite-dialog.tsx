@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Spinner } from "@/components/ui/spinner";
+
 import { useMutInviteOrganizationMember } from "@/features/owner/hooks";
 import {
   DEFAULT_PERMISSIONS_BY_ROLE,
@@ -222,12 +222,9 @@ export function TeamInviteDialog({
             type="button"
             onClick={handleSubmit}
             disabled={inviteMember.isPending}
+            loading={inviteMember.isPending}
           >
-            {inviteMember.isPending ? (
-              <Spinner className="mr-2 h-4 w-4" />
-            ) : (
-              <UserPlus className="mr-2 h-4 w-4" />
-            )}
+            <UserPlus className="mr-2 h-4 w-4" />
             Send invite
           </Button>
         </DialogFooter>

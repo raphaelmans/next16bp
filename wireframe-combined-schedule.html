@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframe: Combined Schedule, Pricing &amp; Add-ons</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-50: #f0fdfa;
+    --teal-100: #ccfbf1;
+    --teal-200: #99f6e4;
+    --teal-500: #14b8a6;
+    --teal-600: #0d9488;
+    --teal-700: #0f766e;
+    --bg: #ffffff;
+    --bg-muted: #f8fafc;
+    --bg-card: #ffffff;
+    --border: #e2e8f0;
+    --border-focus: var(--teal-500);
+    --text: #0f172a;
+    --text-muted: #64748b;
+    --text-xs: #94a3b8;
+    --destructive: #ef4444;
+    --destructive-bg: #fef2f2;
+    --warning: #f59e0b;
+    --warning-bg: #fffbeb;
+    --radius: 8px;
+    --radius-lg: 12px;
+    --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+    --shadow: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f1f5f9;
+    color: var(--text);
+    line-height: 1.5;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+  }
+
+  /* ─── Page wrapper ─── */
+  .page-frame {
+    width: 100%;
+    max-width: 420px;
+    background: var(--bg);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+
+  .label-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    padding: 2px 8px;
+    border-radius: 100px;
+    text-transform: uppercase;
+  }
+  .label-badge--wireframe {
+    background: var(--teal-100);
+    color: var(--teal-700);
+    margin-bottom: 8px;
+  }
+
+  /* ─── Step bar ─── */
+  .step-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: var(--bg-muted);
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .step-bar .step {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .step-circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+  }
+  .step-circle--done { background: var(--text); color: #fff; }
+  .step-circle--active { background: var(--teal-600); color: #fff; }
+  .step-circle--pending { background: var(--border); color: var(--text-muted); }
+  .step-label { font-weight: 500; color: var(--text-muted); font-size: 12px; }
+
+  /* ─── Card ─── */
+  .card {
+    margin: 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--bg-card);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 20px 16px 12px;
+  }
+  .card-header h3 {
+    font-size: 17px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .card-header p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ─── Copy button ─── */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 7px 14px;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    white-space: nowrap;
+  }
+  .btn:hover { background: var(--bg-muted); }
+  .btn--primary {
+    background: var(--teal-600);
+    color: #fff;
+    border-color: var(--teal-600);
+  }
+  .btn--primary:hover { background: var(--teal-700); border-color: var(--teal-700); }
+  .btn--ghost {
+    background: transparent;
+    border-color: transparent;
+    color: var(--text-muted);
+  }
+  .btn--ghost:hover { background: var(--bg-muted); color: var(--text); }
+  .btn--sm { font-size: 12px; padding: 5px 10px; }
+  .btn--full { width: 100%; justify-content: center; }
+
+  /* ─── Copy schedule row ─── */
+  .copy-row {
+    padding: 0 16px 12px;
+  }
+
+  /* ─── Day accordion ─── */
+  .day-list {
+    margin: 0 16px 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+  .day-item {
+    border-bottom: 1px solid var(--border);
+  }
+  .day-item:last-child { border-bottom: none; }
+
+  .day-trigger {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+  }
+  .day-trigger:hover { background: var(--bg-muted); }
+
+  .day-badge {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .day-badge--active { background: var(--teal-100); color: var(--teal-700); }
+  .day-badge--empty { background: var(--bg-muted); color: var(--text-muted); }
+
+  .day-info { flex: 1; min-width: 0; }
+  .day-name { font-size: 13px; font-weight: 600; }
+  .day-summary { font-size: 11px; color: var(--text-muted); }
+  .day-summary--italic { font-style: italic; }
+
+  .day-badges { display: flex; gap: 4px; align-items: center; }
+  .validation-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 7px;
+    border-radius: 100px;
+  }
+  .validation-badge--error { background: #fef2f2; color: var(--destructive); }
+  .validation-badge--warning { background: #fffbeb; color: #b45309; }
+
+  .day-chevron {
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .day-item.open .day-chevron { transform: rotate(180deg); }
+
+  .day-content {
+    display: none;
+    padding: 8px 12px 14px;
+    background: var(--bg-muted);
+    border-top: 1px solid var(--border);
+  }
+  .day-item.open .day-content { display: block; }
+
+  /* ─── Time block row ─── */
+  .slot {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    background: var(--bg);
+    margin-bottom: 6px;
+  }
+  .slot--error {
+    border-color: var(--destructive);
+    background: var(--destructive-bg);
+  }
+  .slot-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+  .slot input[type="time"] {
+    width: 105px;
+    padding: 5px 6px;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .slot input[type="time"]:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(13,148,136,0.15);
+  }
+  .slot-dash { color: var(--text-muted); font-size: 13px; }
+
+  /* Toggle switch */
+  .toggle {
+    position: relative;
+    width: 36px;
+    height: 20px;
+    border-radius: 10px;
+    background: var(--border);
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+    flex-shrink: 0;
+  }
+  .toggle.on { background: var(--teal-500); }
+  .toggle::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    transition: transform 0.2s;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+  .toggle.on::after { transform: translateX(16px); }
+  .toggle-label { font-size: 11px; color: var(--text-muted); }
+
+  /* Rate input */
+  .rate-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+  .rate-group .rate-prefix {
+    padding: 5px 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-muted);
+    background: var(--bg-muted);
+    border-right: 1px solid var(--border);
+  }
+  .rate-group input {
+    width: 70px;
+    padding: 5px 8px;
+    font-size: 13px;
+    border: none;
+    outline: none;
+    background: transparent;
+    color: var(--text);
+  }
+
+  .slot-actions {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-left: auto;
+  }
+  .icon-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: none;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: background 0.1s, color 0.1s;
+  }
+  .icon-btn:hover { background: var(--bg-muted); color: var(--text); }
+  .icon-btn--danger:hover { color: var(--destructive); }
+
+  .slot-issues {
+    font-size: 11px;
+    color: var(--destructive);
+    margin-top: 4px;
+  }
+
+  .add-block-row {
+    display: flex;
+    justify-content: center;
+    padding: 6px 0;
+  }
+
+  /* ─── Divider / collapsible ─── */
+  .section-divider {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px 16px 8px;
+    cursor: pointer;
+    user-select: none;
+  }
+  .section-divider:hover .divider-label { color: var(--text); }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+  }
+  .divider-chevron {
+    width: 14px;
+    height: 14px;
+    color: var(--text-muted);
+    transition: transform 0.2s;
+  }
+  .section-divider.collapsed .divider-chevron { transform: rotate(-90deg); }
+
+  .addon-count-badge {
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--teal-100);
+    color: var(--teal-700);
+    padding: 1px 7px;
+    border-radius: 100px;
+  }
+
+  /* ─── Add-ons section ─── */
+  .addons-section {
+    padding: 0 16px 8px;
+  }
+  .addons-section.hidden { display: none; }
+
+  /* ─── Addon card ─── */
+  .addon-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .addon-identity {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding: 12px;
+  }
+  .addon-identity input[type="text"] {
+    width: 100%;
+    min-width: 0;
+    padding: 6px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .addon-identity-row-2 {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+  }
+  .addon-identity input[type="text"]:focus {
+    outline: none;
+    border-color: var(--border-focus);
+    box-shadow: 0 0 0 2px rgba(13,148,136,0.15);
+  }
+
+  .addon-select {
+    padding: 5px 8px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    color: var(--text);
+    cursor: pointer;
+  }
+
+  .scope-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .scope-badge--global { background: #e2e8f0; color: #475569; }
+  .scope-badge--court { border: 1px solid var(--border); color: var(--text-muted); background: transparent; }
+
+  /* Addon pricing section */
+  .addon-pricing {
+    border-top: 1px solid var(--border);
+    padding: 10px 12px;
+    background: rgba(248,250,252,0.5);
+  }
+  .addon-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+  .addon-pricing-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+  }
+  .field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .field-label {
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Addon schedule rules */
+  .addon-rules {
+    border-top: 1px solid var(--border);
+    padding: 10px 12px 12px;
+  }
+  .addon-rules-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+
+  /* Day pills */
+  .day-pills {
+    display: flex;
+    gap: 3px;
+  }
+  .day-pill {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    border: none;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, color 0.15s;
+  }
+  .day-pill--active { background: var(--teal-600); color: #fff; }
+  .day-pill--inactive { background: var(--bg-muted); color: var(--text-muted); }
+  .day-pill--inactive:hover { background: var(--border); }
+
+  .rule-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    padding: 8px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    margin-bottom: 6px;
+  }
+  .rule-row input[type="time"] {
+    width: 95px;
+    padding: 4px 6px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .rule-row input[type="number"] {
+    width: 70px;
+    padding: 4px 6px;
+    font-size: 12px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--bg);
+    color: var(--text);
+  }
+  .rule-label { font-size: 11px; color: var(--text-muted); }
+
+  /* ─── Add add-on button row ─── */
+  .add-addon-row {
+    padding: 0 16px 16px;
+  }
+
+  /* ─── Footer actions ─── */
+  .card-footer {
+    padding: 16px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  /* ─── Wizard nav ─── */
+  .wizard-nav {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 16px 20px;
+  }
+
+  /* ─── Empty state ─── */
+  .empty-addons {
+    border: 1px dashed var(--border);
+    border-radius: var(--radius);
+    padding: 28px 16px;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  .empty-addons p { font-size: 13px; color: var(--text-muted); }
+  .empty-addons .sub { font-size: 11px; margin-top: 2px; }
+
+  /* ─── Scope divider inside addons ─── */
+  .scope-divider {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 0 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text-muted);
+  }
+  .scope-divider svg { width: 13px; height: 13px; }
+  .scope-divider .scope-line { flex: 1; height: 1px; background: var(--border); }
+
+  /* ─── Header label ─── */
+  .wireframe-header {
+    max-width: 420px;
+    width: 100%;
+    margin-bottom: 12px;
+    text-align: center;
+  }
+  .wireframe-header h1 {
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--text);
+  }
+  .wireframe-header p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* ─── View toggle ─── */
+  .view-toggle {
+    max-width: 420px;
+    width: 100%;
+    display: flex;
+    gap: 6px;
+    margin-bottom: 12px;
+    justify-content: center;
+  }
+  .view-toggle .btn { font-size: 12px; }
+  .view-toggle .btn.active {
+    background: var(--teal-600);
+    color: #fff;
+    border-color: var(--teal-600);
+  }
+
+  /* Notification dot */
+  .notif-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--teal-500);
+    display: inline-block;
+  }
+
+  /* SVG icons inline */
+  .icon { width: 14px; height: 14px; }
+</style>
+</head>
+<body>
+
+<div class="wireframe-header">
+  <span class="label-badge label-badge--wireframe">Wireframe</span>
+  <h1>Combined Schedule, Pricing &amp; Add-ons</h1>
+  <p>Proposed unified form — one card, one save</p>
+</div>
+
+<div class="view-toggle">
+  <button class="btn btn--sm active" onclick="showView('wizard')" id="btn-wizard">Wizard Step 2</button>
+  <button class="btn btn--sm" onclick="showView('standalone')" id="btn-standalone">Standalone Page</button>
+</div>
+
+<div class="page-frame" id="page">
+
+  <!-- Step bar (wizard only) -->
+  <div class="step-bar" id="step-bar">
+    <div class="step">
+      <div class="step-circle step-circle--done">1</div>
+      <span class="step-label">Details</span>
+    </div>
+    <div class="step">
+      <div class="step-circle step-circle--active">2</div>
+      <span class="step-label">Schedule</span>
+    </div>
+    <div class="step">
+      <div class="step-circle step-circle--pending">3</div>
+      <span class="step-label">Publish</span>
+    </div>
+  </div>
+
+  <!-- Main card -->
+  <div class="card">
+    <div class="card-header">
+      <h3>Schedule &amp; Pricing</h3>
+      <p>Set opening hours, rates &amp; add-on extras.</p>
+    </div>
+
+    <!-- Copy button -->
+    <div class="copy-row">
+      <button class="btn btn--sm">
+        <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copy from another court
+      </button>
+    </div>
+
+    <!-- Day accordion -->
+    <div class="day-list" id="day-list">
+      <!-- Sunday – expandable with slots -->
+      <div class="day-item open" id="day-0">
+        <button class="day-trigger" onclick="toggleDay(0)">
+          <span class="day-badge day-badge--active">S</span>
+          <div class="day-info">
+            <div class="day-name">Sunday</div>
+            <div class="day-summary" id="day-0-summary" style="display:none">6:00 AM – 10:00 PM · ₱500</div>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-0-content">
+          <!-- Slot 1 -->
+          <div class="slot">
+            <div class="slot-row">
+              <input type="time" value="06:00">
+              <span class="slot-dash">–</span>
+              <input type="time" value="12:00">
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              <span class="toggle-label">Open</span>
+              <div class="rate-group">
+                <span class="rate-prefix">₱</span>
+                <input type="number" value="500" placeholder="Rate">
+              </div>
+              <div class="slot-actions">
+                <button class="icon-btn" title="Copy to all">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
+                <button class="icon-btn icon-btn--danger" title="Remove">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Slot 2 -->
+          <div class="slot">
+            <div class="slot-row">
+              <input type="time" value="12:00">
+              <span class="slot-dash">–</span>
+              <input type="time" value="18:00">
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              <span class="toggle-label">Open</span>
+              <div class="rate-group">
+                <span class="rate-prefix">₱</span>
+                <input type="number" value="700" placeholder="Rate">
+              </div>
+              <div class="slot-actions">
+                <button class="icon-btn" title="Copy to all">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+                </button>
+                <button class="icon-btn icon-btn--danger" title="Remove">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+                <button class="icon-btn" title="Add block" onclick="alert('Add another time block')">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+          <!-- Slot 3 – with error -->
+          <div class="slot slot--error">
+            <div class="slot-row">
+              <input type="time" value="20:00">
+              <span class="slot-dash">–</span>
+              <input type="time" value="18:00">
+              <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+              <span class="toggle-label">Open</span>
+              <button class="btn btn--ghost btn--sm">Add pricing</button>
+              <div class="slot-actions">
+                <button class="icon-btn icon-btn--danger" title="Remove">
+                  <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                </button>
+              </div>
+            </div>
+            <div class="slot-issues">Invalid time · Needs price</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Monday -->
+      <div class="day-item" id="day-1">
+        <button class="day-trigger" onclick="toggleDay(1)">
+          <span class="day-badge day-badge--active">M</span>
+          <div class="day-info">
+            <div class="day-name">Monday</div>
+            <div class="day-summary">6:00 AM – 10:00 PM · ₱500</div>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-1-content"></div>
+      </div>
+
+      <!-- Tuesday – empty -->
+      <div class="day-item" id="day-2">
+        <button class="day-trigger" onclick="toggleDay(2)">
+          <span class="day-badge day-badge--empty">T</span>
+          <div class="day-info">
+            <div class="day-name">Tuesday</div>
+            <div class="day-summary day-summary--italic">Set a schedule</div>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-2-content">
+          <div class="add-block-row">
+            <button class="btn btn--sm">
+              <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>
+              Add block
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Wednesday – with warning badge -->
+      <div class="day-item" id="day-3">
+        <button class="day-trigger" onclick="toggleDay(3)">
+          <span class="day-badge day-badge--active">W</span>
+          <div class="day-info">
+            <div class="day-name">Wednesday</div>
+            <div class="day-summary">8:00 AM – 6:00 PM · ₱500</div>
+          </div>
+          <div class="day-badges">
+            <span class="validation-badge validation-badge--warning">1 warning</span>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-3-content"></div>
+      </div>
+
+      <!-- Thursday -->
+      <div class="day-item" id="day-4">
+        <button class="day-trigger" onclick="toggleDay(4)">
+          <span class="day-badge day-badge--active">Th</span>
+          <div class="day-info">
+            <div class="day-name">Thursday</div>
+            <div class="day-summary">6:00 AM – 10:00 PM · ₱500</div>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-4-content"></div>
+      </div>
+
+      <!-- Friday – error badge -->
+      <div class="day-item" id="day-5">
+        <button class="day-trigger" onclick="toggleDay(5)">
+          <span class="day-badge day-badge--active">F</span>
+          <div class="day-info">
+            <div class="day-name">Friday</div>
+            <div class="day-summary">6:00 AM – 11:00 PM · ₱600</div>
+          </div>
+          <div class="day-badges">
+            <span class="validation-badge validation-badge--error">1 error</span>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-5-content"></div>
+      </div>
+
+      <!-- Saturday -->
+      <div class="day-item" id="day-6">
+        <button class="day-trigger" onclick="toggleDay(6)">
+          <span class="day-badge day-badge--active">S</span>
+          <div class="day-info">
+            <div class="day-name">Saturday</div>
+            <div class="day-summary">6:00 AM – 11:00 PM · ₱700</div>
+          </div>
+          <svg class="day-chevron" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+        </button>
+        <div class="day-content" id="day-6-content"></div>
+      </div>
+    </div>
+
+    <!-- ═══ Add-ons collapsible section ═══ -->
+    <div class="section-divider" id="addon-divider" onclick="toggleAddons()">
+      <div class="divider-line"></div>
+      <span class="divider-label">
+        Add-ons
+        <span class="addon-count-badge">2</span>
+        <svg class="divider-chevron" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
+      </span>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="addons-section" id="addons-section">
+      <!-- Venue-wide divider -->
+      <div class="scope-divider">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10A15.3 15.3 0 0112 2z"/></svg>
+        Venue-wide
+        <span class="scope-line"></span>
+      </div>
+
+      <!-- Addon 1: Court Towels (FLAT, venue-wide) -->
+      <div class="addon-card">
+        <div class="addon-identity">
+          <input type="text" value="Court Towels" placeholder="Add-on label…">
+          <div class="addon-identity-row-2">
+            <select class="addon-select">
+              <option selected>Auto-applied</option>
+              <option>Optional</option>
+            </select>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <span class="toggle-label">Active</span>
+            <span class="scope-badge scope-badge--global">Venue-wide</span>
+            <button class="icon-btn icon-btn--danger" title="Remove" style="margin-left:auto">
+              <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="addon-pricing">
+          <div class="addon-section-label">Pricing</div>
+          <div class="addon-pricing-row">
+            <div class="field-group">
+              <span class="field-label">Type</span>
+              <select class="addon-select">
+                <option>Hourly add-on</option>
+                <option selected>Flat add-on</option>
+              </select>
+            </div>
+            <div class="field-group">
+              <span class="field-label">Flat fee</span>
+              <div class="rate-group">
+                <span class="rate-prefix">₱</span>
+                <input type="number" value="50" style="width:60px">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Court-specific divider -->
+      <div class="scope-divider">
+        <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        This court
+        <span class="scope-line"></span>
+      </div>
+
+      <!-- Addon 2: Light Rental (HOURLY, court-specific) -->
+      <div class="addon-card">
+        <div class="addon-identity">
+          <input type="text" value="Light Rental" placeholder="Add-on label…">
+          <div class="addon-identity-row-2">
+            <select class="addon-select">
+              <option selected>Optional</option>
+              <option>Auto-applied</option>
+            </select>
+            <button class="toggle on" onclick="this.classList.toggle('on')"></button>
+            <span class="toggle-label">Active</span>
+            <span class="scope-badge scope-badge--court">Court</span>
+            <button class="icon-btn icon-btn--danger" title="Remove" style="margin-left:auto">
+              <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+        <div class="addon-pricing">
+          <div class="addon-section-label">Pricing</div>
+          <div class="addon-pricing-row">
+            <div class="field-group">
+              <span class="field-label">Type</span>
+              <select class="addon-select">
+                <option selected>Hourly add-on</option>
+                <option>Flat add-on</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="addon-rules">
+          <div class="addon-rules-header">
+            <div class="addon-section-label" style="margin-bottom:0">Schedule rules</div>
+            <button class="btn btn--ghost btn--sm">
+              <svg style="width:12px;height:12px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+              Add rule
+            </button>
+          </div>
+          <!-- Rule 1 -->
+          <div class="rule-row">
+            <div class="day-pills">
+              <button class="day-pill day-pill--active">Su</button>
+              <button class="day-pill day-pill--active">M</button>
+              <button class="day-pill day-pill--active">T</button>
+              <button class="day-pill day-pill--active">W</button>
+              <button class="day-pill day-pill--active">Th</button>
+              <button class="day-pill day-pill--inactive">F</button>
+              <button class="day-pill day-pill--inactive">Sa</button>
+            </div>
+            <input type="time" value="18:00">
+            <span class="slot-dash">–</span>
+            <input type="time" value="22:00">
+            <span class="rule-label">₱/hr</span>
+            <input type="number" value="100" style="width:55px">
+            <button class="icon-btn icon-btn--danger" title="Remove rule">
+              <svg style="width:12px;height:12px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+          <!-- Rule 2 (weekend evenings) -->
+          <div class="rule-row">
+            <div class="day-pills">
+              <button class="day-pill day-pill--inactive">Su</button>
+              <button class="day-pill day-pill--inactive">M</button>
+              <button class="day-pill day-pill--inactive">T</button>
+              <button class="day-pill day-pill--inactive">W</button>
+              <button class="day-pill day-pill--inactive">Th</button>
+              <button class="day-pill day-pill--active">F</button>
+              <button class="day-pill day-pill--active">Sa</button>
+            </div>
+            <input type="time" value="18:00">
+            <span class="slot-dash">–</span>
+            <input type="time" value="23:00">
+            <span class="rule-label">₱/hr</span>
+            <input type="number" value="150" style="width:55px">
+            <button class="icon-btn icon-btn--danger" title="Remove rule">
+              <svg style="width:12px;height:12px" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Add add-on button -->
+    <div class="add-addon-row">
+      <button class="btn btn--sm">
+        <svg class="icon" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg>
+        Add add-on
+      </button>
+    </div>
+
+    <!-- Single save button -->
+    <div class="card-footer">
+      <button class="btn btn--primary" id="save-btn">Save schedule &amp; add-ons</button>
+    </div>
+  </div>
+
+  <!-- Wizard bottom nav -->
+  <div class="wizard-nav" id="wizard-nav">
+    <button class="btn btn--ghost">Back to Details</button>
+    <button class="btn btn--ghost">Skip for now</button>
+  </div>
+</div>
+
+<script>
+  // Day accordion
+  function toggleDay(dayIndex) {
+    const item = document.getElementById('day-' + dayIndex);
+    if (item) item.classList.toggle('open');
+  }
+
+  // Add-ons collapsible
+  function toggleAddons() {
+    const divider = document.getElementById('addon-divider');
+    const section = document.getElementById('addons-section');
+    const addRow = document.querySelector('.add-addon-row');
+    divider.classList.toggle('collapsed');
+    if (divider.classList.contains('collapsed')) {
+      section.classList.add('hidden');
+      addRow.style.display = 'none';
+    } else {
+      section.classList.remove('hidden');
+      addRow.style.display = '';
+    }
+  }
+
+  // View toggle (wizard vs standalone)
+  function showView(view) {
+    const stepBar = document.getElementById('step-bar');
+    const wizardNav = document.getElementById('wizard-nav');
+    const saveBtn = document.getElementById('save-btn');
+    const btnWizard = document.getElementById('btn-wizard');
+    const btnStandalone = document.getElementById('btn-standalone');
+
+    if (view === 'wizard') {
+      stepBar.style.display = '';
+      wizardNav.style.display = '';
+      saveBtn.textContent = 'Save & Continue';
+      btnWizard.classList.add('active');
+      btnStandalone.classList.remove('active');
+    } else {
+      stepBar.style.display = 'none';
+      wizardNav.style.display = 'none';
+      saveBtn.textContent = 'Save schedule & add-ons';
+      btnWizard.classList.remove('active');
+      btnStandalone.classList.add('active');
+    }
+  }
+
+  // Toggle pills interactivity
+  document.querySelectorAll('.day-pill').forEach(pill => {
+    pill.addEventListener('click', () => {
+      pill.classList.toggle('day-pill--active');
+      pill.classList.toggle('day-pill--inactive');
+    });
+  });
+</script>
+
+</body>
+</html>

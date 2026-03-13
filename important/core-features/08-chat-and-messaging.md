@@ -1,62 +1,44 @@
-# Chat & Messaging
+# Chat & Messaging (Operational Reference)
+
+_Supporting operational reference. Read after the primary reservation doc in [00-overview.md](./00-overview.md)._
 
 ## Purpose
 
-Booking a court often requires coordination — "Can I arrive 10 minutes late?", "Is parking available?", "Can you hold the court?" Chat provides a direct communication channel between the player and the venue within the context of a specific reservation.
+Chat supports the coordination work that happens after a reservation exists: confirmation questions, payment follow-up, and scheduling details between the player and the venue.
+
+## Provider Model
+
+The chat model is provider-backed, but the runtime is configurable. The current factory defaults to Supabase unless `CHAT_PROVIDER` is explicitly set to another supported backend.
 
 ## Reservation Chat
 
-### How It Works
+Reservation chat is the main operational thread type.
 
-Every active reservation has a chat thread connecting the player and the venue.
+Current shape:
 
-- **When it activates:** The chat becomes available once a reservation is created. It auto-opens for the player on first booking confirmation.
-- **Who can participate:** The player on one side, and any venue team member with "Access reservation chat" permission on the other.
-- **Where it appears:**
-  - **Player side:** On the reservation detail page as a chat widget.
-  - **Owner side:** On the reservation detail page (click to message) and in the floating chat inbox widget (bottom-right corner of the owner portal).
+- one thread per eligible reservation
+- player on one side
+- owner-side team members with `reservation.chat` on the other
+- available from reservation detail flows and the owner reservation inbox widget
 
-### Chat Features
+Current capabilities that are clearly represented in the active stack:
 
-- Real-time messaging (powered by GetStream)
-- Full message history
-- Read receipts
-- Typing indicators
-- Media sharing support (images, files)
-- Thread-based conversations (one thread per reservation)
+- real-time message delivery
+- attachments/media support
+- unread-count and mark-read behavior
+- owner inbox aggregation across reservation threads
 
-### Availability by Reservation Status
+Current constraints:
 
-| Status | Chat Available? |
-|--------|:-:|
-| CREATED | Yes |
-| AWAITING_PAYMENT | Yes |
-| PAYMENT_MARKED_BY_USER | Yes |
-| CONFIRMED | Yes |
-| EXPIRED | No |
-| CANCELLED | No |
-
-### Owner Chat Inbox Widget
-
-A floating panel on the owner portal that aggregates all active chat threads:
-
-- Shows unread message count
-- Lists conversations with the most recent message preview
-- Click to open a specific thread
-- Accessible from any page in the owner portal
-
-**Business purpose:** Owners do not need to navigate to each reservation to check for messages. The inbox widget surfaces all active conversations in one place.
+- guest bookings do not get reservation chat support
+- typing indicators and read-receipt UI are not part of the active documented experience
 
 ## Open Play Chat
 
-Separate from reservation chat, Open Play sessions have their own group chat:
+Open Play sessions use their own thread type for confirmed participants and hosts. This is separate from reservation chat.
 
-- All participants in the session can see and send messages
-- Used for coordination before and during the session
-- Accessible from the Open Play detail page
+## What Chat Does Not Cover
 
-## What Chat Does NOT Cover (Currently)
-
-- **No support chat:** There is no in-app support channel for contacting KudosCourts staff. Support inquiries go through the Contact Us page.
-- **No broadcast messaging:** Owners cannot send messages to all their past customers (e.g., promotions, announcements).
-- **No notification for new chat messages:** New chat messages do not trigger push notifications or email alerts. The user must have the app open or check the inbox widget.
+- no in-app support chat with KudosCourts staff
+- no owner broadcast messaging to all customers
+- no separately documented chat-specific push/email alert layer

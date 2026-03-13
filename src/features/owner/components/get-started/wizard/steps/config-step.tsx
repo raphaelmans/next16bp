@@ -2,8 +2,7 @@
 
 import { CheckCircle2 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
-import { CourtAddonEditor } from "@/features/owner/components/court-addon-editor";
-import { CourtScheduleEditor } from "@/features/owner/components/court-schedule-editor";
+import { CourtScheduleAndAddonsEditor } from "@/features/owner/components/court-schedule-and-addons-editor";
 import type { SetupStatus } from "../../get-started-types";
 
 interface ConfigStepProps {
@@ -46,18 +45,12 @@ export function ConfigStep({ status, onStepComplete }: ConfigStepProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <CourtScheduleEditor
-        courtId={courtId}
-        organizationId={status.organizationId}
-        primaryActionLabel="Save Schedule"
-        onSaved={onStepComplete}
-      />
-      <CourtAddonEditor
-        courtId={courtId}
-        placeId={status.primaryPlaceId}
-        organizationId={status.organizationId}
-      />
-    </div>
+    <CourtScheduleAndAddonsEditor
+      courtId={courtId}
+      placeId={status.primaryPlaceId}
+      organizationId={status.organizationId}
+      primaryActionLabel="Save Schedule"
+      onSaved={onStepComplete}
+    />
   );
 }

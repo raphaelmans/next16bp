@@ -10,7 +10,6 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from "@/components/ui/drawer";
-import { Spinner } from "@/components/ui/spinner";
 import { getBlockCtaLabel } from "@/features/owner/booking-studio/helpers";
 import { useBookingStudio } from "./booking-studio-provider";
 import { SelectionPanelForm } from "./selection-panel-form";
@@ -76,8 +75,8 @@ export const MobileCreateBlockDrawer = React.memo(
               onClick={handleMobileSubmit}
               className="w-full"
               disabled={isCreatingBlock}
+              loading={isCreatingBlock}
             >
-              {isCreatingBlock && <Spinner />}
               {getBlockCtaLabel(selectionBlockType)}
             </Button>
           </DrawerFooter>

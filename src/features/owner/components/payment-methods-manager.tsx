@@ -49,7 +49,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
+
 import { Textarea } from "@/components/ui/textarea";
 import {
   useMutCreateOrganizationPaymentMethod,
@@ -485,8 +485,11 @@ export function PaymentMethodsManager({
               >
                 Cancel
               </Button>
-              <Button type="submit" disabled={isPaymentSubmitDisabled}>
-                {paymentSubmitting && <Spinner className="h-4 w-4 mr-2" />}
+              <Button
+                type="submit"
+                disabled={isPaymentSubmitDisabled}
+                loading={paymentSubmitting}
+              >
                 {editingPaymentMethod ? "Save Changes" : "Add Method"}
               </Button>
             </DialogFooter>
@@ -517,10 +520,8 @@ export function PaymentMethodsManager({
                 handleConfirmDelete();
               }}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              loading={deletePaymentMethod.isPending}
             >
-              {deletePaymentMethod.isPending && (
-                <Spinner className="h-4 w-4 mr-2" />
-              )}
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>

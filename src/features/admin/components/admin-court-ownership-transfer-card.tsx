@@ -34,7 +34,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 
 export type OrganizationSearchItem = {
@@ -268,8 +267,8 @@ export function AdminCourtOwnershipTransferCard({
                   type="button"
                   onClick={onTransfer}
                   disabled={transferDisabled}
+                  loading={transferPending}
                 >
-                  {transferPending && <Spinner className="mr-2" />}
                   Transfer
                 </Button>
               </DialogFooter>
@@ -317,8 +316,8 @@ export function AdminCourtOwnershipTransferCard({
                   variant="destructive"
                   onClick={onRecurate}
                   disabled={recurateDisabled}
+                  loading={recuratePending}
                 >
-                  {recuratePending && <Spinner className="mr-2" />}
                   Return to curated
                 </Button>
               </DialogFooter>

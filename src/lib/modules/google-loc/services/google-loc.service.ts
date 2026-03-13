@@ -396,14 +396,21 @@ export class GoogleLocService implements IGoogleLocService {
       throw new ValidationError("No results found for that address");
     }
 
+    const PLUS_CODE_PREFIX_RE = /^[A-Z0-9]{4}\+[A-Z0-9]{2,3},?\s*/;
+
     const results = places
       .filter((p) => p.location)
       .slice(0, 5)
-      .map((p) => ({
-        lat: p.location?.latitude ?? 0,
-        lng: p.location?.longitude ?? 0,
-        formattedAddress: p.formattedAddress ?? "Unknown address",
-      }));
+      .map((p) => {
+        let address = p.formattedAddress ?? "Unknown address";
+        address = address.replace(PLUS_CODE_PREFIX_RE, "");
+        address = address.replace(/,?\s*Philippines\s*$/, "");
+        return {
+          lat: p.location?.latitude ?? 0,
+          lng: p.location?.longitude ?? 0,
+          formattedAddress: address || "Unknown address",
+        };
+      });
 
     if (results.length === 0) {
       throw new ValidationError("No results found for that address");

@@ -1,4 +1,6 @@
-# User Flow Maps
+# User Flow Maps (Appendix)
+
+_Appendix for the guide-aligned core-features doc set. These flow maps stay implementation-focused and support the primary narrative in [00-overview.md](./00-overview.md)._
 
 ## Flow 1: Player Books a Court (Happy Path)
 
@@ -144,7 +146,7 @@ How a staff member joins and becomes operational.
  ├── Existing user: logs in ─────────────────────────────┤
  │                                                       │
  ▼                                                       ▼
-[5] Sees invitation details → Accept or Decline
+[5] Enters invitation code from email → Accept or Decline
  │
  ├── Decline → flow ends
  │

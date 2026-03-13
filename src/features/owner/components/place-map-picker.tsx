@@ -18,7 +18,7 @@ import {
 import { GoogleMapsEmbed } from "@/components/kudos/google-maps-embed";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Spinner } from "@/components/ui/spinner";
+
 import { env } from "@/lib/env";
 
 const PHILIPPINES_CENTER = { lat: 12.8797, lng: 121.774 };
@@ -207,12 +207,9 @@ function MapPickerInner({
               size="icon"
               onClick={handleSearch}
               disabled={!searchQuery.trim() || geocodeMutation.isPending}
+              loading={geocodeMutation.isPending}
             >
-              {geocodeMutation.isPending ? (
-                <Spinner className="h-4 w-4" />
-              ) : (
-                <Search className="h-4 w-4" />
-              )}
+              <Search className="h-4 w-4" />
             </Button>
           </div>
 

@@ -231,8 +231,11 @@ export const CustomBlockDialog = React.memo(function CustomBlockDialog({
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isCreatingBlock}>
-              {isCreatingBlock && <Spinner />}
+            <Button
+              type="submit"
+              disabled={isCreatingBlock}
+              loading={isCreatingBlock}
+            >
               {getBlockCtaLabel(watchedBlockType)}
             </Button>
           </DialogFooter>

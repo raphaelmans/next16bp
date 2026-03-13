@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Spinner } from "@/components/ui/spinner";
+
 import {
   useMutCancelOrganizationInvitation,
   useMutInviteOrganizationMember,
@@ -402,12 +402,9 @@ export function TeamAccessManager({
                 type="button"
                 onClick={handleInvite}
                 disabled={inviteMember.isPending}
+                loading={inviteMember.isPending}
               >
-                {inviteMember.isPending ? (
-                  <Spinner className="mr-2 h-4 w-4" />
-                ) : (
-                  <UserPlus className="mr-2 h-4 w-4" />
-                )}
+                <UserPlus className="mr-2 h-4 w-4" />
                 Send invite
               </Button>
             </div>
@@ -503,10 +500,8 @@ export function TeamAccessManager({
                           type="button"
                           onClick={() => saveDraft(memberUserId)}
                           disabled={!draft.dirty || updatePermissions.isPending}
+                          loading={updatePermissions.isPending}
                         >
-                          {updatePermissions.isPending && (
-                            <Spinner className="mr-2 h-4 w-4" />
-                          )}
                           Save access
                         </Button>
                       </div>
