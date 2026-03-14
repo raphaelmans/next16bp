@@ -14,6 +14,23 @@ export * from "./chat-inbox-archive";
 export * from "./chat-message";
 // Claim request tables
 export * from "./claim-request";
+// Coach-related tables
+export * from "./coach";
+export * from "./coach-addon";
+export * from "./coach-age-group";
+export * from "./coach-block";
+export * from "./coach-certification";
+export * from "./coach-hours";
+export * from "./coach-payment-method";
+export * from "./coach-photo";
+export * from "./coach-rate-rule";
+export * from "./coach-review";
+export * from "./coach-session-duration";
+export * from "./coach-session-type";
+export * from "./coach-skill-level";
+export * from "./coach-specialty";
+export * from "./coach-sport";
+export * from "./coach-venue";
 // Contact messages
 export * from "./contact-message";
 // Court-related tables

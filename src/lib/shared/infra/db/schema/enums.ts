@@ -322,3 +322,56 @@ export const placeAddonPricingTypeEnum = pgEnum("place_addon_pricing_type", [
   "HOURLY",
   "FLAT",
 ]);
+
+/**
+ * Coach skill level enum
+ * Indicates which player levels a coach serves.
+ */
+export const coachSkillLevelEnum = pgEnum("coach_skill_level_enum", [
+  "BEGINNER",
+  "INTERMEDIATE",
+  "ADVANCED",
+  "COMPETITIVE",
+]);
+
+/**
+ * Coach age group enum
+ * Indicates which age groups a coach serves.
+ */
+export const coachAgeGroupEnum = pgEnum("coach_age_group_enum", [
+  "KIDS",
+  "TEENS",
+  "ADULTS",
+  "SENIORS",
+]);
+
+/**
+ * Coach session type enum
+ * Describes the session format offered by a coach.
+ */
+export const coachSessionTypeEnum = pgEnum("coach_session_type_enum", [
+  "PRIVATE",
+  "SEMI_PRIVATE",
+  "GROUP",
+]);
+
+/**
+ * Coach venue status enum
+ * Tracks the lifecycle of a coach-to-venue attachment.
+ */
+export const coachVenueStatusEnum = pgEnum("coach_venue_status_enum", [
+  "PENDING",
+  "ACCEPTED",
+  "DECLINED",
+  "REMOVED",
+]);
+
+/**
+ * Coach block type enum
+ * Distinguishes why a coach blocked time.
+ */
+export const coachBlockTypeEnum = pgEnum("coach_block_type_enum", [
+  "PERSONAL",
+  "EXTERNAL_BOOKING",
+  "OTHER",
+]);

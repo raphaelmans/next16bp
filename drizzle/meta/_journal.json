@@ -351,6 +351,13 @@
       "when": 1773465600000,
       "tag": "0046_reservation_notification_realtime_grants",
       "breakpoints": true
+    },
+    {
+      "idx": 50,
+      "version": "7",
+      "when": 1773486978333,
+      "tag": "0050_fine_kabuki",
+      "breakpoints": true
     }
   ]
 }
