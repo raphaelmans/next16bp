@@ -12,6 +12,10 @@ import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.route
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
 import { coachRouter } from "@/lib/modules/coach/coach.router";
+import { coachAddonRouter } from "@/lib/modules/coach-addon/coach-addon.router";
+import { coachBlockRouter } from "@/lib/modules/coach-block/coach-block.router";
+import { coachHoursRouter } from "@/lib/modules/coach-hours/coach-hours.router";
+import { coachRateRuleRouter } from "@/lib/modules/coach-rate-rule/coach-rate-rule.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
 import { adminCourtRouter } from "@/lib/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/lib/modules/court/court.router";
@@ -79,6 +83,10 @@ export const appRouter = router({
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
   coach: coachRouter,
+  coachAddon: coachAddonRouter,
+  coachBlock: coachBlockRouter,
+  coachHours: coachHoursRouter,
+  coachRateRule: coachRateRuleRouter,
   chat: chatRouter,
   chatInbox: chatInboxRouter,
   chatMessage: chatMessageRouter,

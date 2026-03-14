@@ -1,4 +1,5 @@
 import {
+  AuthorizationError,
   BusinessRuleError,
   ConflictError,
   NotFoundError,
@@ -33,5 +34,16 @@ export class CoachNotActiveError extends BusinessRuleError {
 
   constructor(coachId: string) {
     super("Coach is not active", { coachId });
+  }
+}
+
+export class CoachOwnershipError extends AuthorizationError {
+  readonly code = "COACH_OWNERSHIP_ERROR";
+
+  constructor(coachId: string, userId: string) {
+    super("Coach does not belong to the authenticated user", {
+      coachId,
+      userId,
+    });
   }
 }

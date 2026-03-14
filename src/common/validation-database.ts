@@ -86,6 +86,10 @@ export const validationDatabase = {
       required: { message: "Court is required" },
       invalid: { message: "Court must be a valid ID" },
     },
+    coachId: {
+      required: { message: "Coach is required" },
+      invalid: { message: "Coach must be a valid ID" },
+    },
     reservationId: {
       required: { message: "Reservation is required" },
       invalid: { message: "Reservation must be a valid ID" },

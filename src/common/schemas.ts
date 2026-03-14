@@ -198,6 +198,10 @@ export const S = {
       V.ids.courtId.required.message,
       V.ids.courtId.invalid.message,
     ),
+    coachId: uuidSchema(
+      V.ids.coachId.required.message,
+      V.ids.coachId.invalid.message,
+    ),
     reservationId: uuidSchema(
       V.ids.reservationId.required.message,
       V.ids.reservationId.invalid.message,
