@@ -9,7 +9,7 @@
 - [x] Step 5: Add a real coach verification gate
 - [x] Step 6: Complete missing coach portal routes
 - [x] Step 7: Finish coach reservation detail with payment-proof support
-- [ ] Step 8: Add coach reviews end to end
+- [x] Step 8: Add coach reviews end to end
 - [ ] Step 9: Surface coach booking add-ons in player UX
 - [ ] Step 10: Add coach notifications, chat, and regression coverage
 
@@ -210,6 +210,14 @@ Integrates with previous work:
 - strengthens public detail pages and coach reputation after core booking journeys are stable
 
 Demo: A player can read coach reviews on the public detail page and, when eligible, submit a review that affects displayed aggregates.
+
+Verification snapshot:
+- added a new `coach-review` backend slice with repository/service/router/factory wiring, soft-delete removal semantics, and protected viewer eligibility backed by past `CONFIRMED` coach reservations whose session time has already ended
+- wired a live reviews section into the public coach detail page with aggregate/empty states, recent reviews, sign-in prompts, and eligible player write/edit/remove actions
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/lib/modules/coach-review/services/coach-review.service.test.ts src/__tests__/lib/modules/coach-review/coach-review.router.test.ts src/__tests__/features/coach-discovery/components/coach-detail/coach-detail-reviews.test.tsx`
+  - `pnpm exec biome check src/lib/modules/coach-review/coach-review.router.ts src/lib/modules/coach-review/dtos/coach-review.dto.ts src/lib/modules/coach-review/errors/coach-review.errors.ts src/lib/modules/coach-review/factories/coach-review.factory.ts src/lib/modules/coach-review/repositories/coach-review.repository.ts src/lib/modules/coach-review/services/coach-review.service.ts src/lib/modules/reservation/repositories/reservation.repository.ts src/lib/shared/infra/cache/revalidate-public-coach-detail.ts src/lib/shared/infra/trpc/root.ts src/features/coach-discovery/server/coach-detail-section-data.ts src/features/coach-discovery/hooks/use-coach-detail-reviews.ts src/features/coach-discovery/components/coach-detail/coach-detail-reviews.tsx src/features/coach-discovery/pages/coach-detail-page.tsx src/__tests__/lib/modules/coach-review/services/coach-review.service.test.ts src/__tests__/lib/modules/coach-review/coach-review.router.test.ts src/__tests__/features/coach-discovery/components/coach-detail/coach-detail-reviews.test.tsx .ralph/agent/decisions.md`
+  - manual dev smoke: `pnpm dev`, `curl -I -s http://localhost:3000/coaches` -> `200 OK`, and adversarial `curl -s http://localhost:3000/coaches/not-a-real-coach | rg -o 'Coach Not Found|404|Page not found|not found'` returned not-found markers while the app/server logs recorded the request as `NOT_FOUND`
 
 ## Step 9: Surface coach booking add-ons in player UX
 

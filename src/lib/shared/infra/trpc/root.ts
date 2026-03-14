@@ -18,6 +18,7 @@ import { coachBlockRouter } from "@/lib/modules/coach-block/coach-block.router";
 import { coachHoursRouter } from "@/lib/modules/coach-hours/coach-hours.router";
 import { coachPaymentRouter } from "@/lib/modules/coach-payment/coach-payment.router";
 import { coachRateRuleRouter } from "@/lib/modules/coach-rate-rule/coach-rate-rule.router";
+import { coachReviewRouter } from "@/lib/modules/coach-review/coach-review.router";
 import { coachVenueRouter } from "@/lib/modules/coach-venue/coach-venue.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
 import { adminCourtRouter } from "@/lib/modules/court/admin/admin-court.router";
@@ -93,6 +94,7 @@ export const appRouter = router({
   coachHours: coachHoursRouter,
   coachRateRule: coachRateRuleRouter,
   coachPayment: coachPaymentRouter,
+  coachReview: coachReviewRouter,
   coachVenue: coachVenueRouter,
   chat: chatRouter,
   chatInbox: chatInboxRouter,

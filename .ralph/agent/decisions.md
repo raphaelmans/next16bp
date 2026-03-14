@@ -33,3 +33,53 @@ Use this file to capture consequential decisions and their confidence scores.
 - Reasoning: The implementation itself is already shipped on `HEAD`; the cleanest atomic follow-up is to verify the touched reservation paths again, update the recovery artifact, and avoid mixing unrelated lint cleanup into this objective
 - Reversibility: easy
 - Timestamp (UTC ISO 8601): 2026-03-15T03:17:00Z
+
+### DEC-003
+
+- Decision: Treat Step 2 as the current task even though its backend commit is already present on `HEAD`
+- Chosen Option: Finish Step 2 by adding the missing focused tests and syncing the recovery checklist before allowing Step 3 work to begin
+- Confidence: 79
+- Alternatives Considered: mark Step 2 complete immediately from existing code, skip directly to Step 3 because the backend implementation already exists
+- Reasoning: The recovery plan requires each step to be demoable with focused validation, and current repo evidence shows the code landed without the plan-required Step 2 test coverage or checklist update. Closing that gap keeps the sequential contract intact and avoids hiding incomplete acceptance work under later UI changes.
+- Reversibility: easy
+- Timestamp (UTC ISO 8601): 2026-03-14T21:00:56Z
+
+### DEC-004
+
+- Decision: Scope Step 4 to live onboarding editors inside the existing get-started wizard
+- Chosen Option: Implement real profile-basics and sport-selection forms in the wizard, reuse the existing `coach.updateProfile` backend contract, and defer `/coach/profile` route work to Step 6
+- Confidence: 78
+- Alternatives Considered: add `/coach/profile` now and reuse it from the wizard, create a new wizard-specific backend contract, keep the placeholders and only update setup-status copy
+- Reasoning: Step 4 specifically targets onboarding truthfulness, while Step 6 is already reserved for missing portal routes. Reusing `coach.updateProfile` keeps data flow consistent, avoids duplicating contracts, and delivers a demoable increment without jumping ahead in the recovery sequence.
+- Reversibility: easy
+- Timestamp (UTC ISO 8601): 2026-03-15T06:22:00Z
+
+### DEC-005
+
+- Decision: Define the Step 5 coach verification gate around explicit status plus certification-backed submission
+- Chosen Option: Add a coach verification status on the `coach` record, gate setup completion on `VERIFIED`, let coaches save certifications inline from the wizard, and add a `submitVerification` action that moves eligible coaches to `PENDING`
+- Confidence: 77
+- Alternatives Considered: keep verification derived only from certification presence, create a full standalone `coach_verification_request` module now, postpone verification until the missing profile/settings routes exist
+- Reasoning: Step 5 needs real blocked and pending states without jumping ahead to a full admin review product. Storing explicit status keeps the public `verified` flag and onboarding gate truthful, while reusing existing coach certification/profile contracts avoids a wider refactor before Step 6.
+- Reversibility: medium
+- Timestamp (UTC ISO 8601): 2026-03-15T05:25:00Z
+
+### DEC-006
+
+- Decision: Scope Step 6 coach portal completion around existing live feature slices instead of new backend work
+- Chosen Option: Build `/coach/profile` by reusing the Step 4 onboarding profile and sports editors, build `/coach/settings` from existing browser-notification and portal-preference controls, and make the portal shell/navigation truthful around those routes
+- Confidence: 75
+- Alternatives Considered: create new coach-specific backend contracts for profile/settings, leave settings out of the coach shell until notifications/chat work lands in Step 10, expose placeholder pages with deferred copy
+- Reasoning: Step 6 is about making the portal routes real and navigable, not expanding the backend scope. Reusing already-shipped editors and shared settings controls keeps the increment demoable, avoids inventing unfinished APIs, and removes the existing misleading "later task" messaging.
+- Reversibility: easy
+- Timestamp (UTC ISO 8601): 2026-03-15T01:30:00Z
+
+### DEC-007
+
+- Decision: Define coach-review eligibility for Step 8
+- Chosen Option: Allow create/update/remove review flows only for authenticated users who either already have an active review or have at least one past `CONFIRMED` reservation for that coach
+- Confidence: 75
+- Alternatives Considered: allow any authenticated user to review a coach, require only any confirmed reservation regardless of whether the session has ended, defer eligibility and ship schema-backed reviews without a booking gate
+- Reasoning: Step 8 explicitly calls for eligibility rules, and the safest trust-preserving boundary is completed-session proof. Reusing reservation history keeps the rule auditable, avoids inventing a new entitlement model, and still permits authors to edit/remove an existing review.
+- Reversibility: easy
+- Timestamp (UTC ISO 8601): 2026-03-15T01:10:00Z

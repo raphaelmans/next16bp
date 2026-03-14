@@ -11,8 +11,12 @@ import { CoachDetailAbout } from "@/features/coach-discovery/components/coach-de
 import { CoachDetailContact } from "@/features/coach-discovery/components/coach-detail/coach-detail-contact";
 import { CoachDetailHero } from "@/features/coach-discovery/components/coach-detail/coach-detail-hero";
 import { CoachDetailQualifications } from "@/features/coach-discovery/components/coach-detail/coach-detail-qualifications";
+import { CoachDetailReviewsSection } from "@/features/coach-discovery/components/coach-detail/coach-detail-reviews";
 import { CoachDetailServices } from "@/features/coach-discovery/components/coach-detail/coach-detail-services";
-import { getCoachCoreSectionData } from "@/features/coach-discovery/server/coach-detail-section-data";
+import {
+  getCoachCoreSectionData,
+  getCoachReviewSectionData,
+} from "@/features/coach-discovery/server/coach-detail-section-data";
 import { getPHProvincesCities } from "@/lib/shared/lib/ph-location-data.server";
 import { getCanonicalOrigin } from "@/lib/shared/utils/canonical-origin";
 import { isUuid } from "@/lib/slug";
@@ -123,6 +127,7 @@ async function CoachDetailPageServerSection({
     const matchedCity = matchedProvince
       ? findCityByName(matchedProvince, coach.city)
       : undefined;
+    const initialReviews = await getCoachReviewSectionData(coach.id);
 
     const sportNames = details.meta.sports.map((s) => s.name);
     const locationLabel = [coach.city, coach.province]
@@ -349,6 +354,15 @@ async function CoachDetailPageServerSection({
                 sessionDurations={details.sessionDurations}
                 willingToTravel={coach.willingToTravel}
                 onlineCoaching={coach.onlineCoaching}
+              />
+
+              <CoachDetailReviewsSection
+                coachId={coach.id}
+                initialAggregate={{
+                  averageRating: details.meta.averageRating,
+                  reviewCount: details.meta.reviewCount,
+                }}
+                initialReviews={initialReviews}
               />
             </div>
 

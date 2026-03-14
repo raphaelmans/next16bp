@@ -204,6 +204,11 @@ export interface IReservationRepository {
   ): Promise<
     import("../dtos/reservation-coach.dto").CoachReservationWithDetails[]
   >;
+  findPastConfirmedCoachReservationForPlayer(
+    coachId: string,
+    playerId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord | null>;
   create(
     data: InsertReservation,
     ctx?: RequestContext,
@@ -1000,6 +1005,29 @@ export class ReservationRepository implements IReservationRepository {
           : null,
       };
     });
+  }
+
+  async findPastConfirmedCoachReservationForPlayer(
+    coachId: string,
+    playerId: string,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select()
+      .from(reservation)
+      .where(
+        and(
+          eq(reservation.coachId, coachId),
+          eq(reservation.playerId, playerId),
+          eq(reservation.status, "CONFIRMED"),
+          lt(reservation.endTime, new Date()),
+        ),
+      )
+      .orderBy(desc(reservation.endTime))
+      .limit(1);
+
+    return result[0] ?? null;
   }
 
   async create(
