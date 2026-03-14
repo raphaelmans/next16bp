@@ -296,3 +296,52 @@ Validation that passed on the final code:
   - `curl -I -s http://localhost:3000/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Freservations%2Freservation-1`
 
 Next loop should start at Step 10 unless review finds a regression in coach booking pricing snapshots or the player reservation summary rendering.
+
+## 2026-03-15T05:22:00Z Step 10 Plan
+
+Step 10 should finish the collaboration surface by extending existing reservation communication seams instead of introducing new parallel systems:
+- use the shared notification-delivery module for coach-booking lifecycle events so inbox/push/email behavior stays consistent with venue reservations
+- keep the notification scope to the core coach lifecycle already exercised in the product today: creation, acceptance -> awaiting payment, payment marked, confirmation, rejection, and coach cancellation
+- adapt the shared reservation chat service to understand either venue-owner or coach participants, then expose coach chat from both reservation detail pages and the protected coach portal shell
+- focus regression coverage on service-level notification/chat wiring plus user-facing detail-page chat affordances, then add one coach e2e happy path if the existing seeded auth/test harness supports it cleanly
+
+Focused validation target for this step:
+- notification-delivery service tests for coach booking enqueue flows
+- reservation chat service tests for coach reservation sessions/meta access and non-participant rejection
+- player and coach reservation detail page tests covering coach chat entry points
+- one coach e2e happy path covering booking creation and coach-side handling if the seeded environment supports it without inventing new test infrastructure
+
+## 2026-03-15T07:08:00Z Step 10 Completion Notes
+
+Step 10 is now implemented as the coach collaboration finish:
+- added `coach_booking.*` notification contracts, builders, recipient lookup, and delivery-service enqueue flows for coach creation, awaiting-payment, payment-marked, confirmed, rejected, and cancelled lifecycle events
+- extended the shared reservation chat service/factory to support coach reservations with the same reservation thread model used by venue bookings, including direct coach-owner authorization and thread metadata for player inbox/event-driven open flows
+- enabled coach chat entry points on the player reservation detail page and added a dedicated coach-side reservation chat sheet on the coach reservation detail page instead of introducing a separate inbox system late in recovery
+- added focused regression coverage for notification delivery, coach reservation chat metadata access, coach/player reservation detail chat affordances, and a coach booking Playwright happy-path spec scaffold
+- updated the recovery implementation plan to mark Step 10 complete with the validation snapshot
+
+Validation that passed on the final code:
+- `pnpm exec vitest run src/__tests__/lib/modules/chat/services/reservation-chat.service.test.ts src/__tests__/modules/notification-delivery/notification-delivery.service.test.ts src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx`
+- `pnpm exec biome check src/lib/modules/chat/services/reservation-chat.service.ts src/lib/modules/chat/factories/reservation-chat.factory.ts src/features/coach/components/coach-reservation-chat-sheet.tsx src/features/coach/pages/coach-reservation-detail-page.tsx src/features/reservation/pages/reservation-detail-page.tsx src/__tests__/lib/modules/chat/services/reservation-chat.service.test.ts src/__tests__/modules/notification-delivery/notification-delivery.service.test.ts src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx`
+- `pnpm exec playwright test tests/e2e/coach-booking.happy-path.spec.ts --list`
+- manual dev smoke:
+  - `pnpm dev`
+  - `curl -I -s http://localhost:3000/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Freservations%2Freservation-1`
+  - `curl -I -s http://localhost:3000/coach/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Fcoach%2Freservations%2Freservation-1`
+  - adversarial `curl -I -s http://localhost:3000/coach/reservations/not-a-real-reservation` also stayed behind the coach auth guard and preserved the original path inside `redirect`
+
+Next loop should verify the final commit/task closure state and emit completion for the coach recovery objective unless review finds a regression in coach notification fan-out or shared reservation chat access.
+
+## 2026-03-14T23:12:15Z Objective Closure Notes
+
+Coach recovery is now complete through Step 10 with the implementation plan fully checked off and the final product-facing increment already landed in `286044404`.
+
+Objective-level completion snapshot:
+- completed steps: 1 through 10 in sequence, with the plan checklist fully marked done in `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md`
+- final step commits on the recovery line: `a4146ab57`, `a480d90bd`, `16d2324a6`, `17a3fb14e`, `dfc6a836c`, `cba9b965c`, `f9b7d9caa`, `03b6cb41b`, `55bd8571e`, `b9f23e69e`, `aa8b86f5d`, `286044404`
+- latest validation already recorded in the step notes:
+  - Step 10: focused Vitest suite, focused Biome check, Playwright spec listing, and protected-route smoke/adversarial curls all passed
+  - earlier step notes capture the prior focused validation for Steps 1 through 9, including migration generation for Step 9
+- known gaps/follow-up: none within the recovery objective itself; remaining repo-wide lint/tooling noise stays outside this scoped coach recovery effort and was intentionally handled with focused validation at each step
+
+This closure iteration only needs to verify runtime task state, preserve the completion record in scratchpad history, and emit the completion event for the loop.
