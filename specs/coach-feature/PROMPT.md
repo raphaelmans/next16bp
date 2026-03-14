@@ -202,3 +202,76 @@ Full design, research, and implementation plan: `.agents/planning/2026-03-14-coa
 ```bash
 ralph run --config presets/pdd-to-code-assist.yml
 ```
+
+## Implementation Audit Addendum (2026-03-15)
+
+This addendum preserves the original spec and records the current implementation state based on:
+
+- `.agents/planning/2026-03-15-coach-feature-review/research/01-surface-map.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/02-gap-analysis.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md`
+- `.agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md`
+
+### Current Implementation Audit
+
+- Overall verdict: the coach feature shipped as a meaningful MVP slice, but not as the full spec described above.
+- Usable today: coach schema exists, public coach discovery exists, coach booking creation exists, coaches can manage schedule/pricing, and coaches can act on reservations in a protected portal.
+- Not yet spec-complete: several promised portal, payment, review, notification, chat, and reservation-detail capabilities are still missing or explicitly deferred.
+- Planning reference gap: the spec references `.agents/planning/2026-03-14-coach-feature/`, but that directory is not present in the current repository snapshot, so this audit is grounded in the current codebase plus the 2026-03-15 review artifacts.
+
+### Implemented Areas
+
+- Schema foundation: coach tables exist, including `coach_payment_method`, `coach_review`, and `reservation.coachId` with the reservation XOR constraint.
+- Public discovery and booking MVP: `/coaches`, location routes, `/coaches/[id]`, and `/coaches/[id]/book` are implemented.
+- Coach portal core: dashboard, get-started, schedule, pricing, reservations list, and reservation detail routes/pages are implemented.
+- Schedule and pricing systems: coach hours, blocks, rate rules, add-ons, availability calculation, and related tests are implemented.
+- Reservation lifecycle backend: `reservation.createForCoach` plus coach-side accept, reject, confirm payment, cancel, list, detail, and pending-count flows are implemented.
+
+### Partial Areas
+
+- Public coach detail is partial: hero/about/qualifications/services/contact ship, but the spec-level availability and reviews surface does not.
+- Coach get-started wizard is partial: the overall flow exists, but payment and verification steps are placeholders or effectively auto-satisfied.
+- Coach reservation detail is partial: action flow exists, but payment-proof handling is explicitly deferred.
+- Coach booking add-ons are partial: add-ons are fetched in booking flows but are not surfaced as a real user selection experience.
+
+### Missing Areas
+
+- Coach portal completeness: `/coach/profile`, `/coach/payment-methods`, and `/coach/settings` routes/pages are missing.
+- Coach payment management: `coach_payment_method` schema exists, but no coach payment CRUD module or real management UI was found.
+- Coach reviews: `coach_review` schema exists, but no review module, no public reviews section, and no submission/removal flow was found.
+- Player reservation compatibility: player reservation detail/payment handling still appears court/place-oriented rather than fully coach-aware.
+- Coach notifications and chat: acceptance criteria for `coach_booking.*` notifications and coach reservation chat were not found in implementation.
+
+### Prioritized Backlog
+
+#### P0 - restore broken or misleading end-to-end promises
+
+1. Ship coach payment methods end to end.
+2. Fix player reservation detail and payment flows for coach bookings.
+3. Replace the wizard verification placeholder with a real completion gate.
+
+#### P1 - close explicit missing spec commitments
+
+1. Complete missing coach portal routes.
+2. Deliver coach profile editing and public detail-page parity.
+3. Implement coach reviews backend and public experience.
+4. Surface add-on selection in player coach booking.
+
+#### P2 - polish, communication, and regression safety
+
+1. Add coach booking notifications.
+2. Add coach reservation chat.
+3. Expand regression coverage around coach-specific paths.
+
+### Recommended Delivery Order
+
+1. Coach payment methods.
+2. Player coach reservation detail/payment compatibility.
+3. Real verification gate.
+4. Missing portal routes.
+5. Profile editing and detail-page parity.
+6. Reviews.
+7. Booking add-ons UX.
+8. Notifications.
+9. Chat.
+10. Regression coverage sweep.
