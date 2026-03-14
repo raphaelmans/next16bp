@@ -7,7 +7,7 @@
 - [x] Step 3: Ship coach payment methods UI and connect get-started
 - [x] Step 4: Replace placeholder onboarding steps with real profile and sports editing
 - [x] Step 5: Add a real coach verification gate
-- [ ] Step 6: Complete missing coach portal routes
+- [x] Step 6: Complete missing coach portal routes
 - [ ] Step 7: Finish coach reservation detail with payment-proof support
 - [ ] Step 8: Add coach reviews end to end
 - [ ] Step 9: Surface coach booking add-ons in player UX
@@ -156,6 +156,14 @@ Integrates with previous work:
 - consolidates the onboarding/payment/profile work into the canonical coach portal structure
 
 Demo: Every item in coach portal navigation opens a working page with no placeholders.
+
+Verification snapshot:
+- added dedicated `/coach/profile` and `/coach/settings` route files plus feature pages that reuse the shipped Step 4 profile/sports editors and existing browser-notification/default-portal controls
+- updated the coach portal shell so profile and settings are first-class navigation destinations and removed the stale "later task" messaging from the sidebar/header copy
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/features/coach/pages/coach-pages.test.tsx src/__tests__/features/coach/components/coach-portal-shell.test.tsx src/__tests__/app/coach/portal-route-pages.test.tsx`
+  - `pnpm exec biome check src/features/coach/components/coach-portal-shell.tsx src/features/coach/pages/coach-profile-page.tsx src/features/coach/pages/coach-settings-page.tsx 'src/app/(coach)/coach/profile/page.tsx' 'src/app/(coach)/coach/settings/page.tsx' src/__tests__/features/coach/pages/coach-pages.test.tsx src/__tests__/features/coach/components/coach-portal-shell.test.tsx src/__tests__/app/coach/portal-route-pages.test.tsx .ralph/agent/decisions.md .ralph/agent/scratchpad.md`
+  - manual dev smoke: `pnpm dev`, `curl -I -s http://localhost:3000/coach/profile`, and `curl -I -s http://localhost:3000/coach/settings` each returned `307` redirects to `/login` with the correct route-specific `redirect` query
 
 ## Step 7: Finish coach reservation detail with payment-proof support
 

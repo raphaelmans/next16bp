@@ -22,8 +22,8 @@ const coachNavItems = [
   {
     label: "Profile",
     href: appRoutes.coach.profile,
-    description: "Detailed editing arrives in a later step.",
-    status: "upcoming" as const,
+    description: "Profile basics and sports you coach.",
+    status: "active" as const,
   },
   {
     label: "Payment Methods",
@@ -49,6 +49,12 @@ const coachNavItems = [
     description: "Player booking inbox and actions.",
     status: "active" as const,
   },
+  {
+    label: "Settings",
+    href: appRoutes.coach.settings,
+    description: "Browser notifications and workspace preferences.",
+    status: "active" as const,
+  },
 ];
 
 export function CoachPortalShell({ children }: { children: React.ReactNode }) {
@@ -63,10 +69,10 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
               Coach Portal
             </p>
             <h1 className="font-heading text-2xl font-semibold text-foreground">
-              Build your coaching profile
+              Run your coaching workspace
             </h1>
           </div>
-          <Badge variant="secondary">Payment live</Badge>
+          <Badge variant="secondary">Core routes live</Badge>
         </div>
       </header>
 
@@ -78,8 +84,8 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
                 Coach workspace
               </h2>
               <p className="text-sm text-muted-foreground">
-                Payment, schedule, and pricing are live alongside the setup
-                wizard. The remaining coach portal surfaces land in later tasks.
+                Manage your profile, payments, availability, reservations, and
+                coach-specific settings from one portal.
               </p>
             </div>
 
@@ -97,22 +103,6 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
                     : "border-border hover:border-primary/20 hover:bg-accent/40",
                   item.status === "upcoming" && "opacity-70",
                 );
-
-                if (item.status === "upcoming") {
-                  return (
-                    <div key={item.href} className={itemClassName}>
-                      <div className="flex items-center justify-between gap-3">
-                        <span className="font-medium text-foreground">
-                          {item.label}
-                        </span>
-                        <Badge variant="outline">Upcoming</Badge>
-                      </div>
-                      <p className="mt-1 text-sm text-muted-foreground">
-                        {item.description}
-                      </p>
-                    </div>
-                  );
-                }
 
                 return (
                   <Link

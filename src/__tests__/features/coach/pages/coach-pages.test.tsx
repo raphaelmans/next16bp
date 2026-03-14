@@ -44,9 +44,45 @@ vi.mock("@/features/coach/components/coach-payment-methods-manager", () => ({
   ),
 }));
 
+vi.mock(
+  "@/features/coach/components/get-started/wizard/steps/profile-step",
+  () => ({
+    ProfileStep: ({ isComplete }: { isComplete: boolean }) => (
+      <div>Profile step complete: {String(isComplete)}</div>
+    ),
+  }),
+);
+
+vi.mock(
+  "@/features/coach/components/get-started/wizard/steps/sports-step",
+  () => ({
+    SportsStep: ({
+      coachId,
+      isComplete,
+    }: {
+      coachId: string | null;
+      isComplete: boolean;
+    }) => (
+      <div>
+        Sports step {coachId ?? "none"}: {String(isComplete)}
+      </div>
+    ),
+  }),
+);
+
+vi.mock("@/features/auth/components", () => ({
+  PortalPreferenceCard: () => <div>Portal preference card</div>,
+}));
+
+vi.mock("@/features/notifications/components/web-push-settings", () => ({
+  WebPushSettingsCard: () => <div>Web push settings card</div>,
+}));
+
 import CoachPaymentMethodsPage from "@/features/coach/pages/coach-payment-methods-page";
 import CoachPricingPage from "@/features/coach/pages/coach-pricing-page";
+import CoachProfilePage from "@/features/coach/pages/coach-profile-page";
 import CoachSchedulePage from "@/features/coach/pages/coach-schedule-page";
+import CoachSettingsPage from "@/features/coach/pages/coach-settings-page";
 
 describe("coach schedule and pricing pages", () => {
   beforeEach(() => {
@@ -80,6 +116,44 @@ describe("coach schedule and pricing pages", () => {
       screen.getByText("Manage how players pay for sessions"),
     ).toBeTruthy();
     expect(screen.getByText("Payment manager for coach-1")).toBeTruthy();
+  });
+
+  it("profile page renders the live profile and sports editors", () => {
+    coachSetupStatusState.data = {
+      coachId: "coach-1",
+      hasCoachProfile: true,
+      hasCoachSports: false,
+    } as never;
+
+    render(<CoachProfilePage />);
+
+    expect(screen.getByText("Edit your public coach profile")).toBeTruthy();
+    expect(screen.getByText("Profile step complete: true")).toBeTruthy();
+    expect(screen.getByText("Sports step coach-1: false")).toBeTruthy();
+  });
+
+  it("profile page passes a missing coach id through to the sports editor", () => {
+    coachSetupStatusState.data = {
+      coachId: null,
+      hasCoachProfile: false,
+      hasCoachSports: false,
+    } as never;
+
+    render(<CoachProfilePage />);
+
+    expect(screen.getByText("Profile step complete: false")).toBeTruthy();
+    expect(screen.getByText("Sports step none: false")).toBeTruthy();
+  });
+
+  it("settings page renders the real coach settings cards", () => {
+    render(<CoachSettingsPage />);
+
+    expect(screen.getByText("Manage workspace preferences")).toBeTruthy();
+    expect(screen.getByText("Web push settings card")).toBeTruthy();
+    expect(screen.getByText("Portal preference card")).toBeTruthy();
+    expect(
+      screen.getByRole("link", { name: "Open account profile" }),
+    ).toBeTruthy();
   });
 
   it("schedule page shows the prerequisite state when coachId is missing", () => {
