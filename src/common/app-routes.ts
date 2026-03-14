@@ -163,11 +163,14 @@ export const appRoutes = {
   coach: {
     base: "/coach",
     options: { type: "protected" as const },
+    dashboard: "/coach/dashboard",
     getStarted: "/coach/get-started",
     profile: "/coach/profile",
     schedule: "/coach/schedule",
     pricing: "/coach/pricing",
     reservations: "/coach/reservations",
+    reservationDetail: (reservationId: string) =>
+      `/coach/reservations/${reservationId}`,
     paymentMethods: "/coach/payment-methods",
     settings: "/coach/settings",
   },

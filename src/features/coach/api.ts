@@ -35,6 +35,27 @@ export interface ICoachApi {
   >;
   queryCoachAddonGet: ProcedureFn<TrpcClientApi["coachAddon"]["get"]["query"]>;
   mutCoachAddonSet: ProcedureFn<TrpcClientApi["coachAddon"]["set"]["mutate"]>;
+  queryReservationCoachGetForCoach: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getForCoach"]["query"]
+  >;
+  queryReservationCoachGetDetail: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getDetail"]["query"]
+  >;
+  queryReservationCoachGetPendingCount: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getPendingCount"]["query"]
+  >;
+  mutReservationCoachAccept: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["accept"]["mutate"]
+  >;
+  mutReservationCoachReject: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["reject"]["mutate"]
+  >;
+  mutReservationCoachConfirmPayment: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["confirmPayment"]["mutate"]
+  >;
+  mutReservationCoachCancel: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["cancel"]["mutate"]
+  >;
 }
 
 export type CoachApiDeps = {
@@ -156,6 +177,83 @@ export class CoachApi implements ICoachApi {
         input,
         this.toAppError,
       );
+
+  queryReservationCoachGetForCoach: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getForCoach"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservationCoach", "getForCoach"],
+      (clientApi) => clientApi.reservationCoach.getForCoach.query,
+      input,
+      this.toAppError,
+    );
+
+  queryReservationCoachGetDetail: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getDetail"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservationCoach", "getDetail"],
+      (clientApi) => clientApi.reservationCoach.getDetail.query,
+      input,
+      this.toAppError,
+    );
+
+  queryReservationCoachGetPendingCount: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["getPendingCount"]["query"]
+  > = async () =>
+    callTrpcQuery(
+      this.clientApi,
+      ["reservationCoach", "getPendingCount"],
+      (clientApi) => clientApi.reservationCoach.getPendingCount.query,
+      undefined,
+      this.toAppError,
+    );
+
+  mutReservationCoachAccept: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["accept"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationCoach", "accept"],
+      (clientApi) => clientApi.reservationCoach.accept.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationCoachReject: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["reject"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationCoach", "reject"],
+      (clientApi) => clientApi.reservationCoach.reject.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationCoachConfirmPayment: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["confirmPayment"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationCoach", "confirmPayment"],
+      (clientApi) => clientApi.reservationCoach.confirmPayment.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutReservationCoachCancel: ProcedureFn<
+    TrpcClientApi["reservationCoach"]["cancel"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["reservationCoach", "cancel"],
+      (clientApi) => clientApi.reservationCoach.cancel.mutate,
+      input,
+      this.toAppError,
+    );
 }
 
 export const createCoachApi = (deps: CoachApiDeps = {}) => new CoachApi(deps);

@@ -6,6 +6,7 @@ import {
   useFeatureQuery,
   useFeatureQueryCache,
 } from "@/common/feature-api-hooks";
+import { toast } from "@/common/toast";
 import { getCoachApi } from "./api";
 
 const coachApi = getCoachApi();
@@ -187,6 +188,134 @@ export function useMutCoachSetAddons(coachId: string) {
         invalidateCoachAddons(coachId),
         invalidateCoachSetupStatus(),
       ]);
+    },
+  });
+}
+
+// ─── Coach Reservation Hooks ────────────────────────────────────────────────
+
+export function useQueryCoachReservations(filters: {
+  status?: string;
+  statuses?: string[];
+  timeBucket?: "past" | "upcoming";
+  limit?: number;
+  offset?: number;
+}) {
+  return useFeatureQuery(
+    ["reservationCoach", "getForCoach"],
+    coachApi.queryReservationCoachGetForCoach,
+    filters,
+    {
+      staleTime: 10_000,
+      refetchOnMount: "always",
+    },
+  );
+}
+
+export function useQueryCoachReservationDetail(reservationId: string | null) {
+  return useFeatureQuery(
+    ["reservationCoach", "getDetail"],
+    coachApi.queryReservationCoachGetDetail,
+    reservationId ? { reservationId } : undefined,
+    {
+      enabled: !!reservationId,
+      staleTime: 5_000,
+    },
+  );
+}
+
+export function useQueryCoachPendingCount() {
+  return useFeatureQuery(
+    ["reservationCoach", "getPendingCount"],
+    coachApi.queryReservationCoachGetPendingCount,
+    undefined,
+    {
+      staleTime: 15_000,
+      refetchInterval: 30_000,
+    },
+  );
+}
+
+function useCoachReservationInvalidation() {
+  const featureCache = useFeatureQueryCache();
+
+  return useMemo(
+    () => ({
+      invalidateCoachReservations: () =>
+        featureCache.invalidate(["reservationCoach", "getForCoach"]),
+      invalidateCoachReservationDetail: (reservationId: string) =>
+        featureCache.invalidate(["reservationCoach", "getDetail"], {
+          reservationId,
+        }),
+      invalidateCoachPendingCount: () =>
+        featureCache.invalidate(["reservationCoach", "getPendingCount"]),
+      invalidateAll: (reservationId?: string) =>
+        Promise.all([
+          featureCache.invalidate(["reservationCoach", "getForCoach"]),
+          featureCache.invalidate(["reservationCoach", "getPendingCount"]),
+          reservationId
+            ? featureCache.invalidate(["reservationCoach", "getDetail"], {
+                reservationId,
+              })
+            : Promise.resolve(),
+        ]),
+    }),
+    [featureCache],
+  );
+}
+
+export function useMutCoachAcceptReservation() {
+  const { invalidateAll } = useCoachReservationInvalidation();
+
+  return useFeatureMutation(coachApi.mutReservationCoachAccept, {
+    onSuccess: async (_, variables) => {
+      toast.success("Reservation accepted");
+      await invalidateAll(variables.reservationId);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Failed to accept reservation");
+    },
+  });
+}
+
+export function useMutCoachRejectReservation() {
+  const { invalidateAll } = useCoachReservationInvalidation();
+
+  return useFeatureMutation(coachApi.mutReservationCoachReject, {
+    onSuccess: async (_, variables) => {
+      toast.success("Reservation rejected");
+      await invalidateAll(variables.reservationId);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Failed to reject reservation");
+    },
+  });
+}
+
+export function useMutCoachConfirmPayment() {
+  const { invalidateAll } = useCoachReservationInvalidation();
+
+  return useFeatureMutation(coachApi.mutReservationCoachConfirmPayment, {
+    onSuccess: async (_, variables) => {
+      toast.success("Payment confirmed");
+      await invalidateAll(variables.reservationId);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Failed to confirm payment");
+    },
+  });
+}
+
+export function useMutCoachCancelReservation() {
+  const { invalidateAll } = useCoachReservationInvalidation();
+
+  return useFeatureMutation(coachApi.mutReservationCoachCancel, {
+    onSuccess: async (_, variables) => {
+      toast.success("Reservation cancelled");
+      await invalidateAll(variables.reservationId);
+    },
+    onError: (error) => {
+      toast.error(error.message ?? "Failed to cancel reservation");
     },
   });
 }

@@ -8,6 +8,12 @@ import { cn } from "@/lib/utils";
 
 const coachNavItems = [
   {
+    label: "Dashboard",
+    href: appRoutes.coach.dashboard,
+    description: "Overview stats and pending bookings.",
+    status: "active" as const,
+  },
+  {
     label: "Get Started",
     href: appRoutes.coach.getStarted,
     description: "Complete your public coach setup.",
@@ -35,7 +41,7 @@ const coachNavItems = [
     label: "Reservations",
     href: appRoutes.coach.reservations,
     description: "Player booking inbox and actions.",
-    status: "upcoming" as const,
+    status: "active" as const,
   },
 ];
 
