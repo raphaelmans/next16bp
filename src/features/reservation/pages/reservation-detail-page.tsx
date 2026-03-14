@@ -479,6 +479,11 @@ export default function ReservationDetailPage({
     currency: reservation.currency,
     createdAt: reservation.createdAt,
   };
+  const reservationPricingBreakdown = reservation.pricingBreakdown ?? null;
+  const coachAddonLines =
+    isCoachReservation && reservationPricingBreakdown
+      ? reservationPricingBreakdown.addons
+      : [];
 
   const isFreeSlot = transformedTimeSlot.priceCents === 0;
   const cancellationCutoffMinutes =
@@ -1062,6 +1067,45 @@ export default function ReservationDetailPage({
                     status={reservation.status as ReservationStatus}
                     size="sm"
                   />
+                </div>
+                <div className="border-t pt-3 space-y-2">
+                  <div className="flex items-center justify-between gap-4 text-sm">
+                    <span className="text-muted-foreground">Session fee</span>
+                    <span>
+                      {formatCurrency(
+                        reservationPricingBreakdown?.basePriceCents ??
+                          reservation.totalPriceCents,
+                        reservation.currency,
+                      )}
+                    </span>
+                  </div>
+                  {coachAddonLines.map((addon) => (
+                    <div
+                      key={addon.addonId}
+                      className="flex items-center justify-between gap-4 text-sm"
+                    >
+                      <span className="text-muted-foreground">
+                        {addon.addonLabel}
+                        {addon.quantity > 1 ? ` x${addon.quantity}` : ""}
+                      </span>
+                      <span>
+                        {formatCurrency(
+                          addon.subtotalCents,
+                          reservation.currency,
+                        )}
+                      </span>
+                    </div>
+                  ))}
+                  <div className="flex items-center justify-between gap-4 pt-1 font-medium">
+                    <span>Total</span>
+                    <span>
+                      {formatCurrency(
+                        reservationPricingBreakdown?.totalPriceCents ??
+                          reservation.totalPriceCents,
+                        reservation.currency,
+                      )}
+                    </span>
+                  </div>
                 </div>
                 {canShowPaymentStep && activeStep !== "payment" ? (
                   <Button

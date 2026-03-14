@@ -257,3 +257,42 @@ Validation that passed on the final code:
 
 Runtime-note:
 - probing `publicCaller` through `pnpm exec tsx -e` is not reliable in this repo because `src/trpc/server` imports the Next.js `server-only` shim outside the app runtime; public-route smoke is the safer validation path here
+
+## 2026-03-14T22:35:55Z Step 9 Plan
+
+Step 9 needs a truthful player-side pricing slice, not a coach-pricing refactor:
+- the booking page already fetches coach availability and add-ons, and the mutation already accepts `selectedAddons`; the missing work is selection state, pricing feedback, and passing the payload through
+- coach reservation creation currently prices selected add-ons but discards the breakdown, so reservation detail has no durable way to show which extras were chosen after booking
+- the smallest stable persistence fix is a nullable reservation `pricingBreakdown` snapshot that stores base price, add-on total, and per-addon lines at booking time
+
+Chosen implementation boundary:
+- reuse the existing court add-on player selector helpers/components for coach booking, with a small wording override instead of inventing a parallel selector
+- keep selection state local to the coach booking page, sanitize it against current coach add-ons, auto-include `AUTO` add-ons, and feed it into the coach availability query so totals update live
+- pass selected add-ons into `reservation.createForCoach` and store the computed pricing breakdown snapshot on the reservation record
+- render coach reservation detail/payment totals from that stored breakdown so chosen add-ons remain visible even if coach pricing config changes later
+
+Focused validation target:
+- booking-page tests for optional add-on selection, total updates, and mutation payload forwarding
+- coach reservation service tests for invalid add-on rejection plus stored pricing-breakdown persistence
+- player reservation detail page tests covering coach add-on line rendering from the stored breakdown
+- targeted Biome on touched reservation/coach-discovery/shared schema files
+
+## 2026-03-14T22:44:00Z Step 9 Completion Notes
+
+Step 9 is now complete as a pricing-truthfulness slice for coach bookings:
+- coach booking now renders live session add-on selection using the existing player add-on selector/helpers, including selection sanitizing and automatic inclusion of `AUTO` coach add-ons
+- selected add-ons now feed the coach availability query and `reservation.createForCoach`, so slot totals update before confirmation and the final mutation carries the chosen extras
+- added nullable `reservation.pricingBreakdown` storage plus generated migration `0053_busy_spectrum.sql`, and coach reservation creation now snapshots base fee/add-on totals/per-addon lines at booking time
+- the shared player reservation detail summary now renders coach add-on lines and totals from that stored pricing snapshot
+
+Validation that passed on the final code:
+- `pnpm exec vitest run src/__tests__/features/coach-discovery/pages/coach-booking-page.test.tsx src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts`
+- `pnpm exec biome check src/features/court-addons/components/player-addon-selector.tsx src/features/coach-discovery/pages/coach-booking-page.tsx src/features/reservation/pages/reservation-detail-page.tsx src/lib/shared/infra/db/schema/reservation.ts src/lib/modules/reservation/services/reservation-coach.service.ts src/__tests__/features/coach-discovery/pages/coach-booking-page.test.tsx src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts`
+- `pnpm db:generate` -> `drizzle/0053_busy_spectrum.sql`
+- manual dev smoke:
+  - `pnpm dev`
+  - `curl -I -s http://localhost:3000/coaches/coach-carla/book` -> `307` redirect to `/login?redirect=%2Fcoaches%2Fcoach-carla%2Fbook`
+  - adversarial `curl -I -s 'http://localhost:3000/coaches/not-a-real-coach/book?addonIds=addon-1%3A2'` -> `307` redirect to login with the original query preserved inside `redirect`
+  - `curl -I -s http://localhost:3000/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Freservations%2Freservation-1`
+
+Next loop should start at Step 10 unless review finds a regression in coach booking pricing snapshots or the player reservation summary rendering.

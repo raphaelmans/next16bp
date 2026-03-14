@@ -195,6 +195,20 @@ describe("ReservationDetailPage", () => {
         ...baseReservation,
         courtId: null,
         coachId: "coach-1",
+        pricingBreakdown: {
+          basePriceCents: 250000,
+          addonPriceCents: 4000,
+          totalPriceCents: 254000,
+          addons: [
+            {
+              addonId: "addon-1",
+              addonLabel: "Warm-up drills",
+              pricingType: "FLAT",
+              quantity: 2,
+              subtotalCents: 4000,
+            },
+          ],
+        },
       },
       events: [],
       targetType: "COACH",
@@ -218,6 +232,9 @@ describe("ReservationDetailPage", () => {
     expect(screen.getByText("Coach session: Coach Carla")).toBeTruthy();
     expect(screen.getByText("Private lessons for match prep")).toBeTruthy();
     expect(screen.getByText("Reservation Summary")).toBeTruthy();
+    expect(screen.getByText("Warm-up drills x2")).toBeTruthy();
+    expect(screen.getByText("₱40.00")).toBeTruthy();
+    expect(screen.getByText("₱2,540.00")).toBeTruthy();
     expect(screen.getByText("Status banner: coach")).toBeTruthy();
     expect(screen.queryByText("Venue reservation actions")).toBeNull();
     expect(screen.queryByText("Reservation not found")).toBeNull();

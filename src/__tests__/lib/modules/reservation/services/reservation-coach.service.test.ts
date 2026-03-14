@@ -1,10 +1,25 @@
 import { describe, expect, it, vi } from "vitest";
-import { ReservationNotFoundError } from "@/lib/modules/reservation/errors/reservation.errors";
+import {
+  InvalidReservationAddonSelectionError,
+  ReservationNotFoundError,
+} from "@/lib/modules/reservation/errors/reservation.errors";
+
+vi.mock("@/lib/env", () => ({
+  env: {
+    ENABLE_ADDON_PRICING_V2: true,
+  },
+}));
+
 import { CoachReservationService } from "@/lib/modules/reservation/services/reservation-coach.service";
 import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
 import type {
+  CoachAddonRateRuleRecord,
+  CoachAddonRecord,
+  CoachHoursWindowRecord,
+  CoachRateRuleRecord,
   CoachRecord,
   PaymentProofRecord,
+  ProfileRecord,
   ReservationEventRecord,
   ReservationRecord,
 } from "@/lib/shared/infra/db/schema";
@@ -15,13 +30,28 @@ type CoachReservationServiceDeps = ConstructorParameters<
 
 const USER_ID = "coach-user-1";
 const COACH_ID = "coach-1";
+const PROFILE_ID = "profile-1";
 const RESERVATION_ID = "reservation-1";
 
+const toCoachAddonRateRuleRecord = (
+  value: Partial<CoachAddonRateRuleRecord>,
+): CoachAddonRateRuleRecord => value as CoachAddonRateRuleRecord;
+const toCoachAddonRecord = (
+  value: Partial<CoachAddonRecord>,
+): CoachAddonRecord => value as CoachAddonRecord;
+const toCoachHoursWindowRecord = (
+  value: Partial<CoachHoursWindowRecord>,
+): CoachHoursWindowRecord => value as CoachHoursWindowRecord;
+const toCoachRateRuleRecord = (
+  value: Partial<CoachRateRuleRecord>,
+): CoachRateRuleRecord => value as CoachRateRuleRecord;
 const toCoachRecord = (value: Partial<CoachRecord>): CoachRecord =>
   value as CoachRecord;
 const toPaymentProofRecord = (
   value: Partial<PaymentProofRecord>,
 ): PaymentProofRecord => value as PaymentProofRecord;
+const toProfileRecord = (value: Partial<ProfileRecord>): ProfileRecord =>
+  value as ProfileRecord;
 const toReservationEventRecord = (
   value: Partial<ReservationEventRecord>,
 ): ReservationEventRecord => value as ReservationEventRecord;
@@ -29,21 +59,61 @@ const toReservationRecord = (
   value: Partial<ReservationRecord>,
 ): ReservationRecord => value as ReservationRecord;
 
+const hoursFromNowIso = (hours: number) => {
+  const value = new Date(Date.now() + hours * 60 * 60 * 1000);
+  value.setMinutes(0, 0, 0);
+  return value.toISOString();
+};
+
 function createHarness() {
   const reservationRepositoryFns = {
     findById: vi.fn(async () => null),
+    findOverlappingActiveByCoachIds: vi.fn(async () => []),
+    create: vi.fn(async (data: Partial<ReservationRecord>) =>
+      toReservationRecord({
+        id: RESERVATION_ID,
+        pingOwnerCount: 0,
+        createdAt: new Date("2026-03-15T01:00:00.000Z"),
+        updatedAt: new Date("2026-03-15T01:00:00.000Z"),
+        ...data,
+      }),
+    ),
   };
   const reservationEventRepositoryFns = {
     findByReservationId: vi.fn(async () => []),
+    create: vi.fn(async () =>
+      toReservationEventRecord({
+        id: "event-1",
+        reservationId: RESERVATION_ID,
+        toStatus: "CREATED",
+      }),
+    ),
   };
-  const profileRepositoryFns = {};
+  const profileRepositoryFns = {
+    findById: vi.fn(async () => null),
+  };
   const coachRepositoryFns = {
     findByUserId: vi.fn(async () => null),
+    findById: vi.fn(async () => null),
   };
-  const coachHoursRepositoryFns = {};
-  const coachRateRuleRepositoryFns = {};
-  const coachAddonRepositoryFns = {};
-  const coachBlockRepositoryFns = {};
+  const coachHoursRepositoryFns = {
+    findByCoachId: vi.fn(async () => []),
+  };
+  const coachRateRuleRepositoryFns = {
+    findByCoachId: vi.fn(async () => []),
+  };
+  const coachAddonRepositoryFns = {
+    findActiveByCoachIds: vi.fn(async () => []),
+    findRateRulesByAddonIds: vi.fn(async () => []),
+  };
+  const coachBlockRepositoryFns = {
+    findOverlappingByCoachId: vi.fn(async () => []),
+  };
+  const transactionManagerFns = {
+    run: vi.fn(async (callback: (tx: object) => Promise<unknown>) =>
+      callback({}),
+    ),
+  };
   const paymentProofRepositoryFns = {
     findByReservationId: vi.fn(async () => null),
   };
@@ -60,7 +130,7 @@ function createHarness() {
     coachRateRuleRepositoryFns as unknown as CoachReservationServiceDeps[5],
     coachAddonRepositoryFns as unknown as CoachReservationServiceDeps[6],
     coachBlockRepositoryFns as unknown as CoachReservationServiceDeps[7],
-    { run: vi.fn() } as unknown as CoachReservationServiceDeps[8],
+    transactionManagerFns as unknown as CoachReservationServiceDeps[8],
     paymentProofRepositoryFns as unknown as CoachReservationServiceDeps[9],
     storageServiceFns as unknown as CoachReservationServiceDeps[10],
   );
@@ -69,11 +139,170 @@ function createHarness() {
     service,
     reservationRepositoryFns,
     reservationEventRepositoryFns,
+    profileRepositoryFns,
     coachRepositoryFns,
+    coachHoursRepositoryFns,
+    coachRateRuleRepositoryFns,
+    coachAddonRepositoryFns,
+    coachBlockRepositoryFns,
+    transactionManagerFns,
     paymentProofRepositoryFns,
     storageServiceFns,
   };
 }
+
+describe("CoachReservationService.createForCoach", () => {
+  it("rejects invalid selected add-ons before creating the reservation", async () => {
+    const harness = createHarness();
+    const startTime = hoursFromNowIso(48);
+    const startDate = new Date(startTime);
+    const dayOfWeek = startDate.getUTCDay();
+
+    harness.profileRepositoryFns.findById.mockResolvedValue(
+      toProfileRecord({
+        id: PROFILE_ID,
+        name: "Player One",
+        email: "player@example.com",
+        phone: "+63 900 000 0000",
+      }),
+    );
+    harness.coachRepositoryFns.findById.mockResolvedValue(
+      toCoachRecord({
+        id: COACH_ID,
+        isActive: true,
+        name: "Coach Carla",
+        timeZone: "UTC",
+      }),
+    );
+    harness.coachHoursRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachHoursWindowRecord({
+        coachId: COACH_ID,
+        dayOfWeek,
+        startMinute: 0,
+        endMinute: 1440,
+      }),
+    ]);
+    harness.coachRateRuleRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachRateRuleRecord({
+        coachId: COACH_ID,
+        dayOfWeek,
+        startMinute: 0,
+        endMinute: 1440,
+        hourlyRateCents: 150000,
+        currency: "PHP",
+      }),
+    ]);
+
+    await expect(
+      harness.service.createForCoach("player-user-1", PROFILE_ID, {
+        coachId: COACH_ID,
+        startTime,
+        durationMinutes: 60,
+        selectedAddons: [{ addonId: "missing-addon", quantity: 1 }],
+      }),
+    ).rejects.toBeInstanceOf(InvalidReservationAddonSelectionError);
+
+    expect(harness.reservationRepositoryFns.create).not.toHaveBeenCalled();
+    expect(harness.transactionManagerFns.run).not.toHaveBeenCalled();
+  });
+
+  it("stores the pricing breakdown snapshot for selected coach add-ons", async () => {
+    const harness = createHarness();
+    const startTime = hoursFromNowIso(48);
+    const startDate = new Date(startTime);
+    const dayOfWeek = startDate.getUTCDay();
+    const addon = toCoachAddonRecord({
+      id: "addon-1",
+      coachId: COACH_ID,
+      label: "Warm-up drills",
+      isActive: true,
+      mode: "OPTIONAL",
+      pricingType: "FLAT",
+      flatFeeCents: 2000,
+      flatFeeCurrency: "PHP",
+      displayOrder: 0,
+    });
+
+    harness.profileRepositoryFns.findById.mockResolvedValue(
+      toProfileRecord({
+        id: PROFILE_ID,
+        name: "Player One",
+        email: "player@example.com",
+        phone: "+63 900 000 0000",
+      }),
+    );
+    harness.coachRepositoryFns.findById.mockResolvedValue(
+      toCoachRecord({
+        id: COACH_ID,
+        isActive: true,
+        name: "Coach Carla",
+        timeZone: "UTC",
+      }),
+    );
+    harness.coachHoursRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachHoursWindowRecord({
+        coachId: COACH_ID,
+        dayOfWeek,
+        startMinute: 0,
+        endMinute: 1440,
+      }),
+    ]);
+    harness.coachRateRuleRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachRateRuleRecord({
+        coachId: COACH_ID,
+        dayOfWeek,
+        startMinute: 0,
+        endMinute: 1440,
+        hourlyRateCents: 150000,
+        currency: "PHP",
+      }),
+    ]);
+    harness.coachAddonRepositoryFns.findActiveByCoachIds.mockResolvedValue([
+      addon,
+    ]);
+    harness.coachAddonRepositoryFns.findRateRulesByAddonIds.mockResolvedValue([
+      toCoachAddonRateRuleRecord({}),
+    ]);
+
+    const result = await harness.service.createForCoach(
+      "player-user-1",
+      PROFILE_ID,
+      {
+        coachId: COACH_ID,
+        startTime,
+        durationMinutes: 60,
+        selectedAddons: [{ addonId: addon.id, quantity: 2 }],
+      },
+    );
+
+    expect(harness.reservationRepositoryFns.create).toHaveBeenCalledWith(
+      expect.objectContaining({
+        coachId: COACH_ID,
+        playerId: PROFILE_ID,
+        totalPriceCents: 154000,
+        currency: "PHP",
+        pricingBreakdown: {
+          basePriceCents: 150000,
+          addonPriceCents: 4000,
+          totalPriceCents: 154000,
+          addons: [
+            {
+              addonId: addon.id,
+              addonLabel: "Warm-up drills",
+              pricingType: "FLAT",
+              quantity: 2,
+              subtotalCents: 4000,
+            },
+          ],
+        },
+      }),
+      expect.objectContaining({ tx: {} }),
+    );
+    expect(result.totalPriceCents).toBe(154000);
+    expect(result.currency).toBe("PHP");
+    expect(harness.transactionManagerFns.run).toHaveBeenCalledTimes(1);
+  });
+});
 
 describe("CoachReservationService.getReservationDetail", () => {
   it("returns signed payment proof metadata for the owning coach", async () => {

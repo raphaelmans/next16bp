@@ -167,6 +167,7 @@ export class CoachReservationService implements ICoachReservationService {
     endTime: Date;
     totalPriceCents: number;
     currency: string;
+    pricingBreakdown: import("@/common/pricing-breakdown").PricingBreakdown;
     pricingWarnings: string[];
   } | null> {
     const { coachId, startTime, durationMinutes, timeZone, selectedAddons } =
@@ -225,6 +226,7 @@ export class CoachReservationService implements ICoachReservationService {
       endTime: computed.result.endTime,
       totalPriceCents: computed.result.totalPriceCents,
       currency: computed.result.currency,
+      pricingBreakdown: computed.result.pricingBreakdown,
       pricingWarnings: computed.result.warnings.map(
         (warning) => warning.message,
       ),
@@ -376,6 +378,7 @@ export class CoachReservationService implements ICoachReservationService {
           endTime: pricing.endTime,
           totalPriceCents: pricing.totalPriceCents,
           currency: pricing.currency,
+          pricingBreakdown: pricing.pricingBreakdown,
           status: "CREATED",
           expiresAt,
           playerNameSnapshot: profile.name,

@@ -35,6 +35,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  type CourtAddonConfig,
+  getAutoAddonIds,
+  PlayerAddonSelector,
+  sanitizeSelectedAddons,
+} from "@/features/court-addons";
+import type { SelectedAddon } from "@/features/court-addons/schemas";
 import { ProfilePreviewCard } from "@/features/reservation/components/profile-preview-card";
 import { ProfileSetupModal } from "@/features/reservation/components/profile-setup-modal";
 import { useQueryProfile } from "@/features/reservation/hooks";
@@ -87,6 +94,9 @@ export default function CoachBookingPage({
   const [selectedSlotTime, setSelectedSlotTime] = React.useState<string | null>(
     null,
   );
+  const [selectedAddons, setSelectedAddons] = React.useState<SelectedAddon[]>(
+    [],
+  );
   const [termsAccepted, setTermsAccepted] = React.useState(false);
   const [showProfileModal, setShowProfileModal] = React.useState(false);
 
@@ -112,6 +122,39 @@ export default function CoachBookingPage({
     [selectedDate, coachTimeZone],
   );
 
+  const { data: coachAddonConfigsData, isLoading: isLoadingAddons } =
+    useModCoachAddonsForBooking({
+      coachId,
+      enabled: !!coachId,
+    });
+
+  const coachAddonConfigs = React.useMemo(
+    () => (coachAddonConfigsData ?? []) as CourtAddonConfig[],
+    [coachAddonConfigsData],
+  );
+
+  React.useEffect(() => {
+    const sanitized = sanitizeSelectedAddons(selectedAddons, coachAddonConfigs);
+    const autoAddonIds = getAutoAddonIds(coachAddonConfigs);
+    const sanitizedIds = new Set(sanitized.map((addon) => addon.addonId));
+    const autoEntries: SelectedAddon[] = autoAddonIds
+      .filter((addonId) => !sanitizedIds.has(addonId))
+      .map((addonId) => ({ addonId, quantity: 1 }));
+    const next = [...sanitized, ...autoEntries];
+
+    const hasChanged =
+      next.length !== selectedAddons.length ||
+      next.some(
+        (addon, index) =>
+          addon.addonId !== selectedAddons[index]?.addonId ||
+          addon.quantity !== selectedAddons[index]?.quantity,
+      );
+
+    if (hasChanged) {
+      setSelectedAddons(next);
+    }
+  }, [coachAddonConfigs, selectedAddons]);
+
   const {
     data: availability,
     isLoading: isLoadingAvailability,
@@ -120,12 +163,8 @@ export default function CoachBookingPage({
     coachId: coachId ?? "",
     date: dateIso ?? "",
     durationMinutes,
+    selectedAddons: selectedAddons.length > 0 ? selectedAddons : undefined,
     enabled: !!coachId && !!dateIso,
-  });
-
-  useModCoachAddonsForBooking({
-    coachId,
-    enabled: !!coachId,
   });
 
   const availableSlots = React.useMemo(
@@ -166,6 +205,7 @@ export default function CoachBookingPage({
         coachId,
         startTime: selectedSlot.startTime,
         durationMinutes,
+        selectedAddons: selectedAddons.length > 0 ? selectedAddons : undefined,
       },
       {
         onSuccess: (data) => {
@@ -179,9 +219,17 @@ export default function CoachBookingPage({
     termsAccepted,
     profileComplete,
     durationMinutes,
+    selectedAddons,
     createBooking,
     router,
   ]);
+
+  const handleSelectedAddonsChange = React.useCallback(
+    (nextAddons: SelectedAddon[]) => {
+      setSelectedAddons(nextAddons);
+    },
+    [],
+  );
 
   if (isLoadingCoach) {
     return (
@@ -235,6 +283,10 @@ export default function CoachBookingPage({
   const noSchedule = diagnostics && !diagnostics.hasHoursWindows;
   const noPricing = diagnostics && !diagnostics.hasRateRules;
   const noHoursForDay = diagnostics && !diagnostics.dayHasHours;
+  const pricingBreakdown = selectedSlot?.pricingBreakdown;
+  const basePriceCents =
+    pricingBreakdown?.basePriceCents ?? selectedSlot?.totalPriceCents ?? 0;
+  const addonLines = pricingBreakdown?.addons ?? [];
 
   return (
     <Container className="py-8">
@@ -407,6 +459,32 @@ export default function CoachBookingPage({
               onEditClick={() => setShowProfileModal(true)}
             />
           )}
+
+          {coachId && (isLoadingAddons || coachAddonConfigs.length > 0) ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Session Add-ons</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <p className="text-sm text-muted-foreground">
+                  Optional extras update your session total before you confirm.
+                </p>
+                {isLoadingAddons ? (
+                  <div className="space-y-2">
+                    <Skeleton className="h-14" />
+                    <Skeleton className="h-14" />
+                  </div>
+                ) : (
+                  <PlayerAddonSelector
+                    addons={coachAddonConfigs}
+                    selectedAddons={selectedAddons}
+                    onSelectedAddonsChange={handleSelectedAddonsChange}
+                    emptyMessage="No optional extras are available for this coach yet."
+                  />
+                )}
+              </CardContent>
+            </Card>
+          ) : null}
         </div>
 
         {/* Right column: Order summary */}
@@ -466,11 +544,28 @@ export default function CoachBookingPage({
                     <span className="text-muted-foreground">Session fee</span>
                     <span>
                       {formatCurrency(
-                        selectedSlot.totalPriceCents,
+                        basePriceCents,
                         selectedSlot.currency ?? currency,
                       )}
                     </span>
                   </div>
+                  {addonLines.map((addon) => (
+                    <div
+                      key={addon.addonId}
+                      className="flex justify-between text-sm"
+                    >
+                      <span className="text-muted-foreground">
+                        {addon.addonLabel}
+                        {addon.quantity > 1 ? ` x${addon.quantity}` : ""}
+                      </span>
+                      <span>
+                        {formatCurrency(
+                          addon.subtotalCents,
+                          selectedSlot.currency ?? currency,
+                        )}
+                      </span>
+                    </div>
+                  ))}
                 </div>
 
                 {/* Pricing warnings */}

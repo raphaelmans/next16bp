@@ -3,6 +3,7 @@ import {
   check,
   index,
   integer,
+  jsonb,
   pgTable,
   text,
   timestamp,
@@ -12,6 +13,7 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import { coach } from "./coach";
 import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
@@ -80,6 +82,9 @@ export const reservation = pgTable(
     endTime: timestamp("end_time", { withTimezone: true }).notNull(),
     totalPriceCents: integer("total_price_cents").notNull().default(0),
     currency: varchar("currency", { length: 3 }).notNull().default("PHP"),
+    pricingBreakdown: jsonb(
+      "pricing_breakdown",
+    ).$type<PricingBreakdown | null>(),
     playerId: uuid("player_id").references(() => profile.id, {
       onDelete: "cascade",
     }),

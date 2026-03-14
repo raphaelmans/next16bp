@@ -10,7 +10,7 @@
 - [x] Step 6: Complete missing coach portal routes
 - [x] Step 7: Finish coach reservation detail with payment-proof support
 - [x] Step 8: Add coach reviews end to end
-- [ ] Step 9: Surface coach booking add-ons in player UX
+- [x] Step 9: Surface coach booking add-ons in player UX
 - [ ] Step 10: Add coach notifications, chat, and regression coverage
 
 Convert the design into a series of implementation steps that will build each component in a test-driven manner following agile best practices. Each step must result in a working, demoable increment of functionality. Prioritize best practices, incremental progress, and early testing, ensuring no big jumps in complexity at any stage. Make sure that each step builds on the previous steps, and ends with wiring things together. There should be no hanging or orphaned code that isn't integrated into a previous step.
@@ -237,6 +237,16 @@ Integrates with previous work:
 - depends on the repaired player detail and payment flows already being coach-aware
 
 Demo: A player selects optional coach add-ons during booking, sees the total change, and later sees those add-ons reflected in reservation detail.
+
+Verification snapshot:
+- added live coach booking add-on selection by reusing the existing player add-on selector/helpers, sanitizing selections against coach add-ons, auto-including `AUTO` add-ons, and passing selected add-ons through the availability and create-for-coach flows
+- persisted a stable `reservation.pricingBreakdown` snapshot so coach reservation detail can show base fee, chosen add-ons, and totals after booking without depending on mutable coach pricing config
+- updated the shared player reservation detail summary to render coach add-on lines and totals from the stored pricing snapshot
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/features/coach-discovery/pages/coach-booking-page.test.tsx src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts`
+  - `pnpm exec biome check src/features/court-addons/components/player-addon-selector.tsx src/features/coach-discovery/pages/coach-booking-page.tsx src/features/reservation/pages/reservation-detail-page.tsx src/lib/shared/infra/db/schema/reservation.ts src/lib/modules/reservation/services/reservation-coach.service.ts src/__tests__/features/coach-discovery/pages/coach-booking-page.test.tsx src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts`
+  - `pnpm db:generate` -> generated `drizzle/0053_busy_spectrum.sql`
+  - manual dev smoke: `pnpm dev`, `curl -I -s http://localhost:3000/coaches/coach-carla/book` -> `307` redirect to `/login?redirect=%2Fcoaches%2Fcoach-carla%2Fbook`, adversarial `curl -I -s 'http://localhost:3000/coaches/not-a-real-coach/book?addonIds=addon-1%3A2'` preserved the auth redirect with the original query encoded in `redirect`, and `curl -I -s http://localhost:3000/reservations/reservation-1` stayed behind the player auth guard with a `307` to `/login`
 
 ## Step 10: Add coach notifications, chat, and regression coverage
 

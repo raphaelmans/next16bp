@@ -83,3 +83,13 @@ Use this file to capture consequential decisions and their confidence scores.
 - Reasoning: Step 8 explicitly calls for eligibility rules, and the safest trust-preserving boundary is completed-session proof. Reusing reservation history keeps the rule auditable, avoids inventing a new entitlement model, and still permits authors to edit/remove an existing review.
 - Reversibility: easy
 - Timestamp (UTC ISO 8601): 2026-03-15T01:10:00Z
+
+### DEC-008
+
+- Decision: Persist coach booking add-on detail for Step 9 reservation-detail rendering
+- Chosen Option: Add a nullable `pricingBreakdown` JSON snapshot column on `reservation`, populate it during coach reservation creation, and render coach detail/add-on totals from that stored snapshot
+- Confidence: 74
+- Alternatives Considered: add a new relational reservation-addon table, recompute add-on lines on the fly from current coach addon config, pass detail-only add-on state through client navigation without persistence
+- Reasoning: Step 9 needs post-booking truth, not just pre-submit pricing. Recomputing from mutable coach addon config would make old reservations drift, while a new table is too large for this narrow increment. A stored pricing snapshot matches the existing `PricingBreakdown` shape, keeps venue behavior untouched, and gives the player detail page stable add-on lines immediately.
+- Reversibility: medium
+- Timestamp (UTC ISO 8601): 2026-03-14T22:35:55Z

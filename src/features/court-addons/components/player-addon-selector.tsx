@@ -17,6 +17,7 @@ type PlayerAddonSelectorProps = {
   selectedAddons: SelectedAddon[];
   onSelectedAddonsChange: (next: SelectedAddon[]) => void;
   globalAddonIds?: Set<string>;
+  emptyMessage?: string;
 };
 
 export function PlayerAddonSelector({
@@ -24,15 +25,12 @@ export function PlayerAddonSelector({
   selectedAddons,
   onSelectedAddonsChange,
   globalAddonIds,
+  emptyMessage = "No optional extras are available for this court.",
 }: PlayerAddonSelectorProps) {
   const optionalAddons = getOptionalAddonConfigs(addons);
 
   if (optionalAddons.length === 0) {
-    return (
-      <p className="text-sm text-muted-foreground">
-        No optional extras are available for this court.
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
   }
 
   const selectedMap = new Map(
