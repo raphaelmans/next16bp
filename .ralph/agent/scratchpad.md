@@ -1,25 +1,42 @@
-## 2026-03-14T18:03:21Z
+# Step 2: Coach Payment Methods Backend + Payment-Info Resolution
 
-- Objective: turn the coach feature review research into a prioritized implementation backlog grouped into P0, P1, and P2.
-- Evidence base: `01-surface-map.md`, `02-gap-analysis.md`, and `03-acceptance-audit.md` all agree the coach feature shipped as an MVP but missed full-spec portal, payment, review, notification, chat, and player-detail work.
-- Plan for this iteration: create one backlog artifact in `.agents/planning/2026-03-15-coach-feature-review/` that converts those findings into implementation-ready priorities, then verify the file content and commit only the planning artifact.
+## Understanding
 
-## 2026-03-14T18:05:00Z
+The `coach_payment_method` table exists in schema with the same shape as `organization_payment_method`.
+Setup-status already queries it to check payment readiness. But there's no CRUD module.
 
-- Completed `.agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md` with 3 P0, 4 P1, and 3 P2 backlog items plus delivery order and review framing.
-- Verification for this doc task was content review of the generated backlog plus cached diff review before commit `8d51cb388`.
-- Tried `ralph tools interact progress`, but the loop environment has no bot token configured; captured a fix memory so future iterations skip that path unless RObot is onboarded.
+The reservation service's `getPaymentInfo` currently returns empty `{ methods: [], defaultMethodId: null }` for coach reservations (line 2032-2033).
 
-## 2026-03-15T00:00:00Z - coach spec audit addendum
+## Plan
 
-- Objective this iteration: append a concise audit/addendum section to `specs/coach-feature/PROMPT.md` without rewriting original requirements.
-- Inputs reviewed: `01-surface-map.md`, `02-gap-analysis.md`, `03-acceptance-audit.md`, and `04-implementation-backlog.md`.
-- Planned shape: keep the original spec intact, then add one new section summarizing current implementation status, implemented areas, partial areas, missing areas, and prioritized backlog/delivery order.
-- Expected verification: inspect resulting spec diff for fidelity and run `pnpm lint` as the repo validation gate, even though the change is documentation-only.
+1. Create `src/lib/modules/coach-payment/` module following org-payment pattern:
+   - `errors/coach-payment.errors.ts` - NotFound, Conflict, Inactive errors
+   - `dtos/coach-payment-method.dto.ts` - List/Create/Update/Delete/SetDefault schemas
+   - `dtos/index.ts` - barrel export
+   - `repositories/coach-payment-method.repository.ts` - CRUD with tx support
+   - `services/coach-payment.service.ts` - business logic with authorization
+   - `factories/coach-payment.factory.ts` - singleton factory
+   - `coach-payment.router.ts` - tRPC router with 5 endpoints
 
-## 2026-03-15T00:05:00Z - coach spec audit addendum result
+2. Register `coachPaymentRouter` in tRPC root router.
 
-- Appended `Implementation Audit Addendum (2026-03-15)` to `specs/coach-feature/PROMPT.md` without modifying the original requirements section.
-- Added concise sections for current audit framing, implemented areas, partial areas, missing areas, prioritized backlog, and recommended delivery order, all grounded in the 2026-03-15 review artifacts.
-- Verification: reviewed the rendered tail of `specs/coach-feature/PROMPT.md` and diffed the change for scope control.
-- Validation note: `pnpm lint` is currently red because of unrelated pre-existing Biome findings outside this doc task; captured fix memory `mem-1773512414-9708` instead of expanding task scope.
+3. Extend `ReservationService.getPaymentInfo()` to resolve coach payment methods when `reservation.coachId` is set.
+   - Add `ICoachPaymentMethodRepository` as a new constructor dependency
+   - Update factory to inject it
+
+4. Run lint to validate.
+
+## Key Decisions
+- Follow exact same patterns as organization-payment module
+- Coach authorization uses `requireOwnedCoach` helper from coach module
+- `ReservationPaymentMethod` type is already compatible (same fields)
+- The `type` field uses the same `OrganizationPaymentMethodRecord["type"]` reference - this is fine since it's the same DB enum
+
+## Completed
+
+All three tasks done in a single iteration:
+1. Created full `coach-payment` module with 7 files (errors, DTOs, repository, service, factory, router)
+2. Extended `ReservationService.getPaymentInfo()` to resolve coach payment methods for coach reservations
+3. Registered `coachPayment` router in tRPC root
+4. Lint passes on all touched files
+5. Committed as `16d2324a6`
