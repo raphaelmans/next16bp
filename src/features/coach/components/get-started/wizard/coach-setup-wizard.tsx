@@ -162,7 +162,12 @@ function renderActiveStep(
         />
       );
     case "payment":
-      return <PaymentStep isComplete={status.hasPaymentMethod} />;
+      return (
+        <PaymentStep
+          isComplete={status.hasPaymentMethod}
+          coachId={status.coachId}
+        />
+      );
     case "verify":
       return <VerifyStep isComplete={status.hasVerification} />;
     case "complete":

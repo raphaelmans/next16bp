@@ -10,6 +10,31 @@ vi.mock("@/common/trpc-client-call", () => ({
 }));
 
 describe("CoachApi", () => {
+  it("queryCoachPaymentListMethods uses the coachPayment.listMethods transport path", async () => {
+    const clientApi = {
+      coachPayment: {
+        listMethods: { query: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { methods: [{ id: "payment-1" }] };
+    callTrpcQueryMock.mockResolvedValue(expected);
+
+    const result = await api.queryCoachPaymentListMethods({
+      coachId: "coach-1",
+    });
+
+    expect(result).toEqual(expected);
+    expect(callTrpcQueryMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coachPayment", "listMethods"],
+      expect.any(Function),
+      { coachId: "coach-1" },
+      toAppError,
+    );
+  });
+
   it("queryCoachHoursGet uses the coachHours.get transport path", async () => {
     const clientApi = {
       coachHours: {
@@ -149,6 +174,47 @@ describe("CoachApi", () => {
             rules: [],
           },
         ],
+      },
+      toAppError,
+    );
+  });
+
+  it("mutCoachPaymentCreateMethod uses the coachPayment.createMethod transport path", async () => {
+    const clientApi = {
+      coachPayment: {
+        createMethod: { mutate: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { method: { id: "payment-1" } };
+    callTrpcMutationMock.mockResolvedValue(expected);
+
+    const result = await api.mutCoachPaymentCreateMethod({
+      coachId: "coach-1",
+      type: "MOBILE_WALLET",
+      provider: "GCASH",
+      accountName: "Coach One",
+      accountNumber: "09171234567",
+      instructions: "Use reservation ID",
+      isActive: true,
+      isDefault: true,
+    });
+
+    expect(result).toEqual(expected);
+    expect(callTrpcMutationMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coachPayment", "createMethod"],
+      expect.any(Function),
+      {
+        coachId: "coach-1",
+        type: "MOBILE_WALLET",
+        provider: "GCASH",
+        accountName: "Coach One",
+        accountNumber: "09171234567",
+        instructions: "Use reservation ID",
+        isActive: true,
+        isDefault: true,
       },
       toAppError,
     );

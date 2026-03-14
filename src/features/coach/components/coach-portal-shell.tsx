@@ -26,6 +26,12 @@ const coachNavItems = [
     status: "upcoming" as const,
   },
   {
+    label: "Payment Methods",
+    href: appRoutes.coach.paymentMethods,
+    description: "Manage player payment instructions.",
+    status: "active" as const,
+  },
+  {
     label: "Schedule",
     href: appRoutes.coach.schedule,
     description: "Weekly hours and time blocks.",
@@ -60,7 +66,7 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
               Build your coaching profile
             </h1>
           </div>
-          <Badge variant="secondary">Step 4 live</Badge>
+          <Badge variant="secondary">Payment live</Badge>
         </div>
       </header>
 
@@ -72,8 +78,8 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
                 Coach workspace
               </h2>
               <p className="text-sm text-muted-foreground">
-                Schedule and pricing are now live alongside the setup wizard.
-                The remaining coach portal surfaces land in later tasks.
+                Payment, schedule, and pricing are live alongside the setup
+                wizard. The remaining coach portal surfaces land in later tasks.
               </p>
             </div>
 

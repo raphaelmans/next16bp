@@ -25,6 +25,13 @@ vi.mock("@/features/coach/components/coach-addon-editor", () => ({
   ),
 }));
 
+vi.mock("@/features/coach/components/coach-payment-methods-manager", () => ({
+  CoachPaymentMethodsManager: ({ coachId }: { coachId: string }) => (
+    <div>Payment manager for {coachId}</div>
+  ),
+}));
+
+import { PaymentStep } from "@/features/coach/components/get-started/wizard/steps/payment-step";
 import { PricingStep } from "@/features/coach/components/get-started/wizard/steps/pricing-step";
 import { ScheduleStep } from "@/features/coach/components/get-started/wizard/steps/schedule-step";
 
@@ -54,5 +61,18 @@ describe("coach setup live schedule and pricing steps", () => {
       ),
     ).toBeTruthy();
     expect(screen.queryByText("Schedule editor for coach-1")).toBeNull();
+  });
+
+  it("payment step renders the live payment manager when coachId exists", () => {
+    render(<PaymentStep isComplete={false} coachId="coach-1" />);
+
+    expect(screen.getByText("Payment manager for coach-1")).toBeTruthy();
+  });
+
+  it("payment step shows the completed state when payment methods are ready", () => {
+    render(<PaymentStep isComplete={true} coachId="coach-1" />);
+
+    expect(screen.getByText("Payment method added")).toBeTruthy();
+    expect(screen.getByText("Manage payment methods")).toBeTruthy();
   });
 });

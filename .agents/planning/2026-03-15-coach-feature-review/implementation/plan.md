@@ -4,7 +4,7 @@
 
 - [x] Step 1: Make player coach reservation detail render correctly
 - [x] Step 2: Add coach payment methods backend and player payment-info support
-- [ ] Step 3: Ship coach payment methods UI and connect get-started
+- [x] Step 3: Ship coach payment methods UI and connect get-started
 - [ ] Step 4: Replace placeholder onboarding steps with real profile and sports editing
 - [ ] Step 5: Add a real coach verification gate
 - [ ] Step 6: Complete missing coach portal routes
@@ -80,6 +80,12 @@ Integrates with previous work:
 - uses backend APIs from Step 2 and unlocks meaningful paid-coach onboarding
 
 Demo: A coach adds a payment method, sees it on `/coach/payment-methods`, and the get-started flow updates payment readiness.
+
+Verification snapshot:
+- added coach feature API/query-adapter support for `coachPayment.*` CRUD plus setup-status invalidation
+- shipped `CoachPaymentMethodsManager`, `/coach/payment-methods`, and live payment-step wiring in the get-started wizard
+- updated coach portal navigation so payment methods is a real destination instead of a missing promised surface
+- focused validation passed for coach payment manager/component/page/api/hooks coverage plus a local dev smoke showing `/coach/payment-methods` redirects unauthenticated users to `/login?redirect=%2Fcoach%2Fpayment-methods`
 
 ## Step 4: Replace placeholder onboarding steps with real profile and sports editing
 

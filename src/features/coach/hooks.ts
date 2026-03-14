@@ -35,6 +35,8 @@ export function useModCoachInvalidation() {
     () => ({
       invalidateCoachSetupStatus: () =>
         featureCache.invalidate(["coach", "getSetupStatus"]),
+      invalidateCoachPaymentMethods: (coachId: string) =>
+        featureCache.invalidate(["coachPayment", "listMethods"], { coachId }),
       invalidateCoachHours: (coachId: string) =>
         featureCache.invalidate(["coachHours", "get"], { coachId }),
       invalidateCoachRateRules: (coachId: string) =>
@@ -49,6 +51,80 @@ export function useModCoachInvalidation() {
     }),
     [featureCache],
   );
+}
+
+export function useQueryCoachPaymentMethods(
+  coachId: string | null,
+  options?: {
+    enabled?: boolean;
+  },
+) {
+  const isEnabled = options?.enabled ?? true;
+
+  return useFeatureQuery(
+    ["coachPayment", "listMethods"],
+    coachApi.queryCoachPaymentListMethods,
+    coachId ? { coachId } : undefined,
+    {
+      enabled: !!coachId && isEnabled,
+    },
+  );
+}
+
+export function useMutCreateCoachPaymentMethod(coachId: string) {
+  const { invalidateCoachPaymentMethods, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachPaymentCreateMethod, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachPaymentMethods(coachId),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
+}
+
+export function useMutUpdateCoachPaymentMethod(coachId: string) {
+  const { invalidateCoachPaymentMethods, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachPaymentUpdateMethod, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachPaymentMethods(coachId),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
+}
+
+export function useMutDeleteCoachPaymentMethod(coachId: string) {
+  const { invalidateCoachPaymentMethods, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachPaymentDeleteMethod, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachPaymentMethods(coachId),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
+}
+
+export function useMutSetDefaultCoachPaymentMethod(coachId: string) {
+  const { invalidateCoachPaymentMethods, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachPaymentSetDefault, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachPaymentMethods(coachId),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
 }
 
 export function useQueryCoachHours(

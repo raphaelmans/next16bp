@@ -16,7 +16,22 @@ export interface ICoachApi {
   queryCoachGetSetupStatus: ProcedureFn<
     TrpcClientApi["coach"]["getSetupStatus"]["query"]
   >;
+  queryCoachPaymentListMethods: ProcedureFn<
+    TrpcClientApi["coachPayment"]["listMethods"]["query"]
+  >;
   queryCoachHoursGet: ProcedureFn<TrpcClientApi["coachHours"]["get"]["query"]>;
+  mutCoachPaymentCreateMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["createMethod"]["mutate"]
+  >;
+  mutCoachPaymentDeleteMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["deleteMethod"]["mutate"]
+  >;
+  mutCoachPaymentSetDefault: ProcedureFn<
+    TrpcClientApi["coachPayment"]["setDefault"]["mutate"]
+  >;
+  mutCoachPaymentUpdateMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["updateMethod"]["mutate"]
+  >;
   mutCoachHoursSet: ProcedureFn<TrpcClientApi["coachHours"]["set"]["mutate"]>;
   queryCoachBlockList: ProcedureFn<
     TrpcClientApi["coachBlock"]["list"]["query"]
@@ -83,6 +98,17 @@ export class CoachApi implements ICoachApi {
       this.toAppError,
     );
 
+  queryCoachPaymentListMethods: ProcedureFn<
+    TrpcClientApi["coachPayment"]["listMethods"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["coachPayment", "listMethods"],
+      (clientApi) => clientApi.coachPayment.listMethods.query,
+      input,
+      this.toAppError,
+    );
+
   queryCoachHoursGet: ProcedureFn<TrpcClientApi["coachHours"]["get"]["query"]> =
     async (input) =>
       callTrpcQuery(
@@ -102,6 +128,50 @@ export class CoachApi implements ICoachApi {
         input,
         this.toAppError,
       );
+
+  mutCoachPaymentCreateMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["createMethod"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coachPayment", "createMethod"],
+      (clientApi) => clientApi.coachPayment.createMethod.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutCoachPaymentDeleteMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["deleteMethod"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coachPayment", "deleteMethod"],
+      (clientApi) => clientApi.coachPayment.deleteMethod.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutCoachPaymentSetDefault: ProcedureFn<
+    TrpcClientApi["coachPayment"]["setDefault"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coachPayment", "setDefault"],
+      (clientApi) => clientApi.coachPayment.setDefault.mutate,
+      input,
+      this.toAppError,
+    );
+
+  mutCoachPaymentUpdateMethod: ProcedureFn<
+    TrpcClientApi["coachPayment"]["updateMethod"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coachPayment", "updateMethod"],
+      (clientApi) => clientApi.coachPayment.updateMethod.mutate,
+      input,
+      this.toAppError,
+    );
 
   queryCoachBlockList: ProcedureFn<
     TrpcClientApi["coachBlock"]["list"]["query"]

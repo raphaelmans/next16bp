@@ -38,6 +38,13 @@ vi.mock("@/features/coach/components/coach-addon-editor", () => ({
   ),
 }));
 
+vi.mock("@/features/coach/components/coach-payment-methods-manager", () => ({
+  CoachPaymentMethodsManager: ({ coachId }: { coachId: string }) => (
+    <div>Payment manager for {coachId}</div>
+  ),
+}));
+
+import CoachPaymentMethodsPage from "@/features/coach/pages/coach-payment-methods-page";
 import CoachPricingPage from "@/features/coach/pages/coach-pricing-page";
 import CoachSchedulePage from "@/features/coach/pages/coach-schedule-page";
 
@@ -66,6 +73,15 @@ describe("coach schedule and pricing pages", () => {
     expect(screen.getByText("Addon editor for coach-1")).toBeTruthy();
   });
 
+  it("payment methods page renders the live manager when a coach profile exists", () => {
+    render(<CoachPaymentMethodsPage />);
+
+    expect(
+      screen.getByText("Manage how players pay for sessions"),
+    ).toBeTruthy();
+    expect(screen.getByText("Payment manager for coach-1")).toBeTruthy();
+  });
+
   it("schedule page shows the prerequisite state when coachId is missing", () => {
     coachSetupStatusState.data = { coachId: null };
 
@@ -73,5 +89,14 @@ describe("coach schedule and pricing pages", () => {
 
     expect(screen.getByText("Create your coach profile first")).toBeTruthy();
     expect(screen.queryByText("Schedule editor for coach-1")).toBeNull();
+  });
+
+  it("payment methods page shows the prerequisite state when coachId is missing", () => {
+    coachSetupStatusState.data = { coachId: null };
+
+    render(<CoachPaymentMethodsPage />);
+
+    expect(screen.getByText("Create your coach profile first")).toBeTruthy();
+    expect(screen.queryByText("Payment manager for coach-1")).toBeNull();
   });
 });
