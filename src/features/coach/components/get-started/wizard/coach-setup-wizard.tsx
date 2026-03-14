@@ -144,7 +144,12 @@ function renderActiveStep(
     case "profile":
       return <ProfileStep isComplete={status.hasCoachProfile} />;
     case "sports":
-      return <SportsStep isComplete={status.hasCoachSports} />;
+      return (
+        <SportsStep
+          isComplete={status.hasCoachSports}
+          coachId={status.coachId}
+        />
+      );
     case "location":
       return <LocationStep isComplete={status.hasCoachLocation} />;
     case "schedule":

@@ -5,7 +5,7 @@
 - [x] Step 1: Make player coach reservation detail render correctly
 - [x] Step 2: Add coach payment methods backend and player payment-info support
 - [x] Step 3: Ship coach payment methods UI and connect get-started
-- [ ] Step 4: Replace placeholder onboarding steps with real profile and sports editing
+- [x] Step 4: Replace placeholder onboarding steps with real profile and sports editing
 - [ ] Step 5: Add a real coach verification gate
 - [ ] Step 6: Complete missing coach portal routes
 - [ ] Step 7: Finish coach reservation detail with payment-proof support
@@ -104,6 +104,14 @@ Integrates with previous work:
 - builds on the now-functional portal and setup status chain without introducing a separate data model
 
 Demo: A new coach can complete profile and sports steps directly from the onboarding flow and see progress update live.
+
+Verification snapshot:
+- replaced the placeholder wizard steps with live `coach.updateProfile` forms for required profile basics and sport selection
+- extended the coach feature API/query adapter layer for `coach.getMyProfile`, `coach.updateProfile`, and `sport.list`, with setup-status/profile invalidation so step completion refreshes immediately
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/features/coach/api.test.ts src/__tests__/features/coach/hooks.test.ts src/__tests__/features/coach/components/get-started/wizard/coach-step-live-editors.test.tsx`
+  - `pnpm exec biome check src/features/coach/api.ts src/features/coach/hooks.ts src/features/coach/schemas.ts src/features/coach/components/get-started/wizard/coach-setup-wizard.tsx src/features/coach/components/get-started/wizard/steps/profile-step.tsx src/features/coach/components/get-started/wizard/steps/sports-step.tsx src/__tests__/features/coach/api.test.ts src/__tests__/features/coach/hooks.test.ts src/__tests__/features/coach/components/get-started/wizard/coach-step-live-editors.test.tsx`
+  - manual dev smoke: `pnpm dev` plus `curl -I -s http://localhost:3000/coach/get-started` and `curl -I -s 'http://localhost:3000/coach/get-started?step=sports'` both returned `307` redirects to login, preserving the protected route boundary after the wizard changes
 
 ## Step 5: Add a real coach verification gate
 

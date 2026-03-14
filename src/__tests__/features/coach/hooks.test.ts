@@ -7,6 +7,9 @@ const { featureQuerySpy, featureMutationSpy, invalidateSpy, coachApi } =
     featureMutationSpy: vi.fn(),
     invalidateSpy: vi.fn(async () => undefined),
     coachApi: {
+      queryCoachGetMyProfile: vi.fn(),
+      mutCoachUpdateProfile: vi.fn(),
+      querySportList: vi.fn(),
       queryCoachPaymentListMethods: vi.fn(),
       mutCoachPaymentCreateMethod: vi.fn(),
       mutCoachPaymentDeleteMethod: vi.fn(),
@@ -39,11 +42,14 @@ vi.mock("@/features/coach/api", () => ({
 }));
 
 import {
+  useMutCoachUpdateProfile,
   useMutCreateCoachPaymentMethod,
   useMutDeleteCoachPaymentMethod,
   useMutSetDefaultCoachPaymentMethod,
   useMutUpdateCoachPaymentMethod,
+  useQueryCoachMyProfile,
   useQueryCoachPaymentMethods,
+  useQueryCoachSports,
 } from "@/features/coach/hooks";
 
 describe("coach hooks", () => {
@@ -60,6 +66,53 @@ describe("coach hooks", () => {
       { coachId: "coach-1" },
       { enabled: true },
     );
+  });
+
+  it("useQueryCoachMyProfile uses the feature query adapter", () => {
+    renderHook(() => useQueryCoachMyProfile());
+
+    expect(featureQuerySpy).toHaveBeenCalledWith(
+      ["coach", "getMyProfile"],
+      coachApi.queryCoachGetMyProfile,
+      undefined,
+      {
+        enabled: true,
+        staleTime: 0,
+        refetchOnMount: "always",
+      },
+    );
+  });
+
+  it("useQueryCoachSports uses the feature query adapter", () => {
+    renderHook(() => useQueryCoachSports());
+
+    expect(featureQuerySpy).toHaveBeenCalledWith(
+      ["sport", "list"],
+      coachApi.querySportList,
+      undefined,
+      {
+        enabled: true,
+        staleTime: 60_000,
+      },
+    );
+  });
+
+  it("useMutCoachUpdateProfile invalidates profile and setup status on success", async () => {
+    renderHook(() => useMutCoachUpdateProfile());
+
+    expect(featureMutationSpy).toHaveBeenCalledWith(
+      coachApi.mutCoachUpdateProfile,
+      expect.any(Object),
+    );
+
+    const options = featureMutationSpy.mock.lastCall?.[1] as {
+      onSuccess?: () => Promise<unknown>;
+    };
+
+    await options.onSuccess?.();
+
+    expect(invalidateSpy).toHaveBeenCalledWith(["coach", "getMyProfile"]);
+    expect(invalidateSpy).toHaveBeenCalledWith(["coach", "getSetupStatus"]);
   });
 
   it.each([

@@ -28,6 +28,35 @@ export function useQueryCoachSetupStatus() {
   );
 }
 
+export function useQueryCoachMyProfile(options?: { enabled?: boolean }) {
+  const isEnabled = options?.enabled ?? true;
+
+  return useFeatureQuery(
+    ["coach", "getMyProfile"],
+    coachApi.queryCoachGetMyProfile,
+    undefined,
+    {
+      enabled: isEnabled,
+      staleTime: 0,
+      refetchOnMount: "always",
+    },
+  );
+}
+
+export function useQueryCoachSports(options?: { enabled?: boolean }) {
+  const isEnabled = options?.enabled ?? true;
+
+  return useFeatureQuery(
+    ["sport", "list"],
+    coachApi.querySportList,
+    undefined,
+    {
+      enabled: isEnabled,
+      staleTime: 60_000,
+    },
+  );
+}
+
 export function useModCoachInvalidation() {
   const featureCache = useFeatureQueryCache();
 
@@ -35,6 +64,8 @@ export function useModCoachInvalidation() {
     () => ({
       invalidateCoachSetupStatus: () =>
         featureCache.invalidate(["coach", "getSetupStatus"]),
+      invalidateCoachProfile: () =>
+        featureCache.invalidate(["coach", "getMyProfile"]),
       invalidateCoachPaymentMethods: (coachId: string) =>
         featureCache.invalidate(["coachPayment", "listMethods"], { coachId }),
       invalidateCoachHours: (coachId: string) =>
@@ -51,6 +82,20 @@ export function useModCoachInvalidation() {
     }),
     [featureCache],
   );
+}
+
+export function useMutCoachUpdateProfile() {
+  const { invalidateCoachProfile, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachUpdateProfile, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachProfile(),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
 }
 
 export function useQueryCoachPaymentMethods(

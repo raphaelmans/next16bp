@@ -10,6 +10,83 @@ vi.mock("@/common/trpc-client-call", () => ({
 }));
 
 describe("CoachApi", () => {
+  it("queryCoachGetMyProfile uses the coach.getMyProfile transport path", async () => {
+    const clientApi = {
+      coach: {
+        getMyProfile: { query: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { coach: { id: "coach-1", name: "Coach Alex" } };
+    callTrpcQueryMock.mockResolvedValue(expected);
+
+    const result = await api.queryCoachGetMyProfile();
+
+    expect(result).toEqual(expected);
+    expect(callTrpcQueryMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coach", "getMyProfile"],
+      expect.any(Function),
+      undefined,
+      toAppError,
+    );
+  });
+
+  it("mutCoachUpdateProfile uses the coach.updateProfile transport path", async () => {
+    const clientApi = {
+      coach: {
+        updateProfile: { mutate: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { coach: { id: "coach-1", name: "Coach Alex" } };
+    callTrpcMutationMock.mockResolvedValue(expected);
+
+    const result = await api.mutCoachUpdateProfile({
+      name: "Coach Alex",
+      tagline: "Private badminton sessions",
+      bio: "Competitive player turned coach",
+    });
+
+    expect(result).toEqual(expected);
+    expect(callTrpcMutationMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coach", "updateProfile"],
+      expect.any(Function),
+      {
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      toAppError,
+    );
+  });
+
+  it("querySportList uses the sport.list transport path", async () => {
+    const clientApi = {
+      sport: {
+        list: { query: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = [{ id: "sport-1", name: "Badminton" }];
+    callTrpcQueryMock.mockResolvedValue(expected);
+
+    const result = await api.querySportList();
+
+    expect(result).toEqual(expected);
+    expect(callTrpcQueryMock).toHaveBeenCalledWith(
+      clientApi,
+      ["sport", "list"],
+      expect.any(Function),
+      undefined,
+      toAppError,
+    );
+  });
+
   it("queryCoachPaymentListMethods uses the coachPayment.listMethods transport path", async () => {
     const clientApi = {
       coachPayment: {

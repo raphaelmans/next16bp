@@ -16,6 +16,13 @@ export interface ICoachApi {
   queryCoachGetSetupStatus: ProcedureFn<
     TrpcClientApi["coach"]["getSetupStatus"]["query"]
   >;
+  queryCoachGetMyProfile: ProcedureFn<
+    TrpcClientApi["coach"]["getMyProfile"]["query"]
+  >;
+  mutCoachUpdateProfile: ProcedureFn<
+    TrpcClientApi["coach"]["updateProfile"]["mutate"]
+  >;
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]>;
   queryCoachPaymentListMethods: ProcedureFn<
     TrpcClientApi["coachPayment"]["listMethods"]["query"]
   >;
@@ -94,6 +101,39 @@ export class CoachApi implements ICoachApi {
       this.clientApi,
       ["coach", "getSetupStatus"],
       (clientApi) => clientApi.coach.getSetupStatus.query,
+      input,
+      this.toAppError,
+    );
+
+  queryCoachGetMyProfile: ProcedureFn<
+    TrpcClientApi["coach"]["getMyProfile"]["query"]
+  > = async (input) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["coach", "getMyProfile"],
+      (clientApi) => clientApi.coach.getMyProfile.query,
+      input,
+      this.toAppError,
+    );
+
+  mutCoachUpdateProfile: ProcedureFn<
+    TrpcClientApi["coach"]["updateProfile"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coach", "updateProfile"],
+      (clientApi) => clientApi.coach.updateProfile.mutate,
+      input,
+      this.toAppError,
+    );
+
+  querySportList: ProcedureFn<TrpcClientApi["sport"]["list"]["query"]> = async (
+    input,
+  ) =>
+    callTrpcQuery(
+      this.clientApi,
+      ["sport", "list"],
+      (clientApi) => clientApi.sport.list.query,
       input,
       this.toAppError,
     );
