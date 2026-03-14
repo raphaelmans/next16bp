@@ -11,7 +11,7 @@
 - [x] Step 7: Finish coach reservation detail with payment-proof support
 - [x] Step 8: Add coach reviews end to end
 - [x] Step 9: Surface coach booking add-ons in player UX
-- [ ] Step 10: Add coach notifications, chat, and regression coverage
+- [x] Step 10: Add coach notifications, chat, and regression coverage
 
 Convert the design into a series of implementation steps that will build each component in a test-driven manner following agile best practices. Each step must result in a working, demoable increment of functionality. Prioritize best practices, incremental progress, and early testing, ensuring no big jumps in complexity at any stage. Make sure that each step builds on the previous steps, and ends with wiring things together. There should be no hanging or orphaned code that isn't integrated into a previous step.
 
@@ -266,3 +266,14 @@ Integrates with previous work:
 - intentionally comes last so communication features sit on top of stable booking, payment, and portal foundations
 
 Demo: A player books a coach, the coach receives the right notification, both parties can access the reservation conversation when appropriate, and the full happy path is covered by automated regression tests.
+
+Verification snapshot:
+- added `coach_booking.*` notification payloads, templates, recipient lookup, and delivery-service enqueue paths for coach booking creation, awaiting-payment, payment-marked, confirmed, rejected, and cancelled transitions
+- taught the shared reservation chat service to treat coach reservations as first-class reservation threads, including direct coach-owner access, shared session/send flows, and stable coach thread metadata for player inbox usage
+- exposed coach chat entry points on both reservation detail surfaces: player detail can now message the coach through the shared reservation chat event flow, and coach detail now includes a dedicated reservation chat sheet for direct player coordination
+- added focused regression coverage across notification delivery, coach reservation chat metadata access, coach/player reservation detail pages, and a coach booking Playwright happy-path spec
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/lib/modules/chat/services/reservation-chat.service.test.ts src/__tests__/modules/notification-delivery/notification-delivery.service.test.ts src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx`
+  - `pnpm exec biome check src/lib/modules/chat/services/reservation-chat.service.ts src/lib/modules/chat/factories/reservation-chat.factory.ts src/features/coach/components/coach-reservation-chat-sheet.tsx src/features/coach/pages/coach-reservation-detail-page.tsx src/features/reservation/pages/reservation-detail-page.tsx src/__tests__/lib/modules/chat/services/reservation-chat.service.test.ts src/__tests__/modules/notification-delivery/notification-delivery.service.test.ts src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/reservation/pages/reservation-detail-page.test.tsx src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx`
+  - `pnpm exec playwright test tests/e2e/coach-booking.happy-path.spec.ts --list`
+  - manual dev smoke: `pnpm dev`, `curl -I -s http://localhost:3000/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Freservations%2Freservation-1`, `curl -I -s http://localhost:3000/coach/reservations/reservation-1` -> `307` redirect to `/login?redirect=%2Fcoach%2Freservations%2Freservation-1`, and adversarial `curl -I -s http://localhost:3000/coach/reservations/not-a-real-reservation` stayed behind the protected coach layout with the original path preserved in `redirect`

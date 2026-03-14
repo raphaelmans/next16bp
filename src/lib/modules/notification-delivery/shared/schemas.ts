@@ -216,6 +216,66 @@ export const reservationPingOwnerSchema = z.object({
   endTimeIso: z.string(),
 });
 
+export const coachBookingCreatedSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+  playerName: z.string(),
+  playerEmail: z.string().nullable().optional(),
+  playerPhone: z.string().nullable().optional(),
+  expiresAtIso: z.string().nullable().optional(),
+});
+
+export const coachBookingAwaitingPaymentSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  expiresAtIso: z.string().nullable().optional(),
+  totalPriceCents: z.number(),
+  currency: z.string(),
+});
+
+export const coachBookingPaymentMarkedSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  playerName: z.string(),
+});
+
+export const coachBookingConfirmedSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+});
+
+export const coachBookingRejectedSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  reason: z.string().nullable().optional(),
+});
+
+export const coachBookingCancelledSchema = z.object({
+  reservationId: z.string(),
+  coachId: z.string(),
+  coachName: z.string(),
+  startTimeIso: z.string(),
+  endTimeIso: z.string(),
+  reason: z.string().nullable().optional(),
+});
+
 export const testWebPushSchema = z.object({
   title: z.string(),
   body: z.string().nullable().optional(),
@@ -275,6 +335,24 @@ export type ReservationGroupCancelledByOwnerPayload = z.infer<
 export type ReservationPingOwnerPayload = z.infer<
   typeof reservationPingOwnerSchema
 >;
+export type CoachBookingCreatedPayload = z.infer<
+  typeof coachBookingCreatedSchema
+>;
+export type CoachBookingAwaitingPaymentPayload = z.infer<
+  typeof coachBookingAwaitingPaymentSchema
+>;
+export type CoachBookingPaymentMarkedPayload = z.infer<
+  typeof coachBookingPaymentMarkedSchema
+>;
+export type CoachBookingConfirmedPayload = z.infer<
+  typeof coachBookingConfirmedSchema
+>;
+export type CoachBookingRejectedPayload = z.infer<
+  typeof coachBookingRejectedSchema
+>;
+export type CoachBookingCancelledPayload = z.infer<
+  typeof coachBookingCancelledSchema
+>;
 export type TestWebPushPayload = z.infer<typeof testWebPushSchema>;
 
 export type NotificationEventType =
@@ -298,4 +376,10 @@ export type NotificationEventType =
   | "reservation.cancelled_by_owner"
   | "reservation_group.cancelled_by_owner"
   | "reservation.ping_owner"
+  | "coach_booking.created"
+  | "coach_booking.awaiting_payment"
+  | "coach_booking.payment_marked"
+  | "coach_booking.confirmed"
+  | "coach_booking.rejected"
+  | "coach_booking.cancelled"
   | "test.web_push";

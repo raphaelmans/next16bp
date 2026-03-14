@@ -2,6 +2,7 @@ import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import { env } from "@/lib/env";
 import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
+import { postCoachReservationMessage } from "@/lib/modules/chat/ops/post-coach-reservation-message";
 import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
 import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { CoachNotFoundError } from "@/lib/modules/coach/errors/coach.errors";
@@ -644,6 +645,48 @@ export class ReservationService implements IReservationService {
           organizationId: input.organizationId,
         },
         "Failed to post player payment marked chat message",
+      );
+    }
+  }
+
+  private async postCoachReservationMessageBestEffort(input: {
+    reservationId: string;
+    profileId: string;
+    coachId: string;
+    kind: "payment_marked" | "cancelled";
+    reason?: string;
+  }) {
+    try {
+      const [profile, coach] = await Promise.all([
+        this.profileRepository.findById(input.profileId),
+        this.coachRepository.findById(input.coachId),
+      ]);
+
+      const playerUserId = profile?.userId ?? null;
+      const coachUserId = coach?.userId ?? null;
+
+      if (!playerUserId || !coachUserId) {
+        return;
+      }
+
+      await postCoachReservationMessage({
+        reservationId: input.reservationId,
+        playerUserId,
+        coachUserId,
+        kind: input.kind,
+        reason: input.reason,
+      });
+    } catch (error) {
+      logger.warn(
+        {
+          err: error,
+          event: "reservation.coach_chat_message_failed",
+          reservationId: input.reservationId,
+          profileId: input.profileId,
+          coachId: input.coachId,
+          kind: input.kind,
+        },
+        "Failed to post coach reservation chat message",
       );
     }
   }
@@ -1768,8 +1811,8 @@ export class ReservationService implements IReservationService {
       throw new TermsNotAcceptedError();
     }
 
-    const { updated, organizationId } = await this.transactionManager.run(
-      async (tx) => {
+    const { updated, organizationId, coachId } =
+      await this.transactionManager.run(async (tx) => {
         const ctx: RequestContext = { tx };
 
         const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -1832,31 +1875,53 @@ export class ReservationService implements IReservationService {
         );
 
         let organizationId: string | null = null;
+        let coachId: string | null = null;
 
         try {
-          const court = await this.courtRepository.findById(
-            reservation.courtId,
-            ctx,
-          );
-          if (court?.placeId) {
-            const place = await this.placeRepository.findById(
-              court.placeId,
+          if (reservation.coachId) {
+            const coach = await this.coachRepository.findById(
+              reservation.coachId,
               ctx,
             );
-            if (place) {
-              organizationId = place.organizationId;
-
-              await this.notificationDeliveryService.enqueueOwnerReservationPaymentMarked(
+            if (coach) {
+              coachId = coach.id;
+              await this.notificationDeliveryService.enqueueCoachBookingPaymentMarked(
                 {
                   reservationId: data.reservationId,
-                  placeName: place.name,
-                  courtLabel: court.label,
+                  coachId: coach.id,
+                  coachName: coach.name,
                   startTimeIso: updated.startTime.toISOString(),
                   endTimeIso: updated.endTime.toISOString(),
                   playerName: updated.playerNameSnapshot ?? "Player",
                 },
                 ctx,
               );
+            }
+          } else {
+            const court = await this.courtRepository.findById(
+              reservation.courtId,
+              ctx,
+            );
+            if (court?.placeId) {
+              const place = await this.placeRepository.findById(
+                court.placeId,
+                ctx,
+              );
+              if (place) {
+                organizationId = place.organizationId;
+
+                await this.notificationDeliveryService.enqueueOwnerReservationPaymentMarked(
+                  {
+                    reservationId: data.reservationId,
+                    placeName: place.name,
+                    courtLabel: court.label,
+                    startTimeIso: updated.startTime.toISOString(),
+                    endTimeIso: updated.endTime.toISOString(),
+                    playerName: updated.playerNameSnapshot ?? "Player",
+                  },
+                  ctx,
+                );
+              }
             }
           }
         } catch (error) {
@@ -1866,15 +1931,23 @@ export class ReservationService implements IReservationService {
           );
         }
 
-        return { updated, organizationId };
-      },
-    );
+        return { updated, organizationId, coachId };
+      });
 
     if (organizationId) {
       await this.postPlayerPaymentMarkedMessageBestEffort({
         reservationId: updated.id,
         profileId,
         organizationId,
+      });
+    }
+
+    if (coachId) {
+      await this.postCoachReservationMessageBestEffort({
+        reservationId: updated.id,
+        profileId,
+        coachId,
+        kind: "payment_marked",
       });
     }
 
@@ -1886,123 +1959,166 @@ export class ReservationService implements IReservationService {
     profileId: string,
     data: CancelReservationDTO,
   ): Promise<ReservationRecord> {
-    return this.transactionManager.run(async (tx) => {
-      const ctx: RequestContext = { tx };
+    const { updated, coachIdForChat } = await this.transactionManager.run(
+      async (tx) => {
+        const ctx: RequestContext = { tx };
 
-      const reservation = await this.reservationRepository.findByIdForUpdate(
-        data.reservationId,
-        ctx,
-      );
-
-      if (!reservation) {
-        throw new ReservationNotFoundError(data.reservationId);
-      }
-
-      if (reservation.playerId !== profileId) {
-        throw new NotReservationOwnerError();
-      }
-
-      if (
-        reservation.status === "CANCELLED" ||
-        reservation.status === "EXPIRED" ||
-        reservation.status === "CONFIRMED"
-      ) {
-        throw new InvalidReservationStatusError(
+        const reservation = await this.reservationRepository.findByIdForUpdate(
           data.reservationId,
-          reservation.status,
-          ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
-        );
-      }
-
-      const policy = await this.getOrganizationPolicyForCourt(
-        reservation.courtId,
-        ctx,
-      );
-      const cancellationCutoffMinutes =
-        policy?.cancellationCutoffMinutes ??
-        DEFAULT_CANCELLATION_CUTOFF_MINUTES;
-      const cutoffTime = new Date(reservation.startTime);
-      cutoffTime.setMinutes(
-        cutoffTime.getMinutes() - cancellationCutoffMinutes,
-      );
-
-      if (new Date() > cutoffTime) {
-        throw new ReservationCancellationWindowError(
-          data.reservationId,
-          cancellationCutoffMinutes,
-          cutoffTime,
-        );
-      }
-
-      const previousStatus = reservation.status;
-
-      const updated = await this.reservationRepository.update(
-        data.reservationId,
-        {
-          status: "CANCELLED",
-          cancelledAt: new Date(),
-          cancellationReason: data.reason,
-          expiresAt: null,
-        },
-        ctx,
-      );
-
-      await this.reservationEventRepository.create(
-        {
-          reservationId: data.reservationId,
-          fromStatus: previousStatus,
-          toStatus: "CANCELLED",
-          triggeredByUserId: userId,
-          triggeredByRole: "PLAYER",
-          notes: data.reason ?? "Cancelled by player",
-        },
-        ctx,
-      );
-
-      await this.emitReservationReleased(updated, "reservation.cancelled", ctx);
-
-      logger.info(
-        {
-          event: "reservation.cancelled",
-          reservationId: data.reservationId,
-          playerId: profileId,
-          previousStatus,
-          reason: data.reason,
-        },
-        "Reservation cancelled by player",
-      );
-
-      try {
-        const court = await this.courtRepository.findById(
-          reservation.courtId,
           ctx,
         );
-        if (court?.placeId) {
-          const place = await this.placeRepository.findById(court.placeId, ctx);
-          if (place) {
-            await this.notificationDeliveryService.enqueueOwnerReservationCancelled(
-              {
-                reservationId: data.reservationId,
-                placeName: place.name,
-                courtLabel: court.label,
-                startTimeIso: updated.startTime.toISOString(),
-                endTimeIso: updated.endTime.toISOString(),
-                playerName: updated.playerNameSnapshot ?? "Player",
-                reason: data.reason,
-              },
+
+        if (!reservation) {
+          throw new ReservationNotFoundError(data.reservationId);
+        }
+
+        if (reservation.playerId !== profileId) {
+          throw new NotReservationOwnerError();
+        }
+
+        if (
+          reservation.status === "CANCELLED" ||
+          reservation.status === "EXPIRED" ||
+          reservation.status === "CONFIRMED"
+        ) {
+          throw new InvalidReservationStatusError(
+            data.reservationId,
+            reservation.status,
+            ["CREATED", "AWAITING_PAYMENT", "PAYMENT_MARKED_BY_USER"],
+          );
+        }
+
+        const cancellationCutoffMinutes = reservation.coachId
+          ? DEFAULT_CANCELLATION_CUTOFF_MINUTES
+          : ((
+              await this.getOrganizationPolicyForCourt(reservation.courtId, ctx)
+            )?.cancellationCutoffMinutes ??
+            DEFAULT_CANCELLATION_CUTOFF_MINUTES);
+        const cutoffTime = new Date(reservation.startTime);
+        cutoffTime.setMinutes(
+          cutoffTime.getMinutes() - cancellationCutoffMinutes,
+        );
+
+        if (new Date() > cutoffTime) {
+          throw new ReservationCancellationWindowError(
+            data.reservationId,
+            cancellationCutoffMinutes,
+            cutoffTime,
+          );
+        }
+
+        const previousStatus = reservation.status;
+
+        const updated = await this.reservationRepository.update(
+          data.reservationId,
+          {
+            status: "CANCELLED",
+            cancelledAt: new Date(),
+            cancellationReason: data.reason,
+            expiresAt: null,
+          },
+          ctx,
+        );
+
+        await this.reservationEventRepository.create(
+          {
+            reservationId: data.reservationId,
+            fromStatus: previousStatus,
+            toStatus: "CANCELLED",
+            triggeredByUserId: userId,
+            triggeredByRole: "PLAYER",
+            notes: data.reason ?? "Cancelled by player",
+          },
+          ctx,
+        );
+
+        if (!reservation.coachId) {
+          await this.emitReservationReleased(
+            updated,
+            "reservation.cancelled",
+            ctx,
+          );
+        }
+
+        logger.info(
+          {
+            event: "reservation.cancelled",
+            reservationId: data.reservationId,
+            playerId: profileId,
+            previousStatus,
+            reason: data.reason,
+          },
+          "Reservation cancelled by player",
+        );
+
+        try {
+          if (reservation.coachId) {
+            const coach = await this.coachRepository.findById(
+              reservation.coachId,
               ctx,
             );
+            if (coach) {
+              await this.notificationDeliveryService.enqueueCoachBookingCancelled(
+                {
+                  reservationId: data.reservationId,
+                  coachId: coach.id,
+                  coachName: coach.name,
+                  startTimeIso: updated.startTime.toISOString(),
+                  endTimeIso: updated.endTime.toISOString(),
+                  reason: data.reason,
+                },
+                "coach",
+                ctx,
+              );
+            }
+          } else {
+            const court = await this.courtRepository.findById(
+              reservation.courtId,
+              ctx,
+            );
+            if (court?.placeId) {
+              const place = await this.placeRepository.findById(
+                court.placeId,
+                ctx,
+              );
+              if (place) {
+                await this.notificationDeliveryService.enqueueOwnerReservationCancelled(
+                  {
+                    reservationId: data.reservationId,
+                    placeName: place.name,
+                    courtLabel: court.label,
+                    startTimeIso: updated.startTime.toISOString(),
+                    endTimeIso: updated.endTime.toISOString(),
+                    playerName: updated.playerNameSnapshot ?? "Player",
+                    reason: data.reason,
+                  },
+                  ctx,
+                );
+              }
+            }
           }
+        } catch (error) {
+          logger.warn(
+            { err: error, reservationId: data.reservationId },
+            "Failed to enqueue reservation.cancelled notification",
+          );
         }
-      } catch (error) {
-        logger.warn(
-          { err: error, reservationId: data.reservationId },
-          "Failed to enqueue reservation.cancelled notification",
-        );
-      }
 
-      return updated;
-    });
+        return { updated, coachIdForChat: reservation.coachId };
+      },
+    );
+
+    if (coachIdForChat) {
+      await this.postCoachReservationMessageBestEffort({
+        reservationId: updated.id,
+        profileId,
+        coachId: coachIdForChat,
+        kind: "cancelled",
+        reason: data.reason,
+      });
+    }
+
+    return updated;
   }
 
   async getPaymentInfo(

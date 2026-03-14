@@ -621,7 +621,9 @@ export default function ReservationDetailPage({
         expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
         onMessageOwner={
-          !isCoachReservation ? handleOpenChatFromBanner : undefined
+          isChatEnabledForReservationStatus
+            ? handleOpenChatFromBanner
+            : undefined
         }
         onPayNow={
           canShowPaymentStep ? () => void handleGoToPaymentInfo() : undefined
@@ -714,14 +716,14 @@ export default function ReservationDetailPage({
                     />
                   </div>
 
-                  {!isCoachReservation && isChatEnabledForReservationStatus ? (
+                  {isChatEnabledForReservationStatus ? (
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => handleOpenChat("reservation-payment")}
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
-                      Message Owner
+                      {isCoachReservation ? "Message Coach" : "Message Owner"}
                     </Button>
                   ) : null}
 
@@ -777,7 +779,7 @@ export default function ReservationDetailPage({
                     />
                   </div>
 
-                  {!isCoachReservation && isChatEnabledForReservationStatus ? (
+                  {isChatEnabledForReservationStatus ? (
                     <Button
                       type="button"
                       variant="outline"
@@ -785,7 +787,7 @@ export default function ReservationDetailPage({
                       onClick={() => handleOpenChat("reservation-payment")}
                     >
                       <MessageSquare className="mr-2 h-4 w-4" />
-                      Message Owner
+                      {isCoachReservation ? "Message Coach" : "Message Owner"}
                     </Button>
                   ) : null}
 
@@ -1114,6 +1116,17 @@ export default function ReservationDetailPage({
                     onClick={() => void handleGoToPaymentInfo()}
                   >
                     Complete Payment
+                  </Button>
+                ) : null}
+                {isChatEnabledForReservationStatus ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => handleOpenChat("reservation-summary")}
+                  >
+                    <MessageSquare className="mr-2 h-4 w-4" />
+                    Message Coach
                   </Button>
                 ) : null}
               </CardContent>

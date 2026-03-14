@@ -1,6 +1,7 @@
 import { eq, inArray } from "drizzle-orm";
 import {
   claimRequest,
+  coach,
   court,
   organization,
   organizationProfile,
@@ -32,6 +33,13 @@ export type PlayerRecipient = {
   phoneNumber: string | null;
 };
 
+export type CoachRecipient = {
+  coachId: string;
+  userId: string;
+  email: string | null;
+  phoneNumber: string | null;
+};
+
 export type OrganizationRecipient = {
   organizationId: string;
   userId: string;
@@ -49,6 +57,10 @@ export interface INotificationRecipientRepository {
     reservationId: string,
     ctx?: RequestContext,
   ): Promise<PlayerRecipient | null>;
+  findCoachRecipientByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<CoachRecipient | null>;
   findOwnerRecipientByReservationId(
     reservationId: string,
     ctx?: RequestContext,
@@ -150,6 +162,35 @@ export class NotificationRecipientRepository
     if (!row) return null;
 
     return {
+      userId: row.userId,
+      email: row.email ?? null,
+      phoneNumber: row.phoneNumber ?? null,
+    };
+  }
+
+  async findCoachRecipientByReservationId(
+    reservationId: string,
+    ctx?: RequestContext,
+  ): Promise<CoachRecipient | null> {
+    const client = this.getClient(ctx);
+    const result = await client
+      .select({
+        coachId: coach.id,
+        userId: coach.userId,
+        email: profile.email,
+        phoneNumber: profile.phoneNumber,
+      })
+      .from(reservation)
+      .innerJoin(coach, eq(coach.id, reservation.coachId))
+      .leftJoin(profile, eq(profile.userId, coach.userId))
+      .where(eq(reservation.id, reservationId))
+      .limit(1);
+
+    const row = result[0];
+    if (!row) return null;
+
+    return {
+      coachId: row.coachId,
       userId: row.userId,
       email: row.email ?? null,
       phoneNumber: row.phoneNumber ?? null,

@@ -5,6 +5,10 @@ export const SYSTEM_RESERVATION_MESSAGE_ID_SUFFIXES = [
   ":player-created:v1",
   ":player-payment-marked:v1",
   ":owner-confirmed:v1",
+  ":coach-created:v1",
+  ":coach-payment_marked:v1",
+  ":coach-confirmed:v1",
+  ":coach-cancelled:v1",
 ] as const;
 
 export type InboxThreadKind = "reservation";

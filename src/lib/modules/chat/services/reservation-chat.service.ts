@@ -1,5 +1,7 @@
 import { createHash } from "node:crypto";
 import { and, eq, inArray } from "drizzle-orm";
+import { CoachNotFoundError } from "@/lib/modules/coach/errors/coach.errors";
+import type { ICoachRepository } from "@/lib/modules/coach/repositories/coach.repository";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import { NotOrganizationOwnerError } from "@/lib/modules/organization/errors/organization.errors";
@@ -17,6 +19,7 @@ import type { IReservationRepository } from "@/lib/modules/reservation/repositor
 import { getContainer } from "@/lib/shared/infra/container";
 import {
   chatInboxArchive,
+  coach,
   court,
   organization,
   place,
@@ -84,6 +87,7 @@ export class ReservationChatService {
   constructor(
     private reservationRepository: IReservationRepository,
     private profileRepository: IProfileRepository,
+    private coachRepository: ICoachRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private organizationRepository: IOrganizationRepository,
@@ -125,7 +129,8 @@ export class ReservationChatService {
       startTime: Date;
       endTime: Date;
       playerId: string;
-      courtId: string;
+      courtId: string | null;
+      coachId: string | null;
     };
     profile: {
       id: string;
@@ -135,16 +140,16 @@ export class ReservationChatService {
     court: {
       id: string;
       label: string;
-      placeId: string;
+      placeId: string | null;
     };
     place: {
       id: string;
       name: string;
       timeZone: string;
-      organizationId: string;
+      organizationId: string | null;
     };
     organization: {
-      id: string;
+      id: string | null;
       name: string;
       ownerUserId: string;
     };
@@ -167,6 +172,49 @@ export class ReservationChatService {
     );
     if (!profile) {
       throw new ProfileNotFoundError(reservation.playerId);
+    }
+
+    if (reservation.coachId) {
+      const coachRecord = await this.coachRepository.findById(
+        reservation.coachId,
+        ctx,
+      );
+      if (!coachRecord) {
+        throw new CoachNotFoundError(reservation.coachId);
+      }
+
+      return {
+        reservation: {
+          id: reservation.id,
+          status: reservation.status,
+          startTime: reservation.startTime,
+          endTime: reservation.endTime,
+          playerId: reservation.playerId,
+          courtId: reservation.courtId,
+          coachId: reservation.coachId,
+        },
+        profile: {
+          id: profile.id,
+          userId: profile.userId,
+          displayName: profile.displayName,
+        },
+        court: {
+          id: coachRecord.id,
+          label: "Coaching session",
+          placeId: null,
+        },
+        place: {
+          id: coachRecord.id,
+          name: coachRecord.name,
+          timeZone: coachRecord.timeZone,
+          organizationId: null,
+        },
+        organization: {
+          id: null,
+          name: coachRecord.name,
+          ownerUserId: coachRecord.userId,
+        },
+      };
     }
 
     const court = await this.courtRepository.findById(reservation.courtId, ctx);
@@ -203,6 +251,7 @@ export class ReservationChatService {
         endTime: reservation.endTime,
         playerId: reservation.playerId,
         courtId: reservation.courtId,
+        coachId: reservation.coachId,
       },
       profile: {
         id: profile.id,
@@ -415,12 +464,16 @@ export class ReservationChatService {
     }
 
     const context = await this.getReservationContext(reservationId, ctx);
-    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
-      context.organization.id,
-      context.organization.ownerUserId,
-      ctx,
+    const ownerParticipantIds = context.organization.id
+      ? await this.getOwnerParticipantUserIds(
+          context.organization.id,
+          context.organization.ownerUserId,
+          ctx,
+        )
+      : [context.organization.ownerUserId];
+    const memberIds = Array.from(
+      new Set([context.profile.userId, ...ownerParticipantIds]),
     );
-    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationId);
     }
@@ -589,12 +642,16 @@ export class ReservationChatService {
     }
 
     const context = await this.getReservationContext(reservationId, ctx);
-    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
-      context.organization.id,
-      context.organization.ownerUserId,
-      ctx,
+    const ownerParticipantIds = context.organization.id
+      ? await this.getOwnerParticipantUserIds(
+          context.organization.id,
+          context.organization.ownerUserId,
+          ctx,
+        )
+      : [context.organization.ownerUserId];
+    const memberIds = Array.from(
+      new Set([context.profile.userId, ...ownerParticipantIds]),
     );
-    const memberIds = [context.profile.userId, ...ownerParticipantIds];
     if (!memberIds.includes(userId)) {
       throw new ReservationChatNotParticipantError(reservationId);
     }
@@ -670,12 +727,16 @@ export class ReservationChatService {
     ctx?: RequestContext,
   ) {
     const context = await this.getReservationContext(reservationId, ctx);
-    const ownerParticipantIds = await this.getOwnerParticipantUserIds(
-      context.organization.id,
-      context.organization.ownerUserId,
-      ctx,
+    const ownerParticipantIds = context.organization.id
+      ? await this.getOwnerParticipantUserIds(
+          context.organization.id,
+          context.organization.ownerUserId,
+          ctx,
+        )
+      : [context.organization.ownerUserId];
+    const memberIds = Array.from(
+      new Set([context.profile.userId, ...ownerParticipantIds]),
     );
-    const memberIds = [context.profile.userId, ...ownerParticipantIds];
 
     const channel = await this.ensureThread(
       reservationId,
@@ -762,12 +823,13 @@ export class ReservationChatService {
     const client: DbClient | DrizzleTransaction =
       (ctx?.tx as DrizzleTransaction) ?? getContainer().db;
 
-    const reservationRows = reservationIds.length
+    const venueReservationRows = reservationIds.length
       ? await client
           .select({
             organizationId: organization.id,
             ownerUserId: organization.ownerUserId,
             playerUserId: profile.userId,
+            coachId: reservation.coachId,
             reservationId: reservation.id,
             reservationGroupId: reservation.groupId,
             status: reservation.status,
@@ -784,6 +846,31 @@ export class ReservationChatService {
           .innerJoin(court, eq(reservation.courtId, court.id))
           .innerJoin(place, eq(court.placeId, place.id))
           .innerJoin(organization, eq(place.organizationId, organization.id))
+          .innerJoin(profile, eq(reservation.playerId, profile.id))
+          .where(inArray(reservation.id, reservationIds))
+      : [];
+
+    const coachReservationRows = reservationIds.length
+      ? await client
+          .select({
+            organizationId: coach.id,
+            ownerUserId: coach.userId,
+            playerUserId: profile.userId,
+            coachId: reservation.coachId,
+            reservationId: reservation.id,
+            reservationGroupId: reservation.groupId,
+            status: reservation.status,
+            updatedAt: reservation.updatedAt,
+            startTime: reservation.startTime,
+            endTime: reservation.endTime,
+            courtLabel: coach.name,
+            placeName: coach.name,
+            timeZone: coach.timeZone,
+            playerDisplayName: profile.displayName,
+            ownerDisplayName: coach.name,
+          })
+          .from(reservation)
+          .innerJoin(coach, eq(reservation.coachId, coach.id))
           .innerJoin(profile, eq(reservation.playerId, profile.id))
           .where(inArray(reservation.id, reservationIds))
       : [];
@@ -844,11 +931,17 @@ export class ReservationChatService {
       return checkPromise;
     };
 
+    const reservationRows = [...venueReservationRows, ...coachReservationRows];
+
     const authorizedReservationRows = (
       await Promise.all(
         reservationRows.map(async (row) => {
           const isPlayer = row.playerUserId === userId;
           if (isPlayer) {
+            return row;
+          }
+
+          if (row.ownerUserId === userId) {
             return row;
           }
 
@@ -866,6 +959,10 @@ export class ReservationChatService {
         reservationGroupRows.map(async (row) => {
           const isPlayer = row.playerUserId === userId;
           if (isPlayer) {
+            return row;
+          }
+
+          if (row.ownerUserId === userId) {
             return row;
           }
 
@@ -943,7 +1040,7 @@ export class ReservationChatService {
       status: row.status,
       placeName: row.placeName,
       timeZone: row.timeZone,
-      courtLabel: row.courtLabel,
+      courtLabel: row.coachId ? "Coaching session" : row.courtLabel,
       playerDisplayName: row.playerDisplayName ?? "Player",
       ownerDisplayName: row.ownerDisplayName,
       updatedAtIso: row.updatedAt.toISOString(),

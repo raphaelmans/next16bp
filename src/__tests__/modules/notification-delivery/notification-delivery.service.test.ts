@@ -21,6 +21,7 @@ function makeService() {
 
   const recipientRepository = {
     findAdminRecipients: vi.fn(),
+    findCoachRecipientByReservationId: vi.fn(),
     findOwnerRecipientByOrganizationId: vi.fn(),
     findPlayerRecipientByReservationId: vi.fn(),
     findOwnerRecipientByReservationId: vi.fn(),
@@ -671,5 +672,104 @@ describe("NotificationDeliveryService reservation group events", () => {
     ).resolves.toEqual({ pinged: false });
 
     expect(jobRepository.createMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("NotificationDeliveryService coach booking events", () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it("enqueueCoachBookingCreated sends inbox, email, sms, and push jobs to the coach", async () => {
+    const {
+      service,
+      recipientRepository,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      recipientRepository.findCoachRecipientByReservationId,
+    ).mockResolvedValue({
+      coachId: "coach-1",
+      userId: "coach-user-1",
+      email: "coach@example.com",
+      phoneNumber: "09171234567",
+    });
+
+    await service.enqueueCoachBookingCreated({
+      reservationId: "res-coach-1",
+      coachId: "coach-1",
+      coachName: "Coach Carla",
+      startTimeIso: "2026-03-01T08:00:00.000Z",
+      endTimeIso: "2026-03-01T09:00:00.000Z",
+      totalPriceCents: 3000,
+      currency: "PHP",
+      playerName: "Player A",
+      playerEmail: "player@example.com",
+      playerPhone: "09170000000",
+      expiresAtIso: "2026-02-28T10:00:00.000Z",
+    });
+
+    expect(jobRepository.createMany).toHaveBeenCalledTimes(1);
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{
+      eventType: string;
+      idempotencyKey: string;
+    }>;
+    expect(jobs).toHaveLength(4);
+    expect(jobs.every((job) => job.eventType === "coach_booking.created")).toBe(
+      true,
+    );
+    expect(
+      jobs.every((job) =>
+        job.idempotencyKey.startsWith(
+          "coach_booking.created:res-coach-1:coach:coach-user-1",
+        ),
+      ),
+    ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("enqueuePlayerCoachBookingConfirmed sends coach confirmation jobs to the player", async () => {
+    const {
+      service,
+      recipientRepository,
+      jobRepository,
+      userNotificationRepository,
+    } = makeService();
+    vi.mocked(
+      recipientRepository.findPlayerRecipientByReservationId,
+    ).mockResolvedValue({
+      userId: "player-user-1",
+      email: "player@example.com",
+      phoneNumber: "09170000000",
+    });
+
+    await service.enqueuePlayerCoachBookingConfirmed({
+      reservationId: "res-coach-1",
+      coachId: "coach-1",
+      coachName: "Coach Carla",
+      startTimeIso: "2026-03-01T08:00:00.000Z",
+      endTimeIso: "2026-03-01T09:00:00.000Z",
+    });
+
+    expect(jobRepository.createMany).toHaveBeenCalledTimes(1);
+    const jobs = vi.mocked(jobRepository.createMany).mock
+      .calls[0]?.[0] as Array<{
+      eventType: string;
+      idempotencyKey: string;
+    }>;
+    expect(jobs).toHaveLength(2);
+    expect(
+      jobs.every((job) => job.eventType === "coach_booking.confirmed"),
+    ).toBe(true);
+    expect(
+      jobs.every((job) =>
+        job.idempotencyKey.startsWith(
+          "coach_booking.confirmed:res-coach-1:user:player-user-1",
+        ),
+      ),
+    ).toBe(true);
+    expect(userNotificationRepository.createMany).toHaveBeenCalledTimes(1);
   });
 });

@@ -10,6 +10,10 @@ vi.mock("@/lib/env", () => ({
   },
 }));
 
+vi.mock("@/lib/modules/chat/ops/post-coach-reservation-message", () => ({
+  postCoachReservationMessage: vi.fn(async () => undefined),
+}));
+
 import { CoachReservationService } from "@/lib/modules/reservation/services/reservation-coach.service";
 import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
 import type {
@@ -114,6 +118,16 @@ function createHarness() {
       callback({}),
     ),
   };
+  const notificationDeliveryServiceFns = {
+    enqueueCoachBookingCreated: vi.fn(async () => ({ jobCount: 4 })),
+    enqueuePlayerCoachBookingAwaitingPayment: vi.fn(async () => ({
+      jobCount: 2,
+    })),
+    enqueueCoachBookingPaymentMarked: vi.fn(async () => ({ jobCount: 2 })),
+    enqueuePlayerCoachBookingConfirmed: vi.fn(async () => ({ jobCount: 2 })),
+    enqueuePlayerCoachBookingRejected: vi.fn(async () => ({ jobCount: 2 })),
+    enqueueCoachBookingCancelled: vi.fn(async () => ({ jobCount: 2 })),
+  };
   const paymentProofRepositoryFns = {
     findByReservationId: vi.fn(async () => null),
   };
@@ -131,8 +145,9 @@ function createHarness() {
     coachAddonRepositoryFns as unknown as CoachReservationServiceDeps[6],
     coachBlockRepositoryFns as unknown as CoachReservationServiceDeps[7],
     transactionManagerFns as unknown as CoachReservationServiceDeps[8],
-    paymentProofRepositoryFns as unknown as CoachReservationServiceDeps[9],
-    storageServiceFns as unknown as CoachReservationServiceDeps[10],
+    notificationDeliveryServiceFns as unknown as CoachReservationServiceDeps[9],
+    paymentProofRepositoryFns as unknown as CoachReservationServiceDeps[10],
+    storageServiceFns as unknown as CoachReservationServiceDeps[11],
   );
 
   return {
@@ -146,6 +161,7 @@ function createHarness() {
     coachAddonRepositoryFns,
     coachBlockRepositoryFns,
     transactionManagerFns,
+    notificationDeliveryServiceFns,
     paymentProofRepositoryFns,
     storageServiceFns,
   };
@@ -164,6 +180,7 @@ describe("CoachReservationService.createForCoach", () => {
         name: "Player One",
         email: "player@example.com",
         phone: "+63 900 000 0000",
+        userId: "player-user-1",
       }),
     );
     harness.coachRepositoryFns.findById.mockResolvedValue(
@@ -229,6 +246,7 @@ describe("CoachReservationService.createForCoach", () => {
         name: "Player One",
         email: "player@example.com",
         phone: "+63 900 000 0000",
+        userId: "player-user-1",
       }),
     );
     harness.coachRepositoryFns.findById.mockResolvedValue(
@@ -301,6 +319,18 @@ describe("CoachReservationService.createForCoach", () => {
     expect(result.totalPriceCents).toBe(154000);
     expect(result.currency).toBe("PHP");
     expect(harness.transactionManagerFns.run).toHaveBeenCalledTimes(1);
+    expect(
+      harness.notificationDeliveryServiceFns.enqueueCoachBookingCreated,
+    ).toHaveBeenCalledWith(
+      expect.objectContaining({
+        reservationId: RESERVATION_ID,
+        coachId: COACH_ID,
+        coachName: "Coach Carla",
+        totalPriceCents: 154000,
+        currency: "PHP",
+        playerName: "Player One",
+      }),
+    );
   });
 });
 

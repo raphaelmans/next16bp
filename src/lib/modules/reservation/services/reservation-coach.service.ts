@@ -1,6 +1,7 @@
 import { addDays, addMinutes, endOfDay } from "date-fns";
 import { MAX_BOOKING_WINDOW_DAYS } from "@/common/booking-window";
 import { env } from "@/lib/env";
+import { postCoachReservationMessage } from "@/lib/modules/chat/ops/post-coach-reservation-message";
 import {
   CoachNotActiveError,
   CoachNotFoundError,
@@ -10,6 +11,7 @@ import type { ICoachAddonRepository } from "@/lib/modules/coach-addon/repositori
 import type { ICoachBlockRepository } from "@/lib/modules/coach-block/repositories/coach-block.repository";
 import type { ICoachHoursRepository } from "@/lib/modules/coach-hours/repositories/coach-hours.repository";
 import type { ICoachRateRuleRepository } from "@/lib/modules/coach-rate-rule/repositories/coach-rate-rule.repository";
+import type { NotificationDeliveryService } from "@/lib/modules/notification-delivery/services/notification-delivery.service";
 import type { IPaymentProofRepository } from "@/lib/modules/payment-proof/repositories/payment-proof.repository";
 import {
   IncompleteProfileError,
@@ -119,6 +121,7 @@ export class CoachReservationService implements ICoachReservationService {
     private coachAddonRepository: ICoachAddonRepository,
     private coachBlockRepository: ICoachBlockRepository,
     private transactionManager: TransactionManager,
+    private notificationDeliveryService: NotificationDeliveryService,
     private paymentProofRepository?: IPaymentProofRepository,
     private storageService?: IObjectStorageService,
   ) {}
@@ -296,6 +299,23 @@ export class CoachReservationService implements ICoachReservationService {
     };
   }
 
+  private async postCoachChatMessageBestEffort(input: {
+    reservationId: string;
+    playerUserId: string;
+    coachUserId: string;
+    kind: "created" | "payment_marked" | "confirmed" | "cancelled";
+    reason?: string;
+  }) {
+    try {
+      await postCoachReservationMessage(input);
+    } catch (error) {
+      logger.warn(
+        { err: error, reservationId: input.reservationId, kind: input.kind },
+        "Failed to post coach reservation system chat message",
+      );
+    }
+  }
+
   async createForCoach(
     userId: string,
     profileId: string,
@@ -417,6 +437,34 @@ export class CoachReservationService implements ICoachReservationService {
       "Coach reservation created",
     );
 
+    try {
+      await this.notificationDeliveryService.enqueueCoachBookingCreated({
+        reservationId: result.id,
+        coachId: coach.id,
+        coachName: coach.name,
+        startTimeIso: result.startTime.toISOString(),
+        endTimeIso: result.endTime.toISOString(),
+        totalPriceCents: result.totalPriceCents,
+        currency: result.currency,
+        playerName: result.playerNameSnapshot ?? profile.name,
+        playerEmail: result.playerEmailSnapshot ?? profile.email,
+        playerPhone: result.playerPhoneSnapshot ?? profile.phone ?? null,
+        expiresAtIso: result.expiresAt?.toISOString() ?? null,
+      });
+    } catch (error) {
+      logger.warn(
+        { err: error, reservationId: result.id },
+        "Failed to enqueue coach booking creation notification",
+      );
+    }
+
+    await this.postCoachChatMessageBestEffort({
+      reservationId: result.id,
+      playerUserId: profile.userId,
+      coachUserId: coach.userId,
+      kind: "created",
+    });
+
     return {
       ...result,
       coachName: coach.name,
@@ -436,9 +484,15 @@ export class CoachReservationService implements ICoachReservationService {
       throw new ReservationNotFoundError(reservationId);
     }
 
-    await this.verifyCoachOwnsReservation(userId, sourceReservation);
+    const coach = await this.verifyCoachOwnsReservation(
+      userId,
+      sourceReservation,
+    );
+    const playerProfile = sourceReservation.playerId
+      ? await this.profileRepository.findById(sourceReservation.playerId)
+      : null;
 
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -499,6 +553,27 @@ export class CoachReservationService implements ICoachReservationService {
           "Coach reservation accepted",
         );
 
+        try {
+          await this.notificationDeliveryService.enqueuePlayerCoachBookingAwaitingPayment(
+            {
+              reservationId,
+              coachId: coach.id,
+              coachName: coach.name,
+              startTimeIso: updated.startTime.toISOString(),
+              endTimeIso: updated.endTime.toISOString(),
+              expiresAtIso: expiresAt.toISOString(),
+              totalPriceCents: updated.totalPriceCents,
+              currency: updated.currency,
+            },
+            ctx,
+          );
+        } catch (error) {
+          logger.warn(
+            { err: error, reservationId },
+            "Failed to enqueue coach booking awaiting-payment notification",
+          );
+        }
+
         return updated;
       }
 
@@ -533,8 +608,41 @@ export class CoachReservationService implements ICoachReservationService {
         "Coach reservation auto-confirmed (free)",
       );
 
+      try {
+        await this.notificationDeliveryService.enqueuePlayerCoachBookingConfirmed(
+          {
+            reservationId,
+            coachId: coach.id,
+            coachName: coach.name,
+            startTimeIso: updated.startTime.toISOString(),
+            endTimeIso: updated.endTime.toISOString(),
+          },
+          ctx,
+        );
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId },
+          "Failed to enqueue coach booking confirmation notification",
+        );
+      }
+
       return updated;
     });
+
+    if (
+      updated.status === "CONFIRMED" &&
+      playerProfile?.userId &&
+      sourceReservation.coachId
+    ) {
+      await this.postCoachChatMessageBestEffort({
+        reservationId: updated.id,
+        playerUserId: playerProfile.userId,
+        coachUserId: coach.userId,
+        kind: "confirmed",
+      });
+    }
+
+    return updated;
   }
 
   async rejectReservation(
@@ -548,7 +656,10 @@ export class CoachReservationService implements ICoachReservationService {
       throw new ReservationNotFoundError(data.reservationId);
     }
 
-    await this.verifyCoachOwnsReservation(userId, sourceReservation);
+    const coach = await this.verifyCoachOwnsReservation(
+      userId,
+      sourceReservation,
+    );
 
     return this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
@@ -604,6 +715,25 @@ export class CoachReservationService implements ICoachReservationService {
         "Coach reservation rejected",
       );
 
+      try {
+        await this.notificationDeliveryService.enqueuePlayerCoachBookingRejected(
+          {
+            reservationId: data.reservationId,
+            coachId: coach.id,
+            coachName: coach.name,
+            startTimeIso: updated.startTime.toISOString(),
+            endTimeIso: updated.endTime.toISOString(),
+            reason: data.reason,
+          },
+          ctx,
+        );
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId: data.reservationId },
+          "Failed to enqueue coach booking rejection notification",
+        );
+      }
+
       return updated;
     });
   }
@@ -619,9 +749,15 @@ export class CoachReservationService implements ICoachReservationService {
       throw new ReservationNotFoundError(data.reservationId);
     }
 
-    await this.verifyCoachOwnsReservation(userId, sourceReservation);
+    const coach = await this.verifyCoachOwnsReservation(
+      userId,
+      sourceReservation,
+    );
+    const playerProfile = sourceReservation.playerId
+      ? await this.profileRepository.findById(sourceReservation.playerId)
+      : null;
 
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -675,8 +811,37 @@ export class CoachReservationService implements ICoachReservationService {
         "Coach reservation payment confirmed",
       );
 
+      try {
+        await this.notificationDeliveryService.enqueuePlayerCoachBookingConfirmed(
+          {
+            reservationId: data.reservationId,
+            coachId: coach.id,
+            coachName: coach.name,
+            startTimeIso: updated.startTime.toISOString(),
+            endTimeIso: updated.endTime.toISOString(),
+          },
+          ctx,
+        );
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId: data.reservationId },
+          "Failed to enqueue coach booking confirmation notification",
+        );
+      }
+
       return updated;
     });
+
+    if (playerProfile?.userId) {
+      await this.postCoachChatMessageBestEffort({
+        reservationId: updated.id,
+        playerUserId: playerProfile.userId,
+        coachUserId: coach.userId,
+        kind: "confirmed",
+      });
+    }
+
+    return updated;
   }
 
   async cancelReservation(
@@ -690,9 +855,15 @@ export class CoachReservationService implements ICoachReservationService {
       throw new ReservationNotFoundError(data.reservationId);
     }
 
-    await this.verifyCoachOwnsReservation(userId, sourceReservation);
+    const coach = await this.verifyCoachOwnsReservation(
+      userId,
+      sourceReservation,
+    );
+    const playerProfile = sourceReservation.playerId
+      ? await this.profileRepository.findById(sourceReservation.playerId)
+      : null;
 
-    return this.transactionManager.run(async (tx) => {
+    const updated = await this.transactionManager.run(async (tx) => {
       const ctx: RequestContext = { tx };
 
       const reservation = await this.reservationRepository.findByIdForUpdate(
@@ -755,8 +926,40 @@ export class CoachReservationService implements ICoachReservationService {
         "Coach reservation cancelled by coach",
       );
 
+      try {
+        await this.notificationDeliveryService.enqueueCoachBookingCancelled(
+          {
+            reservationId: data.reservationId,
+            coachId: coach.id,
+            coachName: coach.name,
+            startTimeIso: updated.startTime.toISOString(),
+            endTimeIso: updated.endTime.toISOString(),
+            reason: data.reason,
+          },
+          "player",
+          ctx,
+        );
+      } catch (error) {
+        logger.warn(
+          { err: error, reservationId: data.reservationId },
+          "Failed to enqueue coach booking cancellation notification",
+        );
+      }
+
       return updated;
     });
+
+    if (playerProfile?.userId) {
+      await this.postCoachChatMessageBestEffort({
+        reservationId: updated.id,
+        playerUserId: playerProfile.userId,
+        coachUserId: coach.userId,
+        kind: "cancelled",
+        reason: data.reason,
+      });
+    }
+
+    return updated;
   }
 
   async getForCoach(

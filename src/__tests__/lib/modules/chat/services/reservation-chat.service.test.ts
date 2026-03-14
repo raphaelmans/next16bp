@@ -10,6 +10,7 @@ type ReservationMetaRow = {
   organizationId: string;
   ownerUserId: string;
   playerUserId: string;
+  coachId: string | null;
   reservationId: string;
   reservationGroupId: string | null;
   status: string;
@@ -85,6 +86,7 @@ const makeService = (options?: { hasOrganizationPermission?: boolean }) => {
       {} as never,
       {} as never,
       {} as never,
+      {} as never,
       organizationMemberService,
     ),
     organizationMemberService,
@@ -108,6 +110,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-1",
         reservationGroupId: null,
         status: "CREATED",
@@ -124,6 +127,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-2",
         reservationGroupId: null,
         status: "CONFIRMED",
@@ -140,6 +144,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-3",
         reservationGroupId: null,
         status: "CONFIRMED",
@@ -154,7 +159,7 @@ describe("ReservationChatService.getThreadMetas", () => {
       },
     ];
     const archivedRows = [{ threadId: "res-r-1" }];
-    const tx = createFakeTx([reservationRows, archivedRows]);
+    const tx = createFakeTx([reservationRows, [], archivedRows]);
     const { service } = makeService();
 
     const result = await service.getThreadMetas(
@@ -176,6 +181,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-1",
         reservationGroupId: null,
         status: "CREATED",
@@ -192,6 +198,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-2",
         reservationGroupId: null,
         status: "CANCELLED",
@@ -205,7 +212,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         ownerDisplayName: "Owner B",
       },
     ];
-    const tx = createFakeTx([reservationRows]);
+    const tx = createFakeTx([reservationRows, []]);
     const { service } = makeService();
 
     const result = await service.getThreadMetas(
@@ -288,6 +295,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-1",
         reservationGroupId: null,
         status: "CREATED",
@@ -301,7 +309,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         ownerDisplayName: "Owner A",
       },
     ];
-    const tx = createFakeTx([reservationRows, []]);
+    const tx = createFakeTx([reservationRows, [], []]);
     const { service, organizationMemberService } = makeService({
       hasOrganizationPermission: true,
     });
@@ -335,6 +343,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         organizationId: "org-1",
         ownerUserId: "owner-1",
         playerUserId: "player-1",
+        coachId: null,
         reservationId: "r-1",
         reservationGroupId: null,
         status: "CREATED",
@@ -348,7 +357,7 @@ describe("ReservationChatService.getThreadMetas", () => {
         ownerDisplayName: "Owner A",
       },
     ];
-    const tx = createFakeTx([reservationRows]);
+    const tx = createFakeTx([reservationRows, []]);
     const { service, organizationMemberService } = makeService({
       hasOrganizationPermission: false,
     });
@@ -372,5 +381,74 @@ describe("ReservationChatService.getThreadMetas", () => {
     ).toHaveBeenCalledWith("viewer-1", "org-1", "reservation.chat", {
       tx,
     });
+  });
+
+  it("coach reservation threads are accessible to the player and coach owner", async () => {
+    const baseDate = new Date("2026-02-21T10:00:00.000Z");
+    const coachReservationRows: ReservationMetaRow[] = [
+      {
+        organizationId: "coach-1",
+        ownerUserId: "coach-user-1",
+        playerUserId: "player-1",
+        coachId: "coach-1",
+        reservationId: "r-coach-1",
+        reservationGroupId: null,
+        status: "CONFIRMED",
+        updatedAt: baseDate,
+        startTime: baseDate,
+        endTime: new Date("2026-02-21T11:00:00.000Z"),
+        courtLabel: "Coach Carla",
+        placeName: "Coach Carla",
+        timeZone: "Asia/Manila",
+        playerDisplayName: "Player A",
+        ownerDisplayName: "Coach Carla",
+      },
+    ];
+
+    const playerTx = createFakeTx([[], coachReservationRows, []]);
+    const { service: playerService } = makeService({
+      hasOrganizationPermission: false,
+    });
+
+    const playerResult = await playerService.getThreadMetas(
+      "player-1",
+      {
+        reservationIds: ["r-coach-1"],
+        reservationGroupIds: [],
+      },
+      { tx: playerTx },
+    );
+
+    expect(playerResult).toHaveLength(1);
+    expect(playerResult[0]).toMatchObject({
+      threadId: "res-r-coach-1",
+      reservationId: "r-coach-1",
+      ownerDisplayName: "Coach Carla",
+      placeName: "Coach Carla",
+      courtLabel: "Coaching session",
+    });
+
+    const coachTx = createFakeTx([[], coachReservationRows, []]);
+    const { service: coachService, organizationMemberService } = makeService({
+      hasOrganizationPermission: false,
+    });
+
+    const coachResult = await coachService.getThreadMetas(
+      "coach-user-1",
+      {
+        reservationIds: ["r-coach-1"],
+        reservationGroupIds: [],
+      },
+      { tx: coachTx },
+    );
+
+    expect(coachResult).toHaveLength(1);
+    expect(organizationMemberService).toBeDefined();
+    if (!organizationMemberService) {
+      throw new Error("Expected organizationMemberService");
+    }
+    expect(
+      vi.mocked(organizationMemberService.hasOrganizationPermission),
+    ).not.toHaveBeenCalled();
   });
 });

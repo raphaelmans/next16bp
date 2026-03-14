@@ -147,6 +147,7 @@ export function makeCoachReservationService(): CoachReservationService {
       makeCoachAddonRepository(),
       makeCoachBlockRepository(),
       getContainer().transactionManager,
+      makeNotificationDeliveryService(),
       makePaymentProofRepository(),
       makeObjectStorageService(),
     );

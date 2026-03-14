@@ -24,6 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { CoachReservationChatSheet } from "@/features/coach/components/coach-reservation-chat-sheet";
 import { PaymentProofDisplay } from "@/features/reservation/components/payment-proof-display";
 import {
   useMutCoachAcceptReservation,
@@ -174,6 +175,7 @@ export function CoachReservationDetailPage({
     status === "PAYMENT_MARKED_BY_USER" ||
     status === "CONFIRMED";
   const paymentState = getPaymentStateCopy(status, hasPaymentProof);
+  const chatSubtitle = `${formatShortDateTime(reservation.startTime)} - ${formatShortDateTime(reservation.endTime)}`;
 
   const handleAccept = () => {
     acceptMut.mutate({ reservationId });
@@ -291,6 +293,23 @@ export function CoachReservationDetailPage({
           </CardContent>
         </Card>
       )}
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Chat</CardTitle>
+          <CardDescription>
+            Message the player directly from this reservation thread.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <CoachReservationChatSheet
+            reservationId={reservationId}
+            reservationStatus={status}
+            playerName={reservation.playerNameSnapshot}
+            subtitle={chatSubtitle}
+          />
+        </CardContent>
+      </Card>
 
       {/* Session Info */}
       <Card>

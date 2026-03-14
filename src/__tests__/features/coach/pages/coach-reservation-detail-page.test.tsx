@@ -46,6 +46,12 @@ vi.mock("@/features/coach/hooks", () => ({
   }),
 }));
 
+vi.mock("@/features/coach/components/coach-reservation-chat-sheet", () => ({
+  CoachReservationChatSheet: ({ playerName }: { playerName: string }) => (
+    <div>{`Chat sheet for ${playerName}`}</div>
+  ),
+}));
+
 vi.mock("@/features/reservation/components/payment-proof-display", () => ({
   PaymentProofDisplay: ({
     paymentProof,
@@ -140,6 +146,8 @@ describe("CoachReservationDetailPage", () => {
     render(<CoachReservationDetailPage reservationId="reservation-1" />);
 
     expect(screen.getByText("Payment Status")).toBeTruthy();
+    expect(screen.getByText("Chat")).toBeTruthy();
+    expect(screen.getByText("Chat sheet for Player One")).toBeTruthy();
     expect(
       screen.getByText("Waiting for the player to submit payment proof."),
     ).toBeTruthy();

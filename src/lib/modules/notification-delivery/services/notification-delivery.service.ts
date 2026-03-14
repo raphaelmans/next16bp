@@ -232,6 +232,66 @@ export type OwnerReservationGroupCancelledPayload = {
   reason?: string | null;
 };
 
+export type CoachBookingCreatedPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  totalPriceCents: number;
+  currency: string;
+  playerName: string;
+  playerEmail?: string | null;
+  playerPhone?: string | null;
+  expiresAtIso?: string | null;
+};
+
+export type PlayerCoachBookingAwaitingPaymentPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  expiresAtIso: string | null;
+  totalPriceCents: number;
+  currency: string;
+};
+
+export type CoachBookingPaymentMarkedPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  playerName: string;
+};
+
+export type PlayerCoachBookingConfirmedPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+};
+
+export type PlayerCoachBookingRejectedPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  reason?: string | null;
+};
+
+export type CoachBookingCancelledPayload = {
+  reservationId: string;
+  coachId: string;
+  coachName: string;
+  startTimeIso: string;
+  endTimeIso: string;
+  reason?: string | null;
+};
+
 export class NotificationDeliveryService {
   constructor(
     private jobRepository: INotificationDeliveryJobRepository,
@@ -394,6 +454,78 @@ export class NotificationDeliveryService {
       ],
       options.ctx,
     );
+  }
+
+  private async enqueueDirectUserLifecycleNotification(options: {
+    recipient: { userId: string };
+    eventType: string;
+    payload: Record<string, unknown>;
+    reservationId?: string;
+    idempotencyKeyBase: string;
+    includeEmailSms?: boolean;
+    email?: string | null;
+    phoneNumber?: string | null;
+    ctx?: RequestContext;
+  }): Promise<InsertNotificationDeliveryJob[]> {
+    const jobs: InsertNotificationDeliveryJob[] = [];
+
+    await this.createInboxNotification({
+      userId: options.recipient.userId,
+      eventType: options.eventType,
+      payload: options.payload,
+      idempotencyKeyBase: options.idempotencyKeyBase,
+      ctx: options.ctx,
+    });
+
+    if (options.includeEmailSms) {
+      const email = options.email?.trim();
+      if (env.NOTIFICATION_EMAIL_ENABLED !== false && email) {
+        jobs.push({
+          eventType: options.eventType,
+          channel: "EMAIL",
+          target: email,
+          reservationId: options.reservationId,
+          payload: options.payload,
+          idempotencyKey: `${options.idempotencyKeyBase}:email`,
+        });
+      }
+
+      const normalizedPhone = options.phoneNumber
+        ? normalizePhMobile(options.phoneNumber)
+        : "";
+      if (env.NOTIFICATION_SMS_ENABLED !== false && normalizedPhone) {
+        jobs.push({
+          eventType: options.eventType,
+          channel: "SMS",
+          target: normalizedPhone,
+          reservationId: options.reservationId,
+          payload: options.payload,
+          idempotencyKey: `${options.idempotencyKeyBase}:sms`,
+        });
+      }
+    }
+
+    const webPushJobs = await this.enqueueWebPushForUser({
+      userId: options.recipient.userId,
+      eventType: options.eventType,
+      reservationId: options.reservationId,
+      payload: options.payload,
+      idempotencyKeyBase: options.idempotencyKeyBase,
+      ctx: options.ctx,
+    });
+    jobs.push(...webPushJobs);
+
+    const mobilePushJobs = await this.enqueueMobilePushForUser({
+      userId: options.recipient.userId,
+      eventType: options.eventType,
+      reservationId: options.reservationId,
+      payload: options.payload,
+      idempotencyKeyBase: options.idempotencyKeyBase,
+      ctx: options.ctx,
+    });
+    jobs.push(...mobilePushJobs);
+
+    return jobs;
   }
 
   private async listOwnerReservationRecipients(options: {
@@ -1590,6 +1722,231 @@ export class NotificationDeliveryService {
       ctx,
     });
     jobs.push(...mobilePushJobs);
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueCoachBookingCreated(
+    payload: CoachBookingCreatedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findCoachRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      totalPriceCents: payload.totalPriceCents,
+      currency: payload.currency,
+      playerName: payload.playerName,
+      playerEmail: payload.playerEmail ?? null,
+      playerPhone: payload.playerPhone ?? null,
+      expiresAtIso: payload.expiresAtIso ?? null,
+    };
+    const idempotencyKeyBase = `coach_booking.created:${payload.reservationId}:coach:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.created",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      includeEmailSms: true,
+      email: recipient.email,
+      phoneNumber: recipient.phoneNumber,
+      ctx,
+    });
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerCoachBookingAwaitingPayment(
+    payload: PlayerCoachBookingAwaitingPaymentPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      expiresAtIso: payload.expiresAtIso,
+      totalPriceCents: payload.totalPriceCents,
+      currency: payload.currency,
+    };
+    const idempotencyKeyBase = `coach_booking.awaiting_payment:${payload.reservationId}:user:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.awaiting_payment",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueCoachBookingPaymentMarked(
+    payload: CoachBookingPaymentMarkedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findCoachRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      playerName: payload.playerName,
+    };
+    const idempotencyKeyBase = `coach_booking.payment_marked:${payload.reservationId}:coach:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.payment_marked",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerCoachBookingConfirmed(
+    payload: PlayerCoachBookingConfirmedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+    };
+    const idempotencyKeyBase = `coach_booking.confirmed:${payload.reservationId}:user:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.confirmed",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueuePlayerCoachBookingRejected(
+    payload: PlayerCoachBookingRejectedPayload,
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      await this.recipientRepository.findPlayerRecipientByReservationId(
+        payload.reservationId,
+        ctx,
+      );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      reason: payload.reason ?? null,
+    };
+    const idempotencyKeyBase = `coach_booking.rejected:${payload.reservationId}:user:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.rejected",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      ctx,
+    });
+
+    await this.createJobsAndTriggerDispatch(jobs, ctx);
+    return { jobCount: jobs.length };
+  }
+
+  async enqueueCoachBookingCancelled(
+    payload: CoachBookingCancelledPayload,
+    recipientType: "coach" | "player",
+    ctx?: RequestContext,
+  ): Promise<{ jobCount: number }> {
+    const recipient =
+      recipientType === "coach"
+        ? await this.recipientRepository.findCoachRecipientByReservationId(
+            payload.reservationId,
+            ctx,
+          )
+        : await this.recipientRepository.findPlayerRecipientByReservationId(
+            payload.reservationId,
+            ctx,
+          );
+    if (!recipient) {
+      return { jobCount: 0 };
+    }
+
+    const basePayload = {
+      reservationId: payload.reservationId,
+      coachId: payload.coachId,
+      coachName: payload.coachName,
+      startTimeIso: payload.startTimeIso,
+      endTimeIso: payload.endTimeIso,
+      reason: payload.reason ?? null,
+    };
+    const idempotencyKeyBase = `coach_booking.cancelled:${payload.reservationId}:${recipientType}:${recipient.userId}`;
+    const jobs = await this.enqueueDirectUserLifecycleNotification({
+      recipient,
+      eventType: "coach_booking.cancelled",
+      payload: basePayload,
+      reservationId: payload.reservationId,
+      idempotencyKeyBase,
+      ctx,
+    });
 
     await this.createJobsAndTriggerDispatch(jobs, ctx);
     return { jobCount: jobs.length };

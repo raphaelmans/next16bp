@@ -1,3 +1,4 @@
+import { makeCoachRepository } from "@/lib/modules/coach/factories/coach.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeOrganizationRepository } from "@/lib/modules/organization/factories/organization.factory";
 import { makeOrganizationMemberService } from "@/lib/modules/organization-member/factories/organization-member.factory";
@@ -47,6 +48,7 @@ export function makeReservationChatService(): ReservationChatService {
     reservationChatService = new ReservationChatService(
       makeReservationRepository(),
       makeProfileRepository(),
+      makeCoachRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
       makeOrganizationRepository(),

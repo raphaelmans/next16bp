@@ -7,7 +7,19 @@ import {
 import { getPlayerReservationPath } from "@/common/reservation-links";
 import {
   type ClaimReviewedPayload,
+  type CoachBookingAwaitingPaymentPayload,
+  type CoachBookingCancelledPayload,
+  type CoachBookingConfirmedPayload,
+  type CoachBookingCreatedPayload,
+  type CoachBookingPaymentMarkedPayload,
+  type CoachBookingRejectedPayload,
   claimReviewedSchema,
+  coachBookingAwaitingPaymentSchema,
+  coachBookingCancelledSchema,
+  coachBookingConfirmedSchema,
+  coachBookingCreatedSchema,
+  coachBookingPaymentMarkedSchema,
+  coachBookingRejectedSchema,
   type NotificationEventType,
   type ReservationAwaitingPaymentPayload,
   type ReservationCancelledByOwnerPayload,
@@ -762,6 +774,159 @@ export function buildReservationPingOwnerContent(
   };
 }
 
+export function buildCoachBookingCreatedContent(
+  payload: CoachBookingCreatedPayload,
+  appUrl: string,
+): NotificationContent {
+  const coachPath = appRoutes.coach.reservationDetail(payload.reservationId);
+  const coachUrl = makeUrl(appUrl, coachPath);
+  const dateFormatted = formatDateShort(payload.startTimeIso);
+  const timeFormatted = formatTimeRange(
+    payload.startTimeIso,
+    payload.endTimeIso,
+  );
+  const totalFormatted = formatCurrency(
+    payload.totalPriceCents,
+    payload.currency,
+  );
+
+  return {
+    push: {
+      title: "New coach booking",
+      body: `${payload.playerName} booked ${payload.coachName}`,
+      url: coachPath,
+      tag: `coach_booking.created:${payload.reservationId}`,
+    },
+    email: {
+      subject: `New booking for ${payload.coachName}`,
+      text: [
+        "Hi Coach,",
+        "",
+        `${payload.playerName} booked a session with ${payload.coachName}.`,
+        "",
+        `Date: ${dateFormatted}`,
+        `Time: ${timeFormatted}`,
+        `Player: ${payload.playerName}`,
+        ...(payload.playerEmail ? [`Email: ${payload.playerEmail}`] : []),
+        ...(payload.playerPhone ? [`Phone: ${payload.playerPhone}`] : []),
+        `Total: ${totalFormatted}`,
+        "",
+        `Review: ${coachUrl}`,
+      ].join("\n"),
+      templateData: {
+        preheader: `${payload.playerName} booked ${payload.coachName} for ${dateFormatted}.`,
+        headerSubtitle: "New Coach Booking",
+        title: "You have a new booking request",
+        greeting: "Hi Coach,",
+        bodyLines: [
+          `${payload.playerName} booked a session with ${payload.coachName}. Review the details and respond from your coach portal.`,
+        ],
+        detailRows: [
+          { label: "Coach", value: payload.coachName },
+          { label: "Date", value: dateFormatted },
+          { label: "Time", value: timeFormatted },
+          { label: "Player", value: payload.playerName },
+          ...(payload.playerEmail
+            ? [{ label: "Email", value: payload.playerEmail }]
+            : []),
+          ...(payload.playerPhone
+            ? [{ label: "Phone", value: payload.playerPhone }]
+            : []),
+          { label: "Total", value: totalFormatted },
+        ],
+        ctaText: "Review Booking",
+        ctaUrl: coachUrl,
+      },
+    },
+    smsText: `KudosCourts: ${payload.playerName} booked ${payload.coachName} on ${dateFormatted}. Review: ${coachUrl}`,
+  };
+}
+
+export function buildCoachBookingAwaitingPaymentContent(
+  payload: CoachBookingAwaitingPaymentPayload,
+): NotificationContent {
+  return {
+    push: {
+      title: "Coach accepted your booking",
+      body: `${payload.coachName} is waiting for payment`,
+      url: getPlayerReservationPath({
+        reservationId: payload.reservationId,
+        status: "AWAITING_PAYMENT",
+      }),
+      tag: `coach_booking.awaiting_payment:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
+export function buildCoachBookingPaymentMarkedContent(
+  payload: CoachBookingPaymentMarkedPayload,
+): NotificationContent {
+  return {
+    push: {
+      title: "Coach payment marked",
+      body: `${payload.playerName} marked payment for ${payload.coachName}`,
+      url: appRoutes.coach.reservationDetail(payload.reservationId),
+      tag: `coach_booking.payment_marked:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
+export function buildCoachBookingConfirmedContent(
+  payload: CoachBookingConfirmedPayload,
+): NotificationContent {
+  return {
+    push: {
+      title: "Coach session confirmed",
+      body: `${payload.coachName} confirmed your booking`,
+      url: getPlayerReservationPath({
+        reservationId: payload.reservationId,
+        status: "CONFIRMED",
+      }),
+      tag: `coach_booking.confirmed:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
+export function buildCoachBookingRejectedContent(
+  payload: CoachBookingRejectedPayload,
+): NotificationContent {
+  return {
+    push: {
+      title: "Coach booking declined",
+      body: payload.reason
+        ? `${payload.coachName}: ${payload.reason}`
+        : `${payload.coachName} declined your booking`,
+      url: appRoutes.reservations.detail(payload.reservationId),
+      tag: `coach_booking.rejected:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
+export function buildCoachBookingCancelledContent(
+  payload: CoachBookingCancelledPayload,
+): NotificationContent {
+  return {
+    push: {
+      title: "Coach booking cancelled",
+      body: payload.reason
+        ? `${payload.coachName}: ${payload.reason}`
+        : `${payload.coachName} cancelled the booking`,
+      url: appRoutes.reservations.detail(payload.reservationId),
+      tag: `coach_booking.cancelled:${payload.reservationId}`,
+    },
+    email: null,
+    smsText: null,
+  };
+}
+
 export function buildTestWebPushContent(
   payload: TestWebPushPayload,
 ): NotificationContent {
@@ -865,6 +1030,30 @@ const EVENT_HANDLERS: Record<NotificationEventType, EventHandler> = {
   "reservation.ping_owner": {
     schema: reservationPingOwnerSchema,
     build: buildReservationPingOwnerContent as EventHandler["build"],
+  },
+  "coach_booking.created": {
+    schema: coachBookingCreatedSchema,
+    build: buildCoachBookingCreatedContent as EventHandler["build"],
+  },
+  "coach_booking.awaiting_payment": {
+    schema: coachBookingAwaitingPaymentSchema,
+    build: buildCoachBookingAwaitingPaymentContent as EventHandler["build"],
+  },
+  "coach_booking.payment_marked": {
+    schema: coachBookingPaymentMarkedSchema,
+    build: buildCoachBookingPaymentMarkedContent as EventHandler["build"],
+  },
+  "coach_booking.confirmed": {
+    schema: coachBookingConfirmedSchema,
+    build: buildCoachBookingConfirmedContent as EventHandler["build"],
+  },
+  "coach_booking.rejected": {
+    schema: coachBookingRejectedSchema,
+    build: buildCoachBookingRejectedContent as EventHandler["build"],
+  },
+  "coach_booking.cancelled": {
+    schema: coachBookingCancelledSchema,
+    build: buildCoachBookingCancelledContent as EventHandler["build"],
   },
   "test.web_push": {
     schema: testWebPushSchema,

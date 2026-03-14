@@ -236,6 +236,7 @@ describe("ReservationDetailPage", () => {
     expect(screen.getByText("₱40.00")).toBeTruthy();
     expect(screen.getByText("₱2,540.00")).toBeTruthy();
     expect(screen.getByText("Status banner: coach")).toBeTruthy();
+    expect(screen.getAllByText("Message Coach").length).toBeGreaterThan(0);
     expect(screen.queryByText("Venue reservation actions")).toBeNull();
     expect(screen.queryByText("Reservation not found")).toBeNull();
   });
