@@ -6,9 +6,7 @@
     "provinceName": "Metro Manila",
     "cityName": "City of Mandaluyong"
   },
-  "importedPlaceIds": [
-    "5461b7f3-02cd-4494-bd3b-d297bb993e72"
-  ],
+  "importedPlaceIds": ["5461b7f3-02cd-4494-bd3b-d297bb993e72"],
   "stages": {
     "discovery": {
       "status": "completed",

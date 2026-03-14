@@ -10,9 +10,7 @@
     "cityName": "Magalang",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "b6c44297-9296-4c72-a579-c359a2ccbc6d"
-  ],
+  "importedPlaceIds": ["b6c44297-9296-4c72-a579-c359a2ccbc6d"],
   "stages": {
     "discovery": {
       "status": "pending",

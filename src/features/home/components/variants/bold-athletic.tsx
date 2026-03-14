@@ -120,7 +120,7 @@ export function BoldAthleticPage({
                 className={`text-center relative animate-fade-in-up stagger-${i + 1}`}
               >
                 {/* Watermark step number */}
-                <div className="absolute inset-x-0 -top-2 text-6xl font-extrabold text-teal-100 font-heading select-none pointer-events-none">
+                <div className="absolute inset-x-0 -top-2 text-6xl font-extrabold text-primary/20 font-heading select-none pointer-events-none">
                   0{step.step}
                 </div>
                 <div className="w-[72px] h-[72px] rounded-[20px] flex items-center justify-center mx-auto mb-5 font-heading text-[28px] font-extrabold relative z-10 bg-primary/10 text-primary">

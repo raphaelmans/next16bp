@@ -154,7 +154,11 @@ export function ProfileForm() {
                 Form dirty: {isDirty ? "Yes" : "No"}
               </p>
             )}
-            <Button type="submit" disabled={isSubmitDisabled} loading={submitting}>
+            <Button
+              type="submit"
+              disabled={isSubmitDisabled}
+              loading={submitting}
+            >
               Save Changes
             </Button>
           </div>

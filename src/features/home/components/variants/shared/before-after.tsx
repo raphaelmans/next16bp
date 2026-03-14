@@ -21,15 +21,15 @@ interface BeforeAfterProps {
 }
 
 const sectionStyles: Record<LandingVariant, string> = {
-  "bold-athletic": "py-24 bg-teal-50/50",
+  "bold-athletic": "py-24 bg-primary/5",
   "clean-minimal": "py-20 md:py-32",
-  "warm-community": "py-24 bg-teal-50/30",
+  "warm-community": "py-24 bg-primary/[0.03]",
 };
 
 const beforeCardStyles: Record<LandingVariant, string> = {
   "bold-athletic":
     "rounded-lg border border-destructive/10 bg-gradient-to-br from-destructive/[0.035] to-destructive/[0.015] p-9",
-  "clean-minimal": "rounded-xl border border-gray-200 bg-gray-50 p-9",
+  "clean-minimal": "rounded-xl border border-border bg-muted/50 p-9",
   "warm-community": "rounded-2xl border border-destructive/10 bg-white p-9",
 };
 
@@ -37,7 +37,7 @@ const afterCardStyles: Record<LandingVariant, string> = {
   "bold-athletic":
     "rounded-lg border border-primary/12 bg-gradient-to-br from-primary/[0.04] to-primary/[0.015] p-9",
   "clean-minimal": "rounded-xl border border-primary/20 bg-white p-9",
-  "warm-community": "rounded-2xl border border-primary/12 bg-teal-50 p-9",
+  "warm-community": "rounded-2xl border border-primary/12 bg-primary/5 p-9",
 };
 
 export function BeforeAfter({ variant }: BeforeAfterProps) {

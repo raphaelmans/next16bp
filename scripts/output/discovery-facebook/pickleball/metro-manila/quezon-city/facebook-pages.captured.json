@@ -71,11 +71,7 @@
         "email": "edenisip12@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Covered Tennis Court",
-          "Dine-in",
-          "Outdoor seating"
-        ],
+        "amenities": ["Covered Tennis Court", "Dine-in", "Outdoor seating"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

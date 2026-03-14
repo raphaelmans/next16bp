@@ -210,9 +210,7 @@
         "email": "brigettetemprosa8@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Exclusive Pickleball Court"
-        ],
+        "amenities": ["Exclusive Pickleball Court"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -291,9 +289,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://maps.app.goo.gl/Hw2xg7R5D9jsLbY77",
-        "amenities": [
-          "Outdoor pickleball courts"
-        ],
+        "amenities": ["Outdoor pickleball courts"],
         "courtCount": 2,
         "isVenue": true,
         "isWithinScope": true,
@@ -368,9 +364,7 @@
         "email": "Dinkery528@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Silica with acrylic paint on the surface."
-        ],
+        "amenities": ["Silica with acrylic paint on the surface."],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -588,10 +582,7 @@
         "email": "uyjamesalbert@yahoo.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball court",
-          "Sports bar"
-        ],
+        "amenities": ["Pickleball court", "Sports bar"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

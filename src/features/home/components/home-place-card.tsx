@@ -3,6 +3,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { formatCurrency } from "@/common/format";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import type { PlaceSummary } from "@/features/discovery/helpers";
 import { cn } from "@/lib/utils";
 
@@ -84,30 +86,28 @@ export function HomePlaceCard({
               {place.name}
             </h3>
             {place.courtCount ? (
-              <span className="shrink-0 rounded-full bg-secondary px-2 py-0.5 text-[10px] font-medium text-secondary-foreground">
+              <Badge variant="secondary" className="text-[10px]">
                 {place.courtCount} courts
-              </span>
+              </Badge>
             ) : null}
           </div>
 
           <div className="flex flex-wrap items-center gap-2 text-[10px]">
             {(place.featuredRank ?? 0) > 0 ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-secondary px-2 py-1 font-medium text-secondary-foreground">
+              <Badge variant="secondary">
                 <Star className="h-3 w-3" />
                 Featured
-              </span>
+              </Badge>
             ) : null}
             {place.placeType === "RESERVABLE" &&
             place.verificationStatus === "VERIFIED" ? (
-              <span className="inline-flex items-center gap-1 rounded-full bg-success-light px-2 py-1 font-medium text-success">
+              <Badge variant="success">
                 <ShieldCheck className="h-3 w-3" />
                 Verified
-              </span>
+              </Badge>
             ) : null}
             {place.placeType === "CURATED" ? (
-              <span className="inline-flex items-center rounded-full bg-secondary px-2 py-1 font-medium text-secondary-foreground">
-                Curated
-              </span>
+              <Badge variant="secondary">Curated</Badge>
             ) : null}
           </div>
         </div>
@@ -122,17 +122,14 @@ export function HomePlaceCard({
         {visibleSports.length > 0 ? (
           <div className="flex flex-wrap gap-2">
             {visibleSports.map((sport) => (
-              <span
-                key={sport.id}
-                className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground"
-              >
+              <Badge key={sport.id} variant="outline" className="text-[11px]">
                 {sport.name}
-              </span>
+              </Badge>
             ))}
             {hiddenCount > 0 ? (
-              <span className="rounded-full border border-border px-2.5 py-1 text-[11px] font-medium text-muted-foreground">
+              <Badge variant="outline" className="text-[11px]">
                 +{hiddenCount} more
-              </span>
+              </Badge>
             ) : null}
           </div>
         ) : null}
@@ -147,9 +144,9 @@ export function HomePlaceCard({
             </div>
           ) : null}
 
-          <span className="ml-auto inline-flex items-center rounded-lg bg-primary px-3 py-2 text-xs font-heading font-semibold text-primary-foreground">
+          <Button size="sm" className="ml-auto">
             View venue
-          </span>
+          </Button>
         </div>
       </div>
     </>

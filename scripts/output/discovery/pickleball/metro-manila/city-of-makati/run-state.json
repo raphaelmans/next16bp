@@ -10,9 +10,7 @@
     "cityName": "City of Makati",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "7d5e8306-e0dd-49b3-b8db-565ef8ceb2db"
-  ],
+  "importedPlaceIds": ["7d5e8306-e0dd-49b3-b8db-565ef8ceb2db"],
   "stages": {
     "discovery": {
       "status": "completed",

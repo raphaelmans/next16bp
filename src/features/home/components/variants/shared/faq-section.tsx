@@ -21,14 +21,14 @@ interface FaqSectionProps {
 }
 
 const sectionStyles: Record<LandingVariant, string> = {
-  "bold-athletic": "py-20 bg-teal-50/50 border-t border-border",
+  "bold-athletic": "py-20 bg-primary/5 border-t border-border",
   "clean-minimal": "py-20 md:py-32",
-  "warm-community": "py-20 bg-teal-50/30",
+  "warm-community": "py-20 bg-primary/[0.03]",
 };
 
 const accordionWrapperStyles: Record<LandingVariant, string> = {
   "bold-athletic": "rounded-lg border border-border bg-white p-2",
-  "clean-minimal": "rounded-xl border border-gray-200 bg-white p-2",
+  "clean-minimal": "rounded-xl border border-border bg-white p-2",
   "warm-community": "rounded-2xl border border-border bg-white p-4",
 };
 

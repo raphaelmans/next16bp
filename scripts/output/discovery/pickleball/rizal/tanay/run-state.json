@@ -10,9 +10,7 @@
     "cityName": "Tanay",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "77b34a16-53e3-40d7-a013-85ff4902bf33"
-  ],
+  "importedPlaceIds": ["77b34a16-53e3-40d7-a013-85ff4902bf33"],
   "stages": {
     "discovery": {
       "status": "completed",

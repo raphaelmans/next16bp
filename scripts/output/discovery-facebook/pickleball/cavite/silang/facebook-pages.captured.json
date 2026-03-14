@@ -65,10 +65,7 @@
         "email": "powerhousepbc@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "8 Badminton Courts",
-          "5 Pickleball Courts"
-        ],
+        "amenities": ["8 Badminton Courts", "5 Pickleball Courts"],
         "courtCount": 5,
         "isVenue": true,
         "isWithinScope": true,

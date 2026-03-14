@@ -138,9 +138,7 @@
         "email": null,
         "instagramUrl": "https://www.instagram.com/home.courts",
         "websiteUrl": null,
-        "amenities": [
-          "Message to book your court"
-        ],
+        "amenities": ["Message to book your court"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -210,10 +208,7 @@
         "email": "Chattysoriano@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "pickleball court",
-          "Open Play"
-        ],
+        "amenities": ["pickleball court", "Open Play"],
         "courtCount": 2,
         "isVenue": true,
         "isWithinScope": true,

@@ -63,11 +63,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Outdoor",
-          "Garden vibe",
-          "Cool air"
-        ],
+        "amenities": ["Outdoor", "Garden vibe", "Cool air"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -282,9 +278,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Your newest outdoor Pickleball court!"
-        ],
+        "amenities": ["Your newest outdoor Pickleball court!"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -583,9 +577,7 @@
         "email": "ejspblounge@gmail.com",
         "instagramUrl": null,
         "websiteUrl": "https://reclub.co/clubs/@cups-pickleball-lounge",
-        "amenities": [
-          "Indoor courts"
-        ],
+        "amenities": ["Indoor courts"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,

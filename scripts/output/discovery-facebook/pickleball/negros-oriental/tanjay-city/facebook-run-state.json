@@ -10,9 +10,7 @@
     "cityName": "Tanjay City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "2a0a5aa8-739f-4de3-b520-46e9c0cf350d"
-  ],
+  "importedPlaceIds": ["2a0a5aa8-739f-4de3-b520-46e9c0cf350d"],
   "stages": {
     "discovery": {
       "status": "pending",

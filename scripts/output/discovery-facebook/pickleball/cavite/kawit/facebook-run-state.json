@@ -10,9 +10,7 @@
     "cityName": "Kawit",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "4eaa201d-527b-46e0-af17-b80cb086b363"
-  ],
+  "importedPlaceIds": ["4eaa201d-527b-46e0-af17-b80cb086b363"],
   "stages": {
     "discovery": {
       "status": "pending",

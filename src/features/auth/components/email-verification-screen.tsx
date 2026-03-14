@@ -137,7 +137,12 @@ export function EmailVerificationScreen({
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={isVerifying}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitDisabled}
+            loading={isVerifying}
+          >
             Verify
           </Button>
 

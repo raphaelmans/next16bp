@@ -10,9 +10,7 @@
     "cityName": "Zamboanguita",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "a3f77e96-3edb-4327-8197-94ab266f0a30"
-  ],
+  "importedPlaceIds": ["a3f77e96-3edb-4327-8197-94ab266f0a30"],
   "stages": {
     "discovery": {
       "status": "pending",

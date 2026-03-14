@@ -6,9 +6,7 @@
     "provinceName": "Bulacan",
     "cityName": "Malolos City"
   },
-  "importedPlaceIds": [
-    "e0ec0018-b385-4db5-b24a-8567041a11e2"
-  ],
+  "importedPlaceIds": ["e0ec0018-b385-4db5-b24a-8567041a11e2"],
   "stages": {
     "discovery": {
       "status": "completed",

@@ -6,9 +6,7 @@
     "provinceName": "Negros Oriental",
     "cityName": "Santa Catalina"
   },
-  "importedPlaceIds": [
-    "d71a2a4e-4a58-4f8d-964e-0a97ff76c241"
-  ],
+  "importedPlaceIds": ["d71a2a4e-4a58-4f8d-964e-0a97ff76c241"],
   "stages": {
     "discovery": {
       "status": "pending",

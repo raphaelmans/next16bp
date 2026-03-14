@@ -6,9 +6,7 @@
     "provinceName": "Cebu",
     "cityName": "Carcar City"
   },
-  "importedPlaceIds": [
-    "efa39164-8652-4ddb-a626-af3c753c2c03"
-  ],
+  "importedPlaceIds": ["efa39164-8652-4ddb-a626-af3c753c2c03"],
   "stages": {
     "discovery": {
       "status": "pending",

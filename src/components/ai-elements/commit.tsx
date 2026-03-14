@@ -305,9 +305,9 @@ export const CommitFileInfo = ({
 
 const fileStatusStyles = {
   added: "text-success",
-  modified: "text-yellow-600",
+  modified: "text-warning",
   deleted: "text-destructive",
-  renamed: "text-blue-600",
+  renamed: "text-info",
 };
 
 const fileStatusLabels = {

@@ -257,7 +257,12 @@ export function EmailOtpForm({ redirectParam }: EmailOtpFormProps = {}) {
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={requestDisabled} loading={requestSubmitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={requestDisabled}
+            loading={requestSubmitting}
+          >
             Send code
           </Button>
 

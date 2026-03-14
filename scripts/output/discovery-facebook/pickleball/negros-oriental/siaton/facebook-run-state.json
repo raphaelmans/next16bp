@@ -10,9 +10,7 @@
     "cityName": "Siaton",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "17e121a1-166b-416f-8328-76198f60de49"
-  ],
+  "importedPlaceIds": ["17e121a1-166b-416f-8328-76198f60de49"],
   "stages": {
     "discovery": {
       "status": "pending",

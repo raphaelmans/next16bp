@@ -45,7 +45,7 @@ function BoldAthleticOwnerStrip() {
 
 function CleanMinimalOwnerStrip() {
   return (
-    <section className="border-t border-gray-100 py-10">
+    <section className="border-t border-border py-10">
       <Container>
         <div className="flex flex-col items-center gap-6 sm:flex-row sm:justify-between">
           <div className="text-center sm:text-left">
@@ -85,7 +85,7 @@ function WarmCommunityOwnerStrip() {
   return (
     <section className="py-10">
       <Container>
-        <div className="rounded-2xl bg-teal-50 border border-border p-8">
+        <div className="rounded-2xl bg-primary/5 border border-border p-8">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
             <div className="text-center sm:text-left">
               <h3 className="font-heading text-lg font-bold tracking-[-0.02em]">

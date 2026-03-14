@@ -21,7 +21,10 @@ import {
   scoreFacebookPageLead,
   type FacebookLeadResult,
 } from "../shared/facebook-page-scoring";
-import { canonicalizeLeadUrl, normalizeLocationSlug } from "../shared/url-normalization";
+import {
+  canonicalizeLeadUrl,
+  normalizeLocationSlug,
+} from "../shared/url-normalization";
 
 interface ScriptOptions {
   province: string | null;

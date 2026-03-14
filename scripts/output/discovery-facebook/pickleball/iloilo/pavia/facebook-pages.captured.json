@@ -224,9 +224,7 @@
         "email": "dinkdistrictbypicklemd@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "pickleball courts"
-        ],
+        "amenities": ["pickleball courts"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -299,9 +297,7 @@
         "email": "josephinecolmo1@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Commercial Space"
-        ],
+        "amenities": ["Commercial Space"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

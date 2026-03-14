@@ -6,9 +6,7 @@
     "provinceName": "Cavite",
     "cityName": "Silang"
   },
-  "importedPlaceIds": [
-    "7551fe79-915c-47fd-b0eb-ee5c039f6ae3"
-  ],
+  "importedPlaceIds": ["7551fe79-915c-47fd-b0eb-ee5c039f6ae3"],
   "stages": {
     "discovery": {
       "status": "completed",

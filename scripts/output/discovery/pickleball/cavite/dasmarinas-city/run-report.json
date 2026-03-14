@@ -6,9 +6,7 @@
     "provinceName": "Cavite",
     "cityName": "Dasmariñas City"
   },
-  "importedPlaceIds": [
-    "ed4ac4b9-969c-4468-9819-16a715c067fe"
-  ],
+  "importedPlaceIds": ["ed4ac4b9-969c-4468-9819-16a715c067fe"],
   "stages": {
     "discovery": {
       "status": "completed",

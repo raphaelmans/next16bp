@@ -151,7 +151,7 @@ export function AdminReviewsList() {
                             className={cn(
                               "h-3 w-3",
                               s <= review.rating
-                                ? "fill-amber-400 text-amber-400"
+                                ? "fill-warning text-warning"
                                 : "text-muted-foreground/20",
                             )}
                           />

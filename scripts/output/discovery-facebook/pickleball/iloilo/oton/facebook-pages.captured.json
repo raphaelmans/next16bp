@@ -136,9 +136,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Cafe"
-        ],
+        "amenities": ["Cafe"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

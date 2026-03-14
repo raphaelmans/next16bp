@@ -184,7 +184,12 @@ export function RegisterForm({
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={submitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitDisabled}
+            loading={submitting}
+          >
             Create Account
           </Button>
 

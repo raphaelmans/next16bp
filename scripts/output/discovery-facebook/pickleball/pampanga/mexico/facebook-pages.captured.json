@@ -67,9 +67,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://reclub.co/clubs/@think-and-dink-pickleball-center",
-        "amenities": [
-          "Online booking"
-        ],
+        "amenities": ["Online booking"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

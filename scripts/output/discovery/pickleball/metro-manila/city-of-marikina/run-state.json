@@ -10,9 +10,7 @@
     "cityName": "City of Marikina",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "43087e19-971e-4a17-86f8-d2824c4d68a5"
-  ],
+  "importedPlaceIds": ["43087e19-971e-4a17-86f8-d2824c4d68a5"],
   "stages": {
     "discovery": {
       "status": "completed",

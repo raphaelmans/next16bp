@@ -6,9 +6,7 @@
     "provinceName": "Bulacan",
     "cityName": "Santa Maria"
   },
-  "importedPlaceIds": [
-    "8cc0a211-3211-41c9-adf4-394eb1c6eeef"
-  ],
+  "importedPlaceIds": ["8cc0a211-3211-41c9-adf4-394eb1c6eeef"],
   "stages": {
     "discovery": {
       "status": "pending",

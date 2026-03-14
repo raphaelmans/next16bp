@@ -6,9 +6,7 @@
     "provinceName": "Leyte",
     "cityName": "Tacloban City"
   },
-  "importedPlaceIds": [
-    "837aafc1-273a-4a29-a5c8-8e6d4418c53d"
-  ],
+  "importedPlaceIds": ["837aafc1-273a-4a29-a5c8-8e6d4418c53d"],
   "stages": {
     "discovery": {
       "status": "completed",

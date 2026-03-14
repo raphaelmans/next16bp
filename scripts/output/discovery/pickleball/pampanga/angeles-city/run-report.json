@@ -6,9 +6,7 @@
     "provinceName": "Pampanga",
     "cityName": "Angeles City"
   },
-  "importedPlaceIds": [
-    "b1c94701-9679-44bb-b0c9-67553d7f4a86"
-  ],
+  "importedPlaceIds": ["b1c94701-9679-44bb-b0c9-67553d7f4a86"],
   "stages": {
     "discovery": {
       "status": "completed",

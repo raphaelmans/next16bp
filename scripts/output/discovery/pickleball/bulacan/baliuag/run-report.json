@@ -6,9 +6,7 @@
     "provinceName": "Bulacan",
     "cityName": "Baliuag"
   },
-  "importedPlaceIds": [
-    "e22868b7-d4f7-4998-a138-6ac878a2596c"
-  ],
+  "importedPlaceIds": ["e22868b7-d4f7-4998-a138-6ac878a2596c"],
   "stages": {
     "discovery": {
       "status": "completed",

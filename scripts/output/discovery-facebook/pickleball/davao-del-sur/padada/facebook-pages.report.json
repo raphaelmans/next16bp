@@ -14,9 +14,7 @@
     "site:facebook.com \"Padada\" \"pickleball court\"",
     "site:facebook.com \"Davao Del Sur\" \"pickleball\""
   ],
-  "emittedUrls": [
-    "https://www.facebook.com/darlaloominaling/"
-  ],
+  "emittedUrls": ["https://www.facebook.com/darlaloominaling/"],
   "skippedAlreadyDiscovered": [],
   "skippedLowRelevance": [
     {

@@ -6,9 +6,7 @@
     "provinceName": "Pampanga",
     "cityName": "San Fernando City"
   },
-  "importedPlaceIds": [
-    "aa8f22d3-2a2b-489f-aaa7-48c82bb6d901"
-  ],
+  "importedPlaceIds": ["aa8f22d3-2a2b-489f-aaa7-48c82bb6d901"],
   "stages": {
     "discovery": {
       "status": "pending",

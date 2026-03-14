@@ -14,9 +14,7 @@
     "site:facebook.com \"Trece Martires City\" \"pickleball court\"",
     "site:facebook.com \"Cavite\" \"pickleball\""
   ],
-  "emittedUrls": [
-    "https://www.facebook.com/p/The-Dink-Lab-61576669311409/"
-  ],
+  "emittedUrls": ["https://www.facebook.com/p/The-Dink-Lab-61576669311409/"],
   "skippedAlreadyDiscovered": [],
   "skippedLowRelevance": [
     {

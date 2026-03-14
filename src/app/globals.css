@@ -110,6 +110,15 @@
   --warning-foreground: oklch(0.2 0.01 70);
   --warning-light: oklch(0.96 0.04 70);
   --destructive-light: oklch(0.92 0.06 27);
+  --info: oklch(0.55 0.15 260);
+  --info-foreground: oklch(0.99 0 0);
+  --info-light: oklch(0.93 0.04 260);
+  --code-bg: oklch(0.145 0.005 285);
+  --code-fg: oklch(0.87 0.005 260);
+  --code-border: oklch(0.25 0.005 260);
+  --code-muted: oklch(0.55 0.01 260);
+  --code-surface: oklch(0.18 0.005 270);
+  --code-hover: oklch(0.22 0.005 260);
 }
 
 /* =============================================================================
@@ -159,6 +168,15 @@
   --color-warning-foreground: var(--warning-foreground);
   --color-warning-light: var(--warning-light);
   --color-destructive-light: var(--destructive-light);
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-light: var(--info-light);
+  --color-code-bg: var(--code-bg);
+  --color-code-fg: var(--code-fg);
+  --color-code-border: var(--code-border);
+  --color-code-muted: var(--code-muted);
+  --color-code-surface: var(--code-surface);
+  --color-code-hover: var(--code-hover);
 
   /* Radius - shadcn standard calculations */
   --radius-sm: calc(var(--radius) - 4px);

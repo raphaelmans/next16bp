@@ -6,9 +6,7 @@
     "provinceName": "Iloilo",
     "cityName": "Oton"
   },
-  "importedPlaceIds": [
-    "972afbb7-8e99-46b6-9614-85b4d422d839"
-  ],
+  "importedPlaceIds": ["972afbb7-8e99-46b6-9614-85b4d422d839"],
   "stages": {
     "discovery": {
       "status": "completed",

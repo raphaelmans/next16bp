@@ -63,10 +63,7 @@
         "email": "paseodimayuga@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball Court",
-          "Crossfit Box"
-        ],
+        "amenities": ["Pickleball Court", "Crossfit Box"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -365,11 +362,7 @@
         "email": "ejspblounge@gmail.com",
         "instagramUrl": null,
         "websiteUrl": "reclub.co/clubs/@cups-pickleball-lounge",
-        "amenities": [
-          "indoor",
-          "Reservations",
-          "In-person classes"
-        ],
+        "amenities": ["indoor", "Reservations", "In-person classes"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,

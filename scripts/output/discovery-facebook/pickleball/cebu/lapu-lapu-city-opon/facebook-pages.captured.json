@@ -66,10 +66,7 @@
         "email": "rexlozano09@gmail.com",
         "instagramUrl": "https://www.instagram.com/rexkers09",
         "websiteUrl": null,
-        "amenities": [
-          "Private Basketball Court",
-          "Pickleball"
-        ],
+        "amenities": ["Private Basketball Court", "Pickleball"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -245,9 +242,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball court"
-        ],
+        "amenities": ["Pickleball court"],
         "courtCount": 1,
         "isVenue": true,
         "isWithinScope": true,
@@ -465,10 +460,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://sites.google.com/view/linkers-pickleball-court/home?authuser=0",
-        "amenities": [
-          "Outdoor courts",
-          "Covered courts"
-        ],
+        "amenities": ["Outdoor courts", "Covered courts"],
         "courtCount": 4,
         "isVenue": true,
         "isWithinScope": false,

@@ -6,9 +6,7 @@
     "provinceName": "Metro Manila",
     "cityName": "City of Muntinlupa"
   },
-  "importedPlaceIds": [
-    "5abdc9b9-21e3-44fb-983a-85ddb3b55168"
-  ],
+  "importedPlaceIds": ["5abdc9b9-21e3-44fb-983a-85ddb3b55168"],
   "stages": {
     "discovery": {
       "status": "completed",

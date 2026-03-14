@@ -133,12 +133,7 @@
         "email": "nestliesapolinario@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball",
-          "Cafe",
-          "Coffee",
-          "Open play"
-        ],
+        "amenities": ["Pickleball", "Cafe", "Coffee", "Open play"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

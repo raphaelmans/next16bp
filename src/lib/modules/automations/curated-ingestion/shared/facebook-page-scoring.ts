@@ -54,7 +54,8 @@ export function scoreFacebookPageLead(
   if (haystack.includes("court")) score += 2;
   if (haystack.includes("pickleball")) score += 2;
 
-  const isLikelyPage = hostname.includes("facebook.com") && isPageLikePath(pathname);
+  const isLikelyPage =
+    hostname.includes("facebook.com") && isPageLikePath(pathname);
   if (isLikelyPage) score += 3;
 
   return {

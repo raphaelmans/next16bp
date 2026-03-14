@@ -228,9 +228,7 @@
         "email": "kingcourtspickleball@gmail.com",
         "instagramUrl": "https://www.instagram.com/kingcourts_pb",
         "websiteUrl": "https://maps.app.goo.gl/iic7ZZWswx6SiFJ89?g_st=ipc",
-        "amenities": [
-          "10 dedicated usa standard pickleball courts"
-        ],
+        "amenities": ["10 dedicated usa standard pickleball courts"],
         "courtCount": 10,
         "isVenue": true,
         "isWithinScope": true,

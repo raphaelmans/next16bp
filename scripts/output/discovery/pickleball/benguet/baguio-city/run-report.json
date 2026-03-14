@@ -6,9 +6,7 @@
     "provinceName": "Benguet",
     "cityName": "Baguio City"
   },
-  "importedPlaceIds": [
-    "cb0519d0-2761-45a1-ab0a-f50206816316"
-  ],
+  "importedPlaceIds": ["cb0519d0-2761-45a1-ab0a-f50206816316"],
   "stages": {
     "discovery": {
       "status": "completed",

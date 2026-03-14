@@ -6,9 +6,7 @@
     "provinceName": "Bohol",
     "cityName": "Dauis"
   },
-  "importedPlaceIds": [
-    "d4cc2c96-3b14-4bd0-ad8a-dc4c2918d6b0"
-  ],
+  "importedPlaceIds": ["d4cc2c96-3b14-4bd0-ad8a-dc4c2918d6b0"],
   "stages": {
     "discovery": {
       "status": "completed",

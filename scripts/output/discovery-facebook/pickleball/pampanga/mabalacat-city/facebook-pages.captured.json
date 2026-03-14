@@ -359,9 +359,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://reclub.co/clubs/@scorpion-smashers",
-        "amenities": [
-          "Light snacks are provided for our players"
-        ],
+        "amenities": ["Light snacks are provided for our players"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

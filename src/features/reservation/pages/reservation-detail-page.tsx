@@ -120,13 +120,11 @@ export default function ReservationDetailPage({
     formState: { isSubmitting: formSubmitting },
   } = form;
 
-  const {
-    data: reservationDetail,
-    isLoading: isLoadingReservation,
-  } = useQueryReservationDetail(
-    reservationId,
-    RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
-  );
+  const { data: reservationDetail, isLoading: isLoadingReservation } =
+    useQueryReservationDetail(
+      reservationId,
+      RESERVATION_DETAIL_REFETCH_INTERVAL_MS,
+    );
 
   const { data: groupData, isLoading: isLoadingLinkedDetail } =
     useQueryReservationLinkedDetail(
@@ -387,9 +385,7 @@ export default function ReservationDetailPage({
               disabled={isRefreshing}
             >
               <RefreshCw
-                className={`h-4 w-4 mr-2 ${
-                  isRefreshing ? "animate-spin" : ""
-                }`}
+                className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
               />
               Refresh
             </Button>
@@ -582,9 +578,7 @@ export default function ReservationDetailPage({
             disabled={isRefreshing}
           >
             <RefreshCw
-              className={`h-4 w-4 mr-2 ${
-                isRefreshing ? "animate-spin" : ""
-              }`}
+              className={`h-4 w-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`}
             />
             Refresh
           </Button>
@@ -693,10 +687,7 @@ export default function ReservationDetailPage({
                   <Button
                     className="w-full"
                     size="lg"
-                    disabled={
-                      !termsAccepted ||
-                      isPaymentPanelBusy
-                    }
+                    disabled={!termsAccepted || isPaymentPanelBusy}
                     loading={markPaymentLinked.isPending}
                     onClick={handleGroupPaymentSubmit}
                   >
@@ -770,8 +761,7 @@ export default function ReservationDetailPage({
                       className="w-full"
                       size="lg"
                     >
-                      <CheckCircle className="mr-2 h-4 w-4" />
-                      I Have Paid
+                      <CheckCircle className="mr-2 h-4 w-4" />I Have Paid
                     </Button>
 
                     <p className="text-xs text-muted-foreground text-center">

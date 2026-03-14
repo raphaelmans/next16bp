@@ -140,9 +140,7 @@
         "email": "winartpickleballclub@gmail.com",
         "instagramUrl": null,
         "websiteUrl": "reclub.co/clubs/@wpcl-winart-pickleball-club",
-        "amenities": [
-          "Coaching (coach-led sessions)"
-        ],
+        "amenities": ["Coaching (coach-led sessions)"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,

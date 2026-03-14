@@ -6,9 +6,7 @@
     "provinceName": "Cebu",
     "cityName": "Cebu City"
   },
-  "importedPlaceIds": [
-    "e7a742d3-5da5-488a-9b86-ab6f4a764163"
-  ],
+  "importedPlaceIds": ["e7a742d3-5da5-488a-9b86-ab6f4a764163"],
   "stages": {
     "discovery": {
       "status": "pending",

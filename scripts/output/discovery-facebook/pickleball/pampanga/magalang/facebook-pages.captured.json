@@ -112,9 +112,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Specialty Coffee"
-        ],
+        "amenities": ["Specialty Coffee"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

@@ -10,9 +10,7 @@
     "cityName": "Pavia",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "d0ef1b20-4b51-4598-b4e0-07a460ef1887"
-  ],
+  "importedPlaceIds": ["d0ef1b20-4b51-4598-b4e0-07a460ef1887"],
   "stages": {
     "discovery": {
       "status": "pending",

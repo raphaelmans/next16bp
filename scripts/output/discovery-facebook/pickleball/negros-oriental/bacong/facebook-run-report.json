@@ -6,9 +6,7 @@
     "provinceName": "Negros Oriental",
     "cityName": "Bacong"
   },
-  "importedPlaceIds": [
-    "91f57db7-897b-4ea8-89c0-262d8977bfc3"
-  ],
+  "importedPlaceIds": ["91f57db7-897b-4ea8-89c0-262d8977bfc3"],
   "stages": {
     "discovery": {
       "status": "pending",

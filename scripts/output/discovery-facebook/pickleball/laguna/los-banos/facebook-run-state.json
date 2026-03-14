@@ -10,9 +10,7 @@
     "cityName": "Los Baños",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "0ea85c64-2ce6-4f4b-abce-77b566bc80c6"
-  ],
+  "importedPlaceIds": ["0ea85c64-2ce6-4f4b-abce-77b566bc80c6"],
   "stages": {
     "discovery": {
       "status": "pending",

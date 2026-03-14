@@ -68,10 +68,7 @@
         "email": "ejspblounge@gmail.com",
         "instagramUrl": null,
         "websiteUrl": "reclub.co/clubs/@cups-pickleball-lounge",
-        "amenities": [
-          "Reservations",
-          "In-person classes"
-        ],
+        "amenities": ["Reservations", "In-person classes"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

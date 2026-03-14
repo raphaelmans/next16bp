@@ -10,9 +10,7 @@
     "cityName": "Dumaguete City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "3ff2d84e-87e9-45f9-a8f2-622c7e02f109"
-  ],
+  "importedPlaceIds": ["3ff2d84e-87e9-45f9-a8f2-622c7e02f109"],
   "stages": {
     "discovery": {
       "status": "completed",

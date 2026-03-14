@@ -24,9 +24,7 @@
     "site:app.court-access.com pickleball Minglanilla Cebu",
     "dink Minglanilla pickleball"
   ],
-  "emittedUrls": [
-    "https://reclub.co/clubs/@dink-dynasty-mnl"
-  ],
+  "emittedUrls": ["https://reclub.co/clubs/@dink-dynasty-mnl"],
   "skippedAlreadyDiscovered": [],
   "skippedAlreadyScraped": [],
   "skippedLowRelevance": [

@@ -68,10 +68,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "picklehub.ph/pickle-hive",
-        "amenities": [
-          "pickleball",
-          "food"
-        ],
+        "amenities": ["pickleball", "food"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -216,9 +213,7 @@
         "email": "paddleupdavao@gmail.com",
         "instagramUrl": "https://www.instagram.com/paddleupdavao",
         "websiteUrl": "http://paddleupdavao.com/booking",
-        "amenities": [
-          "Paddle rental"
-        ],
+        "amenities": ["Paddle rental"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

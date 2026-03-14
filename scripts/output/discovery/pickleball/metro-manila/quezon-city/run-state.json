@@ -10,9 +10,7 @@
     "cityName": "Quezon City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "9564ff58-a98d-4680-863c-ac8e2400d77a"
-  ],
+  "importedPlaceIds": ["9564ff58-a98d-4680-863c-ac8e2400d77a"],
   "stages": {
     "discovery": {
       "status": "completed",

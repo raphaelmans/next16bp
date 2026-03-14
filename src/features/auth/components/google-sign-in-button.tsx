@@ -2,7 +2,6 @@
 
 import { Button } from "@/components/ui/button";
 
-
 function GoogleIcon({ className }: { className?: string }) {
   return (
     <svg

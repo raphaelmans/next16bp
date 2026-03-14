@@ -566,10 +566,10 @@ export default function OrganizationDevelopersPage() {
                   </div>
                 </div>
 
-                <div className="space-y-3 rounded-2xl border border-border/60 bg-slate-950 p-4 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+                <div className="space-y-3 rounded-2xl border border-border/60 bg-code-bg p-4 text-code-fg shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
                   <div className="flex items-center justify-between">
                     <div>
-                      <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+                      <p className="text-xs uppercase tracking-[0.24em] text-code-muted">
                         Quickstart
                       </p>
                       <p className="mt-1 text-sm font-medium">
@@ -579,7 +579,7 @@ export default function OrganizationDevelopersPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-slate-300 hover:bg-slate-800 hover:text-white"
+                      className="h-8 w-8 text-code-muted hover:bg-code-hover hover:text-code-fg"
                       onClick={() => {
                         void navigator.clipboard.writeText(
                           codeSnippetArgs.apiKey ?? "X-API-Key: YOUR_API_KEY",
@@ -590,10 +590,10 @@ export default function OrganizationDevelopersPage() {
                       <Copy className="h-4 w-4" />
                     </Button>
                   </div>
-                  <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6 text-slate-100">
+                  <pre className="overflow-x-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6 text-code-fg">
                     {`X-API-Key: ${codeSnippetArgs.apiKey ?? "YOUR_API_KEY"}`}
                   </pre>
-                  <p className="text-xs text-slate-400">
+                  <p className="text-xs text-code-muted">
                     {codeSnippetArgs.apiKey
                       ? "This snippet uses the currently selected newly created key."
                       : "Selected keys remain masked after creation. Snippets fall back to YOUR_API_KEY unless the selected key was just revealed."}
@@ -1156,16 +1156,16 @@ export default function OrganizationDevelopersPage() {
                 Run live availability read
               </Button>
 
-              <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
+              <div className="rounded-2xl border border-border/70 bg-code-bg p-4 text-code-fg">
                 <div className="mb-3 flex min-w-0 items-center justify-between gap-3">
                   <p className="text-sm font-medium">Latest response</p>
                   {testConsoleMut.data?.requestId ? (
-                    <span className="truncate font-mono text-xs text-slate-400">
+                    <span className="truncate font-mono text-xs text-code-muted">
                       {testConsoleMut.data.requestId}
                     </span>
                   ) : null}
                 </div>
-                <pre className="max-h-[320px] overflow-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6">
+                <pre className="max-h-[320px] overflow-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6">
                   {JSON.stringify(
                     testConsoleMut.data ?? {
                       request: {
@@ -1302,13 +1302,13 @@ function StatCard({
 
 function CodeCard({ title, code }: { title: string; code: string }) {
   return (
-    <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
+    <div className="rounded-2xl border border-border/70 bg-code-bg p-4 text-code-fg">
       <div className="mb-3 flex items-center justify-between">
         <p className="text-sm font-medium">{title}</p>
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-slate-300 hover:bg-slate-800 hover:text-white"
+          className="h-8 w-8 text-code-muted hover:bg-code-hover hover:text-code-fg"
           onClick={() => {
             void navigator.clipboard.writeText(code);
             toast.success(`${title} snippet copied`);
@@ -1317,7 +1317,7 @@ function CodeCard({ title, code }: { title: string; code: string }) {
           <Copy className="h-4 w-4" />
         </Button>
       </div>
-      <pre className="max-h-[320px] overflow-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6">
+      <pre className="max-h-[320px] overflow-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6">
         {code}
       </pre>
     </div>

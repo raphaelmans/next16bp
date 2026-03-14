@@ -358,9 +358,7 @@
         "email": "c.julieta171963@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "in-house, multi-awarded coach and trainer"
-        ],
+        "amenities": ["in-house, multi-awarded coach and trainer"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,

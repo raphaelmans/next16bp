@@ -57,7 +57,7 @@ function StarRatingInput({
             className={cn(
               "h-6 w-6 transition-colors",
               star <= (hovered || value)
-                ? "fill-amber-400 text-amber-400"
+                ? "fill-warning text-warning"
                 : "text-muted-foreground/30",
             )}
           />

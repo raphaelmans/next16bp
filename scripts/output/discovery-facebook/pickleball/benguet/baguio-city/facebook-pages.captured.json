@@ -361,10 +361,7 @@
         "email": "baguiotennisandpickleball@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Tennis court",
-          "Pickleball court"
-        ],
+        "amenities": ["Tennis court", "Pickleball court"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -411,10 +408,7 @@
         "courtCount": null,
         "isVenue": false,
         "isWithinScope": true,
-        "evidence": [
-          "IBP Baguio - Benguet Chapter",
-          "October 2, 2025"
-        ]
+        "evidence": ["IBP Baguio - Benguet Chapter", "October 2, 2025"]
       },
       "error": null
     }

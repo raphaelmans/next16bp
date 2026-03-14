@@ -21,7 +21,7 @@ export function WelcomeHeader({ name, isLoading }: WelcomeHeaderProps) {
 
   return (
     <div className="space-y-1">
-      <h1 className="text-3xl font-bold tracking-tight">
+      <h1 className="text-3xl font-heading font-bold tracking-tight">
         Welcome back, {displayName}
       </h1>
       <p className="text-muted-foreground">Here's what you have coming up.</p>

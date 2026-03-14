@@ -6,9 +6,7 @@
     "provinceName": "Iloilo",
     "cityName": "Pototan"
   },
-  "importedPlaceIds": [
-    "16cdcbff-df80-4851-9cd9-a43723dcb1ef"
-  ],
+  "importedPlaceIds": ["16cdcbff-df80-4851-9cd9-a43723dcb1ef"],
   "stages": {
     "discovery": {
       "status": "completed",

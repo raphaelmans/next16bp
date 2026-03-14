@@ -6,9 +6,7 @@
     "provinceName": "Cavite",
     "cityName": "Imus City"
   },
-  "importedPlaceIds": [
-    "f9932084-e405-46f6-b1ef-2e6004fa0845"
-  ],
+  "importedPlaceIds": ["f9932084-e405-46f6-b1ef-2e6004fa0845"],
   "stages": {
     "discovery": {
       "status": "completed",

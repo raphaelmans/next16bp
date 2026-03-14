@@ -10,9 +10,7 @@
     "cityName": "San Pablo City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "567ddb45-af74-4f98-9d40-650627525d0f"
-  ],
+  "importedPlaceIds": ["567ddb45-af74-4f98-9d40-650627525d0f"],
   "stages": {
     "discovery": {
       "status": "completed",

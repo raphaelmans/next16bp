@@ -10,9 +10,7 @@
     "cityName": "Mabalacat City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "0f5c969c-af01-40b0-9c2d-622f6d728053"
-  ],
+  "importedPlaceIds": ["0f5c969c-af01-40b0-9c2d-622f6d728053"],
   "stages": {
     "discovery": {
       "status": "pending",

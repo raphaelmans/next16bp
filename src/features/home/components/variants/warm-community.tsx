@@ -116,7 +116,7 @@ export function WarmCommunityPage({
                     key={step.step}
                     className={`flex items-start gap-5 p-6 ${i < HOW_IT_WORKS.length - 1 ? "border-b border-border" : ""}`}
                   >
-                    <div className="w-12 h-12 rounded-xl bg-teal-50 flex items-center justify-center shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-primary/5 flex items-center justify-center shrink-0">
                       <Icon className="h-5 w-5 text-primary" />
                     </div>
                     <div>

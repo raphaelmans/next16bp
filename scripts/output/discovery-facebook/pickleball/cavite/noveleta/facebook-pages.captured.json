@@ -136,12 +136,7 @@
         "email": "swinglanecavite@gmail.com",
         "instagramUrl": "https://Instagram.com/swinglanecavite/",
         "websiteUrl": null,
-        "amenities": [
-          "Tennis",
-          "Pickleball",
-          "Hitting Cage",
-          "Ball Machine"
-        ],
+        "amenities": ["Tennis", "Pickleball", "Hitting Cage", "Ball Machine"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -354,9 +349,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "app.sports360.ph",
-        "amenities": [
-          "🕣 OPEN DAILY 7AM-12MN"
-        ],
+        "amenities": ["🕣 OPEN DAILY 7AM-12MN"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

@@ -10,9 +10,7 @@
     "cityName": "Bais City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "4976935c-99f2-4a56-aa1c-35fed3595963"
-  ],
+  "importedPlaceIds": ["4976935c-99f2-4a56-aa1c-35fed3595963"],
   "stages": {
     "discovery": {
       "status": "pending",

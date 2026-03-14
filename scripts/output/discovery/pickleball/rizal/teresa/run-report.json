@@ -6,9 +6,7 @@
     "provinceName": "Rizal",
     "cityName": "Teresa"
   },
-  "importedPlaceIds": [
-    "b87f041b-e476-4d80-b847-ae0b82d150d1"
-  ],
+  "importedPlaceIds": ["b87f041b-e476-4d80-b847-ae0b82d150d1"],
   "stages": {
     "discovery": {
       "status": "completed",

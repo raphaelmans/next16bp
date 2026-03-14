@@ -150,9 +150,7 @@
         "dbVerification": "completed",
         "embeddingBackfill": "completed"
       },
-      "importedPlaceIds": [
-        "d71a2a4e-4a58-4f8d-964e-0a97ff76c241"
-      ],
+      "importedPlaceIds": ["d71a2a4e-4a58-4f8d-964e-0a97ff76c241"],
       "lastError": null
     },
     {
@@ -168,9 +166,7 @@
         "dbVerification": "completed",
         "embeddingBackfill": "completed"
       },
-      "importedPlaceIds": [
-        "17e121a1-166b-416f-8328-76198f60de49"
-      ],
+      "importedPlaceIds": ["17e121a1-166b-416f-8328-76198f60de49"],
       "lastError": null
     },
     {

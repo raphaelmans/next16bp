@@ -71,9 +71,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Rent our Pickleball Court today!"
-        ],
+        "amenities": ["Rent our Pickleball Court today!"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,
@@ -449,10 +447,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "sites.google.com/view/linkers-pickleball-court/home?authuser=0",
-        "amenities": [
-          "Outdoor courts",
-          "Covered courts"
-        ],
+        "amenities": ["Outdoor courts", "Covered courts"],
         "courtCount": 4,
         "isVenue": true,
         "isWithinScope": false,

@@ -135,9 +135,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "pickleball courts"
-        ],
+        "amenities": ["pickleball courts"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

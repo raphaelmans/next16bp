@@ -10,9 +10,7 @@
     "cityName": "San Mateo",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "6da282f8-eff9-4cfb-8cb4-1e93bf9a91a3"
-  ],
+  "importedPlaceIds": ["6da282f8-eff9-4cfb-8cb4-1e93bf9a91a3"],
   "stages": {
     "discovery": {
       "status": "completed",

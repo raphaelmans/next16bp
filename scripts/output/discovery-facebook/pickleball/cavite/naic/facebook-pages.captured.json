@@ -280,10 +280,7 @@
         "email": "thedinklabph@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "24/7 access",
-          "Open play (Reclub code: 2VXNT)"
-        ],
+        "amenities": ["24/7 access", "Open play (Reclub code: 2VXNT)"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": false,

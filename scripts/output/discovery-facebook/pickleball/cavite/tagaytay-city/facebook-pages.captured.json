@@ -146,10 +146,7 @@
         "email": "smashpickleball.ph@gmail.com",
         "instagramUrl": "https://www.instagram.com/smashpickleball.ph",
         "websiteUrl": "smashpickleball.ph",
-        "amenities": [
-          "pickleball court",
-          "Bookings via Sports 360"
-        ],
+        "amenities": ["pickleball court", "Bookings via Sports 360"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

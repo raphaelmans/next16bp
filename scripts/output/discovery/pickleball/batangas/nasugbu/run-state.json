@@ -10,9 +10,7 @@
     "cityName": "Nasugbu",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "d08fc3a6-7854-4691-b9c2-bd7be46e4201"
-  ],
+  "importedPlaceIds": ["d08fc3a6-7854-4691-b9c2-bd7be46e4201"],
   "stages": {
     "discovery": {
       "status": "completed",

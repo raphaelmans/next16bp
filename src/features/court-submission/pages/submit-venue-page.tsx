@@ -20,8 +20,8 @@ export default function SubmitVenuePage() {
         description="Know a venue that's not listed? Help us grow the directory by submitting it. Your submission will be reviewed before it goes live."
       />
       {!isAuthenticated && (
-        <Alert className="border-amber-500/30 bg-amber-500/5">
-          <AlertTriangle className="text-amber-700" />
+        <Alert className="border-warning/30 bg-warning-light">
+          <AlertTriangle className="text-warning-foreground" />
           <AlertTitle>Sign-in required</AlertTitle>
           <AlertDescription className="gap-3">
             <p>

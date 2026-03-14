@@ -10,9 +10,7 @@
     "cityName": "City of Pasig",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "4d91490e-6ca7-4897-9219-050366621f07"
-  ],
+  "importedPlaceIds": ["4d91490e-6ca7-4897-9219-050366621f07"],
   "stages": {
     "discovery": {
       "status": "completed",

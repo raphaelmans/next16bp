@@ -73,10 +73,7 @@
         "email": "courtyardph@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "pickleball",
-          "Recreation Center"
-        ],
+        "amenities": ["pickleball", "Recreation Center"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -219,10 +216,7 @@
         "email": "marycriscasile@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Billiard hall",
-          "Pickleball"
-        ],
+        "amenities": ["Billiard hall", "Pickleball"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

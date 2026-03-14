@@ -6,9 +6,7 @@
     "provinceName": "Negros Oriental",
     "cityName": "Zamboanguita"
   },
-  "importedPlaceIds": [
-    "2e361d54-c67e-447a-a396-ae1a2f0405da"
-  ],
+  "importedPlaceIds": ["2e361d54-c67e-447a-a396-ae1a2f0405da"],
   "stages": {
     "discovery": {
       "status": "completed",

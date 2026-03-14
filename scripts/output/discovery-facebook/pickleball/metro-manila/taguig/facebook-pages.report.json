@@ -14,9 +14,7 @@
     "site:facebook.com \"Taguig\" \"pickleball court\"",
     "site:facebook.com \"Metro Manila\" \"pickleball\""
   ],
-  "emittedUrls": [
-    "https://www.facebook.com/MarketMarketPickleballClub/"
-  ],
+  "emittedUrls": ["https://www.facebook.com/MarketMarketPickleballClub/"],
   "skippedAlreadyDiscovered": [],
   "skippedLowRelevance": [
     {

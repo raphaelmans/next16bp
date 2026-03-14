@@ -293,7 +293,7 @@ export function MockCourtScheduleEditor() {
                           className={cn(
                             "flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-semibold",
                             hasSlots
-                              ? "bg-teal-100 text-teal-700"
+                              ? "bg-primary/10 text-primary"
                               : "bg-muted text-muted-foreground",
                           )}
                         >
@@ -1065,7 +1065,7 @@ export function MockBookingDetailsCard() {
               <div className="text-xs text-muted-foreground uppercase tracking-wide">
                 Status
               </div>
-              <span className="inline-flex items-center rounded-md border px-2.5 py-1 text-sm font-semibold bg-amber-50 text-amber-700 border-amber-200">
+              <span className="inline-flex items-center rounded-md border px-2.5 py-1 text-sm font-semibold bg-warning-light text-warning-foreground border-warning/30">
                 Awaiting Payment
               </span>
             </div>
@@ -1162,7 +1162,7 @@ export function MockBookingDetailsCard() {
                 </h3>
                 <Badge
                   variant="outline"
-                  className="text-[10px] font-normal text-amber-600 border-amber-300"
+                  className="text-[10px] font-normal text-warning-foreground border-warning/30"
                 >
                   Guest profile
                 </Badge>

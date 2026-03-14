@@ -147,11 +147,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Badminton",
-          "Pickleball",
-          "Basketball"
-        ],
+        "amenities": ["Badminton", "Pickleball", "Basketball"],
         "courtCount": null,
         "isVenue": false,
         "isWithinScope": true,

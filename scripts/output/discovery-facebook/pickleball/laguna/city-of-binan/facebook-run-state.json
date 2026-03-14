@@ -10,9 +10,7 @@
     "cityName": "City of Biñan",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "54d1d1af-54ec-4cfc-bb63-29eecbb59348"
-  ],
+  "importedPlaceIds": ["54d1d1af-54ec-4cfc-bb63-29eecbb59348"],
   "stages": {
     "discovery": {
       "status": "pending",

@@ -10,9 +10,7 @@
     "cityName": "Iloilo City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "1097699d-61bc-4f87-bb20-df11734c21de"
-  ],
+  "importedPlaceIds": ["1097699d-61bc-4f87-bb20-df11734c21de"],
   "stages": {
     "discovery": {
       "status": "pending",

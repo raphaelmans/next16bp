@@ -276,9 +276,7 @@
         "email": "pedci.official@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball club"
-        ],
+        "amenities": ["Pickleball club"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

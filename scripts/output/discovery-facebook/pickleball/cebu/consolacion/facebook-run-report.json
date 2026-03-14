@@ -6,9 +6,7 @@
     "provinceName": "Cebu",
     "cityName": "Consolacion"
   },
-  "importedPlaceIds": [
-    "f6574c9f-bd6e-447a-a660-bb2226f688ca"
-  ],
+  "importedPlaceIds": ["f6574c9f-bd6e-447a-a660-bb2226f688ca"],
   "stages": {
     "discovery": {
       "status": "pending",

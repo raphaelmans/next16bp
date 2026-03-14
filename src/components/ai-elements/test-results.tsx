@@ -116,7 +116,7 @@ export const TestResultsSummary = ({
           )}
           {summary.skipped > 0 && (
             <Badge
-              className="gap-1 bg-yellow-100 text-yellow-700"
+              className="gap-1 bg-warning-light text-warning"
               variant="secondary"
             >
               <CircleIcon className="size-3" />
@@ -287,9 +287,7 @@ export const TestSuiteStats = ({
         {failed > 0 && (
           <span className="text-destructive">{failed} failed</span>
         )}
-        {skipped > 0 && (
-          <span className="text-yellow-600">{skipped} skipped</span>
-        )}
+        {skipped > 0 && <span className="text-warning">{skipped} skipped</span>}
       </>
     )}
   </div>
@@ -351,8 +349,8 @@ export const Test = ({
 const statusStyles: Record<TestStatus, string> = {
   passed: "text-success",
   failed: "text-destructive",
-  skipped: "text-yellow-600",
-  running: "text-blue-600",
+  skipped: "text-warning",
+  running: "text-info",
 };
 
 const statusIcons: Record<TestStatus, React.ReactNode> = {

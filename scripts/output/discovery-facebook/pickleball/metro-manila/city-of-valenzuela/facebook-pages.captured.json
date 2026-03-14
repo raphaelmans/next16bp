@@ -221,10 +221,7 @@
         "email": "marketing@smashplus.ph",
         "instagramUrl": "https://www.instagram.com/smashplusph",
         "websiteUrl": "https://smashplus.ph/book",
-        "amenities": [
-          "badminton courts",
-          "pickleball courts"
-        ],
+        "amenities": ["badminton courts", "pickleball courts"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

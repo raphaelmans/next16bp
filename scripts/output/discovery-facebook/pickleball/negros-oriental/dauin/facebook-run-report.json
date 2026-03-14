@@ -6,9 +6,7 @@
     "provinceName": "Negros Oriental",
     "cityName": "Dauin"
   },
-  "importedPlaceIds": [
-    "f1981df6-7659-41f1-bb67-c63b6d57a25b"
-  ],
+  "importedPlaceIds": ["f1981df6-7659-41f1-bb67-c63b6d57a25b"],
   "stages": {
     "discovery": {
       "status": "pending",

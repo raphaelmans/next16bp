@@ -117,9 +117,9 @@ export const SchemaDisplayHeader = ({
 
 const methodStyles: Record<HttpMethod, string> = {
   GET: "bg-success/10 text-success",
-  POST: "bg-blue-100 text-blue-700",
+  POST: "bg-info-light text-info",
   PUT: "bg-warning/10 text-warning",
-  PATCH: "bg-yellow-100 text-yellow-700",
+  PATCH: "bg-warning-light text-warning",
   DELETE: "bg-destructive/10 text-destructive",
 };
 
@@ -155,7 +155,7 @@ export const SchemaDisplayPath = ({
   // Highlight path parameters
   const highlightedPath = path.replace(
     /\{([^}]+)\}/g,
-    '<span class="text-blue-600">{$1}</span>',
+    '<span class="text-[var(--color-info)]">{$1}</span>',
   );
 
   return (

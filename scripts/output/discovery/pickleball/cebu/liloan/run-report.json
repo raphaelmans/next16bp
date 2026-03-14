@@ -6,9 +6,7 @@
     "provinceName": "Cebu",
     "cityName": "Liloan"
   },
-  "importedPlaceIds": [
-    "527dd0b9-1506-4c93-999d-e4df2525d182"
-  ],
+  "importedPlaceIds": ["527dd0b9-1506-4c93-999d-e4df2525d182"],
   "stages": {
     "discovery": {
       "status": "completed",

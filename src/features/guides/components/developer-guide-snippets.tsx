@@ -197,10 +197,10 @@ export function MockDeveloperLaunchpad() {
               </div>
             </div>
 
-            <div className="space-y-3 rounded-2xl border border-border/60 bg-slate-950 p-4 text-slate-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
+            <div className="space-y-3 rounded-2xl border border-border/60 bg-code-bg p-4 text-code-fg shadow-[inset_0_1px_0_rgba(255,255,255,0.05)]">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.24em] text-slate-400">
+                  <p className="text-xs uppercase tracking-[0.24em] text-code-muted">
                     Quickstart
                   </p>
                   <p className="mt-1 text-sm font-medium">
@@ -211,15 +211,15 @@ export function MockDeveloperLaunchpad() {
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-slate-300"
+                  className="h-8 w-8 text-code-muted"
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-              <pre className="overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6 text-slate-100">
+              <pre className="overflow-x-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6 text-code-fg">
                 X-API-Key: YOUR_API_KEY
               </pre>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-code-muted">
                 Selected keys remain masked after creation. Snippets fall back
                 to YOUR_API_KEY unless the selected key was just revealed.
               </p>
@@ -619,14 +619,14 @@ export function MockDeveloperGuidedConsole() {
             Run live availability read
           </Button>
 
-          <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
+          <div className="rounded-2xl border border-border/70 bg-code-bg p-4 text-code-fg">
             <div className="mb-3 flex items-center justify-between">
               <p className="text-sm font-medium">Latest response</p>
-              <span className="font-mono text-xs text-slate-400">
+              <span className="font-mono text-xs text-code-muted">
                 req_dev_01
               </span>
             </div>
-            <pre className="max-h-[320px] overflow-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6">
+            <pre className="max-h-[320px] overflow-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6">
               {JSON.stringify(developerReadResponse, null, 2)}
             </pre>
           </div>
@@ -653,36 +653,36 @@ export function MockDeveloperSnippetsPanel() {
         </CardHeader>
         <CardContent className="space-y-5">
           <div className="grid gap-4 md:grid-cols-2">
-            <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
+            <div className="rounded-2xl border border-border/70 bg-code-bg p-4 text-code-fg">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm font-medium">cURL</p>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-slate-300"
+                  className="h-8 w-8 text-code-muted"
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6">
+              <pre className="max-h-[220px] overflow-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6">
                 {buildDeveloperCurlSnippet(snippetArgs)}
               </pre>
             </div>
 
-            <div className="rounded-2xl border border-border/70 bg-slate-950 p-4 text-slate-100">
+            <div className="rounded-2xl border border-border/70 bg-code-bg p-4 text-code-fg">
               <div className="mb-3 flex items-center justify-between">
                 <p className="text-sm font-medium">JavaScript</p>
                 <Button
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 text-slate-300"
+                  className="h-8 w-8 text-code-muted"
                 >
                   <Copy className="h-4 w-4" />
                 </Button>
               </div>
-              <pre className="max-h-[220px] overflow-auto rounded-xl border border-slate-800 bg-slate-900/80 p-3 text-xs leading-6">
+              <pre className="max-h-[220px] overflow-auto rounded-xl border border-code-border bg-code-surface p-3 text-xs leading-6">
                 {buildDeveloperJsSnippet(snippetArgs)}
               </pre>
             </div>

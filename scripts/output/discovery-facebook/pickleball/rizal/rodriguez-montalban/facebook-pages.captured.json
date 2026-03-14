@@ -135,11 +135,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "reclub.co/clubs/@vensand-pickleball-hub-open-play-group",
-        "amenities": [
-          "Indoor",
-          "air-conditioned",
-          "tournament-ready"
-        ],
+        "amenities": ["Indoor", "air-conditioned", "tournament-ready"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -274,11 +270,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "reclub.co/clubs/@vensand-pickleball-hub",
-        "amenities": [
-          "Indoor",
-          "air-conditioned",
-          "tournament-ready"
-        ],
+        "amenities": ["Indoor", "air-conditioned", "tournament-ready"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

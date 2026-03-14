@@ -6,9 +6,7 @@
     "provinceName": "Davao Del Sur",
     "cityName": "Bansalan"
   },
-  "importedPlaceIds": [
-    "7d5ad404-5360-4375-9356-dc27945c8801"
-  ],
+  "importedPlaceIds": ["7d5ad404-5360-4375-9356-dc27945c8801"],
   "stages": {
     "discovery": {
       "status": "pending",

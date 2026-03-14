@@ -66,10 +66,7 @@
         "email": null,
         "instagramUrl": "https://www.instagram.com/_palmandpaddle",
         "websiteUrl": null,
-        "amenities": [
-          "2 Outdoor Pickleball Courts Open",
-          "Café (coming soon)"
-        ],
+        "amenities": ["2 Outdoor Pickleball Courts Open", "Café (coming soon)"],
         "courtCount": 2,
         "isVenue": true,
         "isWithinScope": true,

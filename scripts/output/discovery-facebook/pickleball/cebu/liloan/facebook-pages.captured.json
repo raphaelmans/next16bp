@@ -411,10 +411,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://sites.google.com/view/linkers-pickleball-court/home?authuser=0",
-        "amenities": [
-          "Outdoor courts",
-          "Covered courts"
-        ],
+        "amenities": ["Outdoor courts", "Covered courts"],
         "courtCount": 4,
         "isVenue": true,
         "isWithinScope": false,

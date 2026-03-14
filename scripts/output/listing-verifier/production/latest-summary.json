@@ -66,12 +66,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -104,12 +100,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -142,12 +134,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -180,12 +168,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -218,12 +202,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -256,12 +236,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -294,12 +270,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -332,12 +304,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -370,12 +338,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -408,12 +372,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -446,12 +406,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -484,12 +440,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -522,12 +474,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -560,12 +508,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -598,12 +542,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -636,12 +576,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -674,12 +610,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -712,12 +644,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -750,12 +678,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -788,12 +712,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -826,12 +746,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -864,12 +780,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -902,17 +814,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -942,12 +848,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -980,12 +882,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1018,12 +916,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1056,14 +950,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1096,12 +984,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1134,12 +1018,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1172,12 +1052,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1210,12 +1086,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1255,9 +1127,7 @@
           "Court 4",
           "Court 5"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1290,12 +1160,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1328,12 +1194,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1366,12 +1228,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1404,12 +1262,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1442,12 +1296,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1480,12 +1330,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1518,12 +1364,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1556,13 +1398,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1595,12 +1432,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1633,17 +1466,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -1673,12 +1500,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1711,12 +1534,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1749,12 +1568,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1787,12 +1602,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1825,12 +1636,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1863,12 +1670,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1901,12 +1704,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1939,12 +1738,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -1977,12 +1772,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2015,12 +1806,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2053,12 +1840,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2091,12 +1874,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2129,17 +1908,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -2169,12 +1942,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2207,12 +1976,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2245,12 +2010,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2283,12 +2044,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2321,12 +2078,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2359,13 +2112,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2398,13 +2146,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2437,13 +2180,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2476,12 +2214,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2514,12 +2248,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2552,16 +2282,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2594,12 +2316,8 @@
         "claimStatus": "CLAIM_PENDING",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -2632,12 +2350,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2670,12 +2384,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2708,12 +2418,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -2746,16 +2452,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 3,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3"
-        ],
-        "activeSports": [
-          "badminton",
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3"],
+        "activeSports": ["badminton", "basketball", "pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2788,16 +2486,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2830,14 +2520,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2870,12 +2554,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2908,12 +2588,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2946,12 +2622,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -2984,14 +2656,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "badminton",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["badminton", "pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3024,16 +2690,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 3,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3"
-        ],
-        "activeSports": [
-          "badminton",
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3"],
+        "activeSports": ["badminton", "basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3066,12 +2724,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3104,14 +2758,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 3,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -3144,12 +2792,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -3182,15 +2826,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 5",
-          "Court 6",
-          "Court 7",
-          "Court 8"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 5", "Court 6", "Court 7", "Court 8"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -3223,14 +2860,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "badminton",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["badminton", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3273,9 +2904,7 @@
           "Court 7",
           "Court 8"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -3308,19 +2937,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "tennis"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -3350,13 +2971,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3389,12 +3005,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3427,12 +3039,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3465,17 +3073,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -3505,12 +3107,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3543,12 +3141,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3581,12 +3175,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3619,12 +3209,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3657,12 +3243,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3695,12 +3277,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3733,12 +3311,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3771,12 +3345,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3809,12 +3379,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -3847,12 +3413,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3885,18 +3447,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal",
-          "nonprod_slug"
-        ],
+        "baselineFlags": ["missing_trust_signal", "nonprod_slug"],
         "baselineSuggestion": {
           "label": "remove",
           "reasonCode": "nonprod_or_test"
@@ -3926,12 +3481,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -3964,17 +3515,11 @@
         "claimStatus": "CLAIM_PENDING",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -4004,14 +3549,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "badminton",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["badminton", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4044,12 +3583,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4082,17 +3617,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -4122,12 +3651,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4160,12 +3685,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4198,12 +3719,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4236,12 +3753,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4274,12 +3787,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4312,12 +3821,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4350,12 +3855,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4388,12 +3889,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4426,12 +3923,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4464,12 +3957,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4502,12 +3991,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4540,14 +4025,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4580,12 +4059,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -4618,13 +4093,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4657,12 +4127,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4695,12 +4161,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4733,13 +4195,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4772,12 +4229,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4810,12 +4263,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -4848,14 +4297,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "badminton",
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["badminton", "basketball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4888,12 +4331,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4926,12 +4365,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -4964,14 +4399,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5004,14 +4433,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "badminton",
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["badminton", "basketball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5044,12 +4467,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5082,12 +4501,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5120,12 +4535,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5158,12 +4569,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5196,12 +4603,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5234,12 +4637,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5272,12 +4671,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5310,12 +4705,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5348,12 +4739,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5386,15 +4773,8 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5427,12 +4807,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5465,13 +4841,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5513,10 +4884,7 @@
           "Court 6",
           "Court 7"
         ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 4,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5549,13 +4917,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5588,13 +4951,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5627,13 +4985,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5666,12 +5019,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5704,12 +5053,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5742,13 +5087,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5781,12 +5121,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5819,12 +5155,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5857,12 +5189,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5895,14 +5223,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -5935,12 +5257,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -5973,12 +5291,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 3,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6011,12 +5325,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6049,12 +5359,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6087,12 +5393,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6125,12 +5427,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6163,12 +5461,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6201,12 +5495,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6239,12 +5529,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6277,12 +5563,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6315,12 +5597,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6353,12 +5631,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6391,12 +5665,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6429,12 +5699,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6467,12 +5733,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6505,12 +5767,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6543,12 +5801,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6581,12 +5835,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6619,12 +5869,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6657,12 +5903,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6695,12 +5937,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6733,12 +5971,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6771,12 +6005,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6809,12 +6039,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6847,12 +6073,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -6892,14 +6114,10 @@
           "Court 4",
           "Court 5"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -6929,20 +6147,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -6972,12 +6181,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7010,12 +6215,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7057,14 +6258,10 @@
           "Court 6",
           "Court 7"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -7094,15 +6291,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7135,12 +6325,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7173,12 +6359,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7211,12 +6393,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7249,12 +6427,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7287,12 +6461,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7325,12 +6495,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7363,17 +6529,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -7403,12 +6563,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7441,12 +6597,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7479,12 +6631,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7517,12 +6665,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7555,12 +6699,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7593,12 +6733,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7631,12 +6767,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7669,12 +6801,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7707,12 +6835,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7745,12 +6869,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7783,12 +6903,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7821,12 +6937,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7859,12 +6971,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7897,12 +7005,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7935,12 +7039,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -7973,17 +7073,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -8013,17 +7107,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -8053,12 +7141,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8091,12 +7175,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8129,12 +7209,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8167,12 +7243,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8205,12 +7277,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8243,12 +7311,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8281,12 +7345,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8330,9 +7390,7 @@
           "Court 8",
           "Court 9"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8365,12 +7423,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8403,14 +7457,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "basketball",
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["basketball", "pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8443,12 +7491,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8481,12 +7525,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8519,12 +7559,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8557,12 +7593,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8595,12 +7627,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8633,12 +7661,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8671,12 +7695,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8709,12 +7729,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8747,12 +7763,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8785,12 +7797,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8823,12 +7831,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8861,12 +7865,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8899,12 +7899,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8937,12 +7933,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -8975,12 +7967,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9013,12 +8001,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9051,12 +8035,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9089,12 +8069,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9127,12 +8103,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9165,12 +8137,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9203,12 +8171,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9241,12 +8205,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9279,12 +8239,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9317,12 +8273,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9355,12 +8307,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9393,12 +8341,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9431,12 +8375,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9469,12 +8409,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9507,12 +8443,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9545,12 +8477,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9583,12 +8511,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9621,12 +8545,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9659,12 +8579,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9697,12 +8613,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9735,12 +8647,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9773,12 +8681,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9811,12 +8715,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9849,12 +8749,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["tennis"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9887,12 +8783,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -9925,17 +8817,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "basketball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["basketball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -9965,12 +8851,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10003,12 +8885,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10041,17 +8919,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -10081,12 +8953,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10119,12 +8987,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -10157,12 +9021,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10195,12 +9055,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10233,12 +9089,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10271,12 +9123,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -10309,17 +9157,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -10349,12 +9191,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10387,14 +9225,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball",
-          "tennis"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball", "tennis"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10427,12 +9259,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10465,14 +9293,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 3,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10505,12 +9327,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10543,12 +9361,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10581,12 +9395,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10619,12 +9429,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -10657,12 +9463,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10695,12 +9497,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10733,12 +9531,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -10771,12 +9565,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10809,12 +9599,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10847,12 +9633,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10885,12 +9667,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10923,12 +9701,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10961,12 +9735,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -10999,12 +9769,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -11037,12 +9803,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11075,12 +9837,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11113,12 +9871,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -11161,9 +9915,7 @@
           "Court 7",
           "Court 8"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11196,15 +9948,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11237,17 +9982,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -11277,12 +10016,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11315,12 +10050,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11353,12 +10084,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11391,12 +10118,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11429,12 +10152,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11467,12 +10186,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11505,12 +10220,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11543,12 +10254,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11581,13 +10288,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11620,12 +10322,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11658,12 +10356,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11696,12 +10390,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11734,12 +10424,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11772,12 +10458,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11810,12 +10492,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11848,12 +10526,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11886,12 +10560,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11924,12 +10594,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -11962,12 +10628,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12000,12 +10662,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "UNVERIFIED",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -12038,12 +10696,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -12076,12 +10730,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12114,12 +10764,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -12152,12 +10798,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12190,12 +10832,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12228,12 +10866,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12266,12 +10900,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12304,12 +10934,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12342,17 +10968,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -12382,13 +11002,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -12421,13 +11036,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12460,12 +11070,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12498,12 +11104,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 4,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12536,12 +11138,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12574,13 +11172,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12613,12 +11206,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12651,13 +11240,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12690,12 +11274,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12728,12 +11308,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12766,12 +11342,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12804,12 +11376,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12842,12 +11410,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12880,12 +11444,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12918,12 +11478,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -12956,12 +11512,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13011,9 +11563,7 @@
           "Court 8",
           "Court 9"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13046,12 +11596,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13084,12 +11630,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13122,12 +11664,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13160,12 +11698,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13198,17 +11732,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -13238,12 +11766,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13276,12 +11800,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13314,12 +11834,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13352,12 +11868,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13390,12 +11902,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13428,12 +11936,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13466,12 +11970,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13504,12 +12004,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13542,12 +12038,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13580,12 +12072,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13618,12 +12106,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13656,12 +12140,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13694,17 +12174,11 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal"
-        ],
+        "baselineFlags": ["missing_trust_signal"],
         "baselineSuggestion": {
           "label": "review",
           "reasonCode": "missing_trust_signal"
@@ -13734,12 +12208,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13772,12 +12242,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13810,12 +12276,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13848,12 +12310,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13886,12 +12344,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13924,12 +12378,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -13962,12 +12412,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -14000,12 +12446,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -14038,12 +12480,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -14076,12 +12514,8 @@
         "claimStatus": "UNCLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "pickleball"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["pickleball"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -14114,20 +12548,11 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 3,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3"
-        ],
-        "activeSports": [
-          "badminton"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3"],
+        "activeSports": ["badminton"],
         "photoCount": 0,
         "hasContactDetails": true,
-        "baselineFlags": [
-          "generic_name",
-          "generic_slug"
-        ],
+        "baselineFlags": ["generic_name", "generic_slug"],
         "baselineSuggestion": {
           "label": "remove",
           "reasonCode": "generic_or_placeholder"
@@ -14157,20 +12582,11 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "VERIFIED",
         "activeCourtCount": 4,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2",
-          "Court 3",
-          "Court 4"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2", "Court 3", "Court 4"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "generic_slug"
-        ],
+        "baselineFlags": ["generic_slug"],
         "baselineSuggestion": {
           "label": "remove",
           "reasonCode": "generic_or_placeholder"
@@ -14200,12 +12616,8 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": true,
         "baselineFlags": [],
@@ -14238,18 +12650,11 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "VERIFIED",
         "activeCourtCount": 2,
-        "activeCourtLabels": [
-          "Court 1",
-          "Court 2"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1", "Court 2"],
+        "activeSports": ["pickleball"],
         "photoCount": 1,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "nonprod_slug"
-        ],
+        "baselineFlags": ["nonprod_slug"],
         "baselineSuggestion": {
           "label": "remove",
           "reasonCode": "nonprod_or_test"
@@ -14279,18 +12684,11 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 0,
         "hasContactDetails": false,
-        "baselineFlags": [
-          "missing_trust_signal",
-          "nonprod_slug"
-        ],
+        "baselineFlags": ["missing_trust_signal", "nonprod_slug"],
         "baselineSuggestion": {
           "label": "remove",
           "reasonCode": "nonprod_or_test"
@@ -14329,9 +12727,7 @@
           "Court 6",
           "Court 7"
         ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": false,
         "baselineFlags": [],
@@ -14364,12 +12760,8 @@
         "claimStatus": "CLAIMED",
         "verificationStatus": "NONE",
         "activeCourtCount": 1,
-        "activeCourtLabels": [
-          "Court 1"
-        ],
-        "activeSports": [
-          "pickleball"
-        ],
+        "activeCourtLabels": ["Court 1"],
+        "activeSports": ["pickleball"],
         "photoCount": 2,
         "hasContactDetails": true,
         "baselineFlags": [],

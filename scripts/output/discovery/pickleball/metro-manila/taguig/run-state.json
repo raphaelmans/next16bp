@@ -10,9 +10,7 @@
     "cityName": "Taguig",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "a5408c4b-a011-4276-b8a8-1092feae68f4"
-  ],
+  "importedPlaceIds": ["a5408c4b-a011-4276-b8a8-1092feae68f4"],
   "stages": {
     "discovery": {
       "status": "completed",

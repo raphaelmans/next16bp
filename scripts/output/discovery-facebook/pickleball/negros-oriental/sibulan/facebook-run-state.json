@@ -10,9 +10,7 @@
     "cityName": "Sibulan",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "68c02aa0-24ed-46b9-946f-2b59dbf3de1e"
-  ],
+  "importedPlaceIds": ["68c02aa0-24ed-46b9-946f-2b59dbf3de1e"],
   "stages": {
     "discovery": {
       "status": "pending",

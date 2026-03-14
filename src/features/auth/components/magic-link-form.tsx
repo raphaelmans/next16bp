@@ -125,7 +125,12 @@ export function MagicLinkForm({ redirectParam }: MagicLinkFormProps = {}) {
         </CardContent>
 
         <CardFooter className="mt-6 flex flex-col gap-4">
-          <Button type="submit" className="w-full" disabled={isSubmitDisabled} loading={submitting}>
+          <Button
+            type="submit"
+            className="w-full"
+            disabled={isSubmitDisabled}
+            loading={submitting}
+          >
             Send link
           </Button>
 

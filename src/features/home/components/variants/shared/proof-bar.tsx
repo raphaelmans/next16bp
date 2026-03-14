@@ -56,7 +56,7 @@ function BoldAthleticProofBar({ stats }: { stats: HomePublicStats }) {
 
 function CleanMinimalProofBar({ stats }: { stats: HomePublicStats }) {
   return (
-    <div className="border-y border-gray-100 py-5">
+    <div className="border-y border-border py-5">
       <Container>
         <p className="text-sm text-muted-foreground text-center">
           {numberFormatter.format(stats.totalPlaces)} listings{" · "}

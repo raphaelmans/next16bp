@@ -64,9 +64,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball Club"
-        ],
+        "amenities": ["Pickleball Club"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -135,9 +133,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball Club"
-        ],
+        "amenities": ["Pickleball Club"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -206,9 +202,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "pickleball"
-        ],
+        "amenities": ["pickleball"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -555,9 +549,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball Club"
-        ],
+        "amenities": ["Pickleball Club"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

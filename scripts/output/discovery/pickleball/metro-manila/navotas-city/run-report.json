@@ -6,9 +6,7 @@
     "provinceName": "Metro Manila",
     "cityName": "Navotas City"
   },
-  "importedPlaceIds": [
-    "47203bd4-5b66-4dcb-ab85-14c314225d37"
-  ],
+  "importedPlaceIds": ["47203bd4-5b66-4dcb-ab85-14c314225d37"],
   "stages": {
     "discovery": {
       "status": "completed",

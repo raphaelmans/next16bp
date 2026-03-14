@@ -10,9 +10,7 @@
     "cityName": "Bacoor City",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "bbeefbc1-b809-4b22-8a0a-11cc56e48812"
-  ],
+  "importedPlaceIds": ["bbeefbc1-b809-4b22-8a0a-11cc56e48812"],
   "stages": {
     "discovery": {
       "status": "pending",

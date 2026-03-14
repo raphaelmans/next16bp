@@ -14,9 +14,7 @@
     "site:facebook.com \"San Juan City\" \"pickleball court\"",
     "site:facebook.com \"Metro Manila\" \"pickleball\""
   ],
-  "emittedUrls": [
-    "https://www.facebook.com/manilapickleball/"
-  ],
+  "emittedUrls": ["https://www.facebook.com/manilapickleball/"],
   "skippedAlreadyDiscovered": [],
   "skippedLowRelevance": [
     {

@@ -88,10 +88,10 @@ export const PackageInfoName = ({
 
 const changeTypeStyles: Record<ChangeType, string> = {
   major: "bg-destructive-light text-destructive",
-  minor: "bg-yellow-100 text-yellow-700",
+  minor: "bg-warning-light text-warning",
   patch: "bg-success/10 text-success",
-  added: "bg-blue-100 text-blue-700",
-  removed: "bg-gray-100 text-gray-700",
+  added: "bg-info-light text-info",
+  removed: "bg-muted text-muted-foreground",
 };
 
 const changeTypeIcons: Record<ChangeType, React.ReactNode> = {

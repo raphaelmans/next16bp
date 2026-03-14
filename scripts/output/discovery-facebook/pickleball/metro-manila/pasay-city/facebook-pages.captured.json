@@ -139,9 +139,7 @@
         "email": "metparksports@federalland.ph",
         "instagramUrl": null,
         "websiteUrl": "metpark.ph/sports-center",
-        "amenities": [
-          "Volleyball court (KAVA Court)"
-        ],
+        "amenities": ["Volleyball court (KAVA Court)"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

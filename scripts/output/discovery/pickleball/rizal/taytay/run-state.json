@@ -10,9 +10,7 @@
     "cityName": "Taytay",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "a781f573-9ad4-4800-8b2e-92d68f1a9abb"
-  ],
+  "importedPlaceIds": ["a781f573-9ad4-4800-8b2e-92d68f1a9abb"],
   "stages": {
     "discovery": {
       "status": "completed",

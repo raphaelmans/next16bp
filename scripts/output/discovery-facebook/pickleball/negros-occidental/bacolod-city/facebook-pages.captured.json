@@ -207,9 +207,7 @@
         "email": "Bacolodpickleball@gmail.com",
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Outdoor seating"
-        ],
+        "amenities": ["Outdoor seating"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -593,12 +591,7 @@
         "email": null,
         "instagramUrl": "https://www.instagram.com/paddlegroundbcd",
         "websiteUrl": null,
-        "amenities": [
-          "Pickleball court",
-          "Community",
-          "Games",
-          "Events"
-        ],
+        "amenities": ["Pickleball court", "Community", "Games", "Events"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

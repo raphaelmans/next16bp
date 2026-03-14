@@ -64,10 +64,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "Indoor courts",
-          "Indoor court shoes required"
-        ],
+        "amenities": ["Indoor courts", "Indoor court shoes required"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,
@@ -352,10 +349,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "sites.google.com/view/linkers-pickleball-court/home?authuser=0",
-        "amenities": [
-          "Outdoor courts",
-          "Covered courts"
-        ],
+        "amenities": ["Outdoor courts", "Covered courts"],
         "courtCount": 4,
         "isVenue": true,
         "isWithinScope": false,

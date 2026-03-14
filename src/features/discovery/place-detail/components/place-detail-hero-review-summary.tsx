@@ -26,7 +26,7 @@ export function PlaceDetailHeroReviewSummary() {
                 className={cn(
                   "h-3 w-3",
                   star <= Math.round(reviewAggregate.averageRating)
-                    ? "fill-amber-400 text-amber-400"
+                    ? "fill-warning text-warning"
                     : "text-muted-foreground/20",
                 )}
               />

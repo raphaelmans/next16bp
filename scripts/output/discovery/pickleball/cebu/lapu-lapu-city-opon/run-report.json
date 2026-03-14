@@ -6,9 +6,7 @@
     "provinceName": "Cebu",
     "cityName": "Lapu-Lapu City (Opon)"
   },
-  "importedPlaceIds": [
-    "f2ba0dd2-f06a-4ab3-a6f9-1b1897ac960e"
-  ],
+  "importedPlaceIds": ["f2ba0dd2-f06a-4ab3-a6f9-1b1897ac960e"],
   "stages": {
     "discovery": {
       "status": "completed",

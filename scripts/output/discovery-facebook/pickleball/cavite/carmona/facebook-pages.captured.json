@@ -68,9 +68,7 @@
         "email": "badpickle.philippines@gmail.com",
         "instagramUrl": "https://www.instagram.com/badpickleph",
         "websiteUrl": "https://reclub.co/clubs/@bad-pickle-southwoods",
-        "amenities": [
-          "7-court Pickleball Facility"
-        ],
+        "amenities": ["7-court Pickleball Facility"],
         "courtCount": 7,
         "isVenue": true,
         "isWithinScope": true,
@@ -219,10 +217,7 @@
         "email": "badpickle.philippines@gmail.com",
         "instagramUrl": "https://www.instagram.com/badpickleph",
         "websiteUrl": "https://reclub.co/clubs/@bad-pickle-southwoods",
-        "amenities": [
-          "7-court Pickleball Facility",
-          "pickleball courts"
-        ],
+        "amenities": ["7-court Pickleball Facility", "pickleball courts"],
         "courtCount": 7,
         "isVenue": true,
         "isWithinScope": true,
@@ -297,9 +292,7 @@
         "email": "badpickle.philippines@gmail.com",
         "instagramUrl": "https://www.instagram.com/badpickleph",
         "websiteUrl": "https://reclub.co/clubs/@bad-pickle-southwoods",
-        "amenities": [
-          "7-court Pickleball Facility"
-        ],
+        "amenities": ["7-court Pickleball Facility"],
         "courtCount": 7,
         "isVenue": true,
         "isWithinScope": true,

@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface OrganizationSectionProps {
   organization: {
@@ -30,16 +31,16 @@ export function OrganizationSection({
     return (
       <Card className="overflow-hidden">
         <CardHeader className="gap-4">
-          <div className="h-5 w-28 animate-pulse rounded-full bg-muted" />
+          <Skeleton className="h-5 w-28 rounded-full" />
           <div className="space-y-3">
-            <div className="h-8 w-40 animate-pulse rounded bg-muted" />
-            <div className="h-4 w-full animate-pulse rounded bg-muted" />
-            <div className="h-4 w-4/5 animate-pulse rounded bg-muted" />
+            <Skeleton className="h-8 w-40" />
+            <Skeleton className="h-4 w-full" />
+            <Skeleton className="h-4 w-4/5" />
           </div>
         </CardHeader>
         <CardContent className="space-y-3">
-          <div className="h-24 animate-pulse rounded-2xl bg-muted" />
-          <div className="h-11 animate-pulse rounded-xl bg-muted" />
+          <Skeleton className="h-24 rounded-2xl" />
+          <Skeleton className="h-11 rounded-xl" />
         </CardContent>
       </Card>
     );
@@ -58,8 +59,8 @@ export function OrganizationSection({
     : "Submissions are reviewed so the directory stays accurate for everyone.";
 
   return (
-    <Card className="group relative overflow-hidden border-primary/15 bg-gradient-to-br from-primary/[0.10] via-background to-amber-500/[0.12] shadow-[0_18px_50px_-24px_rgba(15,23,42,0.45)]">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.9),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.16),transparent_34%)] dark:bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.08),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.18),transparent_34%)]" />
+    <Card className="group relative overflow-hidden border-primary/15 bg-gradient-to-br from-primary/[0.10] via-background to-warning/[0.12] shadow-[0_18px_50px_-24px_rgba(15,23,42,0.45)]">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.9),transparent_28%),radial-gradient(circle_at_bottom_left,oklch(0.65_0.15_70/0.16),transparent_34%)]" />
       <div className="pointer-events-none absolute right-5 bottom-5 h-24 w-24 rounded-full border border-primary/15 bg-background/40 blur-2xl" />
       <CardHeader className="relative gap-5">
         <div className="flex items-start justify-between gap-4">

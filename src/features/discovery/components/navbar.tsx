@@ -187,7 +187,12 @@ export function Navbar({ className }: NavbarProps) {
         </Button>
 
         {isResolvingSession ? (
-          <Button variant="outline" className="font-heading" disabled loading={true}>
+          <Button
+            variant="outline"
+            className="font-heading"
+            disabled
+            loading={true}
+          >
             &nbsp;
           </Button>
         ) : isAuthenticated ? (
@@ -390,7 +395,12 @@ export function Navbar({ className }: NavbarProps) {
 
             {/* Auth Actions */}
             {isResolvingSession ? (
-              <Button variant="outline" className="w-full" disabled loading={true}>
+              <Button
+                variant="outline"
+                className="w-full"
+                disabled
+                loading={true}
+              >
                 &nbsp;
               </Button>
             ) : isAuthenticated ? (

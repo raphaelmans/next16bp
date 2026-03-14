@@ -10,9 +10,7 @@
     "cityName": "City of Parañaque",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "f0c5229b-cceb-4897-bcb4-225e155b0c84"
-  ],
+  "importedPlaceIds": ["f0c5229b-cceb-4897-bcb4-225e155b0c84"],
   "stages": {
     "discovery": {
       "status": "completed",

@@ -10,9 +10,7 @@
     "cityName": "Dauin",
     "sportSlug": "pickleball"
   },
-  "importedPlaceIds": [
-    "665421cf-d9e6-4288-8501-b5af4c6b1fa0"
-  ],
+  "importedPlaceIds": ["665421cf-d9e6-4288-8501-b5af4c6b1fa0"],
   "stages": {
     "discovery": {
       "status": "completed",

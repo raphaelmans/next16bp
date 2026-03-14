@@ -6,9 +6,7 @@
     "provinceName": "Bulacan",
     "cityName": "Bocaue"
   },
-  "importedPlaceIds": [
-    "4b6cfae3-713d-4f5a-ac7f-985164e03c5f"
-  ],
+  "importedPlaceIds": ["4b6cfae3-713d-4f5a-ac7f-985164e03c5f"],
   "stages": {
     "discovery": {
       "status": "pending",

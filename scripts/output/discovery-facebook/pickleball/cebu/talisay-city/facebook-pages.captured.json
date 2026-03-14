@@ -69,9 +69,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": "https://reclub.co/clubs/@the-courtside-club",
-        "amenities": [
-          "Pickleball court"
-        ],
+        "amenities": ["Pickleball court"],
         "courtCount": null,
         "isVenue": true,
         "isWithinScope": true,

@@ -134,9 +134,7 @@
         "email": null,
         "instagramUrl": null,
         "websiteUrl": null,
-        "amenities": [
-          "5 dedicated PROCOURT Pickleball courts"
-        ],
+        "amenities": ["5 dedicated PROCOURT Pickleball courts"],
         "courtCount": 5,
         "isVenue": true,
         "isWithinScope": true,

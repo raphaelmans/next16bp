@@ -6,9 +6,7 @@
     "provinceName": "Laguna",
     "cityName": "Santa Cruz"
   },
-  "importedPlaceIds": [
-    "84ae50af-5abc-44c8-9127-b68243318b38"
-  ],
+  "importedPlaceIds": ["84ae50af-5abc-44c8-9127-b68243318b38"],
   "stages": {
     "discovery": {
       "status": "pending",
