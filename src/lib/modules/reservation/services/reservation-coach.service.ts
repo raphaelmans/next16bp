@@ -10,13 +10,17 @@ import type { ICoachAddonRepository } from "@/lib/modules/coach-addon/repositori
 import type { ICoachBlockRepository } from "@/lib/modules/coach-block/repositories/coach-block.repository";
 import type { ICoachHoursRepository } from "@/lib/modules/coach-hours/repositories/coach-hours.repository";
 import type { ICoachRateRuleRepository } from "@/lib/modules/coach-rate-rule/repositories/coach-rate-rule.repository";
+import type { IPaymentProofRepository } from "@/lib/modules/payment-proof/repositories/payment-proof.repository";
 import {
   IncompleteProfileError,
   ProfileNotFoundError,
 } from "@/lib/modules/profile/errors/profile.errors";
 import type { IProfileRepository } from "@/lib/modules/profile/repositories/profile.repository";
+import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
+import type { IObjectStorageService } from "@/lib/modules/storage/services/object-storage.service";
 import type {
   CoachRecord,
+  PaymentProofRecord,
   ReservationEventRecord,
   ReservationRecord,
 } from "@/lib/shared/infra/db/schema";
@@ -62,6 +66,13 @@ export interface CoachReservationDetail {
   reservation: ReservationRecord;
   events: ReservationEventRecord[];
   coach: CoachRecord;
+  paymentProof: {
+    id: string;
+    referenceNumber: string | null;
+    notes: string | null;
+    fileUrl: string | null;
+    createdAt: string;
+  } | null;
 }
 
 export interface ICoachReservationService {
@@ -108,6 +119,8 @@ export class CoachReservationService implements ICoachReservationService {
     private coachAddonRepository: ICoachAddonRepository,
     private coachBlockRepository: ICoachBlockRepository,
     private transactionManager: TransactionManager,
+    private paymentProofRepository?: IPaymentProofRepository,
+    private storageService?: IObjectStorageService,
   ) {}
 
   private async getCoachByUserId(userId: string): Promise<CoachRecord> {
@@ -241,6 +254,44 @@ export class CoachReservationService implements ICoachReservationService {
     ]);
 
     return reservations.length === 0 && blocks.length === 0;
+  }
+
+  private async resolvePaymentProof(
+    reservationId: string,
+  ): Promise<CoachReservationDetail["paymentProof"]> {
+    if (!this.paymentProofRepository) {
+      return null;
+    }
+
+    const proof =
+      await this.paymentProofRepository.findByReservationId(reservationId);
+    if (!proof) {
+      return null;
+    }
+
+    return this.attachSignedPaymentProofUrl(proof);
+  }
+
+  private async attachSignedPaymentProofUrl(
+    proof: PaymentProofRecord,
+  ): Promise<NonNullable<CoachReservationDetail["paymentProof"]>> {
+    let fileUrl = proof.fileUrl ?? null;
+
+    if (this.storageService && proof.filePath) {
+      fileUrl = await this.storageService.createSignedUrl(
+        STORAGE_BUCKETS.PAYMENT_PROOFS,
+        proof.filePath,
+        60 * 5,
+      );
+    }
+
+    return {
+      id: proof.id,
+      referenceNumber: proof.referenceNumber ?? null,
+      notes: proof.notes ?? null,
+      fileUrl,
+      createdAt: proof.createdAt.toISOString(),
+    };
   }
 
   async createForCoach(
@@ -732,13 +783,16 @@ export class CoachReservationService implements ICoachReservationService {
 
     const coach = await this.verifyCoachOwnsReservation(userId, reservation);
 
-    const events =
-      await this.reservationEventRepository.findByReservationId(reservationId);
+    const [events, paymentProof] = await Promise.all([
+      this.reservationEventRepository.findByReservationId(reservationId),
+      this.resolvePaymentProof(reservationId),
+    ]);
 
     return {
       reservation,
       events,
       coach,
+      paymentProof,
     };
   }
 

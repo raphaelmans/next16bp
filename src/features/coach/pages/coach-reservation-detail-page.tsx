@@ -24,6 +24,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
+import { PaymentProofDisplay } from "@/features/reservation/components/payment-proof-display";
 import {
   useMutCoachAcceptReservation,
   useMutCoachCancelReservation,
@@ -66,6 +67,49 @@ const STATUS_VARIANTS: Record<
   EXPIRED: "destructive",
   CANCELLED: "destructive",
 };
+
+function getPaymentStateCopy(status: string, hasPaymentProof: boolean) {
+  switch (status) {
+    case "AWAITING_PAYMENT":
+      return {
+        title: "Awaiting payment proof",
+        description: hasPaymentProof
+          ? "Payment proof is already attached while payment is still awaiting coach confirmation."
+          : "Waiting for the player to submit payment proof.",
+      };
+    case "PAYMENT_MARKED_BY_USER":
+      return {
+        title: "Proof submitted",
+        description:
+          "Payment proof has been submitted. Review the details below before confirming.",
+      };
+    case "CONFIRMED":
+      return {
+        title: "Payment confirmed",
+        description: hasPaymentProof
+          ? "Payment was confirmed after reviewing the submitted proof."
+          : "Payment has already been confirmed for this booking.",
+      };
+    case "CANCELLED":
+      return {
+        title: "Payment closed",
+        description:
+          "This booking was cancelled. No further payment action is needed.",
+      };
+    case "EXPIRED":
+      return {
+        title: "Payment window expired",
+        description:
+          "The payment window expired before this booking was completed.",
+      };
+    default:
+      return {
+        title: "Payment not requested yet",
+        description:
+          "Accept this booking first before the player can submit payment.",
+      };
+  }
+}
 
 export function CoachReservationDetailPage({
   reservationId,
@@ -113,8 +157,9 @@ export function CoachReservationDetailPage({
     );
   }
 
-  const { reservation, events } = detail.data;
+  const { reservation, events, paymentProof } = detail.data;
   const status = reservation.status;
+  const hasPaymentProof = Boolean(paymentProof);
   const canAccept = status === "CREATED";
   const canReject = status === "CREATED";
   const canConfirmPayment = status === "PAYMENT_MARKED_BY_USER";
@@ -123,6 +168,12 @@ export function CoachReservationDetailPage({
     status === "AWAITING_PAYMENT" ||
     status === "PAYMENT_MARKED_BY_USER" ||
     status === "CONFIRMED";
+  const shouldShowPaymentSection =
+    hasPaymentProof ||
+    status === "AWAITING_PAYMENT" ||
+    status === "PAYMENT_MARKED_BY_USER" ||
+    status === "CONFIRMED";
+  const paymentState = getPaymentStateCopy(status, hasPaymentProof);
 
   const handleAccept = () => {
     acceptMut.mutate({ reservationId });
@@ -350,7 +401,26 @@ export function CoachReservationDetailPage({
         </CardContent>
       </Card>
 
-      {/* Payment Proof — not included in CoachReservationDetail yet; deferred to payment module step */}
+      {shouldShowPaymentSection && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment Status</CardTitle>
+            <CardDescription>{paymentState.description}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <p className="font-medium">{paymentState.title}</p>
+              {!hasPaymentProof && (
+                <p className="text-sm text-muted-foreground">
+                  No payment proof submitted yet.
+                </p>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {paymentProof && <PaymentProofDisplay paymentProof={paymentProof} />}
 
       {/* Cancellation Reason */}
       {reservation.cancellationReason && (

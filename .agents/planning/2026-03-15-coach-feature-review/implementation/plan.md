@@ -8,7 +8,7 @@
 - [x] Step 4: Replace placeholder onboarding steps with real profile and sports editing
 - [x] Step 5: Add a real coach verification gate
 - [x] Step 6: Complete missing coach portal routes
-- [ ] Step 7: Finish coach reservation detail with payment-proof support
+- [x] Step 7: Finish coach reservation detail with payment-proof support
 - [ ] Step 8: Add coach reviews end to end
 - [ ] Step 9: Surface coach booking add-ons in player UX
 - [ ] Step 10: Add coach notifications, chat, and regression coverage
@@ -183,6 +183,14 @@ Integrates with previous work:
 - builds on Steps 1-3 so both player and coach sides now understand the same paid booking lifecycle
 
 Demo: A coach opens a paid reservation, sees uploaded proof and payment metadata, and confirms payment from a complete detail page.
+
+Verification snapshot:
+- extended the coach reservation detail service contract with a permission-checked `paymentProof` payload and signed private proof URLs for coach viewers
+- replaced the coach reservation detail payment-proof placeholder with live payment-state messaging plus proof metadata rendering for awaiting-payment, proof-submitted, and confirmed states
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx`
+  - `pnpm exec biome check src/lib/modules/reservation/services/reservation-coach.service.ts src/lib/modules/reservation/factories/reservation.factory.ts src/features/coach/pages/coach-reservation-detail-page.tsx src/__tests__/lib/modules/reservation/services/reservation-coach.service.test.ts src/__tests__/features/coach/pages/coach-reservation-detail-page.test.tsx .agents/planning/2026-03-15-coach-feature-review/implementation/plan.md .ralph/agent/scratchpad.md`
+  - manual dev smoke: `pnpm dev`, `curl -I -s http://localhost:3000/coach/reservations/reservation-1`, and adversarial `curl -I -s http://localhost:3000/coach/reservations/not-a-uuid` each returned `307` redirects to `/login` with the correct route-specific `redirect` query
 
 ## Step 8: Add coach reviews end to end
 
