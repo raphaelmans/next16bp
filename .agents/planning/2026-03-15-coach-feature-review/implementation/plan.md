@@ -3,7 +3,7 @@
 ## Checklist
 
 - [x] Step 1: Make player coach reservation detail render correctly
-- [ ] Step 2: Add coach payment methods backend and player payment-info support
+- [x] Step 2: Add coach payment methods backend and player payment-info support
 - [ ] Step 3: Ship coach payment methods UI and connect get-started
 - [ ] Step 4: Replace placeholder onboarding steps with real profile and sports editing
 - [ ] Step 5: Add a real coach verification gate
@@ -56,6 +56,10 @@ Integrates with previous work:
 - plugs into the repaired player reservation detail flow from Step 1
 
 Demo: A paid coach reservation shows the coach's active payment methods and instructions in the player payment step.
+
+Verification snapshot:
+- existing backend module in `16d2324a6` remains wired through tRPC root registration and reservation payment-info resolution
+- focused Vitest coverage now exercises coach payment CRUD service behavior plus venue-vs-coach payment-info resolution and inactive-method filtering
 
 ## Step 3: Ship coach payment methods UI and connect get-started
 

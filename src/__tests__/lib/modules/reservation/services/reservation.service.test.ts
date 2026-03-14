@@ -6,11 +6,14 @@ import type {
 import { InvalidReservationAddonSelectionError } from "@/lib/modules/reservation/errors/reservation.errors";
 import { ReservationService } from "@/lib/modules/reservation/services/reservation.service";
 import type {
+  CoachPaymentMethodRecord,
   CourtAddonRecord,
   CourtRecord,
+  OrganizationPaymentMethodRecord,
   PlaceAddonRecord,
   PlaceRecord,
   PlaceVerificationRecord,
+  ReservationRecord,
 } from "@/lib/shared/infra/db/schema";
 
 vi.mock("@/lib/env", () => ({
@@ -30,8 +33,10 @@ vi.mock("@/lib/modules/chat/ops/post-player-payment-marked-message", () => ({
 const COURT_ID = "court-1";
 const PLACE_ID = "place-1";
 const SPORT_ID = "sport-1";
+const COACH_ID = "coach-1";
 const PROFILE_ID = "profile-1";
 const USER_ID = "user-1";
+const RESERVATION_ID = "reservation-1";
 
 type ReservationServiceDeps = ConstructorParameters<typeof ReservationService>;
 
@@ -48,6 +53,15 @@ const toCourtAddonRecord = (
 const toPlaceAddonRecord = (
   value: Partial<PlaceAddonRecord>,
 ): PlaceAddonRecord => value as PlaceAddonRecord;
+const toReservationRecord = (
+  value: Partial<ReservationRecord>,
+): ReservationRecord => value as ReservationRecord;
+const toCoachPaymentMethodRecord = (
+  value: Partial<CoachPaymentMethodRecord>,
+): CoachPaymentMethodRecord => value as CoachPaymentMethodRecord;
+const toOrganizationPaymentMethodRecord = (
+  value: Partial<OrganizationPaymentMethodRecord>,
+): OrganizationPaymentMethodRecord => value as OrganizationPaymentMethodRecord;
 
 const createHarness = (options?: {
   courtAddonIds?: string[];
@@ -90,6 +104,7 @@ const createHarness = (options?: {
 
   const reservationRepositoryFns = {
     findOverlappingActiveByCourtIds: vi.fn(async () => []),
+    findById: vi.fn(async () => null),
   };
   const reservationEventRepositoryFns = {
     create: vi.fn(async () => undefined),
@@ -118,6 +133,10 @@ const createHarness = (options?: {
   };
   const organizationPaymentMethodRepositoryFns = {
     findActiveByOrganizationId: vi.fn(async () => []),
+    findByOrganizationId: vi.fn(async () => []),
+  };
+  const coachPaymentMethodRepositoryFns = {
+    findByCoachId: vi.fn(async () => []),
   };
   const organizationRepositoryFns = {
     findById: vi.fn(async () => null),
@@ -166,23 +185,28 @@ const createHarness = (options?: {
     placeVerificationRepositoryFns as unknown as ReservationServiceDeps[7],
     organizationReservationPolicyRepositoryFns as unknown as ReservationServiceDeps[8],
     organizationPaymentMethodRepositoryFns as unknown as ReservationServiceDeps[9],
-    organizationRepositoryFns as unknown as ReservationServiceDeps[10],
-    organizationProfileRepositoryFns as unknown as ReservationServiceDeps[11],
-    courtHoursRepositoryFns as unknown as ReservationServiceDeps[12],
-    courtRateRuleRepositoryFns as unknown as ReservationServiceDeps[13],
-    courtAddonRepositoryFns as unknown as ReservationServiceDeps[14],
-    placeAddonRepositoryFns as unknown as ReservationServiceDeps[15],
-    courtBlockRepositoryFns as unknown as ReservationServiceDeps[16],
-    courtPriceOverrideRepositoryFns as unknown as ReservationServiceDeps[17],
-    { run } as unknown as ReservationServiceDeps[18],
-    notificationDeliveryServiceFns as unknown as ReservationServiceDeps[19],
-    availabilityChangeEventServiceFns as unknown as ReservationServiceDeps[20],
+    coachPaymentMethodRepositoryFns as unknown as ReservationServiceDeps[10],
+    organizationRepositoryFns as unknown as ReservationServiceDeps[11],
+    organizationProfileRepositoryFns as unknown as ReservationServiceDeps[12],
+    courtHoursRepositoryFns as unknown as ReservationServiceDeps[13],
+    courtRateRuleRepositoryFns as unknown as ReservationServiceDeps[14],
+    courtAddonRepositoryFns as unknown as ReservationServiceDeps[15],
+    placeAddonRepositoryFns as unknown as ReservationServiceDeps[16],
+    courtBlockRepositoryFns as unknown as ReservationServiceDeps[17],
+    courtPriceOverrideRepositoryFns as unknown as ReservationServiceDeps[18],
+    { run } as unknown as ReservationServiceDeps[19],
+    notificationDeliveryServiceFns as unknown as ReservationServiceDeps[20],
+    availabilityChangeEventServiceFns as unknown as ReservationServiceDeps[21],
   );
 
   return {
     service,
     run,
+    reservationRepositoryFns,
+    coachPaymentMethodRepositoryFns,
+    organizationPaymentMethodRepositoryFns,
     courtRepositoryFns,
+    placeRepositoryFns,
   };
 };
 
@@ -227,5 +251,181 @@ describe("ReservationService addon selection validation", () => {
       SPORT_ID,
     );
     expect(harness.run).not.toHaveBeenCalled();
+  });
+});
+
+describe("ReservationService.getPaymentInfo", () => {
+  it("returns active coach payment methods for coach reservations", async () => {
+    const harness = createHarness();
+    harness.reservationRepositoryFns.findById.mockResolvedValue(
+      toReservationRecord({
+        id: RESERVATION_ID,
+        playerId: PROFILE_ID,
+        coachId: COACH_ID,
+        courtId: null,
+        status: "AWAITING_PAYMENT",
+      }),
+    );
+    harness.coachPaymentMethodRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachPaymentMethodRecord({
+        id: "coach-method-default",
+        coachId: COACH_ID,
+        type: "MOBILE_WALLET",
+        provider: "GCASH",
+        accountName: "Coach Alex",
+        accountNumber: "09171234567",
+        instructions: "Send proof after payment",
+        isActive: true,
+        isDefault: true,
+      }),
+      toCoachPaymentMethodRecord({
+        id: "coach-method-disabled",
+        coachId: COACH_ID,
+        type: "BANK",
+        provider: "BPI",
+        accountName: "Coach Alex",
+        accountNumber: "1234567890",
+        instructions: null,
+        isActive: false,
+        isDefault: false,
+      }),
+    ]);
+
+    const result = await harness.service.getPaymentInfo(
+      USER_ID,
+      PROFILE_ID,
+      RESERVATION_ID,
+    );
+
+    expect(result).toEqual({
+      methods: [
+        {
+          id: "coach-method-default",
+          type: "MOBILE_WALLET",
+          provider: "GCASH",
+          accountName: "Coach Alex",
+          accountNumber: "09171234567",
+          instructions: "Send proof after payment",
+          isDefault: true,
+        },
+      ],
+      defaultMethodId: "coach-method-default",
+    });
+    expect(
+      harness.coachPaymentMethodRepositoryFns.findByCoachId,
+    ).toHaveBeenCalledWith(COACH_ID);
+    expect(harness.courtRepositoryFns.findById).not.toHaveBeenCalled();
+    expect(
+      harness.organizationPaymentMethodRepositoryFns.findByOrganizationId,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("returns active organization payment methods for venue reservations", async () => {
+    const harness = createHarness();
+    harness.reservationRepositoryFns.findById.mockResolvedValue(
+      toReservationRecord({
+        id: RESERVATION_ID,
+        playerId: PROFILE_ID,
+        coachId: null,
+        courtId: COURT_ID,
+        status: "PAYMENT_MARKED_BY_USER",
+      }),
+    );
+    harness.placeRepositoryFns.findById.mockResolvedValue(
+      toPlaceRecord({
+        id: PLACE_ID,
+        organizationId: "org-1",
+        name: "Place 1",
+        timeZone: "Asia/Manila",
+        placeType: "RESERVABLE",
+        isActive: true,
+      }),
+    );
+    harness.organizationPaymentMethodRepositoryFns.findByOrganizationId.mockResolvedValue(
+      [
+        toOrganizationPaymentMethodRecord({
+          id: "org-method-default",
+          organizationId: "org-1",
+          type: "BANK",
+          provider: "BPI",
+          accountName: "Venue Owner",
+          accountNumber: "9876543210",
+          instructions: "Pay before arrival",
+          isActive: true,
+          isDefault: true,
+        }),
+        toOrganizationPaymentMethodRecord({
+          id: "org-method-disabled",
+          organizationId: "org-1",
+          type: "MOBILE_WALLET",
+          provider: "MAYA",
+          accountName: "Venue Owner",
+          accountNumber: "09998887777",
+          instructions: null,
+          isActive: false,
+          isDefault: false,
+        }),
+      ],
+    );
+
+    const result = await harness.service.getPaymentInfo(
+      USER_ID,
+      PROFILE_ID,
+      RESERVATION_ID,
+    );
+
+    expect(result).toEqual({
+      methods: [
+        {
+          id: "org-method-default",
+          type: "BANK",
+          provider: "BPI",
+          accountName: "Venue Owner",
+          accountNumber: "9876543210",
+          instructions: "Pay before arrival",
+          isDefault: true,
+        },
+      ],
+      defaultMethodId: "org-method-default",
+    });
+    expect(
+      harness.organizationPaymentMethodRepositoryFns.findByOrganizationId,
+    ).toHaveBeenCalledWith("org-1");
+    expect(
+      harness.coachPaymentMethodRepositoryFns.findByCoachId,
+    ).not.toHaveBeenCalled();
+  });
+
+  it("returns an empty coach payment payload when all coach methods are inactive", async () => {
+    const harness = createHarness();
+    harness.reservationRepositoryFns.findById.mockResolvedValue(
+      toReservationRecord({
+        id: RESERVATION_ID,
+        playerId: PROFILE_ID,
+        coachId: COACH_ID,
+        courtId: null,
+        status: "AWAITING_PAYMENT",
+      }),
+    );
+    harness.coachPaymentMethodRepositoryFns.findByCoachId.mockResolvedValue([
+      toCoachPaymentMethodRecord({
+        id: "coach-method-disabled",
+        coachId: COACH_ID,
+        type: "MOBILE_WALLET",
+        provider: "GCASH",
+        accountName: "Coach Alex",
+        accountNumber: "09170000000",
+        instructions: null,
+        isActive: false,
+        isDefault: true,
+      }),
+    ]);
+
+    await expect(
+      harness.service.getPaymentInfo(USER_ID, PROFILE_ID, RESERVATION_ID),
+    ).resolves.toEqual({
+      methods: [],
+      defaultMethodId: null,
+    });
   });
 });
