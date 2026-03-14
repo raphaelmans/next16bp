@@ -82,6 +82,7 @@ export function makeReservationService(): ReservationService {
       makeReservationRepository(),
       makeReservationEventRepository(),
       makeProfileRepository(),
+      makeCoachRepository(),
       makeCourtRepository(),
       makePlaceRepository(),
       makePlacePhotoRepository(),

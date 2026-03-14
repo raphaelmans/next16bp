@@ -31,6 +31,7 @@ import { PageHeader } from "@/components/ui/page-header";
 
 import { BookingDetailsCard } from "@/features/reservation/components/booking-details-card";
 import { CancelDialog } from "@/features/reservation/components/cancel-dialog";
+import { CoachSessionDetailsCard } from "@/features/reservation/components/coach-session-details-card";
 import { CountdownTimer } from "@/features/reservation/components/countdown-timer";
 import { PaymentInfoCard } from "@/features/reservation/components/payment-info-card";
 import {
@@ -143,12 +144,17 @@ export default function ReservationDetailPage({
 
   const reservation = reservationDetail?.reservation;
   const events: ReservationEvent[] = reservationDetail?.events ?? [];
+  const targetType = reservationDetail?.targetType ?? "VENUE";
+  const coachRecord = reservationDetail?.coach ?? null;
   const courtRecord = reservationDetail?.court;
   const placeRecord = reservationDetail?.place;
   const placePhotos = reservationDetail?.placePhotos ?? [];
   const reservationPolicy = reservationDetail?.reservationPolicy ?? null;
   const organizationRecord = reservationDetail?.organization ?? null;
   const organizationProfile = reservationDetail?.organizationProfile ?? null;
+  const isCoachReservation = targetType === "COACH";
+  const reviewerLabel = isCoachReservation ? "coach" : "owner";
+  const paymentRecipientLabel = isCoachReservation ? "coach" : "court owner";
 
   const isGroupReservation = Boolean(groupData && groupData.items.length > 1);
   const payableAwaitingItems = useMemo(() => {
@@ -371,7 +377,7 @@ export default function ReservationDetailPage({
       <Container className="py-6">
         <PageHeader
           title="Reservation"
-          description="Track status, payment, venue details, and owner updates without leaving this page."
+          description="Track status, payment, and booking details without leaving this page."
           breadcrumbs={[
             { label: "My Reservations", href: appRoutes.reservations.base },
             { label: "Reservation" },
@@ -409,7 +415,10 @@ export default function ReservationDetailPage({
     );
   }
 
-  if (!reservation || !courtRecord || !placeRecord) {
+  if (
+    !reservation ||
+    (isCoachReservation ? !coachRecord : !courtRecord || !placeRecord)
+  ) {
     return (
       <Container className="py-6">
         <div className="text-center">
@@ -425,21 +434,25 @@ export default function ReservationDetailPage({
     );
   }
 
-  const courtName = `${placeRecord.name} - ${courtRecord.label}`;
-  const venueHref = appRoutes.places.detail(placeRecord.slug ?? placeRecord.id);
-  const court = {
-    id: courtRecord.id,
-    name: courtName,
-    address: placeRecord.address,
-    city: placeRecord.city,
-    coverImageUrl: placePhotos[0]?.url,
-    latitude: placeRecord.latitude
-      ? Number.parseFloat(placeRecord.latitude)
-      : undefined,
-    longitude: placeRecord.longitude
-      ? Number.parseFloat(placeRecord.longitude)
-      : undefined,
-  };
+  const court = !isCoachReservation
+    ? {
+        id: courtRecord.id,
+        name: `${placeRecord.name} - ${courtRecord.label}`,
+        address: placeRecord.address,
+        city: placeRecord.city,
+        coverImageUrl: placePhotos[0]?.url,
+        latitude: placeRecord.latitude
+          ? Number.parseFloat(placeRecord.latitude)
+          : undefined,
+        longitude: placeRecord.longitude
+          ? Number.parseFloat(placeRecord.longitude)
+          : undefined,
+      }
+    : null;
+  const venueHref =
+    !isCoachReservation && placeRecord
+      ? appRoutes.places.detail(placeRecord.slug ?? placeRecord.id)
+      : undefined;
 
   const organizationForDisplay = organizationRecord
     ? {
@@ -449,7 +462,9 @@ export default function ReservationDetailPage({
     : undefined;
 
   const effectiveReservationPolicy =
-    placeRecord.placeType === "RESERVABLE" ? reservationPolicy : null;
+    !isCoachReservation && placeRecord.placeType === "RESERVABLE"
+      ? reservationPolicy
+      : null;
 
   const organization = {
     contactEmail: organizationProfile?.contactEmail ?? undefined,
@@ -475,7 +490,7 @@ export default function ReservationDetailPage({
   const isCutoffPassed = Date.now() > cancellationCutoffTime.getTime();
   const isTerminalStatus =
     reservation.status === "EXPIRED" || reservation.status === "CANCELLED";
-  const canCancel = !isTerminalStatus && !isCutoffPassed;
+  const canCancel = !isCoachReservation && !isTerminalStatus && !isCutoffPassed;
   const cancelDisabledReason = isTerminalStatus
     ? "This reservation is already closed."
     : isCutoffPassed
@@ -497,8 +512,12 @@ export default function ReservationDetailPage({
       );
 
   const activityLabels: Record<string, string> = {
-    CREATED: "Reservation requested",
-    AWAITING_PAYMENT: "Owner accepted (awaiting payment)",
+    CREATED: isCoachReservation
+      ? "Coach session requested"
+      : "Reservation requested",
+    AWAITING_PAYMENT: isCoachReservation
+      ? "Coach accepted (awaiting payment)"
+      : "Owner accepted (awaiting payment)",
     PAYMENT_MARKED_BY_USER: "Payment marked",
     CONFIRMED: "Confirmed",
     CANCELLED: "Cancelled",
@@ -506,9 +525,13 @@ export default function ReservationDetailPage({
   };
 
   const activityNotes: Record<string, string> = {
-    CREATED: "Owner review in progress.",
+    CREATED: isCoachReservation
+      ? "Coach review in progress."
+      : "Owner review in progress.",
     AWAITING_PAYMENT: "Complete payment before the deadline.",
-    PAYMENT_MARKED_BY_USER: "Awaiting owner confirmation.",
+    PAYMENT_MARKED_BY_USER: isCoachReservation
+      ? "Awaiting coach confirmation."
+      : "Awaiting owner confirmation.",
   };
 
   const formatEventTimestamp = (timestamp: Date | string) =>
@@ -527,8 +550,10 @@ export default function ReservationDetailPage({
     return (
       <Container className="py-6">
         <ReservationExpired
-          placeId={placeRecord.id}
-          courtName={court.name}
+          placeId={!isCoachReservation ? placeRecord.id : undefined}
+          courtName={
+            isCoachReservation ? `Coach: ${coachRecord.name}` : court.name
+          }
           slotDate={slotDate}
           slotTime={slotTime}
           amount={amount}
@@ -564,7 +589,7 @@ export default function ReservationDetailPage({
     <Container className="py-6">
       <PageHeader
         title="Reservation"
-        description="Track status, payment, venue details, and owner updates without leaving this page."
+        description="Track status, payment, and booking details without leaving this page."
         breadcrumbs={[
           { label: "My Reservations", href: appRoutes.reservations.base },
           { label: "Reservation" },
@@ -590,21 +615,36 @@ export default function ReservationDetailPage({
         reservationId={reservation.id}
         expiresAt={reservation.expiresAt ?? undefined}
         cancellationReason={reservation.cancellationReason ?? undefined}
-        onMessageOwner={handleOpenChatFromBanner}
+        onMessageOwner={
+          !isCoachReservation ? handleOpenChatFromBanner : undefined
+        }
         onPayNow={
           canShowPaymentStep ? () => void handleGoToPaymentInfo() : undefined
         }
+        counterpartyLabel={isCoachReservation ? "coach" : "owner"}
       />
 
       <div className="grid gap-6 lg:grid-cols-3 mt-6 overflow-hidden">
         <div className="lg:col-span-2 space-y-6">
           {activeStep === "payment" ? (
             <>
-              <BookingDetailsCard
-                court={court}
-                timeSlot={transformedTimeSlot}
-                venueHref={venueHref}
-              />
+              {isCoachReservation ? (
+                <CoachSessionDetailsCard
+                  coach={{
+                    name: coachRecord.name,
+                    city: coachRecord.city,
+                    province: coachRecord.province,
+                    tagline: coachRecord.tagline,
+                  }}
+                  timeSlot={transformedTimeSlot}
+                />
+              ) : (
+                <BookingDetailsCard
+                  court={court}
+                  timeSlot={transformedTimeSlot}
+                  venueHref={venueHref}
+                />
+              )}
 
               {reservation.expiresAt ? (
                 <CountdownTimer
@@ -665,10 +705,11 @@ export default function ReservationDetailPage({
                       paymentMethods={paymentInfo?.methods}
                       expiresInMinutes={groupExpiresInMinutes}
                       isLoading={isPaymentPanelBusy}
+                      recipientLabel={paymentRecipientLabel}
                     />
                   </div>
 
-                  {isChatEnabledForReservationStatus ? (
+                  {!isCoachReservation && isChatEnabledForReservationStatus ? (
                     <Button
                       type="button"
                       variant="outline"
@@ -727,10 +768,11 @@ export default function ReservationDetailPage({
                       paymentMethods={paymentInfo?.methods}
                       expiresInMinutes={expiresInMinutes}
                       isLoading={isPaymentPanelBusy}
+                      recipientLabel={paymentRecipientLabel}
                     />
                   </div>
 
-                  {isChatEnabledForReservationStatus ? (
+                  {!isCoachReservation && isChatEnabledForReservationStatus ? (
                     <Button
                       type="button"
                       variant="outline"
@@ -747,7 +789,7 @@ export default function ReservationDetailPage({
                     onSubmit={handleMarkPaid}
                     className="space-y-6"
                   >
-                    <PaymentProofForm />
+                    <PaymentProofForm reviewerLabel={reviewerLabel} />
 
                     <TermsCheckbox
                       checked={termsAccepted}
@@ -766,8 +808,9 @@ export default function ReservationDetailPage({
 
                     <p className="text-xs text-muted-foreground text-center">
                       By clicking &quot;I Have Paid&quot;, you confirm that you
-                      have completed the payment to the court owner. The owner
-                      will verify your payment and confirm your reservation.
+                      have completed the payment to the {paymentRecipientLabel}.
+                      The {reviewerLabel} will verify your payment and confirm
+                      your reservation.
                     </p>
 
                     <div className="text-center">
@@ -788,22 +831,60 @@ export default function ReservationDetailPage({
             </>
           ) : (
             <>
-              <BookingDetailsCard
-                court={court}
-                timeSlot={transformedTimeSlot}
-                venueHref={venueHref}
-              />
+              {isCoachReservation ? (
+                <>
+                  <CoachSessionDetailsCard
+                    coach={{
+                      name: coachRecord.name,
+                      city: coachRecord.city,
+                      province: coachRecord.province,
+                      tagline: coachRecord.tagline,
+                    }}
+                    timeSlot={transformedTimeSlot}
+                  />
 
-              {organizationForDisplay ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Court Owner</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="font-medium">{organizationForDisplay.name}</p>
-                  </CardContent>
-                </Card>
-              ) : null}
+                  <Card>
+                    <CardHeader>
+                      <CardTitle>Coach</CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-2">
+                      <p className="font-medium">{coachRecord.name}</p>
+                      {coachRecord.tagline ? (
+                        <p className="text-sm text-muted-foreground">
+                          {coachRecord.tagline}
+                        </p>
+                      ) : null}
+                      <p className="text-sm text-muted-foreground">
+                        {[coachRecord.city, coachRecord.province]
+                          .filter(Boolean)
+                          .join(", ") ||
+                          "Coach session details will be shared directly."}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </>
+              ) : (
+                <>
+                  <BookingDetailsCard
+                    court={court}
+                    timeSlot={transformedTimeSlot}
+                    venueHref={venueHref}
+                  />
+
+                  {organizationForDisplay ? (
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Court Owner</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <p className="font-medium">
+                          {organizationForDisplay.name}
+                        </p>
+                      </CardContent>
+                    </Card>
+                  ) : null}
+                </>
+              )}
 
               <Card>
                 <CardHeader>
@@ -959,26 +1040,64 @@ export default function ReservationDetailPage({
             </Card>
           ) : null}
 
-          <ReservationActionsCard
-            reservationId={reservation.id}
-            status={reservation.status}
-            reservationTotalPriceCents={reservation.totalPriceCents}
-            reservationCurrency={reservation.currency}
-            court={court}
-            organization={organization}
-            onCancel={() => setShowCancelDialog(true)}
-            canCancel={canCancel}
-            cancelDisabledReason={cancelDisabledReason}
-            pingOwnerCount={reservation.pingOwnerCount ?? 0}
-          />
+          {isCoachReservation ? (
+            <Card>
+              <CardHeader>
+                <CardTitle>Reservation Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-muted-foreground">Booking ID</span>
+                  <code className="rounded bg-muted px-2 py-1 text-xs">
+                    {reservation.id.slice(0, 8)}
+                  </code>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-muted-foreground">Coach</span>
+                  <span className="font-medium">{coachRecord.name}</span>
+                </div>
+                <div className="flex items-center justify-between gap-4 text-sm">
+                  <span className="text-muted-foreground">Status</span>
+                  <KudosStatusBadge
+                    status={reservation.status as ReservationStatus}
+                    size="sm"
+                  />
+                </div>
+                {canShowPaymentStep && activeStep !== "payment" ? (
+                  <Button
+                    type="button"
+                    className="w-full"
+                    onClick={() => void handleGoToPaymentInfo()}
+                  >
+                    Complete Payment
+                  </Button>
+                ) : null}
+              </CardContent>
+            </Card>
+          ) : (
+            <ReservationActionsCard
+              reservationId={reservation.id}
+              status={reservation.status}
+              reservationTotalPriceCents={reservation.totalPriceCents}
+              reservationCurrency={reservation.currency}
+              court={court}
+              organization={organization}
+              onCancel={() => setShowCancelDialog(true)}
+              canCancel={canCancel}
+              cancelDisabledReason={cancelDisabledReason}
+              pingOwnerCount={reservation.pingOwnerCount ?? 0}
+            />
+          )}
         </div>
       </div>
 
-      <CancelDialog
-        reservationId={reservation.id}
-        open={showCancelDialog}
-        onOpenChange={setShowCancelDialog}
-      />
+      {!isCoachReservation ? (
+        <CancelDialog
+          reservationId={reservation.id}
+          open={showCancelDialog}
+          onOpenChange={setShowCancelDialog}
+        />
+      ) : null}
     </Container>
   );
 }

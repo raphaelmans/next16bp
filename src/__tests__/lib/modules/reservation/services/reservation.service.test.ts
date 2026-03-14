@@ -97,6 +97,9 @@ const createHarness = (options?: {
   const profileRepositoryFns = {
     findById: vi.fn(async () => null),
   };
+  const coachRepositoryFns = {
+    findById: vi.fn(async () => null),
+  };
   const courtRepositoryFns = {
     findById: vi.fn(async () => court),
     findByPlaceAndSport: vi.fn(async () => [court]),
@@ -156,23 +159,24 @@ const createHarness = (options?: {
     reservationRepositoryFns as unknown as ReservationServiceDeps[0],
     reservationEventRepositoryFns as unknown as ReservationServiceDeps[1],
     profileRepositoryFns as unknown as ReservationServiceDeps[2],
-    courtRepositoryFns as unknown as ReservationServiceDeps[3],
-    placeRepositoryFns as unknown as ReservationServiceDeps[4],
-    placePhotoRepositoryFns as unknown as ReservationServiceDeps[5],
-    placeVerificationRepositoryFns as unknown as ReservationServiceDeps[6],
-    organizationReservationPolicyRepositoryFns as unknown as ReservationServiceDeps[7],
-    organizationPaymentMethodRepositoryFns as unknown as ReservationServiceDeps[8],
-    organizationRepositoryFns as unknown as ReservationServiceDeps[9],
-    organizationProfileRepositoryFns as unknown as ReservationServiceDeps[10],
-    courtHoursRepositoryFns as unknown as ReservationServiceDeps[11],
-    courtRateRuleRepositoryFns as unknown as ReservationServiceDeps[12],
-    courtAddonRepositoryFns as unknown as ReservationServiceDeps[13],
-    placeAddonRepositoryFns as unknown as ReservationServiceDeps[14],
-    courtBlockRepositoryFns as unknown as ReservationServiceDeps[15],
-    courtPriceOverrideRepositoryFns as unknown as ReservationServiceDeps[16],
-    { run } as unknown as ReservationServiceDeps[17],
-    notificationDeliveryServiceFns as unknown as ReservationServiceDeps[18],
-    availabilityChangeEventServiceFns as unknown as ReservationServiceDeps[19],
+    coachRepositoryFns as unknown as ReservationServiceDeps[3],
+    courtRepositoryFns as unknown as ReservationServiceDeps[4],
+    placeRepositoryFns as unknown as ReservationServiceDeps[5],
+    placePhotoRepositoryFns as unknown as ReservationServiceDeps[6],
+    placeVerificationRepositoryFns as unknown as ReservationServiceDeps[7],
+    organizationReservationPolicyRepositoryFns as unknown as ReservationServiceDeps[8],
+    organizationPaymentMethodRepositoryFns as unknown as ReservationServiceDeps[9],
+    organizationRepositoryFns as unknown as ReservationServiceDeps[10],
+    organizationProfileRepositoryFns as unknown as ReservationServiceDeps[11],
+    courtHoursRepositoryFns as unknown as ReservationServiceDeps[12],
+    courtRateRuleRepositoryFns as unknown as ReservationServiceDeps[13],
+    courtAddonRepositoryFns as unknown as ReservationServiceDeps[14],
+    placeAddonRepositoryFns as unknown as ReservationServiceDeps[15],
+    courtBlockRepositoryFns as unknown as ReservationServiceDeps[16],
+    courtPriceOverrideRepositoryFns as unknown as ReservationServiceDeps[17],
+    { run } as unknown as ReservationServiceDeps[18],
+    notificationDeliveryServiceFns as unknown as ReservationServiceDeps[19],
+    availabilityChangeEventServiceFns as unknown as ReservationServiceDeps[20],
   );
 
   return {

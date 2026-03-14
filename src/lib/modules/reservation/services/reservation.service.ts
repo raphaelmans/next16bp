@@ -4,6 +4,8 @@ import { env } from "@/lib/env";
 import type { IAvailabilityChangeEventService } from "@/lib/modules/availability/services/availability-change-event.service";
 import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-created-message";
 import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
+import { CoachNotFoundError } from "@/lib/modules/coach/errors/coach.errors";
+import type { ICoachRepository } from "@/lib/modules/coach/repositories/coach.repository";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
@@ -28,6 +30,7 @@ import {
 } from "@/lib/modules/profile/errors/profile.errors";
 import type { IProfileRepository } from "@/lib/modules/profile/repositories/profile.repository";
 import type {
+  CoachRecord,
   CourtRecord,
   OrganizationPaymentMethodRecord,
   OrganizationProfileRecord,
@@ -176,8 +179,10 @@ export interface ReservationPaymentInfo {
 export interface ReservationDetail {
   reservation: ReservationRecord;
   events: ReservationEventRecord[];
-  court: CourtRecord;
-  place: PlaceRecord;
+  targetType: "VENUE" | "COACH";
+  coach: CoachRecord | null;
+  court: CourtRecord | null;
+  place: PlaceRecord | null;
   placePhotos: PlacePhotoRecord[];
   reservationPolicy: OrganizationReservationPolicyRecord | null;
   organization: OrganizationRecord | null;
@@ -225,7 +230,7 @@ export interface IReservationService {
     userId: string,
     profileId: string,
     data: GetPlayerReservationLinkedDetailDTO,
-  ): Promise<ReservationGroupDetail>;
+  ): Promise<ReservationGroupDetail | null>;
   getReservationById(reservationId: string): Promise<{
     reservation: ReservationRecord;
     events: ReservationEventRecord[];
@@ -250,6 +255,7 @@ export class ReservationService implements IReservationService {
     private reservationRepository: IReservationRepository,
     private reservationEventRepository: IReservationEventRepository,
     private profileRepository: IProfileRepository,
+    private coachRepository: ICoachRepository,
     private courtRepository: ICourtRepository,
     private placeRepository: IPlaceRepository,
     private placePhotoRepository: IPlacePhotoRepository,
@@ -1475,7 +1481,7 @@ export class ReservationService implements IReservationService {
     userId: string,
     profileId: string,
     data: GetPlayerReservationLinkedDetailDTO,
-  ): Promise<ReservationGroupDetail> {
+  ): Promise<ReservationGroupDetail | null> {
     const source = await this.reservationRepository.findById(
       data.reservationId,
     );
@@ -1489,9 +1495,22 @@ export class ReservationService implements IReservationService {
       });
     }
 
+    if (source.coachId) {
+      if (source.playerId !== profileId) {
+        throw new NotReservationOwnerError();
+      }
+
+      return null;
+    }
+
     const detail = await this.getReservationDetail(data.reservationId);
     if (detail.reservation.playerId !== profileId) {
       throw new NotReservationOwnerError();
+    }
+    if (!detail.place || !detail.court) {
+      throw new ReservationGroupInvalidError(
+        "Linked detail is only available for venue reservations",
+      );
     }
 
     const statusSummary = this.buildReservationGroupStatusSummary([
@@ -2010,6 +2029,10 @@ export class ReservationService implements IReservationService {
       );
     }
 
+    if (reservation.coachId) {
+      return { methods: [], defaultMethodId: null };
+    }
+
     const court = await this.courtRepository.findById(reservation.courtId);
     if (!court) {
       throw new CourtNotFoundError(reservation.courtId);
@@ -2055,10 +2078,30 @@ export class ReservationService implements IReservationService {
       throw new ReservationNotFoundError(reservationId);
     }
 
-    const [events, court] = await Promise.all([
-      this.reservationEventRepository.findByReservationId(reservationId),
-      this.courtRepository.findById(reservation.courtId),
-    ]);
+    const events =
+      await this.reservationEventRepository.findByReservationId(reservationId);
+
+    if (reservation.coachId) {
+      const coach = await this.coachRepository.findById(reservation.coachId);
+      if (!coach) {
+        throw new CoachNotFoundError(reservation.coachId);
+      }
+
+      return {
+        reservation,
+        events,
+        targetType: "COACH",
+        coach,
+        court: null,
+        place: null,
+        placePhotos: [],
+        reservationPolicy: null,
+        organization: null,
+        organizationProfile: null,
+      };
+    }
+
+    const court = await this.courtRepository.findById(reservation.courtId);
 
     if (!court) {
       throw new CourtNotFoundError(reservation.courtId);
@@ -2091,6 +2134,8 @@ export class ReservationService implements IReservationService {
     return {
       reservation,
       events,
+      targetType: "VENUE",
+      coach: null,
       court,
       place,
       placePhotos,

@@ -71,6 +71,17 @@ type ProfileStub = {
   phoneNumber: string | null;
 };
 
+type CoachStub = {
+  id: string;
+  userId: string;
+  profileId: string;
+  name: string;
+  slug: string;
+  timeZone: string;
+  baseHourlyRateCurrency: string;
+  isActive: boolean;
+};
+
 const makeReservationRecord = (
   value: Partial<ReservationRecord> = {},
 ): ReservationRecord => {
@@ -105,6 +116,7 @@ const makeReservationRecord = (
 function makeReservationService(overrides?: {
   courts?: CourtStub[];
   place?: PlaceStub | null;
+  coach?: CoachStub | null;
   organization?: { id: string; ownerUserId: string } | null;
   profile?: ProfileStub | null;
   placeVerification?: {
@@ -146,6 +158,19 @@ function makeReservationService(overrides?: {
     overrides && Object.hasOwn(overrides, "organization")
       ? (overrides.organization ?? null)
       : null;
+  const coach =
+    overrides && Object.hasOwn(overrides, "coach")
+      ? (overrides.coach ?? null)
+      : {
+          id: "coach-1",
+          userId: "coach-user-1",
+          profileId: "coach-profile-1",
+          name: "Coach Carla",
+          slug: "coach-carla",
+          timeZone: "Asia/Manila",
+          baseHourlyRateCurrency: "PHP",
+          isActive: true,
+        };
 
   const profile = overrides?.profile ?? {
     id: TEST_IDS.profileId,
@@ -351,6 +376,10 @@ function makeReservationService(overrides?: {
     findById: vi.fn().mockResolvedValue(profile),
   };
 
+  const coachRepository = {
+    findById: vi.fn().mockResolvedValue(coach),
+  };
+
   const courtRepository = {
     findByIds: vi.fn().mockResolvedValue(courts),
     findById: vi
@@ -452,6 +481,7 @@ function makeReservationService(overrides?: {
     reservationRepository as never,
     reservationEventRepository as never,
     profileRepository as never,
+    coachRepository as never,
     courtRepository as never,
     placeRepository as never,
     placePhotoRepository as never,
@@ -476,6 +506,7 @@ function makeReservationService(overrides?: {
     reservationRepository,
     reservationEventRepository,
     profileRepository,
+    coachRepository,
     courtRepository,
     placeRepository,
     notificationDeliveryService,
@@ -1413,5 +1444,80 @@ describe("ReservationService.getReservationGroupDetail", () => {
         reservationGroupId: "group-1",
       }),
     ).rejects.toBeInstanceOf(NotReservationOwnerError);
+  });
+});
+
+describe("ReservationService.getReservationDetail", () => {
+  it("returns coach-target detail without requiring court or place records", async () => {
+    const reservation = makeReservationRecord({
+      id: "coach-reservation-1",
+      courtId: null,
+      coachId: "coach-1",
+      status: "CREATED",
+    });
+    const { service, reservationRepository, coachRepository, courtRepository } =
+      makeReservationService({
+        coach: {
+          id: "coach-1",
+          userId: "coach-user-1",
+          profileId: "coach-profile-1",
+          name: "Coach Carla",
+          slug: "coach-carla",
+          timeZone: "Asia/Manila",
+          baseHourlyRateCurrency: "PHP",
+          isActive: true,
+        },
+      });
+
+    vi.mocked(reservationRepository.findById).mockResolvedValue(reservation);
+
+    const result = await service.getReservationDetail(reservation.id);
+
+    expect(result.targetType).toBe("COACH");
+    expect(result.coach?.id).toBe("coach-1");
+    expect(result.court).toBeNull();
+    expect(result.place).toBeNull();
+    expect(result.placePhotos).toEqual([]);
+    expect(coachRepository.findById).toHaveBeenCalledWith("coach-1");
+    expect(courtRepository.findById).not.toHaveBeenCalled();
+  });
+
+  it("preserves venue detail fields for court reservations", async () => {
+    const reservation = makeReservationRecord({
+      id: "venue-reservation-1",
+      courtId: TEST_IDS.courtId1,
+      coachId: null,
+    });
+    const { service, reservationRepository } = makeReservationService();
+
+    vi.mocked(reservationRepository.findById).mockResolvedValue(reservation);
+
+    const result = await service.getReservationDetail(reservation.id);
+
+    expect(result.targetType).toBe("VENUE");
+    expect(result.coach).toBeNull();
+    expect(result.court?.id).toBe(TEST_IDS.courtId1);
+    expect(result.place?.id).toBe(TEST_IDS.placeId);
+  });
+});
+
+describe("ReservationService.getReservationLinkedDetail", () => {
+  it("returns null for single coach reservations", async () => {
+    const reservation = makeReservationRecord({
+      id: "coach-reservation-1",
+      courtId: null,
+      coachId: "coach-1",
+      groupId: null,
+      playerId: TEST_IDS.profileId,
+    });
+    const { service, reservationRepository } = makeReservationService();
+
+    vi.mocked(reservationRepository.findById).mockResolvedValue(reservation);
+
+    await expect(
+      service.getReservationLinkedDetail("user-1", TEST_IDS.profileId, {
+        reservationId: reservation.id,
+      }),
+    ).resolves.toBeNull();
   });
 });

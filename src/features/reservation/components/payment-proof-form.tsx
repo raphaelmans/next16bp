@@ -20,7 +20,11 @@ export const paymentProofFormSchema = z.object({
 
 export type PaymentProofFormValues = z.infer<typeof paymentProofFormSchema>;
 
-export function PaymentProofForm() {
+export function PaymentProofForm({
+  reviewerLabel = "owner",
+}: {
+  reviewerLabel?: string;
+}) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { setValue, control } = useFormContext<PaymentProofFormValues>();
   const proofFile = useWatch({ control, name: "proofFile" });
@@ -67,7 +71,7 @@ export function PaymentProofForm() {
               Payment Proof (Optional)
             </h3>
             <p className="text-sm text-muted-foreground">
-              Help the owner verify your payment faster
+              Help the {reviewerLabel} verify your payment faster
             </p>
           </div>
         </div>

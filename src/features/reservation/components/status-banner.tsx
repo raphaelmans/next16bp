@@ -18,6 +18,7 @@ interface StatusBannerProps {
   className?: string;
   onMessageOwner?: (() => void) | undefined;
   onPayNow?: (() => void) | undefined;
+  counterpartyLabel?: string;
 }
 
 const CHAT_ENABLED_STATUSES: ReservationStatus[] = [
@@ -35,6 +36,7 @@ export function StatusBanner({
   className,
   onMessageOwner,
   onPayNow,
+  counterpartyLabel = "owner",
 }: StatusBannerProps) {
   const config = statusBannerConfig[status];
   const nowMs = useNowMs({ intervalMs: 30_000 });
@@ -68,7 +70,7 @@ export function StatusBanner({
         <span>
           {status === "CANCELLED" && cancellationReason
             ? `Reason: ${cancellationReason}`
-            : config.description}
+            : config.description(counterpartyLabel)}
         </span>
         {showMessageOwnerButton || showPayButton ? (
           <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto sm:justify-end">
@@ -80,7 +82,7 @@ export function StatusBanner({
                 className="w-full sm:w-auto"
                 onClick={onMessageOwner}
               >
-                Message Owner
+                {`Message ${capitalizeLabel(counterpartyLabel)}`}
               </Button>
             ) : null}
             {showPayButton ? (
@@ -111,7 +113,7 @@ const statusBannerConfig: Record<
   {
     icon: typeof CheckCircle;
     title: string;
-    description: string;
+    description: (counterpartyLabel: string) => string;
     className: string;
     variant: string;
   }
@@ -119,7 +121,8 @@ const statusBannerConfig: Record<
   CREATED: {
     icon: Info,
     title: "Processing",
-    description: "Owner review is in progress. Message the owner if needed.",
+    description: (counterpartyLabel) =>
+      `${capitalizeLabel(counterpartyLabel)} review is in progress. Message the ${counterpartyLabel} if needed.`,
     className:
       "border-primary/20 bg-primary/5 text-primary [&>svg]:text-primary",
     variant: "default",
@@ -127,8 +130,8 @@ const statusBannerConfig: Record<
   AWAITING_PAYMENT: {
     icon: AlertTriangle,
     title: "Payment Required",
-    description:
-      "Pay now to keep this slot. Then mark payment for owner confirmation.",
+    description: (counterpartyLabel) =>
+      `Pay now to keep this slot. Then mark payment for ${counterpartyLabel} confirmation.`,
     className:
       "border-warning/20 bg-warning/5 text-warning [&>svg]:text-warning",
     variant: "default",
@@ -136,7 +139,8 @@ const statusBannerConfig: Record<
   PAYMENT_MARKED_BY_USER: {
     icon: Clock,
     title: "Payment Pending Confirmation",
-    description: "Payment marked. The owner will verify and confirm shortly.",
+    description: (counterpartyLabel) =>
+      `Payment marked. The ${counterpartyLabel} will verify and confirm shortly.`,
     className:
       "border-primary/20 bg-primary/5 text-primary [&>svg]:text-primary",
     variant: "default",
@@ -144,7 +148,10 @@ const statusBannerConfig: Record<
   CONFIRMED: {
     icon: CheckCircle,
     title: "Reservation Confirmed",
-    description: "Your booking is confirmed! See you at the venue.",
+    description: (counterpartyLabel) =>
+      counterpartyLabel === "coach"
+        ? "Your booking is confirmed. Coordinate with your coach for the session."
+        : "Your booking is confirmed! See you at the venue.",
     className:
       "border-success/20 bg-success/5 text-success [&>svg]:text-success",
     variant: "default",
@@ -152,7 +159,7 @@ const statusBannerConfig: Record<
   EXPIRED: {
     icon: XCircle,
     title: "Reservation Expired",
-    description:
+    description: () =>
       "This reservation has expired because payment was not completed in time.",
     className: "",
     variant: "destructive",
@@ -160,9 +167,14 @@ const statusBannerConfig: Record<
   CANCELLED: {
     icon: XCircle,
     title: "Reservation Cancelled",
-    description: "This reservation has been cancelled.",
+    description: () => "This reservation has been cancelled.",
     className:
       "border-muted bg-muted/50 text-muted-foreground [&>svg]:text-muted-foreground",
     variant: "default",
   },
 };
+
+function capitalizeLabel(value: string) {
+  if (!value) return value;
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}

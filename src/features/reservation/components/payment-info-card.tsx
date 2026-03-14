@@ -29,6 +29,7 @@ interface PaymentInfoCardProps {
   expiresInMinutes?: number;
   isLoading?: boolean;
   className?: string;
+  recipientLabel?: string;
 }
 
 export function PaymentInfoCard({
@@ -36,6 +37,7 @@ export function PaymentInfoCard({
   expiresInMinutes = 15,
   isLoading = false,
   className,
+  recipientLabel = "court owner",
 }: PaymentInfoCardProps) {
   const hasMethods = paymentMethods.length > 0;
 
@@ -48,8 +50,8 @@ export function PaymentInfoCard({
         <Alert>
           <Clock className="h-4 w-4" />
           <AlertDescription>
-            Owner acceptance is required. Once accepted, complete payment within{" "}
-            {expiresInMinutes} minutes to secure your reservation.
+            Once accepted, complete payment within {expiresInMinutes} minutes to
+            secure your reservation.
           </AlertDescription>
         </Alert>
 
@@ -66,7 +68,7 @@ export function PaymentInfoCard({
           </div>
         ) : (
           <div className="space-y-3 text-sm text-muted-foreground">
-            <p>Contact the court owner for payment details.</p>
+            <p>Contact the {recipientLabel} for payment details.</p>
             <p>Pay via mobile wallet or bank transfer.</p>
             <p>Share your payment proof below.</p>
           </div>
