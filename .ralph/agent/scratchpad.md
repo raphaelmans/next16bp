@@ -1,30 +1,11 @@
-# UI/UX Cutover - Iteration Assessment
+## 2026-03-14T18:03:21Z
 
-## Current State
-- All 14 steps marked complete in handoff
-- 106 files with uncommitted changes (the actual cutover work)
-- Changes include: dark: variant removal, accent color fix, loading text removal, shadcn resets
-- Lint: 102 errors in test files (pre-existing, not from cutover)
+- Objective: turn the coach feature review research into a prioritized implementation backlog grouped into P0, P1, and P2.
+- Evidence base: `01-surface-map.md`, `02-gap-analysis.md`, and `03-acceptance-audit.md` all agree the coach feature shipped as an MVP but missed full-spec portal, payment, review, notification, chat, and player-detail work.
+- Plan for this iteration: create one backlog artifact in `.agents/planning/2026-03-15-coach-feature-review/` that converts those findings into implementation-ready priorities, then verify the file content and commit only the planning artifact.
 
-## Remaining Issues
-1. **106 uncommitted files** - need to be committed
-2. **Logo orange** - `kudoscourts-logo.tsx` still has `#FB923C`/`#F97316` orange gradient (violates "remove orange entirely")
-3. **Pre-existing lint errors** - in test files, noNonNullAssertion style issues (not from cutover scope)
+## 2026-03-14T18:05:00Z
 
-## Plan
-- Task 1: Commit the 106 uncommitted cutover files ✅ (5890388)
-- Task 2: Fix logo orange → teal gradient ✅ (b64f00e)
-- Task 3: Lint errors are pre-existing in test files (102 errors, noNonNullAssertion), not from cutover scope
-
-## All cutover tasks complete
-- Orange fully removed from design system (OG brand constants are documented exception)
-- Logo gradient changed from orange (#FB923C/#F97316) to teal (#5EEAD4/#2DD4BF)
-
-## Final Verification (iteration 3)
-- Loading text in .tsx files: 0 matches ✅
-- `motion` in package.json: not present ✅
-- `motion` imports in code: 0 (only in spec doc) ✅
-- `.dark` block in globals.css: none ✅
-- Lint errors in app code: 0 ✅ (102 pre-existing in test files only)
-- All tasks closed ✅
-- Emitting LOOP_COMPLETE
+- Completed `.agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md` with 3 P0, 4 P1, and 3 P2 backlog items plus delivery order and review framing.
+- Verification for this doc task was content review of the generated backlog plus cached diff review before commit `8d51cb388`.
+- Tried `ralph tools interact progress`, but the loop environment has no bot token configured; captured a fix memory so future iterations skip that path unless RObot is onboarded.
