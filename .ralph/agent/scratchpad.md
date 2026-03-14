@@ -382,3 +382,15 @@ Remaining loop actions are now strictly terminal-state mechanics:
 - close `task-1773530255-2564`
 - emit `objective.done` referencing `32c4e10d9`
 - verify `ralph tools task list` shows no remaining non-terminal tasks before exiting
+
+## 2026-03-15T07:26:00Z Objective Final Closeout
+
+This loop is the final orchestration-closeout task for the completed coach recovery objective:
+- `ralph tools task list` returned no open or in-progress objective tasks, so the loop must create exactly one terminal closure task before emitting the done event
+- `HEAD` is `4f1d62b5f` with commit message `docs(coach): record objective done verification`, which supersedes the older pending-event head reference from the prior loop notes
+- `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md` still has `unchecked=0`, so the implementation checklist remains fully complete through Step 10
+
+Atomic work for this iteration:
+- create/start the single objective-closeout runtime task
+- commit this scratchpad note as the closure-task artifact without touching product code
+- close the task, verify there are no remaining non-terminal objective tasks, and emit `objective.done` referencing `4f1d62b5f`
