@@ -345,3 +345,15 @@ Objective-level completion snapshot:
 - known gaps/follow-up: none within the recovery objective itself; remaining repo-wide lint/tooling noise stays outside this scoped coach recovery effort and was intentionally handled with focused validation at each step
 
 This closure iteration only needs to verify runtime task state, preserve the completion record in scratchpad history, and emit the completion event for the loop.
+
+## 2026-03-14T23:14:38Z Objective Closure Verification
+
+Final closure verification is scoped to orchestration state, not feature code:
+- re-read the coach recovery plan, gap analysis, acceptance audit, journey audit, and spec prompt to confirm the delivered scope still matches the stated objective
+- verified the implementation checklist remains fully checked in `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md`
+- verified the closure commit already exists at `7ef4fd1c7` (`docs(coach): finalize recovery objective`) on top of the Step 10 product commit `286044404`
+
+Remaining actions in this loop:
+- close the runtime task after confirming no other objective tasks remain open
+- emit `objective.done` with a brief completion payload referencing the closure commit
+- leave the objective in a terminal state with no remaining coach recovery follow-up inside this scoped plan
