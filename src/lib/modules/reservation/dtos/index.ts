@@ -3,6 +3,7 @@ export * from "./create-reservation.dto";
 export * from "./mark-payment.dto";
 export * from "./payment-info.dto";
 export * from "./ping-owner.dto";
+export * from "./reservation-coach.dto";
 export * from "./reservation-group-player.dto";
 export * from "./reservation-list.dto";
 export * from "./reservation-owner.dto";

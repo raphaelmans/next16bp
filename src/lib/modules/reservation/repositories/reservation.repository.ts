@@ -13,6 +13,7 @@ import {
 } from "drizzle-orm";
 import {
   type CourtRecord,
+  coach,
   court,
   type InsertReservation,
   type InsertReservationGroup,
@@ -161,6 +162,48 @@ export interface IReservationRepository {
     statuses: ("CREATED" | "AWAITING_PAYMENT" | "PAYMENT_MARKED_BY_USER")[],
     ctx: RequestContext,
   ): Promise<string[]>;
+  findByCoachIdAndStatuses(
+    coachId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    filters: {
+      timeBucket?: "past" | "upcoming";
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]>;
+  countByCoachAndStatuses(
+    coachId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    ctx?: RequestContext,
+  ): Promise<number>;
+  findWithDetailsByCoach(
+    coachId: string,
+    filters: {
+      status?: string;
+      statuses?: string[];
+      timeBucket?: "past" | "upcoming";
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<
+    import("../dtos/reservation-coach.dto").CoachReservationWithDetails[]
+  >;
   create(
     data: InsertReservation,
     ctx?: RequestContext,
@@ -775,6 +818,188 @@ export class ReservationRepository implements IReservationRepository {
       .returning({ id: reservation.id });
 
     return updated.map((r) => r.id);
+  }
+
+  async findByCoachIdAndStatuses(
+    coachId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    filters: {
+      timeBucket?: "past" | "upcoming";
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    const client = this.getClient(ctx);
+    const conditions = [
+      eq(reservation.coachId, coachId),
+      inArray(reservation.status, statuses),
+    ];
+
+    if (filters.timeBucket === "past") {
+      conditions.push(lt(reservation.endTime, new Date()));
+    }
+    if (filters.timeBucket === "upcoming") {
+      conditions.push(gte(reservation.endTime, new Date()));
+    }
+
+    return client
+      .select()
+      .from(reservation)
+      .where(and(...conditions))
+      .orderBy(desc(reservation.createdAt))
+      .limit(filters.limit)
+      .offset(filters.offset);
+  }
+
+  async countByCoachAndStatuses(
+    coachId: string,
+    statuses: (
+      | "CREATED"
+      | "AWAITING_PAYMENT"
+      | "PAYMENT_MARKED_BY_USER"
+      | "CONFIRMED"
+      | "EXPIRED"
+      | "CANCELLED"
+    )[],
+    ctx?: RequestContext,
+  ): Promise<number> {
+    const client = this.getClient(ctx);
+
+    const result = await client
+      .select({ count: count() })
+      .from(reservation)
+      .where(
+        and(
+          eq(reservation.coachId, coachId),
+          inArray(reservation.status, statuses),
+        ),
+      );
+
+    return result[0]?.count ?? 0;
+  }
+
+  async findWithDetailsByCoach(
+    coachId: string,
+    filters: {
+      status?: string;
+      statuses?: string[];
+      timeBucket?: "past" | "upcoming";
+      limit: number;
+      offset: number;
+    },
+    ctx?: RequestContext,
+  ): Promise<
+    import("../dtos/reservation-coach.dto").CoachReservationWithDetails[]
+  > {
+    const client = this.getClient(ctx);
+
+    const conditions = [eq(reservation.coachId, coachId)];
+
+    if (filters.status) {
+      conditions.push(
+        eq(
+          reservation.status,
+          filters.status as
+            | "CREATED"
+            | "AWAITING_PAYMENT"
+            | "PAYMENT_MARKED_BY_USER"
+            | "CONFIRMED"
+            | "EXPIRED"
+            | "CANCELLED",
+        ),
+      );
+    }
+
+    if (filters.statuses?.length) {
+      conditions.push(
+        inArray(
+          reservation.status,
+          filters.statuses as (
+            | "CREATED"
+            | "AWAITING_PAYMENT"
+            | "PAYMENT_MARKED_BY_USER"
+            | "CONFIRMED"
+            | "EXPIRED"
+            | "CANCELLED"
+          )[],
+        ),
+      );
+    }
+
+    if (filters.timeBucket === "past") {
+      conditions.push(lt(reservation.endTime, new Date()));
+    }
+
+    if (filters.timeBucket === "upcoming") {
+      conditions.push(gte(reservation.endTime, new Date()));
+    }
+
+    const results = await client
+      .select({
+        id: reservation.id,
+        status: reservation.status,
+        playerNameSnapshot: reservation.playerNameSnapshot,
+        playerEmailSnapshot: reservation.playerEmailSnapshot,
+        playerPhoneSnapshot: reservation.playerPhoneSnapshot,
+        cancellationReason: reservation.cancellationReason,
+        createdAt: reservation.createdAt,
+        expiresAt: reservation.expiresAt,
+        coachId: coach.id,
+        coachName: coach.name,
+        slotStartTime: reservation.startTime,
+        slotEndTime: reservation.endTime,
+        amountCents: reservation.totalPriceCents,
+        currency: reservation.currency,
+        paymentProofReferenceNumber: paymentProof.referenceNumber,
+        paymentProofNotes: paymentProof.notes,
+        paymentProofFileUrl: paymentProof.fileUrl,
+        paymentProofCreatedAt: paymentProof.createdAt,
+      })
+      .from(reservation)
+      .innerJoin(coach, eq(reservation.coachId, coach.id))
+      .leftJoin(paymentProof, eq(paymentProof.reservationId, reservation.id))
+      .where(and(...conditions))
+      .orderBy(desc(reservation.createdAt))
+      .limit(filters.limit)
+      .offset(filters.offset);
+
+    return results.map((r) => {
+      const proof = {
+        referenceNumber: r.paymentProofReferenceNumber ?? null,
+        notes: r.paymentProofNotes ?? null,
+        fileUrl: r.paymentProofFileUrl ?? null,
+        createdAt: r.paymentProofCreatedAt ?? null,
+      };
+      const hasProof =
+        proof.referenceNumber ||
+        proof.notes ||
+        proof.fileUrl ||
+        proof.createdAt;
+
+      return {
+        ...r,
+        slotStartTime: toIsoString(r.slotStartTime) ?? "",
+        slotEndTime: toIsoString(r.slotEndTime) ?? "",
+        createdAt: toIsoString(r.createdAt),
+        expiresAt: toIsoString(r.expiresAt),
+        paymentProof: hasProof
+          ? {
+              referenceNumber: proof.referenceNumber,
+              notes: proof.notes,
+              fileUrl: proof.fileUrl,
+              createdAt: toIsoString(proof.createdAt) ?? "",
+            }
+          : null,
+      };
+    });
   }
 
   async create(

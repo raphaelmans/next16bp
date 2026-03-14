@@ -49,6 +49,7 @@ import { placeVerificationRouter } from "@/lib/modules/place-verification/place-
 import { profileRouter } from "@/lib/modules/profile/profile.router";
 import { pushSubscriptionRouter } from "@/lib/modules/push-subscription/push-subscription.router";
 import { reservationRouter } from "@/lib/modules/reservation/reservation.router";
+import { reservationCoachRouter } from "@/lib/modules/reservation/reservation-coach.router";
 import { reservationOwnerRouter } from "@/lib/modules/reservation/reservation-owner.router";
 import { sportRouter } from "@/lib/modules/sport/sport.router";
 import { userNotificationRouter } from "@/lib/modules/user-notification/user-notification.router";
@@ -102,6 +103,7 @@ export const appRouter = router({
   availability: availabilityRouter,
   bookingsImport: bookingsImportRouter,
   reservation: reservationRouter,
+  reservationCoach: reservationCoachRouter,
   reservationOwner: reservationOwnerRouter,
   openPlay: openPlayRouter,
   pushSubscription: pushSubscriptionRouter,

@@ -1,6 +1,10 @@
 import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import { S } from "@/common/schemas";
+import {
+  CoachNotActiveError,
+  CoachNotFoundError,
+} from "@/lib/modules/coach/errors/coach.errors";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import { PlaceNotFoundError } from "@/lib/modules/place/errors/place.errors";
 import {
@@ -17,6 +21,7 @@ import { AppError } from "@/lib/shared/kernel/errors";
 import {
   CancelReservationSchema,
   CreateReservationForAnyCourtSchema,
+  CreateReservationForCoachSchema,
   CreateReservationForCourtSchema,
   CreateReservationGroupSchema,
   GetMyReservationsSchema,
@@ -27,6 +32,7 @@ import {
   PingOwnerSchema,
 } from "./dtos";
 import {
+  BookingWindowExceededError,
   InvalidReservationAddonSelectionError,
   InvalidReservationStatusError,
   NoAvailabilityError,
@@ -36,10 +42,14 @@ import {
   ReservationExpiredError,
   ReservationGroupNotFoundError,
   ReservationNotFoundError,
+  ReservationStartTimeInPastError,
   SlotNotAvailableError,
   TermsNotAcceptedError,
 } from "./errors/reservation.errors";
-import { makeReservationService } from "./factories/reservation.factory";
+import {
+  makeCoachReservationService,
+  makeReservationService,
+} from "./factories/reservation.factory";
 
 /**
  * Maps known errors to appropriate tRPC error codes
@@ -50,7 +60,8 @@ function handleReservationError(error: unknown): never {
     error instanceof ReservationGroupNotFoundError ||
     error instanceof ProfileNotFoundError ||
     error instanceof CourtNotFoundError ||
-    error instanceof PlaceNotFoundError
+    error instanceof PlaceNotFoundError ||
+    error instanceof CoachNotFoundError
   ) {
     throw new TRPCError({
       code: "NOT_FOUND",
@@ -74,7 +85,10 @@ function handleReservationError(error: unknown): never {
     error instanceof SlotNotAvailableError ||
     error instanceof NoAvailabilityError ||
     error instanceof IncompleteProfileError ||
-    error instanceof PingLimitExceededError
+    error instanceof PingLimitExceededError ||
+    error instanceof CoachNotActiveError ||
+    error instanceof BookingWindowExceededError ||
+    error instanceof ReservationStartTimeInPastError
   ) {
     throw new TRPCError({
       code: "BAD_REQUEST",
@@ -142,6 +156,20 @@ export const reservationRouter = router({
           profile.id,
           input,
         );
+      } catch (error) {
+        handleReservationError(error);
+      }
+    }),
+
+  createForCoach: protectedRateLimitedProcedure("sensitive")
+    .input(CreateReservationForCoachSchema)
+    .mutation(async ({ input, ctx }) => {
+      try {
+        const profileService = makeProfileService();
+        const profile = await profileService.getOrCreateProfile(ctx.userId);
+
+        const service = makeCoachReservationService();
+        return await service.createForCoach(ctx.userId, profile.id, input);
       } catch (error) {
         handleReservationError(error);
       }

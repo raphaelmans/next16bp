@@ -1,4 +1,9 @@
 import { makeAvailabilityChangeEventService } from "@/lib/modules/availability/factories/availability-change-event.factory";
+import { makeCoachRepository } from "@/lib/modules/coach/factories/coach.factory";
+import { makeCoachAddonRepository } from "@/lib/modules/coach-addon/factories/coach-addon.factory";
+import { makeCoachBlockRepository } from "@/lib/modules/coach-block/factories/coach-block.factory";
+import { makeCoachHoursRepository } from "@/lib/modules/coach-hours/factories/coach-hours.factory";
+import { makeCoachRateRuleRepository } from "@/lib/modules/coach-rate-rule/factories/coach-rate-rule.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeCourtAddonRepository } from "@/lib/modules/court-addon/factories/court-addon.factory";
 import { makeCourtBlockRepository } from "@/lib/modules/court-block/factories/court-block.factory";
@@ -29,6 +34,7 @@ import { getContainer } from "@/lib/shared/infra/container";
 import { ReservationRepository } from "../repositories/reservation.repository";
 import { ReservationEventRepository } from "../repositories/reservation-event.repository";
 import { ReservationService } from "../services/reservation.service";
+import { CoachReservationService } from "../services/reservation-coach.service";
 import { ReservationOwnerService } from "../services/reservation-owner.service";
 import { ExpireStaleReservationsUseCase } from "../use-cases/expire-stale-reservations.use-case";
 
@@ -36,6 +42,7 @@ let reservationRepository: ReservationRepository | null = null;
 let reservationEventRepository: ReservationEventRepository | null = null;
 let reservationService: ReservationService | null = null;
 let reservationOwnerService: ReservationOwnerService | null = null;
+let coachReservationService: CoachReservationService | null = null;
 let expireStaleReservationsUseCase: ExpireStaleReservationsUseCase | null =
   null;
 
@@ -123,4 +130,21 @@ export function makeReservationOwnerService(): ReservationOwnerService {
     );
   }
   return reservationOwnerService;
+}
+
+export function makeCoachReservationService(): CoachReservationService {
+  if (!coachReservationService) {
+    coachReservationService = new CoachReservationService(
+      makeReservationRepository(),
+      makeReservationEventRepository(),
+      makeProfileRepository(),
+      makeCoachRepository(),
+      makeCoachHoursRepository(),
+      makeCoachRateRuleRepository(),
+      makeCoachAddonRepository(),
+      makeCoachBlockRepository(),
+      getContainer().transactionManager,
+    );
+  }
+  return coachReservationService;
 }
