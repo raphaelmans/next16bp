@@ -3,6 +3,7 @@ import { makeCoachRepository } from "@/lib/modules/coach/factories/coach.factory
 import { makeCoachAddonRepository } from "@/lib/modules/coach-addon/factories/coach-addon.factory";
 import { makeCoachBlockRepository } from "@/lib/modules/coach-block/factories/coach-block.factory";
 import { makeCoachHoursRepository } from "@/lib/modules/coach-hours/factories/coach-hours.factory";
+import { makeCoachPaymentMethodRepository } from "@/lib/modules/coach-payment/factories/coach-payment.factory";
 import { makeCoachRateRuleRepository } from "@/lib/modules/coach-rate-rule/factories/coach-rate-rule.factory";
 import { makeCourtRepository } from "@/lib/modules/court/factories/court.factory";
 import { makeCourtAddonRepository } from "@/lib/modules/court-addon/factories/court-addon.factory";
@@ -89,6 +90,7 @@ export function makeReservationService(): ReservationService {
       makePlaceVerificationRepository(),
       makeOrganizationReservationPolicyRepository(),
       makeOrganizationPaymentMethodRepository(),
+      makeCoachPaymentMethodRepository(),
       makeOrganizationRepository(),
       makeOrganizationProfileRepository(),
       makeCourtHoursRepository(),

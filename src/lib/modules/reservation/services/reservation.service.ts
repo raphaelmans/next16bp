@@ -6,6 +6,7 @@ import { postPlayerCreatedMessage } from "@/lib/modules/chat/ops/post-player-cre
 import { postPlayerPaymentMarkedMessage } from "@/lib/modules/chat/ops/post-player-payment-marked-message";
 import { CoachNotFoundError } from "@/lib/modules/coach/errors/coach.errors";
 import type { ICoachRepository } from "@/lib/modules/coach/repositories/coach.repository";
+import type { ICoachPaymentMethodRepository } from "@/lib/modules/coach-payment/repositories/coach-payment-method.repository";
 import { CourtNotFoundError } from "@/lib/modules/court/errors/court.errors";
 import type { ICourtRepository } from "@/lib/modules/court/repositories/court.repository";
 import type { ICourtAddonRepository } from "@/lib/modules/court-addon/repositories/court-addon.repository";
@@ -262,6 +263,7 @@ export class ReservationService implements IReservationService {
     private placeVerificationRepository: IPlaceVerificationRepository,
     private organizationReservationPolicyRepository: IOrganizationReservationPolicyRepository,
     private organizationPaymentMethodRepository: IOrganizationPaymentMethodRepository,
+    private coachPaymentMethodRepository: ICoachPaymentMethodRepository,
     private organizationRepository: IOrganizationRepository,
     private organizationProfileRepository: IOrganizationProfileRepository,
     private courtHoursRepository: ICourtHoursRepository,
@@ -2030,7 +2032,29 @@ export class ReservationService implements IReservationService {
     }
 
     if (reservation.coachId) {
-      return { methods: [], defaultMethodId: null };
+      const coachMethods =
+        await this.coachPaymentMethodRepository.findByCoachId(
+          reservation.coachId,
+        );
+      const activeCoachMethods = coachMethods.filter(
+        (method) => method.isActive,
+      );
+      const defaultCoachMethod = activeCoachMethods.find(
+        (method) => method.isDefault,
+      );
+
+      return {
+        methods: activeCoachMethods.map((method) => ({
+          id: method.id,
+          type: method.type,
+          provider: method.provider,
+          accountName: method.accountName,
+          accountNumber: method.accountNumber,
+          instructions: method.instructions,
+          isDefault: method.isDefault,
+        })),
+        defaultMethodId: defaultCoachMethod?.id ?? null,
+      };
     }
 
     const court = await this.courtRepository.findById(reservation.courtId);
