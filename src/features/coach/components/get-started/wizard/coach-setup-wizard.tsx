@@ -148,9 +148,19 @@ function renderActiveStep(
     case "location":
       return <LocationStep isComplete={status.hasCoachLocation} />;
     case "schedule":
-      return <ScheduleStep isComplete={status.hasCoachSchedule} />;
+      return (
+        <ScheduleStep
+          isComplete={status.hasCoachSchedule}
+          coachId={status.coachId}
+        />
+      );
     case "pricing":
-      return <PricingStep isComplete={status.hasCoachPricing} />;
+      return (
+        <PricingStep
+          isComplete={status.hasCoachPricing}
+          coachId={status.coachId}
+        />
+      );
     case "payment":
       return <PaymentStep isComplete={status.hasPaymentMethod} />;
     case "verify":

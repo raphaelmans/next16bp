@@ -23,13 +23,13 @@ const coachNavItems = [
     label: "Schedule",
     href: appRoutes.coach.schedule,
     description: "Weekly hours and time blocks.",
-    status: "upcoming" as const,
+    status: "active" as const,
   },
   {
     label: "Pricing",
     href: appRoutes.coach.pricing,
     description: "Rate rules and add-ons.",
-    status: "upcoming" as const,
+    status: "active" as const,
   },
   {
     label: "Reservations",
@@ -54,7 +54,7 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
               Build your coaching profile
             </h1>
           </div>
-          <Badge variant="secondary">Step 3 foundation</Badge>
+          <Badge variant="secondary">Step 4 live</Badge>
         </div>
       </header>
 
@@ -66,8 +66,8 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
                 Coach workspace
               </h2>
               <p className="text-sm text-muted-foreground">
-                The get-started flow is live first. The rest of the portal lands
-                in the next coach tasks.
+                Schedule and pricing are now live alongside the setup wizard.
+                The remaining coach portal surfaces land in later tasks.
               </p>
             </div>
 
