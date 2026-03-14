@@ -24,7 +24,8 @@ describe("GetCoachSetupStatusUseCase", () => {
       hasCoachSchedule: false,
       hasCoachPricing: false,
       hasPaymentMethod: false,
-      hasVerification: true,
+      hasVerification: false,
+      verificationStatus: "UNVERIFIED",
       isSetupComplete: false,
       nextStep: "profile",
     });
@@ -43,6 +44,7 @@ describe("GetCoachSetupStatusUseCase", () => {
         hoursCount: 0,
         rateRuleCount: 0,
         paymentMethodCount: 0,
+        verificationStatus: "UNVERIFIED",
       }),
     );
 
@@ -54,9 +56,41 @@ describe("GetCoachSetupStatusUseCase", () => {
       hasCoachSchedule: false,
       hasCoachPricing: false,
       hasPaymentMethod: false,
-      hasVerification: true,
+      hasVerification: false,
+      verificationStatus: "UNVERIFIED",
       isSetupComplete: false,
       nextStep: "schedule",
+    });
+  });
+
+  it("keeps setup on verify while verification is pending", async () => {
+    const useCase = new GetCoachSetupStatusUseCase(
+      createRepository({
+        coachId: "22222222-2222-4222-8222-222222222222",
+        name: "Coach Alex",
+        tagline: "Movement-first training",
+        bio: "Helping players compete with confidence.",
+        city: "Makati",
+        province: "Metro Manila",
+        sportsCount: 2,
+        hoursCount: 4,
+        rateRuleCount: 3,
+        paymentMethodCount: 1,
+        verificationStatus: "PENDING",
+      }),
+    );
+
+    await expect(useCase.execute(TEST_USER_ID)).resolves.toMatchObject({
+      hasCoachProfile: true,
+      hasCoachSports: true,
+      hasCoachLocation: true,
+      hasCoachSchedule: true,
+      hasCoachPricing: true,
+      hasPaymentMethod: true,
+      hasVerification: false,
+      verificationStatus: "PENDING",
+      isSetupComplete: false,
+      nextStep: "verify",
     });
   });
 
@@ -73,6 +107,7 @@ describe("GetCoachSetupStatusUseCase", () => {
         hoursCount: 4,
         rateRuleCount: 3,
         paymentMethodCount: 1,
+        verificationStatus: "VERIFIED",
       }),
     );
 
@@ -84,6 +119,7 @@ describe("GetCoachSetupStatusUseCase", () => {
       hasCoachPricing: true,
       hasPaymentMethod: true,
       hasVerification: true,
+      verificationStatus: "VERIFIED",
       isSetupComplete: true,
       nextStep: "complete",
     });

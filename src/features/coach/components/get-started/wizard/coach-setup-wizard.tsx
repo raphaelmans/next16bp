@@ -71,9 +71,9 @@ export function CoachSetupWizard() {
               Coach setup wizard
             </h2>
             <p className="max-w-2xl text-sm leading-6 text-muted-foreground">
-              This foundation wires the coach onboarding contract end to end:
-              protected route shell, setup-status query, and a stable step
-              sequence for the later implementation waves.
+              Complete the setup contract coaches need before launching:
+              profile, booking readiness, payment instructions, and verification
+              approval.
             </p>
           </div>
           <div className="rounded-2xl border bg-muted/40 px-4 py-3 text-sm">
@@ -174,7 +174,7 @@ function renderActiveStep(
         />
       );
     case "verify":
-      return <VerifyStep isComplete={status.hasVerification} />;
+      return <VerifyStep status={status} />;
     case "complete":
       return <CompleteStep isReady={status.isSetupComplete} />;
   }

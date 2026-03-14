@@ -37,6 +37,7 @@ export class CoachSetupRepository implements ICoachSetupRepository {
         bio: coach.bio,
         city: coach.city,
         province: coach.province,
+        verificationStatus: coach.verificationStatus,
       })
       .from(coach)
       .where(eq(coach.userId, userId))
@@ -82,6 +83,7 @@ export class CoachSetupRepository implements ICoachSetupRepository {
       hoursCount: hoursSummary[0]?.count ?? 0,
       rateRuleCount: rateRuleSummary[0]?.count ?? 0,
       paymentMethodCount: paymentSummary[0]?.count ?? 0,
+      verificationStatus: coachRow.verificationStatus,
     };
   }
 }

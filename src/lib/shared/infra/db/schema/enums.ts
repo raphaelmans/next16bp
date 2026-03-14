@@ -163,6 +163,17 @@ export const placeVerificationStatusEnum = pgEnum("place_verification_status", [
 ]);
 
 /**
+ * Coach verification status enum
+ * Tracks whether a coach listing is ready to launch publicly.
+ */
+export const coachVerificationStatusEnum = pgEnum("coach_verification_status", [
+  "UNVERIFIED",
+  "PENDING",
+  "VERIFIED",
+  "REJECTED",
+]);
+
+/**
  * Bookings import job status enum
  * Tracks the lifecycle of an import job
  */

@@ -7,7 +7,9 @@ const { featureQuerySpy, featureMutationSpy, invalidateSpy, coachApi } =
     featureMutationSpy: vi.fn(),
     invalidateSpy: vi.fn(async () => undefined),
     coachApi: {
+      queryCoachGetSetupStatus: vi.fn(),
       queryCoachGetMyProfile: vi.fn(),
+      mutCoachSubmitVerification: vi.fn(),
       mutCoachUpdateProfile: vi.fn(),
       querySportList: vi.fn(),
       queryCoachPaymentListMethods: vi.fn(),
@@ -42,6 +44,7 @@ vi.mock("@/features/coach/api", () => ({
 }));
 
 import {
+  useMutCoachSubmitVerification,
   useMutCoachUpdateProfile,
   useMutCreateCoachPaymentMethod,
   useMutDeleteCoachPaymentMethod,
@@ -49,6 +52,7 @@ import {
   useMutUpdateCoachPaymentMethod,
   useQueryCoachMyProfile,
   useQueryCoachPaymentMethods,
+  useQueryCoachSetupStatus,
   useQueryCoachSports,
 } from "@/features/coach/hooks";
 
@@ -65,6 +69,20 @@ describe("coach hooks", () => {
       coachApi.queryCoachPaymentListMethods,
       { coachId: "coach-1" },
       { enabled: true },
+    );
+  });
+
+  it("useQueryCoachSetupStatus uses the feature query adapter", () => {
+    renderHook(() => useQueryCoachSetupStatus());
+
+    expect(featureQuerySpy).toHaveBeenCalledWith(
+      ["coach", "getSetupStatus"],
+      coachApi.queryCoachGetSetupStatus,
+      undefined,
+      {
+        staleTime: 0,
+        refetchOnMount: "always",
+      },
     );
   });
 
@@ -102,6 +120,24 @@ describe("coach hooks", () => {
 
     expect(featureMutationSpy).toHaveBeenCalledWith(
       coachApi.mutCoachUpdateProfile,
+      expect.any(Object),
+    );
+
+    const options = featureMutationSpy.mock.lastCall?.[1] as {
+      onSuccess?: () => Promise<unknown>;
+    };
+
+    await options.onSuccess?.();
+
+    expect(invalidateSpy).toHaveBeenCalledWith(["coach", "getMyProfile"]);
+    expect(invalidateSpy).toHaveBeenCalledWith(["coach", "getSetupStatus"]);
+  });
+
+  it("useMutCoachSubmitVerification invalidates profile and setup status on success", async () => {
+    renderHook(() => useMutCoachSubmitVerification());
+
+    expect(featureMutationSpy).toHaveBeenCalledWith(
+      coachApi.mutCoachSubmitVerification,
       expect.any(Object),
     );
 

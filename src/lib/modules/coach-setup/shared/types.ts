@@ -13,6 +13,12 @@ export type CoachSetupNextStep =
   | "verify"
   | "complete";
 
+export type CoachVerificationStatus =
+  | "UNVERIFIED"
+  | "PENDING"
+  | "VERIFIED"
+  | "REJECTED";
+
 export type CoachSetupSnapshot = {
   coachId: string;
   name: string | null;
@@ -24,6 +30,7 @@ export type CoachSetupSnapshot = {
   hoursCount: number;
   rateRuleCount: number;
   paymentMethodCount: number;
+  verificationStatus: CoachVerificationStatus;
 };
 
 export type CoachSetupStatus = {
@@ -35,6 +42,7 @@ export type CoachSetupStatus = {
   hasCoachPricing: boolean;
   hasPaymentMethod: boolean;
   hasVerification: boolean;
+  verificationStatus: CoachVerificationStatus;
   isSetupComplete: boolean;
   nextStep: CoachSetupNextStep;
 };

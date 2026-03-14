@@ -11,6 +11,14 @@ const hookState = vi.hoisted(() => ({
         bio: string | null;
       };
       sports: Array<{ sportId: string }>;
+      certifications: Array<{
+        id: string;
+        coachId: string;
+        name: string;
+        issuingBody: string | null;
+        level: string | null;
+        createdAt: Date;
+      }>;
     } | null,
     isLoading: false,
     error: null as Error | null,
@@ -32,6 +40,7 @@ const hookState = vi.hoisted(() => ({
     refetch: vi.fn(),
   },
   updateProfileMutateAsync: vi.fn(),
+  submitVerificationMutateAsync: vi.fn(),
 }));
 
 vi.mock("@/features/coach/hooks", () => ({
@@ -39,6 +48,10 @@ vi.mock("@/features/coach/hooks", () => ({
   useQueryCoachSports: () => hookState.sportsQuery,
   useMutCoachUpdateProfile: () => ({
     mutateAsync: hookState.updateProfileMutateAsync,
+    isPending: false,
+  }),
+  useMutCoachSubmitVerification: () => ({
+    mutateAsync: hookState.submitVerificationMutateAsync,
     isPending: false,
   }),
 }));
@@ -85,6 +98,7 @@ import { PricingStep } from "@/features/coach/components/get-started/wizard/step
 import { ProfileStep } from "@/features/coach/components/get-started/wizard/steps/profile-step";
 import { ScheduleStep } from "@/features/coach/components/get-started/wizard/steps/schedule-step";
 import { SportsStep } from "@/features/coach/components/get-started/wizard/steps/sports-step";
+import { VerifyStep } from "@/features/coach/components/get-started/wizard/steps/verify-step";
 
 describe("coach setup live editors", () => {
   beforeAll(() => {
@@ -118,6 +132,7 @@ describe("coach setup live editors", () => {
       refetch: vi.fn(),
     };
     hookState.updateProfileMutateAsync.mockReset();
+    hookState.submitVerificationMutateAsync.mockReset();
   });
 
   it("profile step saves the real coach basics form", async () => {
@@ -191,6 +206,7 @@ describe("coach setup live editors", () => {
         bio: "Competitive player turned coach",
       },
       sports: [],
+      certifications: [],
     };
     hookState.updateProfileMutateAsync.mockResolvedValue({
       coach: { id: "coach-1" },
@@ -235,6 +251,7 @@ describe("coach setup live editors", () => {
         bio: "Competitive player turned coach",
       },
       sports: [],
+      certifications: [],
     };
     hookState.sportsQuery.data = [];
 
@@ -281,5 +298,257 @@ describe("coach setup live editors", () => {
 
     expect(screen.getByText("Payment method added")).toBeTruthy();
     expect(screen.getByText("Manage payment methods")).toBeTruthy();
+  });
+
+  it("verify step stays blocked until the earlier steps are complete", () => {
+    hookState.profileQuery.data = {
+      coach: {
+        id: "coach-1",
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      sports: [],
+      certifications: [],
+    };
+
+    render(
+      <VerifyStep
+        status={{
+          coachId: "coach-1",
+          hasCoachProfile: true,
+          hasCoachSports: true,
+          hasCoachLocation: true,
+          hasCoachSchedule: false,
+          hasCoachPricing: false,
+          hasPaymentMethod: false,
+          hasVerification: false,
+          verificationStatus: "UNVERIFIED",
+          isSetupComplete: false,
+          nextStep: "schedule",
+        }}
+      />,
+    );
+
+    expect(
+      screen.getByText("Finish the earlier setup steps first"),
+    ).toBeTruthy();
+  });
+
+  it("verify step shows pending review state", async () => {
+    hookState.profileQuery.data = {
+      coach: {
+        id: "coach-1",
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      sports: [],
+      certifications: [
+        {
+          id: "cert-1",
+          coachId: "coach-1",
+          name: "PTR",
+          issuingBody: "PTR",
+          level: "L1",
+          createdAt: new Date("2026-03-15T00:00:00.000Z"),
+        },
+      ],
+    };
+
+    render(
+      <VerifyStep
+        status={{
+          coachId: "coach-1",
+          hasCoachProfile: true,
+          hasCoachSports: true,
+          hasCoachLocation: true,
+          hasCoachSchedule: true,
+          hasCoachPricing: true,
+          hasPaymentMethod: true,
+          hasVerification: false,
+          verificationStatus: "PENDING",
+          isSetupComplete: false,
+          nextStep: "verify",
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Verification pending review")).toHaveLength(
+        2,
+      );
+    });
+  });
+
+  it("verify step shows approved state once verification is complete", async () => {
+    hookState.profileQuery.data = {
+      coach: {
+        id: "coach-1",
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      sports: [],
+      certifications: [
+        {
+          id: "cert-1",
+          coachId: "coach-1",
+          name: "PTR",
+          issuingBody: "PTR",
+          level: "L1",
+          createdAt: new Date("2026-03-15T00:00:00.000Z"),
+        },
+      ],
+    };
+
+    render(
+      <VerifyStep
+        status={{
+          coachId: "coach-1",
+          hasCoachProfile: true,
+          hasCoachSports: true,
+          hasCoachLocation: true,
+          hasCoachSchedule: true,
+          hasCoachPricing: true,
+          hasPaymentMethod: true,
+          hasVerification: true,
+          verificationStatus: "VERIFIED",
+          isSetupComplete: true,
+          nextStep: "complete",
+        }}
+      />,
+    );
+
+    await waitFor(() => {
+      expect(screen.getAllByText("Coach verified")).toHaveLength(2);
+    });
+  });
+
+  it("verify step saves certifications then submits verification", async () => {
+    hookState.profileQuery.data = {
+      coach: {
+        id: "coach-1",
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      sports: [],
+      certifications: [],
+    };
+    hookState.updateProfileMutateAsync.mockResolvedValue({
+      coach: { id: "coach-1" },
+    });
+    hookState.submitVerificationMutateAsync.mockResolvedValue({
+      coachId: "coach-1",
+      verificationStatus: "PENDING",
+    });
+
+    const { rerender } = render(
+      <VerifyStep
+        status={{
+          coachId: "coach-1",
+          hasCoachProfile: true,
+          hasCoachSports: true,
+          hasCoachLocation: true,
+          hasCoachSchedule: true,
+          hasCoachPricing: true,
+          hasPaymentMethod: true,
+          hasVerification: false,
+          verificationStatus: "UNVERIFIED",
+          isSetupComplete: false,
+          nextStep: "verify",
+        }}
+      />,
+    );
+
+    fireEvent.change(
+      document.querySelector('input[name="certifications.0.name"]') as Element,
+      {
+        target: { value: "PTR" },
+      },
+    );
+    fireEvent.change(
+      document.querySelector(
+        'input[name="certifications.0.issuingBody"]',
+      ) as Element,
+      {
+        target: { value: "Professional Tennis Registry" },
+      },
+    );
+    fireEvent.change(
+      document.querySelector('input[name="certifications.0.level"]') as Element,
+      {
+        target: { value: "Level 1" },
+      },
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole("button", { name: "Save certifications" }),
+      ).toBeTruthy();
+    });
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Save certifications" }),
+    );
+
+    await waitFor(() => {
+      expect(hookState.updateProfileMutateAsync).toHaveBeenCalledWith({
+        certifications: [
+          {
+            name: "PTR",
+            issuingBody: "Professional Tennis Registry",
+            level: "Level 1",
+          },
+        ],
+      });
+    });
+
+    hookState.profileQuery.data = {
+      coach: {
+        id: "coach-1",
+        name: "Coach Alex",
+        tagline: "Private badminton sessions",
+        bio: "Competitive player turned coach",
+      },
+      sports: [],
+      certifications: [
+        {
+          id: "cert-1",
+          coachId: "coach-1",
+          name: "PTR",
+          issuingBody: "Professional Tennis Registry",
+          level: "Level 1",
+          createdAt: new Date("2026-03-15T00:00:00.000Z"),
+        },
+      ],
+    };
+
+    rerender(
+      <VerifyStep
+        status={{
+          coachId: "coach-1",
+          hasCoachProfile: true,
+          hasCoachSports: true,
+          hasCoachLocation: true,
+          hasCoachSchedule: true,
+          hasCoachPricing: true,
+          hasPaymentMethod: true,
+          hasVerification: false,
+          verificationStatus: "UNVERIFIED",
+          isSetupComplete: false,
+          nextStep: "verify",
+        }}
+      />,
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Submit for verification" }),
+    );
+
+    await waitFor(() => {
+      expect(hookState.submitVerificationMutateAsync).toHaveBeenCalledOnce();
+    });
   });
 });

@@ -1,5 +1,8 @@
 import { TRPCError } from "@trpc/server";
-import { makeCoachSetupStatusUseCase } from "@/lib/modules/coach-setup/factories/coach-setup.factory";
+import {
+  makeCoachSetupStatusUseCase,
+  makeSubmitCoachVerificationUseCase,
+} from "@/lib/modules/coach-setup/factories/coach-setup.factory";
 import {
   protectedProcedure,
   publicProcedure,
@@ -136,5 +139,13 @@ export const coachRouter = router({
   getSetupStatus: protectedProcedure.query(async ({ ctx }) => {
     const useCase = makeCoachSetupStatusUseCase();
     return useCase.execute(ctx.userId);
+  }),
+  submitVerification: protectedProcedure.mutation(async ({ ctx }) => {
+    try {
+      const useCase = makeSubmitCoachVerificationUseCase();
+      return await useCase.execute(ctx.userId);
+    } catch (error) {
+      handleCoachError(error);
+    }
   }),
 });

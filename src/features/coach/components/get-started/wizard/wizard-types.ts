@@ -51,7 +51,7 @@ export const COACH_STEP_CONFIGS: Record<
   },
   verify: {
     label: "Verify",
-    description: "Verification placeholder for the first release.",
+    description: "Submit your credentials and wait for approval.",
   },
   complete: {
     label: "Complete",
@@ -68,5 +68,6 @@ export type CoachWizardStatus = Pick<
   | "hasCoachPricing"
   | "hasPaymentMethod"
   | "hasVerification"
+  | "verificationStatus"
   | "isSetupComplete"
 >;

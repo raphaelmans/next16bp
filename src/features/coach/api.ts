@@ -19,6 +19,9 @@ export interface ICoachApi {
   queryCoachGetMyProfile: ProcedureFn<
     TrpcClientApi["coach"]["getMyProfile"]["query"]
   >;
+  mutCoachSubmitVerification: ProcedureFn<
+    TrpcClientApi["coach"]["submitVerification"]["mutate"]
+  >;
   mutCoachUpdateProfile: ProcedureFn<
     TrpcClientApi["coach"]["updateProfile"]["mutate"]
   >;
@@ -112,6 +115,17 @@ export class CoachApi implements ICoachApi {
       this.clientApi,
       ["coach", "getMyProfile"],
       (clientApi) => clientApi.coach.getMyProfile.query,
+      input,
+      this.toAppError,
+    );
+
+  mutCoachSubmitVerification: ProcedureFn<
+    TrpcClientApi["coach"]["submitVerification"]["mutate"]
+  > = async (input) =>
+    callTrpcMutation(
+      this.clientApi,
+      ["coach", "submitVerification"],
+      (clientApi) => clientApi.coach.submitVerification.mutate,
       input,
       this.toAppError,
     );

@@ -98,6 +98,20 @@ export function useMutCoachUpdateProfile() {
   });
 }
 
+export function useMutCoachSubmitVerification() {
+  const { invalidateCoachProfile, invalidateCoachSetupStatus } =
+    useModCoachInvalidation();
+
+  return useFeatureMutation(coachApi.mutCoachSubmitVerification, {
+    onSuccess: async () => {
+      await Promise.all([
+        invalidateCoachProfile(),
+        invalidateCoachSetupStatus(),
+      ]);
+    },
+  });
+}
+
 export function useQueryCoachPaymentMethods(
   coachId: string | null,
   options?: {

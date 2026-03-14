@@ -15,6 +15,7 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { coachVerificationStatusEnum } from "./enums";
 import { profile } from "./profile";
 
 /**
@@ -57,6 +58,13 @@ export const coach = pgTable(
     })
       .notNull()
       .default("PHP"),
+    verificationStatus: coachVerificationStatusEnum("verification_status")
+      .notNull()
+      .default("UNVERIFIED"),
+    verificationSubmittedAt: timestamp("verification_submitted_at", {
+      withTimezone: true,
+    }),
+    verifiedAt: timestamp("verified_at", { withTimezone: true }),
     isActive: boolean("is_active").notNull().default(true),
     featuredRank: integer("featured_rank").notNull().default(0),
     provinceRank: integer("province_rank").notNull().default(0),

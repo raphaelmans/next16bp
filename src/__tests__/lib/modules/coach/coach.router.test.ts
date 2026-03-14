@@ -29,6 +29,10 @@ const mockCoachSetupStatusUseCase = {
   execute: vi.fn(),
 };
 
+const mockSubmitCoachVerificationUseCase = {
+  execute: vi.fn(),
+};
+
 vi.mock("@/lib/modules/coach/factories/coach.factory", () => ({
   makeCoachService: () => mockCoachService,
   makeCoachDiscoveryService: () => mockCoachDiscoveryService,
@@ -36,6 +40,7 @@ vi.mock("@/lib/modules/coach/factories/coach.factory", () => ({
 
 vi.mock("@/lib/modules/coach-setup/factories/coach-setup.factory", () => ({
   makeCoachSetupStatusUseCase: () => mockCoachSetupStatusUseCase,
+  makeSubmitCoachVerificationUseCase: () => mockSubmitCoachVerificationUseCase,
 }));
 
 import { coachRouter } from "@/lib/modules/coach/coach.router";
@@ -194,7 +199,8 @@ describe("coachRouter", () => {
       hasCoachSchedule: false,
       hasCoachPricing: false,
       hasPaymentMethod: false,
-      hasVerification: true,
+      hasVerification: false,
+      verificationStatus: "UNVERIFIED",
       isSetupComplete: false,
       nextStep: "location",
     };
@@ -204,6 +210,23 @@ describe("coachRouter", () => {
 
     expect(result).toEqual(status);
     expect(mockCoachSetupStatusUseCase.execute).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+    );
+  });
+
+  it("submitVerification delegates to the verification use case", async () => {
+    const caller = createProtectedCaller();
+    const payload = {
+      coachId: TEST_IDS.coachId,
+      verificationStatus: "PENDING",
+      hasVerification: false,
+    };
+    mockSubmitCoachVerificationUseCase.execute.mockResolvedValue(payload);
+
+    const result = await caller.submitVerification();
+
+    expect(result).toEqual(payload);
+    expect(mockSubmitCoachVerificationUseCase.execute).toHaveBeenCalledWith(
       TEST_IDS.userId,
     );
   });

@@ -23,6 +23,22 @@ export type CoachSportsSelectionFormData = z.infer<
   typeof coachSportsSelectionSchema
 >;
 
+export const coachVerificationCertificationSchema = z.object({
+  name: z.string().trim().min(1, "Certification name is required").max(200),
+  issuingBody: z.string().trim().min(1, "Issuing body is required").max(200),
+  level: z.string().trim().max(100),
+});
+
+export const coachVerificationFormSchema = z.object({
+  certifications: z
+    .array(coachVerificationCertificationSchema)
+    .min(1, "Add at least one certification"),
+});
+
+export type CoachVerificationFormData = z.infer<
+  typeof coachVerificationFormSchema
+>;
+
 export const coachPaymentMethodSchema = z.object({
   type: z.enum(PAYMENT_METHOD_TYPES, {
     error: V.paymentMethod.type.invalid.message,

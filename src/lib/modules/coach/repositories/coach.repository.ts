@@ -496,13 +496,7 @@ export class CoachRepository implements ICoachRepository {
     }
 
     if (filters.verified) {
-      conditions.push(
-        sql`exists (
-          select 1
-          from ${coachCertification}
-          where ${coachCertification.coachId} = ${coach.id}
-        )`,
-      );
+      conditions.push(eq(coach.verificationStatus, "VERIFIED"));
     }
 
     if (filters.venueId) {
@@ -675,11 +669,9 @@ export class CoachRepository implements ICoachRepository {
           currency: coach.baseHourlyRateCurrency,
           averageRating: reviewAggregate.averageRating,
           reviewCount: reviewAggregate.reviewCount,
-          verified: sql<boolean>`exists (
-              select 1
-              from ${coachCertification}
-              where ${coachCertification.coachId} = ${coach.id}
-            )`.as("verified"),
+          verified: sql<boolean>`${coach.verificationStatus} = 'VERIFIED'`.as(
+            "verified",
+          ),
         })
         .from(coach)
         .leftJoin(reviewAggregate, eq(reviewAggregate.coachId, coach.id))

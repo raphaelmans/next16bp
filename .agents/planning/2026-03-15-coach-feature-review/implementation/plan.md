@@ -6,7 +6,7 @@
 - [x] Step 2: Add coach payment methods backend and player payment-info support
 - [x] Step 3: Ship coach payment methods UI and connect get-started
 - [x] Step 4: Replace placeholder onboarding steps with real profile and sports editing
-- [ ] Step 5: Add a real coach verification gate
+- [x] Step 5: Add a real coach verification gate
 - [ ] Step 6: Complete missing coach portal routes
 - [ ] Step 7: Finish coach reservation detail with payment-proof support
 - [ ] Step 8: Add coach reviews end to end
@@ -130,6 +130,14 @@ Integrates with previous work:
 - completes onboarding truthfulness after payment, profile, and sports are real
 
 Demo: A coach who has not completed verification cannot finish setup; once verified, the final step unlocks.
+
+Verification snapshot:
+- added explicit `coach.verificationStatus` storage plus a generated Drizzle migration so verification is no longer implied by placeholder logic
+- setup status now reports `verificationStatus`, treats only `VERIFIED` as complete, and keeps coaches on the verify step while review is pending
+- shipped a live verify step that lets coaches save certifications inline, blocks submission until prior setup steps are complete, submits eligible listings for review, and surfaces blocked/pending/approved states
+- aligned public coach `verified` metadata/filtering with approved verification status instead of raw certification presence
+- focused validation passed:
+  - `pnpm exec vitest run src/__tests__/lib/modules/coach-setup/use-cases/get-coach-setup-status.use-case.test.ts src/__tests__/lib/modules/coach-setup/use-cases/submit-coach-verification.use-case.test.ts src/__tests__/lib/modules/coach/coach.router.test.ts src/__tests__/features/coach/api.test.ts src/__tests__/features/coach/hooks.test.ts src/__tests__/features/coach/components/get-started/wizard/coach-step-live-editors.test.tsx`
 
 ## Step 6: Complete missing coach portal routes
 

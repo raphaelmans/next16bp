@@ -10,6 +10,29 @@ vi.mock("@/common/trpc-client-call", () => ({
 }));
 
 describe("CoachApi", () => {
+  it("queryCoachGetSetupStatus uses the coach.getSetupStatus transport path", async () => {
+    const clientApi = {
+      coach: {
+        getSetupStatus: { query: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { coachId: "coach-1", verificationStatus: "PENDING" };
+    callTrpcQueryMock.mockResolvedValue(expected);
+
+    const result = await api.queryCoachGetSetupStatus();
+
+    expect(result).toEqual(expected);
+    expect(callTrpcQueryMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coach", "getSetupStatus"],
+      expect.any(Function),
+      undefined,
+      toAppError,
+    );
+  });
+
   it("queryCoachGetMyProfile uses the coach.getMyProfile transport path", async () => {
     const clientApi = {
       coach: {
@@ -27,6 +50,29 @@ describe("CoachApi", () => {
     expect(callTrpcQueryMock).toHaveBeenCalledWith(
       clientApi,
       ["coach", "getMyProfile"],
+      expect.any(Function),
+      undefined,
+      toAppError,
+    );
+  });
+
+  it("mutCoachSubmitVerification uses the coach.submitVerification transport path", async () => {
+    const clientApi = {
+      coach: {
+        submitVerification: { mutate: vi.fn() },
+      },
+    } as never;
+    const toAppError = vi.fn((error: unknown) => error as never);
+    const api = new CoachApi({ clientApi, toAppError });
+    const expected = { coachId: "coach-1", verificationStatus: "PENDING" };
+    callTrpcMutationMock.mockResolvedValue(expected);
+
+    const result = await api.mutCoachSubmitVerification();
+
+    expect(result).toEqual(expected);
+    expect(callTrpcMutationMock).toHaveBeenCalledWith(
+      clientApi,
+      ["coach", "submitVerification"],
       expect.any(Function),
       undefined,
       toAppError,

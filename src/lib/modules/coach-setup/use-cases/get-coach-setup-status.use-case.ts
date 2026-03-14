@@ -29,7 +29,7 @@ export class GetCoachSetupStatusUseCase {
     const hasCoachSchedule = computeCoachScheduleReady(snapshot);
     const hasCoachPricing = computeCoachPricingReady(snapshot);
     const hasPaymentMethod = computeCoachPaymentReady(snapshot);
-    const hasVerification = computeCoachVerificationReady();
+    const hasVerification = computeCoachVerificationReady(snapshot);
 
     const nextStep = computeCoachNextStep({
       hasCoachProfile,
@@ -50,6 +50,7 @@ export class GetCoachSetupStatusUseCase {
       hasCoachPricing,
       hasPaymentMethod,
       hasVerification,
+      verificationStatus: snapshot.verificationStatus,
       isSetupComplete: nextStep === "complete",
       nextStep,
     };

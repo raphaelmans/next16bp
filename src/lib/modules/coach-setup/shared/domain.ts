@@ -2,6 +2,7 @@ import type {
   CoachSetupNextStep,
   CoachSetupSnapshot,
   CoachSetupStatus,
+  CoachVerificationStatus,
 } from "./types";
 
 const hasText = (value: string | null | undefined) =>
@@ -49,9 +50,19 @@ export function computeCoachPaymentReady(
   return (snapshot?.paymentMethodCount ?? 0) > 0;
 }
 
-export function computeCoachVerificationReady(): boolean {
-  // Step 3 keeps verification as a placeholder until the real flow lands.
-  return true;
+export function normalizeCoachVerificationStatus(
+  status: CoachVerificationStatus | null | undefined,
+): CoachVerificationStatus {
+  return status ?? "UNVERIFIED";
+}
+
+export function computeCoachVerificationReady(
+  snapshot: CoachSetupSnapshot | null,
+): boolean {
+  return (
+    normalizeCoachVerificationStatus(snapshot?.verificationStatus) ===
+    "VERIFIED"
+  );
 }
 
 export function computeCoachNextStep(input: {
@@ -74,7 +85,8 @@ export function computeCoachNextStep(input: {
 }
 
 export function buildEmptyCoachSetupStatus(): CoachSetupStatus {
-  const hasVerification = computeCoachVerificationReady();
+  const verificationStatus = normalizeCoachVerificationStatus(null);
+  const hasVerification = false;
 
   return {
     coachId: null,
@@ -85,6 +97,7 @@ export function buildEmptyCoachSetupStatus(): CoachSetupStatus {
     hasCoachPricing: false,
     hasPaymentMethod: false,
     hasVerification,
+    verificationStatus,
     isSetupComplete: false,
     nextStep: "profile",
   };
