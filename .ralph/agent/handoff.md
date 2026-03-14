@@ -1,11 +1,11 @@
 # Session Handoff
 
-_Generated: 2026-03-06 02:48:00 UTC_
+_Generated: 2026-03-14 18:05:26 UTC_
 
 ## Git Context
 
-- **Branch:** `ui-ux-cutover`
-- **HEAD:** 9ce24a0: chore: auto-commit before merge (loop primary)
+- **Branch:** `temp-clean`
+- **HEAD:** f53548651: chore: auto-commit before merge (loop primary)
 
 ## Tasks
 
@@ -27,22 +27,23 @@ _Generated: 2026-03-06 02:48:00 UTC_
 - [x] Step 14: Validation & Verification
 - [x] Commit 106 uncommitted UI/UX cutover files
 - [x] Fix logo orange gradient — replace with teal
+- [x] Create coach implementation backlog
 
 
 ## Key Files
 
 Recently modified:
 
-- `.mcp.json`
-- `.opencode/plans/1772731283296-mighty-squid.md`
-- `.ralph/agent/handoff.md`
+- `.agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md`
+- `.agents/planning/2026-03-15-coach-feature-review/idea-honing.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/01-surface-map.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/02-gap-analysis.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md`
+- `.agents/planning/2026-03-15-coach-feature-review/rough-idea.md`
+- `.gitignore`
 - `.ralph/agent/memories.md`
-- `.ralph/agent/memories.md.lock`
 - `.ralph/agent/scratchpad.md`
 - `.ralph/agent/summary.md`
-- `.ralph/agent/tasks.jsonl`
-- `.ralph/agent/tasks.jsonl.lock`
-- `.ralph/current-events`
 
 ## Next Session
 
@@ -51,16 +52,5 @@ Session completed successfully. No pending work.
 **Original objective:**
 
 ```
-# UI/UX Cutover & Revamp
-
-## Objective
-
-Big-bang cutover of the entire UI layer to shadcn-ui components on a dedicated branch. Mobile-first PWA, light-only, primary teal retained. ~280 files, 14 steps.
-
-## Key Requirements
-
-- Reset all 47 shadcn primitives to latest via `npx shadcn@latest add --overwrite`
-- Remove `motion` dependency, migrate 9 files to CSS animations (tailwindcss-animate)
-- Remove dark mode (`.dark` block in globals.css, `dark:` variants)
-- Replace all hardcoded hex/rgba with C...
+Use .agents/planning/2026-03-15-coach-feature-review/research/01-surface-map.md, .agents/planning/2026-03-15-coach-feature-review/research/02-gap-analysis.md, and .agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md. Create an implementation backlog for the missing coach feature work, grouped into P0, P1, and P2.
 ```
