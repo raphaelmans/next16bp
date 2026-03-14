@@ -1,7 +1,7 @@
-import { pgTable, uuid, text, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import { authUsers } from "drizzle-orm/supabase";
-import { createSelectSchema, createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { createInsertSchema, createSelectSchema } from "drizzle-zod";
+import type { z } from "zod";
 
 /**
  * User roles table

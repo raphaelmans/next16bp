@@ -1,6 +1,6 @@
 import { initTRPC, TRPCError } from "@trpc/server";
 import { AppError, AuthenticationError } from "@/shared/kernel/errors";
-import type { Context, AuthenticatedContext } from "./context";
+import type { AuthenticatedContext, Context } from "./context";
 
 /**
  * tRPC initialization with error formatter.

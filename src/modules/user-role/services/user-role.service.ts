@@ -1,9 +1,9 @@
-import type { TransactionManager } from "@/shared/kernel/transaction";
-import type { RequestContext } from "@/shared/kernel/context";
-import type { IUserRoleRepository } from "../repositories/user-role.repository";
-import type { UserRoleRecord, InsertUserRole } from "@/shared/infra/db/schema";
-import { UserRoleAlreadyExistsError } from "../errors/user-role.errors";
+import type { InsertUserRole, UserRoleRecord } from "@/shared/infra/db/schema";
 import { logger } from "@/shared/infra/logger";
+import type { RequestContext } from "@/shared/kernel/context";
+import type { TransactionManager } from "@/shared/kernel/transaction";
+import { UserRoleAlreadyExistsError } from "../errors/user-role.errors";
+import type { IUserRoleRepository } from "../repositories/user-role.repository";
 
 export interface IUserRoleService {
   findByUserId(

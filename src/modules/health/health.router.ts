@@ -1,4 +1,4 @@
-import { router, publicProcedure } from "@/shared/infra/trpc/trpc";
+import { publicProcedure, router } from "@/shared/infra/trpc/trpc";
 
 /**
  * Health check response schema

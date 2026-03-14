@@ -1,9 +1,9 @@
-import { logger } from "./logger";
-import type { Logger } from "./logger";
+import type { TransactionManager } from "@/shared/kernel/transaction";
 import { db } from "./db/drizzle";
 import { DrizzleTransactionManager } from "./db/transaction";
-import type { TransactionManager } from "@/shared/kernel/transaction";
 import type { DbClient } from "./db/types";
+import type { Logger } from "./logger";
+import { logger } from "./logger";
 
 /**
  * Composition root for shared infrastructure.

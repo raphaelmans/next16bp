@@ -1,4 +1,4 @@
-import { NotFoundError, ConflictError } from "@/shared/kernel/errors";
+import { ConflictError, NotFoundError } from "@/shared/kernel/errors";
 
 export class UserRoleNotFoundError extends NotFoundError {
   readonly code = "USER_ROLE_NOT_FOUND";
