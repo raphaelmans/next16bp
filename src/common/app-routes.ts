@@ -147,6 +147,17 @@ export const appRoutes = {
       accept: "/account/invitations/accept",
     },
   },
+  coach: {
+    base: "/coach",
+    options: { type: "protected" as const },
+    getStarted: "/coach/get-started",
+    profile: "/coach/profile",
+    schedule: "/coach/schedule",
+    pricing: "/coach/pricing",
+    reservations: "/coach/reservations",
+    paymentMethods: "/coach/payment-methods",
+    settings: "/coach/settings",
+  },
   organization: {
     base: "/organization",
     options: { type: "organization" as const },
@@ -251,6 +262,7 @@ const protectedBases = [
   appRoutes.savedVenues.base,
   appRoutes.reservations.base,
   appRoutes.account.base,
+  appRoutes.coach.base,
   appRoutes.organization.onboarding,
   appRoutes.organization.getStarted,
 ];

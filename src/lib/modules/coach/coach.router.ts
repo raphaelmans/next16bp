@@ -1,4 +1,5 @@
 import { TRPCError } from "@trpc/server";
+import { makeCoachSetupStatusUseCase } from "@/lib/modules/coach-setup/factories/coach-setup.factory";
 import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import { UpdateCoachSchema } from "./dtos";
@@ -66,4 +67,8 @@ export const coachRouter = router({
         handleCoachError(error);
       }
     }),
+  getSetupStatus: protectedProcedure.query(async ({ ctx }) => {
+    const useCase = makeCoachSetupStatusUseCase();
+    return useCase.execute(ctx.userId);
+  }),
 });

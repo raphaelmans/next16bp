@@ -16,8 +16,16 @@ const mockCoachService = {
   deactivateCoach: vi.fn(),
 };
 
+const mockCoachSetupStatusUseCase = {
+  execute: vi.fn(),
+};
+
 vi.mock("@/lib/modules/coach/factories/coach.factory", () => ({
   makeCoachService: () => mockCoachService,
+}));
+
+vi.mock("@/lib/modules/coach-setup/factories/coach-setup.factory", () => ({
+  makeCoachSetupStatusUseCase: () => mockCoachSetupStatusUseCase,
 }));
 
 import { coachRouter } from "@/lib/modules/coach/coach.router";
@@ -77,6 +85,30 @@ describe("coachRouter", () => {
 
     expect(result).toEqual(details);
     expect(mockCoachService.getCoachByUserId).toHaveBeenCalledWith(
+      TEST_IDS.userId,
+    );
+  });
+
+  it("getSetupStatus returns the current coach setup state", async () => {
+    const caller = createCaller();
+    const status = {
+      coachId: TEST_IDS.coachId,
+      hasCoachProfile: true,
+      hasCoachSports: true,
+      hasCoachLocation: false,
+      hasCoachSchedule: false,
+      hasCoachPricing: false,
+      hasPaymentMethod: false,
+      hasVerification: true,
+      isSetupComplete: false,
+      nextStep: "location",
+    };
+    mockCoachSetupStatusUseCase.execute.mockResolvedValue(status);
+
+    const result = await caller.getSetupStatus();
+
+    expect(result).toEqual(status);
+    expect(mockCoachSetupStatusUseCase.execute).toHaveBeenCalledWith(
       TEST_IDS.userId,
     );
   });
