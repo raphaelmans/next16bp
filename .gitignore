@@ -52,3 +52,6 @@ next-env.d.ts
 
 .playwright-cli/
 .firecrawl/
+scripts/output
+/.opencode/
+/.playwright-facebook/
