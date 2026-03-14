@@ -47,6 +47,19 @@ export const appRoutes = {
         `/courts/locations/${province}/${city}/${sport}`,
     },
   },
+  coaches: {
+    base: "/coaches",
+    options: { type: "public" as const },
+    detail: (coachIdOrSlug: string) => `/coaches/${coachIdOrSlug}`,
+    book: (coachIdOrSlug: string) => `/coaches/${coachIdOrSlug}/book`,
+    locations: {
+      province: (province: string) => `/coaches/locations/${province}`,
+      city: (province: string, city: string) =>
+        `/coaches/locations/${province}/${city}`,
+      sport: (province: string, city: string, sport: string) =>
+        `/coaches/locations/${province}/${city}/${sport}`,
+    },
+  },
   places: {
     base: "/venues",
     options: { type: "public" as const },
@@ -250,7 +263,7 @@ export const appRoutes = {
 } satisfies Record<string, RouteConfig | Record<string, unknown>>;
 
 const bookingRoutePattern =
-  /^\/(courts\/[^/]+\/book\/[^/]+|venues\/[^/]+\/book|places\/[^/]+\/book)$/;
+  /^\/(courts\/[^/]+\/book\/[^/]+|venues\/[^/]+\/book|places\/[^/]+\/book|coaches\/[^/]+\/book)$/;
 
 const exactOrChild = (path: string, base: string) =>
   path === base || path.startsWith(`${base}/`);
@@ -278,6 +291,7 @@ const publicBases = [
   appRoutes.listYourVenue.base,
   appRoutes.ownersGetStarted.base,
   appRoutes.courts.base,
+  appRoutes.coaches.base,
   appRoutes.places.base,
   appRoutes.openPlay.base,
   appRoutes.terms.base,
