@@ -369,3 +369,16 @@ The only remaining work in this iteration is mechanical and should not change pr
 - close the single closure task after final verification
 - emit `objective.done` referencing `c2486fb16`
 - exit with the objective in a terminal state and no remaining runtime tasks
+
+## 2026-03-14T23:17:57Z Objective Done Final Verification
+
+Final orchestration verification for the coach recovery objective is complete:
+- created and started the single closure task `task-1773530255-2564` because no ready runtime tasks were present at loop start
+- verified `HEAD` is `32c4e10d9`, which matches the pending `objective.done` event payload for this loop
+- re-checked `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md` and confirmed there are no remaining unchecked checklist items
+
+Remaining loop actions are now strictly terminal-state mechanics:
+- commit this scratchpad closeout note as the atomic closure-task artifact
+- close `task-1773530255-2564`
+- emit `objective.done` referencing `32c4e10d9`
+- verify `ralph tools task list` shows no remaining non-terminal tasks before exiting
