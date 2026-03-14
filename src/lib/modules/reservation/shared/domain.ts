@@ -6,6 +6,11 @@ export type ReservationLifecycleStatus =
   | "EXPIRED"
   | "CANCELLED";
 
+export type BlockingReservationOverlapRecord = {
+  status: ReservationLifecycleStatus;
+  expiresAt: Date | string | null;
+};
+
 export type ReservationGroupRequestedItem = {
   courtId: string;
   startTime: string;
@@ -84,4 +89,14 @@ export function deriveReservationGroupStatus(
   return statuses.reduce((selected, current) =>
     STATUS_PRIORITY[current] < STATUS_PRIORITY[selected] ? current : selected,
   );
+}
+
+export function filterBlockingReservationOverlaps<
+  T extends BlockingReservationOverlapRecord,
+>(records: T[], now: Date = new Date()): T[] {
+  return records.filter((record) => {
+    if (record.status === "CONFIRMED") return true;
+    if (!record.expiresAt) return true;
+    return new Date(record.expiresAt) > now;
+  });
 }

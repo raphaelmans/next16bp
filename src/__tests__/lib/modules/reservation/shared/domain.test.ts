@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   computeReservationGroupTotals,
   deriveReservationGroupStatus,
+  filterBlockingReservationOverlaps,
   findReservationGroupDuplicateItemKeys,
   type ReservationLifecycleStatus,
 } from "@/lib/modules/reservation/shared/domain";
@@ -148,6 +149,54 @@ describe("reservation/shared/domain", () => {
 
       // Assert
       expect(status).toBe("PAYMENT_MARKED_BY_USER");
+    });
+  });
+
+  describe("filterBlockingReservationOverlaps", () => {
+    it("keeps confirmed reservations even when they have expired timestamps", () => {
+      // Arrange
+      const now = new Date("2026-03-14T10:00:00.000Z");
+      const records = [
+        {
+          id: "confirmed",
+          status: "CONFIRMED" as const,
+          expiresAt: "2026-03-14T09:00:00.000Z",
+        },
+      ];
+
+      // Act
+      const result = filterBlockingReservationOverlaps(records, now);
+
+      // Assert
+      expect(result).toEqual(records);
+    });
+
+    it("drops expired non-confirmed reservations and keeps still-valid holds", () => {
+      // Arrange
+      const now = new Date("2026-03-14T10:00:00.000Z");
+      const records = [
+        {
+          id: "expired-created",
+          status: "CREATED" as const,
+          expiresAt: "2026-03-14T09:00:00.000Z",
+        },
+        {
+          id: "valid-awaiting-payment",
+          status: "AWAITING_PAYMENT" as const,
+          expiresAt: "2026-03-14T11:00:00.000Z",
+        },
+        {
+          id: "no-expiry-payment-marked",
+          status: "PAYMENT_MARKED_BY_USER" as const,
+          expiresAt: null,
+        },
+      ];
+
+      // Act
+      const result = filterBlockingReservationOverlaps(records, now);
+
+      // Assert
+      expect(result).toEqual([records[1], records[2]]);
     });
   });
 });

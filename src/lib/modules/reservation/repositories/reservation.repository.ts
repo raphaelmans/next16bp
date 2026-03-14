@@ -30,6 +30,7 @@ import type { DbClient, DrizzleTransaction } from "@/lib/shared/infra/db/types";
 import type { RequestContext } from "@/lib/shared/kernel/context";
 import type { ReservationListItemRecord } from "../dtos/reservation-list.dto";
 import type { ReservationWithDetails } from "../dtos/reservation-owner.dto";
+import { filterBlockingReservationOverlaps } from "../shared/domain";
 
 export type ReservationGroupItemVenueRecord = {
   reservation: ReservationRecord;
@@ -94,6 +95,12 @@ export interface IReservationRepository {
   ): Promise<ReservationListItemRecord[]>;
   findOverlappingActiveByCourtIds(
     courtIds: string[],
+    startTime: Date,
+    endTime: Date,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]>;
+  findOverlappingActiveByCoachIds(
+    coachIds: string[],
     startTime: Date,
     endTime: Date,
     ctx?: RequestContext,
@@ -495,12 +502,36 @@ export class ReservationRepository implements IReservationRepository {
         ),
       );
 
-    const now = new Date();
-    return candidates.filter((record) => {
-      if (record.status === "CONFIRMED") return true;
-      if (!record.expiresAt) return true;
-      return new Date(record.expiresAt) > now;
-    });
+    return filterBlockingReservationOverlaps(candidates);
+  }
+
+  async findOverlappingActiveByCoachIds(
+    coachIds: string[],
+    startTime: Date,
+    endTime: Date,
+    ctx?: RequestContext,
+  ): Promise<ReservationRecord[]> {
+    const client = this.getClient(ctx);
+    if (coachIds.length === 0) return [];
+
+    const candidates = await client
+      .select()
+      .from(reservation)
+      .where(
+        and(
+          inArray(reservation.coachId, coachIds),
+          inArray(reservation.status, [
+            "CREATED",
+            "AWAITING_PAYMENT",
+            "PAYMENT_MARKED_BY_USER",
+            "CONFIRMED",
+          ]),
+          lt(reservation.startTime, endTime),
+          gt(reservation.endTime, startTime),
+        ),
+      );
+
+    return filterBlockingReservationOverlaps(candidates);
   }
 
   async findByCourtIdAndStatus(

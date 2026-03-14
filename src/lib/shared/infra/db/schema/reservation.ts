@@ -12,6 +12,7 @@ import {
 import { authUsers } from "drizzle-orm/supabase";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
+import { coach } from "./coach";
 import { court } from "./court";
 import { reservationStatusEnum, triggeredByRoleEnum } from "./enums";
 import { guestProfile } from "./guest-profile";
@@ -63,15 +64,18 @@ export type InsertReservationGroup = z.infer<
 
 /**
  * Reservation table
- * Booking record linking a player to a court time range
+ * Booking record linking a player to a reservable target time range.
  */
 export const reservation = pgTable(
   "reservation",
   {
     id: uuid("id").primaryKey().defaultRandom(),
-    courtId: uuid("court_id")
-      .notNull()
-      .references(() => court.id, { onDelete: "cascade" }),
+    courtId: uuid("court_id").references(() => court.id, {
+      onDelete: "cascade",
+    }),
+    coachId: uuid("coach_id").references(() => coach.id, {
+      onDelete: "set null",
+    }),
     startTime: timestamp("start_time", { withTimezone: true }).notNull(),
     endTime: timestamp("end_time", { withTimezone: true }).notNull(),
     totalPriceCents: integer("total_price_cents").notNull().default(0),
@@ -105,7 +109,9 @@ export const reservation = pgTable(
   (table) => [
     index("idx_reservation_player").on(table.playerId),
     index("idx_reservation_status").on(table.status),
+    index("idx_reservation_coach").on(table.coachId),
     index("idx_reservation_court_start").on(table.courtId, table.startTime),
+    index("idx_reservation_coach_start").on(table.coachId, table.startTime),
     index("idx_reservation_player_status_created").on(
       table.playerId,
       table.status,
@@ -124,9 +130,18 @@ export const reservation = pgTable(
       .where(
         sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER', 'CONFIRMED')`,
       ),
+    index("idx_reservation_active_coach_time")
+      .on(table.coachId, table.startTime, table.endTime)
+      .where(
+        sql`${table.status} IN ('CREATED', 'AWAITING_PAYMENT', 'PAYMENT_MARKED_BY_USER', 'CONFIRMED')`,
+      ),
     check(
       "chk_reservation_identity",
       sql`((${table.playerId} IS NOT NULL)::int + (${table.guestProfileId} IS NOT NULL)::int) = 1`,
+    ),
+    check(
+      "chk_reservation_target",
+      sql`((${table.courtId} IS NOT NULL)::int + (${table.coachId} IS NOT NULL)::int) = 1`,
     ),
   ],
 );
