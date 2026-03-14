@@ -11,6 +11,7 @@ import { openPlayChatRouter } from "@/lib/modules/chat/open-play-chat.router";
 import { reservationChatRouter } from "@/lib/modules/chat/reservation-chat.router";
 import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.router";
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
+import { coachRouter } from "@/lib/modules/coach/coach.router";
 import { contactRouter } from "@/lib/modules/contact/contact.router";
 import { adminCourtRouter } from "@/lib/modules/court/admin/admin-court.router";
 import { courtRouter } from "@/lib/modules/court/court.router";
@@ -77,6 +78,7 @@ export const appRouter = router({
   ownerSetup: ownerSetupRouter,
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
+  coach: coachRouter,
   chat: chatRouter,
   chatInbox: chatInboxRouter,
   chatMessage: chatMessageRouter,
