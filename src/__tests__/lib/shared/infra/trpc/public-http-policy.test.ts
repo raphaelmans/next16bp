@@ -7,12 +7,12 @@ import {
 describe("public tRPC HTTP policy", () => {
   it("extracts batched procedure paths from the request URL", () => {
     const req = new Request(
-      "https://example.com/api/trpc/place.listSummary,place.cardMetaByIds?batch=1",
+      "https://example.com/api/trpc/place.listSummary,coach.cardMetaByIds?batch=1",
     );
 
     expect(getTrpcProcedurePaths(req)).toEqual([
       "place.listSummary",
-      "place.cardMetaByIds",
+      "coach.cardMetaByIds",
     ]);
   });
 
@@ -29,7 +29,7 @@ describe("public tRPC HTTP policy", () => {
     expect(
       shouldBlockAnonymousTrpcHttpRequest({
         isAuthenticated: true,
-        procedurePaths: ["place.cardMetaByIds"],
+        procedurePaths: ["coach.cardMetaByIds"],
       }),
     ).toBe(false);
   });

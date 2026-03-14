@@ -54,8 +54,41 @@ export const CreateCoachSchema = CoachBaseInputSchema;
 
 export const UpdateCoachSchema = CoachBaseInputSchema.partial();
 
+export const ListCoachesSchema = z.object({
+  q: z.string().trim().min(1).max(200).optional(),
+  province: z.string().trim().min(1).max(100).optional(),
+  city: z.string().trim().min(1).max(100).optional(),
+  sportId: S.ids.sportId.optional(),
+  minRate: z.number().int().min(0).optional(),
+  maxRate: z.number().int().min(0).optional(),
+  minRating: z.number().min(0).max(5).optional(),
+  skillLevel: z.enum(COACH_SKILL_LEVELS).optional(),
+  ageGroup: z.enum(COACH_AGE_GROUPS).optional(),
+  sessionType: z.enum(COACH_SESSION_TYPES).optional(),
+  verified: z.boolean().optional(),
+  venueId: S.ids.placeId.optional(),
+  limit: S.pagination.limit.default(20),
+  offset: S.pagination.offset.default(0),
+});
+
+export const ListCoachCardMediaSchema = z.object({
+  coachIds: z.array(S.ids.coachId),
+});
+
+export const ListCoachCardMetaSchema = z.object({
+  coachIds: z.array(S.ids.coachId),
+});
+
+export const GetCoachByIdOrSlugSchema = z.object({
+  coachIdOrSlug: z.string().trim().min(1).max(200),
+});
+
 export type CreateCoachDTO = z.infer<typeof CreateCoachSchema>;
 export type UpdateCoachDTO = z.infer<typeof UpdateCoachSchema>;
+export type ListCoachesDTO = z.infer<typeof ListCoachesSchema>;
+export type ListCoachCardMediaDTO = z.infer<typeof ListCoachCardMediaSchema>;
+export type ListCoachCardMetaDTO = z.infer<typeof ListCoachCardMetaSchema>;
+export type GetCoachByIdOrSlugDTO = z.infer<typeof GetCoachByIdOrSlugSchema>;
 export type CoachCertificationInput = z.infer<
   typeof CoachCertificationInputSchema
 >;

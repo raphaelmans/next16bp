@@ -1,14 +1,28 @@
 import { TRPCError } from "@trpc/server";
 import { makeCoachSetupStatusUseCase } from "@/lib/modules/coach-setup/factories/coach-setup.factory";
-import { protectedProcedure, router } from "@/lib/shared/infra/trpc/trpc";
+import {
+  protectedProcedure,
+  publicProcedure,
+  router,
+} from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
-import { UpdateCoachSchema } from "./dtos";
+import {
+  GetCoachByIdOrSlugSchema,
+  ListCoachCardMediaSchema,
+  ListCoachCardMetaSchema,
+  ListCoachesSchema,
+  UpdateCoachSchema,
+} from "./dtos";
 import {
   CoachAlreadyExistsError,
+  CoachNotActiveError,
   CoachNotFoundError,
   CoachSlugConflictError,
 } from "./errors/coach.errors";
-import { makeCoachService } from "./factories/coach.factory";
+import {
+  makeCoachDiscoveryService,
+  makeCoachService,
+} from "./factories/coach.factory";
 
 function handleCoachError(error: unknown): never {
   if (error instanceof CoachNotFoundError) {
@@ -25,6 +39,14 @@ function handleCoachError(error: unknown): never {
   ) {
     throw new TRPCError({
       code: "CONFLICT",
+      message: error.message,
+      cause: error,
+    });
+  }
+
+  if (error instanceof CoachNotActiveError) {
+    throw new TRPCError({
+      code: "NOT_FOUND",
       message: error.message,
       cause: error,
     });
@@ -49,6 +71,50 @@ function handleCoachError(error: unknown): never {
 }
 
 export const coachRouter = router({
+  listSummary: publicProcedure
+    .input(ListCoachesSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeCoachDiscoveryService();
+        return await service.listCoachSummaries(input);
+      } catch (error) {
+        handleCoachError(error);
+      }
+    }),
+  cardMediaByIds: publicProcedure
+    .input(ListCoachCardMediaSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeCoachDiscoveryService();
+        return await service.listCoachCardMediaByIds(input.coachIds);
+      } catch (error) {
+        handleCoachError(error);
+      }
+    }),
+  cardMetaByIds: publicProcedure
+    .input(ListCoachCardMetaSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeCoachDiscoveryService();
+        return await service.listCoachCardMetaByIds(input.coachIds);
+      } catch (error) {
+        handleCoachError(error);
+      }
+    }),
+  getByIdOrSlug: publicProcedure
+    .input(GetCoachByIdOrSlugSchema)
+    .query(async ({ input }) => {
+      try {
+        const service = makeCoachDiscoveryService();
+        return await service.getCoachByIdOrSlug(input.coachIdOrSlug);
+      } catch (error) {
+        handleCoachError(error);
+      }
+    }),
+  stats: publicProcedure.query(async () => {
+    const service = makeCoachDiscoveryService();
+    return service.getPublicStats();
+  }),
   getMyProfile: protectedProcedure.query(async ({ ctx }) => {
     try {
       const service = makeCoachService();

@@ -2,6 +2,9 @@ const SERVER_ONLY_ANONYMOUS_PROCEDURES = new Set([
   "place.listSummary",
   "place.cardMediaByIds",
   "place.cardMetaByIds",
+  "coach.listSummary",
+  "coach.cardMediaByIds",
+  "coach.cardMetaByIds",
 ]);
 
 const TRPC_PATH_PREFIX = "/api/trpc/";

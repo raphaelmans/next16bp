@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
+  CoachNotActiveError,
   CoachNotFoundError,
   CoachSlugConflictError,
 } from "@/lib/modules/coach/errors/coach.errors";
@@ -16,12 +17,21 @@ const mockCoachService = {
   deactivateCoach: vi.fn(),
 };
 
+const mockCoachDiscoveryService = {
+  listCoachSummaries: vi.fn(),
+  listCoachCardMediaByIds: vi.fn(),
+  listCoachCardMetaByIds: vi.fn(),
+  getCoachByIdOrSlug: vi.fn(),
+  getPublicStats: vi.fn(),
+};
+
 const mockCoachSetupStatusUseCase = {
   execute: vi.fn(),
 };
 
 vi.mock("@/lib/modules/coach/factories/coach.factory", () => ({
   makeCoachService: () => mockCoachService,
+  makeCoachDiscoveryService: () => mockCoachDiscoveryService,
 }));
 
 vi.mock("@/lib/modules/coach-setup/factories/coach-setup.factory", () => ({
@@ -30,7 +40,7 @@ vi.mock("@/lib/modules/coach-setup/factories/coach-setup.factory", () => ({
 
 import { coachRouter } from "@/lib/modules/coach/coach.router";
 
-const createCaller = () =>
+const createProtectedCaller = () =>
   coachRouter.createCaller({
     requestId: "req-1",
     clientIdentifier: "client-1",
@@ -56,13 +66,98 @@ const createCaller = () =>
     } as unknown,
   } as unknown as Parameters<typeof coachRouter.createCaller>[0]);
 
+const createPublicCaller = () =>
+  coachRouter.createCaller({
+    requestId: "req-public",
+    clientIdentifier: "client-public",
+    clientIdentifierSource: "fallback",
+    session: null,
+    userId: null,
+    cookies: { getAll: () => [], setAll: () => undefined },
+    origin: "http://localhost:3000",
+    log: {
+      info: vi.fn(),
+      warn: vi.fn(),
+      error: vi.fn(),
+      debug: vi.fn(),
+      fatal: vi.fn(),
+      trace: vi.fn(),
+      silent: vi.fn(),
+      level: "info",
+      msgPrefix: "",
+    } as unknown,
+  } as unknown as Parameters<typeof coachRouter.createCaller>[0]);
+
 describe("coachRouter", () => {
   beforeEach(() => {
     vi.clearAllMocks();
   });
 
+  it("listSummary exposes public discovery results", async () => {
+    const caller = createPublicCaller();
+    const payload = {
+      items: [
+        {
+          coach: {
+            id: TEST_IDS.coachId,
+            slug: "coach-alex",
+            name: "Coach Alex",
+            tagline: "Elite private lessons",
+            city: "Cebu City",
+            province: "Cebu",
+            baseHourlyRateCents: 1500,
+            baseHourlyRateCurrency: "PHP",
+            featuredRank: 0,
+            provinceRank: 0,
+          },
+          meta: {
+            sports: [],
+            sessionTypes: ["PRIVATE"],
+            averageRating: 4.8,
+            reviewCount: 12,
+            verified: true,
+          },
+        },
+      ],
+      total: 1,
+    };
+    mockCoachDiscoveryService.listCoachSummaries.mockResolvedValue(payload);
+
+    const result = await caller.listSummary({ limit: 20, offset: 0 });
+
+    expect(result).toEqual(payload);
+    expect(mockCoachDiscoveryService.listCoachSummaries).toHaveBeenCalledWith({
+      limit: 20,
+      offset: 0,
+    });
+  });
+
+  it("getByIdOrSlug maps inactive coaches to NOT_FOUND", async () => {
+    const caller = createPublicCaller();
+    mockCoachDiscoveryService.getCoachByIdOrSlug.mockRejectedValue(
+      new CoachNotActiveError(TEST_IDS.coachId),
+    );
+
+    await expect(
+      caller.getByIdOrSlug({ coachIdOrSlug: "coach-alex" }),
+    ).rejects.toMatchObject({
+      code: "NOT_FOUND",
+    });
+  });
+
+  it("stats returns public coach metrics", async () => {
+    const caller = createPublicCaller();
+    const payload = { totalCoaches: 9, totalCities: 4, totalSports: 3 };
+    mockCoachDiscoveryService.getPublicStats.mockResolvedValue(payload);
+
+    const result = await caller.stats();
+
+    expect(result).toEqual(payload);
+    expect(mockCoachDiscoveryService.getPublicStats).toHaveBeenCalledOnce();
+  });
+
   it("getMyProfile returns the current coach profile payload", async () => {
-    const caller = createCaller();
+    const caller = createProtectedCaller();
     const details = {
       coach: {
         id: TEST_IDS.coachId,
@@ -90,7 +185,7 @@ describe("coachRouter", () => {
   });
 
   it("getSetupStatus returns the current coach setup state", async () => {
-    const caller = createCaller();
+    const caller = createProtectedCaller();
     const status = {
       coachId: TEST_IDS.coachId,
       hasCoachProfile: true,
@@ -114,7 +209,7 @@ describe("coachRouter", () => {
   });
 
   it("updateProfile passes the payload to the service", async () => {
-    const caller = createCaller();
+    const caller = createProtectedCaller();
     const payload = { name: "Coach Alex", sportIds: [] as string[] };
     mockCoachService.updateCoach.mockResolvedValue({
       coach: {
@@ -148,7 +243,7 @@ describe("coachRouter", () => {
   });
 
   it("updateProfile maps coach slug conflicts to CONFLICT", async () => {
-    const caller = createCaller();
+    const caller = createProtectedCaller();
     mockCoachService.updateCoach.mockRejectedValue(
       new CoachSlugConflictError("coach-alex"),
     );
@@ -161,7 +256,7 @@ describe("coachRouter", () => {
   });
 
   it("getMyProfile maps missing coach errors to NOT_FOUND", async () => {
-    const caller = createCaller();
+    const caller = createProtectedCaller();
     mockCoachService.getCoachByUserId.mockRejectedValue(
       new CoachNotFoundError(TEST_IDS.userId),
     );
