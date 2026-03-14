@@ -4,11 +4,6 @@ import type {
   PricingBreakdownAddonLine,
 } from "@/common/pricing-breakdown";
 import { getZonedWeekdayMinuteOfDay } from "@/common/time-zone";
-import type {
-  CourtHoursWindowRecord,
-  CourtPriceOverrideRecord,
-  CourtRateRuleRecord,
-} from "@/lib/shared/infra/db/schema";
 
 export type SchedulePricingResult = {
   endTime: Date;
@@ -32,6 +27,39 @@ export type SchedulePricingFailureReason =
   | "BASE_CURRENCY_MISMATCH"
   | "ADDON_CURRENCY_MISMATCH"
   | "ADDON_CONFIGURATION_INVALID";
+
+/**
+ * Minimal hours-window shape required by the pricing engine.
+ * Satisfied structurally by both CourtHoursWindowRecord and CoachHoursWindowRecord.
+ */
+export type ScheduleHoursWindow = {
+  dayOfWeek: number;
+  startMinute: number;
+  endMinute: number;
+};
+
+/**
+ * Minimal rate-rule shape required by the pricing engine.
+ * Satisfied structurally by both CourtRateRuleRecord and CoachRateRuleRecord.
+ */
+export type ScheduleRateRule = {
+  dayOfWeek: number;
+  startMinute: number;
+  endMinute: number;
+  hourlyRateCents: number;
+  currency: string;
+};
+
+/**
+ * Minimal price-override shape required by the pricing engine.
+ * Currently used by courts only, but kept generic so the helper remains domain-agnostic.
+ */
+export type SchedulePriceOverride = {
+  startTime: Date | string;
+  endTime: Date | string;
+  hourlyRateCents: number;
+  currency: string;
+};
 
 /**
  * Minimal addon shape required by the pricing engine.
@@ -79,7 +107,7 @@ const HOUR_MINUTES = 60;
 function isHourCoveredByHoursWindows(options: {
   dayOfWeek: number;
   minuteOfDay: number;
-  hoursWindows: CourtHoursWindowRecord[];
+  hoursWindows: ScheduleHoursWindow[];
 }): boolean {
   const { dayOfWeek, minuteOfDay, hoursWindows } = options;
   return hoursWindows.some(
@@ -93,7 +121,7 @@ function isHourCoveredByHoursWindows(options: {
 function findHourlyRateFromRules(options: {
   dayOfWeek: number;
   minuteOfDay: number;
-  rateRules: CourtRateRuleRecord[];
+  rateRules: ScheduleRateRule[];
 }): { hourlyRateCents: number; currency: string } | null {
   const { dayOfWeek, minuteOfDay, rateRules } = options;
   const rule = rateRules.find(
@@ -109,7 +137,7 @@ function findHourlyRateFromRules(options: {
 function findHourlyRateFromOverrides(options: {
   segmentStart: Date;
   segmentEnd: Date;
-  overrides?: CourtPriceOverrideRecord[];
+  overrides?: SchedulePriceOverride[];
 }): { hourlyRateCents: number; currency: string } | null {
   const { segmentStart, segmentEnd, overrides } = options;
   if (!overrides || overrides.length === 0) return null;
@@ -142,9 +170,9 @@ export function computeSchedulePriceDetailed(options: {
   startTime: Date;
   durationMinutes: number;
   timeZone?: string | null;
-  hoursWindows: CourtHoursWindowRecord[];
-  rateRules: CourtRateRuleRecord[];
-  priceOverrides?: CourtPriceOverrideRecord[];
+  hoursWindows: ScheduleHoursWindow[];
+  rateRules: ScheduleRateRule[];
+  priceOverrides?: SchedulePriceOverride[];
   addons?: ScheduleAddon[];
   venueAddons?: ScheduleAddon[];
   selectedAddons?: SelectedAddon[];
@@ -352,9 +380,9 @@ export function computeSchedulePrice(options: {
   startTime: Date;
   durationMinutes: number;
   timeZone?: string | null;
-  hoursWindows: CourtHoursWindowRecord[];
-  rateRules: CourtRateRuleRecord[];
-  priceOverrides?: CourtPriceOverrideRecord[];
+  hoursWindows: ScheduleHoursWindow[];
+  rateRules: ScheduleRateRule[];
+  priceOverrides?: SchedulePriceOverride[];
   addons?: ScheduleAddon[];
   venueAddons?: ScheduleAddon[];
   selectedAddons?: SelectedAddon[];

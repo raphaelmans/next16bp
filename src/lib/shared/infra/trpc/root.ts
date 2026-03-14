@@ -13,6 +13,7 @@ import { claimAdminRouter } from "@/lib/modules/claim-request/admin/claim-admin.
 import { claimRequestRouter } from "@/lib/modules/claim-request/claim-request.router";
 import { coachRouter } from "@/lib/modules/coach/coach.router";
 import { coachAddonRouter } from "@/lib/modules/coach-addon/coach-addon.router";
+import { coachAvailabilityRouter } from "@/lib/modules/coach-availability/coach-availability.router";
 import { coachBlockRouter } from "@/lib/modules/coach-block/coach-block.router";
 import { coachHoursRouter } from "@/lib/modules/coach-hours/coach-hours.router";
 import { coachRateRuleRouter } from "@/lib/modules/coach-rate-rule/coach-rate-rule.router";
@@ -83,6 +84,7 @@ export const appRouter = router({
   paymentProof: paymentProofRouter,
   claimRequest: claimRequestRouter,
   coach: coachRouter,
+  coachAvailability: coachAvailabilityRouter,
   coachAddon: coachAddonRouter,
   coachBlock: coachBlockRouter,
   coachHours: coachHoursRouter,
