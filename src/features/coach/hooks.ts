@@ -17,12 +17,15 @@ export type CoachBlockListRange = {
   endTime: string;
 };
 
-export function useQueryCoachSetupStatus() {
+export function useQueryCoachSetupStatus(options?: { enabled?: boolean }) {
+  const isEnabled = options?.enabled ?? true;
+
   return useFeatureQuery(
     ["coach", "getSetupStatus"],
     coachApi.queryCoachGetSetupStatus,
     undefined,
     {
+      enabled: isEnabled,
       staleTime: 0,
       refetchOnMount: "always",
     },

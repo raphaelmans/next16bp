@@ -3,6 +3,7 @@
 import {
   Building2,
   CalendarDays,
+  GraduationCap,
   type LucideIcon,
   Search,
   Shield,
@@ -52,9 +53,18 @@ function QuickActionCard({
 interface QuickActionsProps {
   isAdmin?: boolean;
   isOwner?: boolean;
+  coachHref?: string;
+  coachTitle?: string;
+  coachDescription?: string;
 }
 
-export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
+export function QuickActions({
+  isAdmin,
+  isOwner,
+  coachHref,
+  coachTitle = "Become a Coach",
+  coachDescription = "Set up your coach profile and offerings",
+}: QuickActionsProps) {
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <QuickActionCard
@@ -75,6 +85,16 @@ export function QuickActions({ isAdmin, isOwner }: QuickActionsProps) {
         href={appRoutes.account.profile}
         description="Update your personal information"
       />
+
+      {coachHref && (
+        <QuickActionCard
+          title={coachTitle}
+          icon={GraduationCap}
+          href={coachHref}
+          description={coachDescription}
+          className="border-border/80 bg-muted/20 hover:bg-muted/40"
+        />
+      )}
 
       {isOwner && (
         <QuickActionCard

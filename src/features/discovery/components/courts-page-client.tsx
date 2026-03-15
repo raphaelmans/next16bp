@@ -30,6 +30,10 @@ import {
 } from "@/components/ui/pagination";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
+  buildCoachDiscoveryEntryLabel,
+  buildCoachDiscoveryHrefFromCourtFilters,
+} from "@/features/discovery/coach-cross-discovery";
+import {
   AppliedFilterChips,
   DiscoveryPlaceCard,
   EmptyResults,
@@ -445,6 +449,23 @@ function CourtsPageContent({
     initialResolvedLocation,
     provincesCities,
   ]);
+  const selectedSportName =
+    sports.find((sport) => sport.id === effectiveSportId)?.name ?? null;
+  const coachDiscoveryHref = useMemo(
+    () =>
+      buildCoachDiscoveryHrefFromCourtFilters({
+        q: filters.q,
+        province: effectiveProvince,
+        city: effectiveCity,
+        sportId: effectiveSportId,
+        sports: sports.map((sport) => ({ id: sport.id, slug: sport.slug })),
+      }),
+    [effectiveCity, effectiveProvince, effectiveSportId, filters.q, sports],
+  );
+  const coachDiscoveryLabel = buildCoachDiscoveryEntryLabel({
+    locationLabel,
+    sportName: selectedSportName,
+  });
 
   // ── Applied chip removal handlers (write directly to URL) ──
   const removeProvince = useCallback(() => {
@@ -572,6 +593,13 @@ function CourtsPageContent({
               </span>
               <span className="text-border">|</span>
               <Link
+                href={coachDiscoveryHref}
+                className="hover:text-foreground hover:underline"
+              >
+                Explore coaches
+              </Link>
+              <span className="text-border">|</span>
+              <Link
                 href={appRoutes.submitVenue.base}
                 className="text-primary hover:underline"
               >
@@ -595,6 +623,13 @@ function CourtsPageContent({
               <span>
                 {total} result{total !== 1 ? "s" : ""}
               </span>
+              <span className="text-border">|</span>
+              <Link
+                href={coachDiscoveryHref}
+                className="hover:text-foreground hover:underline"
+              >
+                Explore coaches
+              </Link>
               <span className="text-border">|</span>
               <Link
                 href={appRoutes.submitVenue.base}
@@ -772,6 +807,8 @@ function CourtsPageContent({
           <EmptyResults
             query={filters.q ?? undefined}
             onClearFilters={hasClearableFilters ? clearAllFilters : undefined}
+            alternativeHref={coachDiscoveryHref}
+            alternativeLabel={coachDiscoveryLabel}
           />
         )}
       </div>

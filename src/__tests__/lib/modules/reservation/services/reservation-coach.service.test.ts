@@ -73,9 +73,9 @@ const hoursFromNowIso = (hours: number) => {
 function createHarness() {
   const reservationRepositoryFns = {
     findById: vi.fn<() => Promise<ReservationRecord | null>>(async () => null),
-    findOverlappingActiveByCoachIds: vi.fn<
-      () => Promise<ReservationRecord[]>
-    >(async () => []),
+    findOverlappingActiveByCoachIds: vi.fn<() => Promise<ReservationRecord[]>>(
+      async () => [],
+    ),
     create: vi.fn(async (data: Partial<ReservationRecord>) =>
       toReservationRecord({
         id: RESERVATION_ID,

@@ -68,11 +68,17 @@ export function HomeSearchForm({
           <span className="text-xs text-muted-foreground/60 font-medium font-heading">
             Explore:
           </span>
+          <Link
+            href={appRoutes.coaches.base}
+            className="inline-flex min-h-9 items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
+          >
+            Find Coaches
+          </Link>
           {POPULAR_DISCOVERY_LINKS.map((link) => (
             <Link
               key={link.href}
               href={link.href}
-              className="inline-flex items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
+              className="inline-flex min-h-9 items-center gap-1 px-3 py-1.5 rounded-full border border-border text-xs font-medium font-heading text-muted-foreground transition-all hover:border-primary hover:text-primary hover:bg-primary/5"
             >
               {link.label}
             </Link>

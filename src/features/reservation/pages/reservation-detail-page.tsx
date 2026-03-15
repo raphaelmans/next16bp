@@ -9,13 +9,13 @@ import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
-import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   formatCurrency,
   formatDateShort,
   formatTime,
   formatTimeRange,
 } from "@/common/format";
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   getPlayerReservationDetailPath,
   PLAYER_RESERVATION_STEP_QUERY_PARAM,
@@ -174,34 +174,12 @@ export default function ReservationDetailPage({
       ? reservationId
       : undefined;
   }, [isGroupReservation, payableAwaitingItems, reservation, reservationId]);
-
-  if (isCoachReservation && !coachRecord) {
-    return (
-      <Container className="py-6">
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">
-              Coach details are unavailable for this reservation.
-            </p>
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  }
-
-  if (!isCoachReservation && (!courtRecord || !placeRecord)) {
-    return (
-      <Container className="py-6">
-        <Card>
-          <CardContent className="py-12 text-center">
-            <p className="text-muted-foreground">
-              Venue details are unavailable for this reservation.
-            </p>
-          </CardContent>
-        </Card>
-      </Container>
-    );
-  }
+  const coachDetailsMissing = isCoachReservation && !coachRecord;
+  const venueContext =
+    !isCoachReservation && courtRecord && placeRecord
+      ? { courtRecord, placeRecord }
+      : null;
+  const venueDetailsMissing = !isCoachReservation && !venueContext;
 
   const groupExpiresInMinutes = useMemo(() => {
     const expiries = payableAwaitingItems
@@ -444,10 +422,7 @@ export default function ReservationDetailPage({
     );
   }
 
-  if (
-    !reservation ||
-    (isCoachReservation ? !coachRecord : !courtRecord || !placeRecord)
-  ) {
+  if (!reservation) {
     return (
       <Container className="py-6">
         <div className="text-center">
@@ -463,25 +438,54 @@ export default function ReservationDetailPage({
     );
   }
 
+  if (coachDetailsMissing) {
+    return (
+      <Container className="py-6">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              Coach details are unavailable for this reservation.
+            </p>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (venueDetailsMissing) {
+    return (
+      <Container className="py-6">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              Venue details are unavailable for this reservation.
+            </p>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
   const court = !isCoachReservation
     ? {
-        id: courtRecord.id,
-        name: `${placeRecord.name} - ${courtRecord.label}`,
-        address: placeRecord.address,
-        city: placeRecord.city,
+        id: venueContext.courtRecord.id,
+        name: `${venueContext.placeRecord.name} - ${venueContext.courtRecord.label}`,
+        address: venueContext.placeRecord.address,
+        city: venueContext.placeRecord.city,
         coverImageUrl: placePhotos[0]?.url,
-        latitude: placeRecord.latitude
-          ? Number.parseFloat(placeRecord.latitude)
+        latitude: venueContext.placeRecord.latitude
+          ? Number.parseFloat(venueContext.placeRecord.latitude)
           : undefined,
-        longitude: placeRecord.longitude
-          ? Number.parseFloat(placeRecord.longitude)
+        longitude: venueContext.placeRecord.longitude
+          ? Number.parseFloat(venueContext.placeRecord.longitude)
           : undefined,
       }
     : null;
-  const venueHref =
-    !isCoachReservation && placeRecord
-      ? appRoutes.places.detail(placeRecord.slug ?? placeRecord.id)
-      : undefined;
+  const venueHref = !isCoachReservation
+    ? appRoutes.places.detail(
+        venueContext.placeRecord.slug ?? venueContext.placeRecord.id,
+      )
+    : undefined;
 
   const organizationForDisplay = organizationRecord
     ? {
@@ -491,7 +495,7 @@ export default function ReservationDetailPage({
     : undefined;
 
   const effectiveReservationPolicy =
-    !isCoachReservation && placeRecord.placeType === "RESERVABLE"
+    !isCoachReservation && venueContext.placeRecord.placeType === "RESERVABLE"
       ? reservationPolicy
       : null;
 
@@ -589,9 +593,13 @@ export default function ReservationDetailPage({
     return (
       <Container className="py-6">
         <ReservationExpired
-          placeId={!isCoachReservation ? placeRecord.id : undefined}
+          placeId={
+            !isCoachReservation ? venueContext.placeRecord.id : undefined
+          }
           courtName={
-            isCoachReservation ? `Coach: ${coachRecord.name}` : court!.name
+            isCoachReservation
+              ? `Coach: ${coachRecord.name}`
+              : (court?.name ?? "Reservation")
           }
           slotDate={slotDate}
           slotTime={slotTime}
@@ -681,7 +689,7 @@ export default function ReservationDetailPage({
                 />
               ) : (
                 <BookingDetailsCard
-                  court={court!}
+                  court={court}
                   timeSlot={transformedTimeSlot}
                   venueHref={venueHref}
                 />
@@ -907,7 +915,7 @@ export default function ReservationDetailPage({
               ) : (
                 <>
                   <BookingDetailsCard
-                    court={court!}
+                    court={court}
                     timeSlot={transformedTimeSlot}
                     venueHref={venueHref}
                   />
@@ -1171,7 +1179,7 @@ export default function ReservationDetailPage({
               status={reservation.status}
               reservationTotalPriceCents={reservation.totalPriceCents}
               reservationCurrency={reservation.currency}
-              court={court!}
+              court={court}
               organization={organization}
               onCancel={() => setShowCancelDialog(true)}
               canCancel={canCancel}

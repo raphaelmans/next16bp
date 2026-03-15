@@ -367,9 +367,7 @@ export function CoachReservationDetailPage({
                   Expires At
                 </dt>
                 <dd className="mt-1">
-                  {formatShortDateTime(
-                    reservation.expiresAt,
-                  )}
+                  {formatShortDateTime(reservation.expiresAt)}
                 </dd>
               </div>
             )}
@@ -475,9 +473,7 @@ export function CoachReservationDetailPage({
                     </p>
                     {event.createdAt && (
                       <p className="text-xs text-muted-foreground">
-                        {formatShortDateTime(
-                          String(event.createdAt),
-                        )}
+                        {formatShortDateTime(String(event.createdAt))}
                       </p>
                     )}
                   </div>

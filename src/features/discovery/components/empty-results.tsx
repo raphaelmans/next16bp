@@ -1,6 +1,7 @@
 "use client";
 
-import { MapPin } from "lucide-react";
+import { ArrowRight, MapPin } from "lucide-react";
+import Link from "next/link";
 import { appRoutes } from "@/common/app-routes";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,9 +16,16 @@ import {
 interface EmptyResultsProps {
   query?: string;
   onClearFilters?: () => void;
+  alternativeHref?: string;
+  alternativeLabel?: string;
 }
 
-export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
+export function EmptyResults({
+  query,
+  onClearFilters,
+  alternativeHref,
+  alternativeLabel,
+}: EmptyResultsProps) {
   return (
     <Empty>
       <EmptyHeader>
@@ -32,15 +40,25 @@ export function EmptyResults({ query, onClearFilters }: EmptyResultsProps) {
         </EmptyDescription>
       </EmptyHeader>
       <EmptyContent>
-        {onClearFilters ? (
-          <Button variant="outline" onClick={onClearFilters}>
-            Clear filters
-          </Button>
-        ) : (
-          <Button asChild variant="outline">
-            <a href={appRoutes.courts.base}>Browse all courts</a>
-          </Button>
-        )}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          {onClearFilters ? (
+            <Button variant="outline" onClick={onClearFilters}>
+              Clear filters
+            </Button>
+          ) : (
+            <Button asChild variant="outline">
+              <a href={appRoutes.courts.base}>Browse all courts</a>
+            </Button>
+          )}
+          {alternativeHref && alternativeLabel ? (
+            <Button asChild variant="ghost">
+              <Link href={alternativeHref}>
+                {alternativeLabel}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </Button>
+          ) : null}
+        </div>
       </EmptyContent>
     </Empty>
   );

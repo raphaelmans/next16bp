@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { useQueryAuthSession } from "@/features/auth/hooks";
+import { useQueryCoachSetupStatus } from "@/features/coach/hooks";
 import {
   ProfileCompletionBanner,
   QuickActions,
@@ -25,6 +26,9 @@ export default function HomePage() {
   const router = useRouter();
   const { data: sessionUser, isLoading: sessionLoading } =
     useQueryAuthSession();
+  const coachSetupStatus = useQueryCoachSetupStatus({
+    enabled: !!sessionUser,
+  });
   const { data: ownerOnboardingIntent } = useOwnerOnboardingIntent();
   const setOwnerOnboardingIntent = useSetOwnerOnboardingIntent();
   const {
@@ -144,6 +148,21 @@ export default function HomePage() {
       <QuickActions
         isAdmin={sessionUser.role === "admin"}
         isOwner={!!organization}
+        coachHref={
+          !coachSetupStatus.isLoading
+            ? coachSetupStatus.data?.coachId
+              ? appRoutes.coach.dashboard
+              : appRoutes.coach.getStarted
+            : undefined
+        }
+        coachTitle={
+          coachSetupStatus.data?.coachId ? "Coach Portal" : "Become a Coach"
+        }
+        coachDescription={
+          coachSetupStatus.data?.coachId
+            ? "Manage your coaching profile and bookings"
+            : "Set up your coach profile, schedule, and pricing"
+        }
       />
 
       <UpcomingReservations

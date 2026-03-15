@@ -171,7 +171,7 @@ const baseReservation = {
   totalPriceCents: 250000,
   currency: "PHP",
   createdAt: "2026-03-15T01:00:00.000Z",
-  expiresAt: "2026-03-15T04:00:00.000Z",
+  expiresAt: "2099-03-15T04:00:00.000Z",
   cancellationReason: null,
   pingOwnerCount: 0,
 };

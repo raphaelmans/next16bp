@@ -29,11 +29,26 @@ export function HomeNavbar() {
           </Button>
         </form>
 
+        <Button
+          variant="ghost"
+          asChild
+          className="hidden md:inline-flex font-heading text-foreground"
+        >
+          <Link href={appRoutes.coaches.base}>Find Coaches</Link>
+        </Button>
+
         <div className="ml-auto hidden md:flex items-center gap-3">
           <HomeNavbarAuthActionsLoader variant="desktop" />
         </div>
 
         <div className="ml-auto flex md:hidden items-center gap-2">
+          <Button
+            variant="ghost"
+            asChild
+            className="font-heading text-foreground text-xs sm:text-sm"
+          >
+            <Link href={appRoutes.coaches.base}>Coaches</Link>
+          </Button>
           <HomeNavbarAuthActionsLoader variant="mobile" />
         </div>
       </div>

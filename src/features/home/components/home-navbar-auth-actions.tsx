@@ -9,6 +9,7 @@ import {
   useQueryAuthSession,
   useQueryAuthUserPreference,
 } from "@/features/auth/hooks";
+import { useQueryCoachSetupStatus } from "@/features/coach/hooks";
 import { UserDropdown } from "@/features/discovery/components/user-dropdown";
 
 type HomeNavbarAuthActionsVariant = "desktop" | "mobile";
@@ -23,6 +24,9 @@ export function HomeNavbarAuthActions({
   const { mutate: logout, isPending: isSigningOut } = useMutAuthLogout();
   const { data: organizations } = useQueryAuthMyOrganizations(!!sessionUser);
   const { data: userPreference } = useQueryAuthUserPreference(!!sessionUser);
+  const coachSetupStatus = useQueryCoachSetupStatus({
+    enabled: !!sessionUser,
+  });
 
   if (sessionLoading && !sessionUser) {
     return variant === "desktop" ? (
@@ -63,6 +67,12 @@ export function HomeNavbarAuthActions({
   const listYourVenueHref = isOwner
     ? appRoutes.organization.places.new
     : appRoutes.organization.getStarted;
+  const coachShortcutHref = coachSetupStatus.data?.coachId
+    ? appRoutes.coach.dashboard
+    : appRoutes.coach.getStarted;
+  const coachShortcutLabel = coachSetupStatus.data?.coachId
+    ? "Coach Portal"
+    : "Become a Coach";
 
   const handleSignOut = () => {
     logout(undefined, {
@@ -75,6 +85,13 @@ export function HomeNavbarAuthActions({
   if (variant === "mobile") {
     return (
       <>
+        {!coachSetupStatus.isLoading ? (
+          <Button variant="ghost" asChild className="font-heading text-xs">
+            <Link href={coachShortcutHref}>
+              {coachSetupStatus.data?.coachId ? "Coach" : "Coach Setup"}
+            </Link>
+          </Button>
+        ) : null}
         <Button
           variant="ghost"
           asChild
@@ -97,6 +114,11 @@ export function HomeNavbarAuthActions({
 
   return (
     <>
+      {!coachSetupStatus.isLoading ? (
+        <Button variant="ghost" asChild className="font-heading">
+          <Link href={coachShortcutHref}>{coachShortcutLabel}</Link>
+        </Button>
+      ) : null}
       <Button variant="ghost" asChild className="font-heading text-primary">
         <Link href={listYourVenueHref}>List Your Venue</Link>
       </Button>

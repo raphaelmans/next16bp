@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KudosCourts – Find Your Court</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        /* =============================================================================
+           KudosCourts Design System - Logo-Aligned Colors
+           ============================================================================= */
+        
+        :root {
+            /* Brand Colors (from logo) */
+            --primary: #0D9488;           /* Teal */
+            --primary-dark: #0F766E;
+            --primary-light: #CCFBF1;
+            --accent: #F97316;            /* Orange */
+            --accent-light: #FFEDD5;
+            --destructive: #DC2626;       /* Red */
+            --destructive-light: #FEE2E2;
+            
+            /* Semantic Colors */
+            --success: #059669;
+            --success-light: #ECFDF5;
+            --warning: #D97706;
+            --warning-light: #FFFBEB;
+            
+            /* Neutrals (warm-tinted) */
+            --background: #FAFAF9;
+            --foreground: #1A1917;
+            --card: #FFFFFF;
+            --muted: #F5F5F4;
+            --muted-foreground: #78716C;
+            --border: #E7E5E4;
+            
+            /* Typography */
+            --font-heading: 'Outfit', ui-sans-serif, system-ui, sans-serif;
+            --font-body: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+            --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+            
+            /* Radius */
+            --radius-sm: 6px;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 2px rgba(26, 25, 23, 0.04);
+            --shadow-md: 0 1px 3px rgba(26, 25, 23, 0.04), 0 4px 12px rgba(26, 25, 23, 0.03);
+            --shadow-lg: 0 4px 6px rgba(26, 25, 23, 0.04), 0 10px 24px rgba(26, 25, 23, 0.06);
+            --shadow-hover: 0 8px 30px rgba(26, 25, 23, 0.08);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            background: var(--background);
+            color: var(--foreground);
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.01em;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           HEADER
+           ───────────────────────────────────────────────────────────────────────── */
+        header {
+            background: var(--card);
+            border-bottom: 1px solid var(--border);
+            padding: 14px 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--foreground);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.02em;
+        }
+
+        .logo-icon {
+            width: 36px;
+            height: 36px;
+            flex-shrink: 0;
+        }
+
+        .logo-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-link {
+            font-family: var(--font-body);
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            text-decoration: none;
+            padding: 10px 18px;
+            border-radius: var(--radius-md);
+            transition: all 0.2s;
+        }
+
+        .nav-link:hover {
+            background: var(--primary-light);
+            color: var(--primary);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           MAIN CONTAINER
+           ───────────────────────────────────────────────────────────────────────── */
+        main {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px 24px;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           SEARCH SECTION
+           ───────────────────────────────────────────────────────────────────────── */
+        .search-section {
+            margin-bottom: 36px;
+        }
+
+        .search-title {
+            font-family: var(--font-heading);
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+            color: var(--foreground);
+        }
+
+        .search-subtitle {
+            font-family: var(--font-body);
+            color: var(--muted-foreground);
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+
+        .search-bar {
+            display: flex;
+            gap: 12px;
+            max-width: 600px;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-family: var(--font-body);
+            background: var(--card);
+            transition: all 0.2s;
+            color: var(--foreground);
+        }
+
+        .search-input::placeholder {
+            color: var(--muted-foreground);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        .search-btn {
+            padding: 14px 28px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-size: 15px;
+            font-weight: 600;
+            font-family: var(--font-heading);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           BENTO GRID
+           ───────────────────────────────────────────────────────────────────────── */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 20px;
+        }
+
+        .bento-card {
+            background: var(--card);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border);
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-md);
+        }
+
+        .bento-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        /* Card Sizes */
+        .card-featured { grid-column: span 8; grid-row: span 2; }
+        .card-medium { grid-column: span 4; }
+        .card-small { grid-column: span 4; }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           COURT CARD CONTENT
+           ───────────────────────────────────────────────────────────────────────── */
+        .court-image {
+            width: 100%;
+            height: 180px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-featured .court-image {
+            height: 260px;
+        }
+
+        .court-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Gradient overlays using brand colors */
+        .court-image.gradient-teal {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        }
+        .court-image.gradient-orange {
+            background: linear-gradient(135deg, #FB923C 0%, var(--accent) 100%);
+        }
+        .court-image.gradient-success {
+            background: linear-gradient(135deg, #10b981 0%, var(--success) 100%);
+        }
+        .court-image.gradient-warning {
+            background: linear-gradient(135deg, #fbbf24 0%, var(--warning) 100%);
+        }
+        .court-image.gradient-mixed {
+            background: linear-gradient(135deg, var(--primary) 0%, #14b8a6 50%, #22d3d1 100%);
+        }
+
+        /* Location pin overlay (matching logo) */
+        .location-pin {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, #FB923C 0%, var(--accent) 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+        }
+
+        .location-pin::after {
+            content: '';
+            width: 20px;
+            height: 20px;
+            background: white;
+            border-radius: 50%;
+        }
+
+        .court-badge {
+            position: absolute;
+            top: 14px;
+            left: 14px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-family: var(--font-heading);
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-free {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .badge-paid {
+            background: var(--primary-light);
+            color: var(--primary-dark);
+        }
+
+        .badge-contact {
+            background: var(--warning-light);
+            color: var(--warning);
+        }
+
+        .court-content {
+            padding: 22px;
+        }
+
+        .court-name {
+            font-family: var(--font-heading);
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: var(--foreground);
+        }
+
+        .court-location {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--muted-foreground);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        .court-location svg {
+            color: var(--accent);
+        }
+
+        .court-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 14px;
+            font-family: var(--font-body);
+            font-size: 13px;
+            color: var(--muted-foreground);
+        }
+
+        .court-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .court-action {
+            margin-top: 18px;
+            padding-top: 18px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .court-price {
+            font-family: var(--font-heading);
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--foreground);
+        }
+
+        .court-price span {
+            font-family: var(--font-body);
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--muted-foreground);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           BUTTONS
+           ───────────────────────────────────────────────────────────────────────── */
+        .btn-reserve {
+            padding: 11px 22px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: var(--radius-md);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reserve:hover {
+            background: var(--primary-dark);
+            transform: translateY(-1px);
+        }
+
+        .btn-contact {
+            padding: 11px 22px;
+            background: transparent;
+            color: var(--foreground);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            font-family: var(--font-heading);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-contact:hover {
+            background: var(--muted);
+            border-color: var(--muted-foreground);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           TIME SLOTS
+           ───────────────────────────────────────────────────────────────────────── */
+        .slots-preview {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-top: 18px;
+        }
+
+        .slot {
+            padding: 10px 6px;
+            background: var(--muted);
+            border-radius: var(--radius-sm);
+            text-align: center;
+            font-family: var(--font-body);
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--muted-foreground);
+            border: 1px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .slot:hover:not(.booked) {
+            border-color: var(--primary);
+            color: var(--primary);
+            background: var(--primary-light);
+        }
+
+        .slot.available {
+            background: var(--success-light);
+            color: var(--success);
+        }
+
+        .slot.available:hover {
+            border-color: var(--success);
+        }
+
+        .slot.booked {
+            background: var(--muted);
+            color: var(--muted-foreground);
+            text-decoration: line-through;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           SECTION LABEL
+           ───────────────────────────────────────────────────────────────────────── */
+        .section-label {
+            font-family: var(--font-heading);
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           AD BANNER
+           ───────────────────────────────────────────────────────────────────────── */
+        .ad-banner {
+            grid-column: span 12;
+            background: linear-gradient(90deg, var(--muted) 0%, #f1f1f0 100%);
+            border-radius: var(--radius-xl);
+            padding: 18px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px dashed var(--border);
+        }
+
+        .ad-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .ad-tag {
+            font-family: var(--font-heading);
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--muted-foreground);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .ad-text {
+            font-family: var(--font-body);
+            font-size: 14px;
+            color: var(--muted-foreground);
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           ANIMATIONS
+           ───────────────────────────────────────────────────────────────────────── */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .bento-card {
+            animation: fadeInUp 0.5s ease forwards;
+            opacity: 0;
+        }
+
+        .bento-card:nth-child(1) { animation-delay: 0.05s; }
+        .bento-card:nth-child(2) { animation-delay: 0.10s; }
+        .bento-card:nth-child(3) { animation-delay: 0.15s; }
+        .bento-card:nth-child(4) { animation-delay: 0.20s; }
+        .bento-card:nth-child(5) { animation-delay: 0.25s; }
+        .bento-card:nth-child(6) { animation-delay: 0.30s; }
+
+        .ad-banner {
+            animation: fadeInUp 0.5s ease forwards;
+            animation-delay: 0.20s;
+            opacity: 0;
+        }
+
+        /* ─────────────────────────────────────────────────────────────────────────
+           RESPONSIVE
+           ───────────────────────────────────────────────────────────────────────── */
+        @media (max-width: 900px) {
+            .bento-grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .card-featured { grid-column: span 6; }
+            .card-medium { grid-column: span 6; }
+            .card-small { grid-column: span 6; }
+        }
+
+        @media (max-width: 600px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .card-featured, .card-medium, .card-small {
+                grid-column: span 1;
+            }
+            .search-bar {
+                flex-direction: column;
+            }
+            .search-title {
+                font-size: 1.75rem;
+            }
+            .slots-preview {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .ad-banner {
+                flex-direction: column;
+                text-align: center;
+                gap: 12px;
+            }
+            .ad-content {
+                flex-direction: column;
+                gap: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <div class="logo-icon">
+                    <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#0F766E"/>
+                                <stop offset="100%" style="stop-color:#0D9488"/>
+                            </linearGradient>
+                            <linearGradient id="orangeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" style="stop-color:#FB923C"/>
+                                <stop offset="100%" style="stop-color:#F97316"/>
+                            </linearGradient>
+                        </defs>
+                        <!-- Background -->
+                        <rect width="512" height="512" rx="96" fill="url(#bgGrad)"/>
+                        <!-- Court (square) -->
+                        <g transform="translate(96, 96)">
+                            <!-- Court outline -->
+                            <rect x="0" y="0" width="320" height="320" rx="24" stroke="white" stroke-width="16" fill="rgba(255,255,255,0.1)"/>
+                            <!-- Net line (center horizontal) -->
+                            <line x1="0" y1="160" x2="320" y2="160" stroke="white" stroke-width="14"/>
+                            <!-- Kitchen lines -->
+                            <line x1="0" y1="96" x2="320" y2="96" stroke="white" stroke-width="10" opacity="0.85"/>
+                            <line x1="0" y1="224" x2="320" y2="224" stroke="white" stroke-width="10" opacity="0.85"/>
+                            <!-- Center line (vertical) -->
+                            <line x1="160" y1="0" x2="160" y2="320" stroke="white" stroke-width="8" opacity="0.5"/>
+                            <!-- Location pin -->
+                            <circle cx="160" cy="160" r="48" fill="url(#orangeGrad)"/>
+                            <circle cx="160" cy="160" r="24" fill="white"/>
+                        </g>
+                    </svg>
+                </div>
+                KudosCourts
+            </div>
+            <nav>
+                <a href="#" class="nav-link">My Reservations</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="search-section">
+            <h1 class="search-title">Find your court</h1>
+            <p class="search-subtitle">Discover and reserve courts near you</p>
+            <div class="search-bar">
+                <input type="text" class="search-input" placeholder="Search by location or court name...">
+                <button class="search-btn">Search</button>
+            </div>
+        </section>
+
+        <div class="bento-grid">
+            <!-- Featured Court (Teal gradient) -->
+            <div class="bento-card card-featured">
+                <div class="court-image gradient-teal">
+                    <span class="court-badge badge-free">Free</span>
+                    <div class="location-pin"></div>
+                </div>
+                <div class="court-content">
+                    <h3 class="court-name">Makati Sports Complex</h3>
+                    <div class="court-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Makati City, Metro Manila
+                    </div>
+                    <div class="court-meta">
+                        <span>🎾 4 Courts</span>
+                        <span>🕐 6AM – 10PM</span>
+                        <span>💡 Lighted</span>
+                        <span>🚗 Parking</span>
+                    </div>
+                    <div class="section-label" style="margin-top: 20px;">Available Today</div>
+                    <div class="slots-preview">
+                        <div class="slot available">6:00 AM</div>
+                        <div class="slot available">7:00 AM</div>
+                        <div class="slot booked">8:00 AM</div>
+                        <div class="slot available">9:00 AM</div>
+                        <div class="slot booked">10:00 AM</div>
+                        <div class="slot available">11:00 AM</div>
+                        <div class="slot available">12:00 PM</div>
+                        <div class="slot booked">1:00 PM</div>
+                    </div>
+                    <div class="court-action">
+                        <div class="court-price">Free <span>per hour</span></div>
+                        <button class="btn-reserve">Reserve Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Medium Card (Mixed teal gradient) -->
+            <div class="bento-card card-medium">
+                <div class="court-image gradient-mixed">
+                    <span class="court-badge badge-paid">₱150/hr</span>
+                </div>
+                <div class="court-content">
+                    <h3 class="court-name">BGC Active Zone</h3>
+                    <div class="court-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Taguig City
+                    </div>
+                    <div class="court-meta">
+                        <span>🎾 2 Courts</span>
+                        <span>🕐 7AM – 9PM</span>
+                    </div>
+                    <div class="court-action">
+                        <div class="court-price">₱150 <span>per hour</span></div>
+                        <button class="btn-reserve">Reserve</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Small Card (Warning/Contact) -->
+            <div class="bento-card card-small">
+                <div class="court-image gradient-warning">
+                    <span class="court-badge badge-contact">Contact</span>
+                </div>
+                <div class="court-content">
+                    <h3 class="court-name">Village Club Courts</h3>
+                    <div class="court-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Quezon City
+                    </div>
+                    <div class="court-meta">
+                        <span>🎾 6 Courts</span>
+                    </div>
+                    <div class="court-action">
+                        <span style="font-size: 13px; color: var(--muted-foreground);">Via Facebook/Viber</span>
+                        <button class="btn-contact">Contact</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ad Banner -->
+            <div class="ad-banner">
+                <div class="ad-content">
+                    <span class="ad-tag">Sponsored</span>
+                    <span class="ad-text">🏓 Get 20% off your first paddle at PickleGear PH – Use code: KUDOS20</span>
+                </div>
+                <button class="btn-contact">Shop Now</button>
+            </div>
+
+            <!-- Small Card (Success/Green) -->
+            <div class="bento-card card-small">
+                <div class="court-image gradient-success">
+                    <span class="court-badge badge-paid">₱200/hr</span>
+                </div>
+                <div class="court-content">
+                    <h3 class="court-name">Ortigas Pickle Hub</h3>
+                    <div class="court-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Pasig City
+                    </div>
+                    <div class="court-meta">
+                        <span>🎾 3 Courts</span>
+                        <span>☕ Cafe</span>
+                    </div>
+                    <div class="court-action">
+                        <div class="court-price">₱200 <span>per hour</span></div>
+                        <button class="btn-reserve">Reserve</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Small Card (Orange accent) -->
+            <div class="bento-card card-small">
+                <div class="court-image gradient-orange">
+                    <span class="court-badge badge-free">Free</span>
+                </div>
+                <div class="court-content">
+                    <h3 class="court-name">Alabang Town Center</h3>
+                    <div class="court-location">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Muntinlupa City
+                    </div>
+                    <div class="court-meta">
+                        <span>🎾 2 Courts</span>
+                        <span>🏬 Mall Access</span>
+                    </div>
+                    <div class="court-action">
+                        <div class="court-price">Free <span>per hour</span></div>
+                        <button class="btn-reserve">Reserve</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

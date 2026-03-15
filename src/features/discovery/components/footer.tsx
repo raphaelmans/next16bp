@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 const FOOTER_LINKS = {
   discover: [
     { name: "Browse Courts", href: appRoutes.courts.base },
+    { name: "Browse Coaches", href: appRoutes.coaches.base },
     {
       name: "Cebu City Courts",
       href: appRoutes.courts.locations.city("cebu", "cebu-city"),
@@ -15,10 +16,11 @@ const FOOTER_LINKS = {
       name: "Manila Courts",
       href: appRoutes.courts.locations.city("metro-manila", "manila"),
     },
-    {
-      name: "Player Guides",
-      href: appRoutes.guides.base,
-    },
+    { name: "Player Guides", href: appRoutes.guides.base },
+  ],
+  coaches: [
+    { name: "Become a Coach", href: appRoutes.coach.getStarted },
+    { name: "Coach Discovery", href: appRoutes.coaches.base },
   ],
   owners: [
     { name: "List Your Venue", href: appRoutes.ownersGetStarted.base },
@@ -44,7 +46,7 @@ export function Footer() {
       <Container>
         <div className="py-12">
           {/* Main Footer Content */}
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-8">
+          <div className="grid grid-cols-2 md:grid-cols-6 gap-8">
             {/* Brand */}
             <div className="col-span-2 md:col-span-1">
               <Link href={appRoutes.index.base} className="inline-block">
@@ -65,6 +67,25 @@ export function Footer() {
               </h3>
               <ul className="space-y-2">
                 {FOOTER_LINKS.discover.map((link) => (
+                  <li key={link.href}>
+                    <Link
+                      href={link.href}
+                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                    >
+                      {link.name}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            {/* For Coaches */}
+            <div>
+              <h3 className="font-heading font-semibold text-foreground mb-4">
+                For Coaches
+              </h3>
+              <ul className="space-y-2">
+                {FOOTER_LINKS.coaches.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
