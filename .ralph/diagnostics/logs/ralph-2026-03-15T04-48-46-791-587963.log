@@ -8,3 +8,7 @@
 [2m2026-03-14T20:55:57.235553Z[0m [32m INFO[0m [2mralph::loop_runner[0m[2m:[0m All done! LOOP_COMPLETE detected in solo output.
 [2m2026-03-14T20:55:57.235598Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Wrapping up: completed. 1 iterations in 7m 10s. [3mreason[0m[2m=[0mcompleted [3miterations[0m[2m=[0m1 [3mduration[0m[2m=[0m7m 10s
 [2m2026-03-14T20:55:57.237419Z[0m [32m INFO[0m [2mralph_core::landing[0m[2m:[0m Beginning landing sequence [3mloop_id[0m[2m=[0mprimary
+[2m2026-03-14T20:55:57.308699Z[0m [32m INFO[0m [2mralph_core::landing[0m[2m:[0m Auto-committed changes during landing [3mloop_id[0m[2m=[0mprimary [3mcommit[0m[2m=[0mSome("784ae92ba6efe1e99223e7042d4b5689f5efacde") [3mfiles[0m[2m=[0m18
+[2m2026-03-14T20:56:00.776146Z[0m [32m INFO[0m [2mralph_core::landing[0m[2m:[0m Generated handoff file [3mloop_id[0m[2m=[0mprimary [3mpath[0m[2m=[0m/home/raphaelm/kudoscourts/.ralph/agent/handoff.md [3mcompleted[0m[2m=[0m25 [3mopen[0m[2m=[0m0
+[2m2026-03-14T20:56:00.803870Z[0m [32m INFO[0m [2mralph_core::loop_completion[0m[2m:[0m Landing completed with auto-commit [3mcommit[0m[2m=[0mSome("784ae92ba6efe1e99223e7042d4b5689f5efacde") [3mhandoff[0m[2m=[0m/home/raphaelm/kudoscourts/.ralph/agent/handoff.md
+[2m2026-03-14T20:56:00.803892Z[0m [32m INFO[0m [2mralph::loop_runner[0m[2m:[0m Primary loop landed successfully [3mcommitted[0m[2m=[0mtrue [3mhandoff[0m[2m=[0m/home/raphaelm/kudoscourts/.ralph/agent/handoff.md [3mopen_tasks[0m[2m=[0m0

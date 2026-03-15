@@ -1,0 +1,126 @@
+[2m2026-03-14T20:58:41.781562Z[0m [33m WARN[0m [2mralph::preflight[0m[2m:[0m Config file "presets/pdd-to-code-assist.yml" not found, using defaults
+[2m2026-03-14T20:58:41.796576Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Interactive mode requested but stdout is not a TTY, falling back to autonomous
+[2m2026-03-14T20:58:41.797392Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T20:58:41.797405Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T20:58:41.798116Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 11 memories from store
+[2m2026-03-14T20:58:41.798142Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 11 memories (4072 chars) into prompt
+[2m2026-03-14T20:58:41.798243Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 25 closed) into prompt
+[2m2026-03-14T21:07:03.143364Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T21:07:03.143390Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T21:07:03.143483Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 15 memories from store
+[2m2026-03-14T21:07:03.143497Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 15 memories (5938 chars) into prompt
+[2m2026-03-14T21:07:03.143525Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (4028 chars) into prompt
+[2m2026-03-14T21:07:03.143583Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 8 open, 26 closed) into prompt
+[2m2026-03-14T21:21:53.895895Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T21:21:53.895948Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T21:21:53.896062Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 16 memories from store
+[2m2026-03-14T21:21:53.896083Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 16 memories (6365 chars) into prompt
+[2m2026-03-14T21:21:53.896114Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (6288 chars) into prompt
+[2m2026-03-14T21:21:53.896181Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 7 open, 27 closed) into prompt
+[2m2026-03-14T21:38:35.983136Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T21:38:35.983172Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T21:38:35.983311Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 22 memories from store
+[2m2026-03-14T21:38:35.983329Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 22 memories (9157 chars) into prompt
+[2m2026-03-14T21:38:35.983354Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (9468 chars) into prompt
+[2m2026-03-14T21:38:35.983419Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 6 open, 28 closed) into prompt
+[2m2026-03-14T21:57:52.216733Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T21:57:52.216788Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T21:57:52.216929Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 25 memories from store
+[2m2026-03-14T21:57:52.216947Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 25 memories (10176 chars) into prompt
+[2m2026-03-14T21:57:52.216973Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (14364 chars) into prompt
+[2m2026-03-14T21:57:52.217044Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 5 open, 29 closed) into prompt
+[2m2026-03-14T22:07:26.412748Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T22:07:26.412776Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T22:07:26.412904Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 28 memories from store
+[2m2026-03-14T22:07:26.412922Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 28 memories (11191 chars) into prompt
+[2m2026-03-14T22:07:26.412951Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16137 chars) into prompt
+[2m2026-03-14T22:07:26.413019Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 4 open, 30 closed) into prompt
+[2m2026-03-14T22:17:17.784871Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T22:17:17.784903Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T22:17:17.785042Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 30 memories from store
+[2m2026-03-14T22:17:17.785061Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 30 memories (12381 chars) into prompt
+[2m2026-03-14T22:17:17.785099Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16013 chars) into prompt
+[2m2026-03-14T22:17:17.785161Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 3 open, 31 closed) into prompt
+[2m2026-03-14T22:32:00.678352Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T22:32:00.678392Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T22:32:00.678564Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 38 memories from store
+[2m2026-03-14T22:32:00.678590Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 38 memories (16124 chars) into prompt
+[2m2026-03-14T22:32:00.678631Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16100 chars) into prompt
+[2m2026-03-14T22:32:00.678692Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 2 open, 32 closed) into prompt
+[2m2026-03-14T22:45:27.746394Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T22:45:27.746425Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T22:45:27.746590Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 39 memories from store
+[2m2026-03-14T22:45:27.746613Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 39 memories (16577 chars) into prompt
+[2m2026-03-14T22:45:27.746660Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (15732 chars) into prompt
+[2m2026-03-14T22:45:27.746723Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (1 ready, 1 open, 33 closed) into prompt
+[2m2026-03-14T23:11:16.700169Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:11:16.700234Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:11:16.700469Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:11:16.700503Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:11:16.700568Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16434 chars) into prompt
+[2m2026-03-14T23:11:16.700630Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 34 closed) into prompt
+[2m2026-03-14T23:13:18.143090Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:13:18.143117Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:13:18.143307Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:13:18.143334Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:13:18.143378Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16565 chars) into prompt
+[2m2026-03-14T23:13:18.143438Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 35 closed) into prompt
+[2m2026-03-14T23:15:32.341051Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:15:32.341086Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:15:32.341320Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:15:32.341349Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:15:32.341395Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16553 chars) into prompt
+[2m2026-03-14T23:15:32.341450Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 36 closed) into prompt
+[2m2026-03-14T23:17:04.274360Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:17:04.274385Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:17:04.274551Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:17:04.274573Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:17:04.274621Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16630 chars) into prompt
+[2m2026-03-14T23:17:04.274685Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 37 closed) into prompt
+[2m2026-03-14T23:19:04.668478Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:19:04.668502Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:19:04.668669Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:19:04.668691Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:19:04.668752Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16647 chars) into prompt
+[2m2026-03-14T23:19:04.668810Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 38 closed) into prompt
+[2m2026-03-14T23:20:33.306789Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:20:33.306827Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:20:33.307030Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 43 memories from store
+[2m2026-03-14T23:20:33.307055Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 43 memories (18186 chars) into prompt
+[2m2026-03-14T23:20:33.307129Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16716 chars) into prompt
+[2m2026-03-14T23:20:33.307195Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 38 closed) into prompt
+[2m2026-03-14T23:22:56.707070Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Output indicated `ralph emit`, but no event became readable before fallback logic [3mhat[0m[2m=[0mralph
+[2m2026-03-14T23:22:56.961203Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:22:56.961338Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:22:56.961648Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 46 memories from store
+[2m2026-03-14T23:22:56.961689Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 46 memories (19295 chars) into prompt
+[2m2026-03-14T23:22:56.961775Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (15969 chars) into prompt
+[2m2026-03-14T23:22:56.961880Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 39 closed) into prompt
+[2m2026-03-14T23:24:10.308045Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Output indicated `ralph emit`, but no event became readable before fallback logic [3mhat[0m[2m=[0mralph
+[2m2026-03-14T23:24:10.560081Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:24:10.560137Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:24:10.560428Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 46 memories from store
+[2m2026-03-14T23:24:10.560464Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 46 memories (19295 chars) into prompt
+[2m2026-03-14T23:24:10.560552Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16674 chars) into prompt
+[2m2026-03-14T23:24:10.560649Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 39 closed) into prompt
+[2m2026-03-14T23:24:59.422522Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Output indicated `ralph emit`, but no event became readable before fallback logic [3mhat[0m[2m=[0mralph
+[2m2026-03-14T23:24:59.675329Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:24:59.675390Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:24:59.675678Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 46 memories from store
+[2m2026-03-14T23:24:59.675714Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 46 memories (19295 chars) into prompt
+[2m2026-03-14T23:24:59.675806Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16644 chars) into prompt
+[2m2026-03-14T23:24:59.675910Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 39 closed) into prompt
+[2m2026-03-14T23:26:16.661620Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Output indicated `ralph emit`, but no event became readable before fallback logic [3mhat[0m[2m=[0mralph
+[2m2026-03-14T23:26:16.916316Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:26:16.916372Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:26:16.916649Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 46 memories from store
+[2m2026-03-14T23:26:16.916687Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 46 memories (19295 chars) into prompt
+[2m2026-03-14T23:26:16.916779Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16735 chars) into prompt
+[2m2026-03-14T23:26:16.916870Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 39 closed) into prompt
+[2m2026-03-14T23:27:03.513373Z[0m [33m WARN[0m [2mralph::loop_runner[0m[2m:[0m Output indicated `ralph emit`, but no event became readable before fallback logic [3mhat[0m[2m=[0mralph
+[2m2026-03-14T23:27:03.764955Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Memory injection check: enabled=true, inject=Auto, workspace_root="/home/raphaelm/kudoscourts"
+[2m2026-03-14T23:27:03.765013Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Looking for memories at: "/home/raphaelm/kudoscourts/.ralph/agent/memories.md" (exists: true)
+[2m2026-03-14T23:27:03.765336Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Successfully loaded 46 memories from store
+[2m2026-03-14T23:27:03.765379Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting 46 memories (19295 chars) into prompt
+[2m2026-03-14T23:27:03.765472Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting scratchpad (16794 chars) into prompt
+[2m2026-03-14T23:27:03.765554Z[0m [32m INFO[0m [2mralph_core::event_loop[0m[2m:[0m Injecting ready tasks (0 ready, 0 open, 39 closed) into prompt

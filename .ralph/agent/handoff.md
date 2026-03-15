@@ -1,11 +1,11 @@
 # Session Handoff
 
-_Generated: 2026-03-14 18:21:11 UTC_
+_Generated: 2026-03-14 20:56:00 UTC_
 
 ## Git Context
 
 - **Branch:** `temp-clean`
-- **HEAD:** 0c9c012eb: chore: auto-commit before merge (loop primary)
+- **HEAD:** 784ae92ba: chore: auto-commit before merge (loop primary)
 
 ## Tasks
 
@@ -29,22 +29,29 @@ _Generated: 2026-03-14 18:21:11 UTC_
 - [x] Fix logo orange gradient — replace with teal
 - [x] Create coach implementation backlog
 - [x] Append coach audit addendum to spec
+- [x] Step 1: Fix player coach reservation detail
+- [x] Finalize Step 1 coach reservation detail
+- [x] Finalize coach Step 1 objective
+- [x] Finalize coach Step 1 closeout
+- [x] Create coach-payment module (errors, DTOs, repository, service, factory, router)
+- [x] Extend reservation getPaymentInfo to resolve coach payment methods
+- [x] Register coachPayment router in tRPC root and validate with lint
 
 
 ## Key Files
 
 Recently modified:
 
-- `.agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md`
-- `.agents/planning/2026-03-15-coach-feature-review/idea-honing.md`
-- `.agents/planning/2026-03-15-coach-feature-review/research/01-surface-map.md`
-- `.agents/planning/2026-03-15-coach-feature-review/research/02-gap-analysis.md`
-- `.agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md`
-- `.agents/planning/2026-03-15-coach-feature-review/rough-idea.md`
-- `.gitignore`
+- `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md`
+- `.agents/planning/2026-03-15-coach-feature-review/research/04-full-user-journey-audit.md`
+- `.ralph/agent/decisions.md`
 - `.ralph/agent/handoff.md`
 - `.ralph/agent/memories.md`
 - `.ralph/agent/scratchpad.md`
+- `.ralph/agent/summary.md`
+- `.ralph/agent/tasks.jsonl`
+- `.ralph/current-events`
+- `.ralph/current-loop-id`
 
 ## Next Session
 
@@ -53,5 +60,5 @@ Session completed successfully. No pending work.
 **Original objective:**
 
 ```
-Read .agents/planning/2026-03-15-coach-feature-review/research/01-surface-map.md, .agents/planning/2026-03-15-coach-feature-review/research/02-gap-analysis.md, .agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md, and .agents/planning/2026-03-15-coach-feature-review/04-implementation-backlog.md. Then update specs/coach-feature/PROMPT.md by preserving the original spec and appending a new section that captures the current implementation audit, implemented areas, partia...
+Implement Step 2 from .agents/planning/2026-03-15-coach-feature-review/implementation/plan.md: add coach payment methods backend and player payment-info support. Read .agents/planning/2026-03-15-coach-feature-review/research/04-full-user-journey-audit.md, .agents/planning/2026-03-15-coach-feature-review/research/03-acceptance-audit.md, and .agents/planning/2026-03-15-coach-feature-review/implementation/plan.md first. Create the coach payment methods repository/service/router around coach_payment...
 ```

@@ -93,3 +93,23 @@ Use this file to capture consequential decisions and their confidence scores.
 - Reasoning: Step 9 needs post-booking truth, not just pre-submit pricing. Recomputing from mutable coach addon config would make old reservations drift, while a new table is too large for this narrow increment. A stored pricing snapshot matches the existing `PricingBreakdown` shape, keeps venue behavior untouched, and gives the player detail page stable add-on lines immediately.
 - Reversibility: medium
 - Timestamp (UTC ISO 8601): 2026-03-14T22:35:55Z
+
+### DEC-009
+
+- Decision: Scope Step 10 around the core coach booking lifecycle and the shared reservation chat system
+- Chosen Option: Extend the existing reservation notification/chat infrastructure for coach reservations by adding coach recipient routing plus core lifecycle events (`created`, `awaiting_payment`, `payment_marked`, `confirmed`, `rejected`, `cancelled`), teach the shared reservation chat service to support coach reservations, and expose chat entry points in the player and coach reservation detail surfaces
+- Confidence: 77
+- Alternatives Considered: build a separate coach-only chat module, delay notification wiring until every optional event variant (`expired`, `pinged`) is implemented, add a coach-specific reservation detail/chat route instead of adapting the shared reservation chat flow
+- Reasoning: Step 10 is the last recovery slice and needs a demoable collaboration path without destabilizing the existing venue stack. Reusing the shared reservation chat and notification seams minimizes API churn, keeps the player reservation detail flow unified, and covers the acceptance-critical booking lifecycle while leaving narrower optional variants as follow-up work if needed.
+- Reversibility: medium
+- Timestamp (UTC ISO 8601): 2026-03-15T05:22:00Z
+
+### DEC-010
+
+- Decision: Finish the terminal closeout loop without creating another objective-closeout commit or re-emitting `objective.done`
+- Chosen Option: Treat the existing `21ff2962a` closeout commit and the already-recorded `objective.done` event as authoritative, append the final loop verification to the scratchpad only, and close the runtime task after re-checking terminal task state
+- Confidence: 78
+- Alternatives Considered: create one more docs-only commit and emit a fresh `objective.done`, re-emit `objective.done` without a new commit, leave the loop task open and wait for another iteration to resolve the duplicate-event ambiguity
+- Reasoning: The event log already contains `objective.done` with payload `{\"closureCommit\":\"21ff2962a\",\"head\":\"21ff2962a\",\"objective\":\"coach-recovery\",\"status\":\"complete\"}`. Creating a new commit would invalidate that recorded closure reference, and emitting another completion signal would add more duplicate terminal events to a log that already contains several. The safest closeout is to preserve the existing completion record, document the verification, and leave runtime task state terminal.
+- Reversibility: easy
+- Timestamp (UTC ISO 8601): 2026-03-14T23:21:54Z

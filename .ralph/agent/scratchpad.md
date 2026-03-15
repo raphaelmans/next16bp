@@ -394,3 +394,72 @@ Atomic work for this iteration:
 - create/start the single objective-closeout runtime task
 - commit this scratchpad note as the closure-task artifact without touching product code
 - close the task, verify there are no remaining non-terminal objective tasks, and emit `objective.done` referencing `4f1d62b5f`
+
+## 2026-03-14T23:21:54Z Objective Terminal Loop Verification
+
+This final loop verified that the coach recovery objective is already in a terminal done state and only needed runtime-task cleanup:
+- `ralph tools task list` returned no pre-existing non-terminal tasks, so this loop created and started one closure task: `task-1773530481-5395`
+- `git rev-parse --short=10 HEAD` returned `21ff2962ab`, and `git log -1 --oneline` confirmed the active closure commit is `21ff2962a docs(coach): finalize objective closeout`
+- `rg -n -- '^- \\[ \\]|^- \\[x\\]' '.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md'` showed all ten plan steps remain checked
+- `.ralph/events-20260314-205841.jsonl` already contains `objective.done` with payload `{"closureCommit":"21ff2962a","head":"21ff2962a","objective":"coach-recovery","status":"complete"}`, so this loop must not emit another duplicate completion event or create a new commit that would invalidate the recorded closure reference
+
+Remaining actions after this note:
+- close `task-1773530481-5395`
+- verify `ralph tools task list` is empty/terminal
+- exit the loop with `LOOP_COMPLETE`
+
+## 2026-03-15T07:34:00Z Terminal Loop Completion Check
+
+This recovery objective remains terminally complete and does not need another closure artifact:
+- `ralph tools task ready --format json` and `ralph tools task list --format json` both returned `[]`, so there are no remaining non-terminal runtime tasks to dispatch or clean up
+- `git rev-parse --short=10 HEAD` still returns `21ff2962ab`, and `git log -1 --oneline` still confirms `21ff2962a docs(coach): finalize objective closeout`
+- `.ralph/events-20260314-205841.jsonl` already contains `objective.done` for `{"closureCommit":"21ff2962a","head":"21ff2962a","objective":"coach-recovery","status":"complete"}`, which matches the current closure commit
+- `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md` still has `checked=10` and `unchecked=0`
+
+Conclusion for this iteration:
+- do not create another closure task
+- do not create another commit
+- do not emit another duplicate `objective.done`
+- terminate the loop with `LOOP_COMPLETE`
+
+## 2026-03-15T07:39:00Z Resume Event Verification
+
+Handled the pending `task.resume` recovery event as a pure terminal-state verification pass:
+- re-ran `ralph tools task ready --format json` and `ralph tools task list --format json`; both still returned `[]`
+- re-verified `HEAD` remains `21ff2962ab` / `21ff2962a docs(coach): finalize objective closeout`
+- re-verified `.ralph/events-20260314-205841.jsonl` still contains the non-duplicate terminal record `{"closureCommit":"21ff2962a","head":"21ff2962a","objective":"coach-recovery","status":"complete"}`
+- re-verified the implementation checklist still shows all ten steps checked in `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md`
+
+Terminal action for this iteration:
+- no new runtime task
+- no new commit
+- no new event emission
+- exit with `LOOP_COMPLETE`
+
+## 2026-03-15T07:45:00Z Resume Event Final Verification
+
+Handled the current `task.resume` event as another terminal-state verification pass and confirmed nothing new needs dispatch:
+- re-ran `ralph tools task ready --format json` and `ralph tools task list --format json`; both again returned `[]`
+- re-verified `HEAD` is still `21ff2962ab`, preserving the recorded closure commit `21ff2962a docs(coach): finalize objective closeout`
+- re-verified `.ralph/events-20260314-205841.jsonl` still contains the terminal `objective.done` payload for `{"closureCommit":"21ff2962a","head":"21ff2962a","objective":"coach-recovery","status":"complete"}`
+- re-verified `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md` still has all ten steps checked
+
+Terminal action for this iteration:
+- no new runtime task
+- no new commit
+- no new event emission
+- exit with `LOOP_COMPLETE`
+
+## 2026-03-15T07:52:00Z Resume Event Terminal Verification
+
+Verified the terminal objective state again for the current recovery loop:
+- `$RALPH_BIN tools task ready --format json` and `$RALPH_BIN tools task list --format json` both returned `[]`, so there are still no non-terminal runtime tasks to dispatch or clean up
+- `git rev-parse --short=10 HEAD` remains `21ff2962ab`, and `git log -1 --oneline` still resolves to `21ff2962a docs(coach): finalize objective closeout`
+- `.ralph/events-20260314-205841.jsonl` still contains the most recent canonical `objective.done` record for `{"closureCommit":"21ff2962a","head":"21ff2962a","objective":"coach-recovery","status":"complete"}`
+- `.agents/planning/2026-03-15-coach-feature-review/implementation/plan.md` still shows all ten recovery steps checked
+
+Terminal action for this iteration:
+- do not create another runtime task
+- do not create another closure commit
+- do not emit another duplicate `objective.done`
+- exit with `LOOP_COMPLETE`
