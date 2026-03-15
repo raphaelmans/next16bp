@@ -451,7 +451,7 @@ export default function CoachBookingPage({
           {selectedSlot && profile && (
             <ProfilePreviewCard
               profile={{
-                displayName: profile.displayName,
+                displayName: profile.displayName ?? undefined,
                 email: profile.email ?? undefined,
                 phone: profile.phoneNumber ?? undefined,
                 avatarUrl: profile.avatarUrl ?? undefined,
