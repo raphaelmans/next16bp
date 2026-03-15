@@ -335,11 +335,20 @@ export function useMutCoachSetAddons(coachId: string) {
 
 // ─── Coach Reservation Hooks ────────────────────────────────────────────────
 
-export function useQueryCoachReservations(filters: GetCoachReservationsDTO) {
+export function useQueryCoachReservations(
+  filters: Omit<GetCoachReservationsDTO, "limit" | "offset"> &
+    Partial<Pick<GetCoachReservationsDTO, "limit" | "offset">>,
+) {
+  const normalizedFilters: GetCoachReservationsDTO = {
+    limit: filters.limit ?? 20,
+    offset: filters.offset ?? 0,
+    ...filters,
+  };
+
   return useFeatureQuery(
     ["reservationCoach", "getForCoach"],
     coachApi.queryReservationCoachGetForCoach,
-    filters,
+    normalizedFilters,
     {
       staleTime: 10_000,
       refetchOnMount: "always",
