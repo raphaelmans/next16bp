@@ -28,6 +28,11 @@ import {
   canonicalizeLeadUrl,
   normalizeLocationSlug,
 } from "../shared/url-normalization";
+import type {
+  CuratedPlaceEnhancementExtraction,
+  CuratedPlaceEnhancementPayload,
+  FacebookCapturedPagePayload,
+} from "./curated-place-enhancement.service";
 
 interface ScriptOptions {
   province: string | null;
@@ -44,20 +49,11 @@ interface ScriptOptions {
   recaptureAll: boolean;
 }
 
-interface CapturedPagePayload {
-  pageUrl: string;
-  title: string;
-  bodyText: string;
-  links: string[];
-  ogTitle: string;
-  ogDescription: string;
-}
-
 interface CapturedPageRecord {
   url: string;
   canonicalUrl: string;
   capturedAt: string;
-  payload: CapturedPagePayload | null;
+  payload: FacebookCapturedPagePayload | null;
   analysis: FacebookPageAnalysis | null;
   error: string | null;
 }
@@ -107,7 +103,9 @@ const FACEBOOK_PAGE_ANALYSIS_SCHEMA = z.object({
   evidence: z.array(z.string()),
 });
 
-type FacebookPageAnalysis = z.infer<typeof FACEBOOK_PAGE_ANALYSIS_SCHEMA>;
+export type FacebookPageAnalysis = z.infer<
+  typeof FACEBOOK_PAGE_ANALYSIS_SCHEMA
+>;
 
 const DEFAULT_LIMIT = 10;
 const DEFAULT_OPTIONS: ScriptOptions = {
@@ -390,7 +388,7 @@ async function closePlaywrightSession(session: PlaywrightSession) {
 async function capturePagePayload(
   session: PlaywrightSession,
   url: string,
-): Promise<CapturedPagePayload> {
+): Promise<FacebookCapturedPagePayload> {
   const page = session.page.isClosed()
     ? await session.context.newPage()
     : session.page;
@@ -424,7 +422,7 @@ async function capturePagePayload(
   });
 
   session.page = page;
-  return payload satisfies CapturedPagePayload;
+  return payload satisfies FacebookCapturedPagePayload;
 }
 
 function buildCourtValue(courtCount: number | null): string {
@@ -529,6 +527,34 @@ function buildCsvRow(
   };
 }
 
+function toEnhancementPayload(
+  row: CuratedCsvRow,
+): CuratedPlaceEnhancementPayload {
+  const desiredCourtCount = row.courts
+    .split(";")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0).length;
+
+  return {
+    name: row.name || null,
+    address: row.address || null,
+    websiteUrl: row.website_url || null,
+    facebookUrl: row.facebook_url || null,
+    instagramUrl: row.instagram_url || null,
+    viberInfo: row.viber_contact || null,
+    otherContactInfo: row.other_contact_info || null,
+    amenities: row.amenities
+      .split(";")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0),
+    photoUrls: row.photo_urls
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0),
+    desiredCourtCount: desiredCourtCount > 0 ? desiredCourtCount : null,
+  };
+}
+
 function hasReadyVenueAnalysis(
   item: CapturedPageRecord,
 ): item is CapturedPageRecord & { analysis: FacebookPageAnalysis } {
@@ -544,7 +570,7 @@ function hasReadyVenueAnalysis(
 
 function getPrompt(
   scope: ResolvedCuratedDiscoveryScope,
-  payload: CapturedPagePayload,
+  payload: FacebookCapturedPagePayload,
 ) {
   return [
     "You normalize a public Facebook page lead into a curated pickleball venue row for a Philippines database.",
@@ -574,7 +600,7 @@ function getPrompt(
 
 async function analyzeCapturedPage(
   scope: ResolvedCuratedDiscoveryScope,
-  payload: CapturedPagePayload,
+  payload: FacebookCapturedPagePayload,
   model: string,
 ): Promise<FacebookPageAnalysis> {
   const { object } = await generateObject({
@@ -593,7 +619,7 @@ function hasAnyKeyword(value: string, keywords: string[]): boolean {
 
 function postProcessAnalysis(
   scope: ResolvedCuratedDiscoveryScope,
-  payload: CapturedPagePayload,
+  payload: FacebookCapturedPagePayload,
   analysis: FacebookPageAnalysis,
 ): FacebookPageAnalysis {
   if (analysis.status !== "ready") {
@@ -885,6 +911,123 @@ async function runScope(
   }
 
   return report;
+}
+
+export async function analyzeCapturedFacebookPage(input: {
+  payload: FacebookCapturedPagePayload;
+  city: string;
+  province: string;
+  sportSlug?: string;
+  model?: string;
+}): Promise<{
+  scope: ResolvedCuratedDiscoveryScope;
+  analysis: FacebookPageAnalysis;
+}> {
+  const scope: ResolvedCuratedDiscoveryScope = {
+    sportSlug: input.sportSlug?.trim() || DEFAULT_OPTIONS.sportSlug,
+    provinceSlug: normalizeLocationSlug(input.province),
+    citySlug: normalizeLocationSlug(input.city),
+    provinceName: input.province,
+    cityName: input.city,
+  };
+
+  return {
+    scope,
+    analysis: postProcessAnalysis(
+      scope,
+      input.payload,
+      await analyzeCapturedPage(
+        scope,
+        input.payload,
+        input.model?.trim() || DEFAULT_OPTIONS.model,
+      ),
+    ),
+  };
+}
+
+export function buildCuratedEnhancementFromFacebookAnalysis(input: {
+  scope: ResolvedCuratedDiscoveryScope;
+  requestUrl: string;
+  payload: FacebookCapturedPagePayload;
+  analysis: FacebookPageAnalysis;
+}): CuratedPlaceEnhancementExtraction | null {
+  if (
+    input.analysis.status !== "ready" ||
+    !input.analysis.isVenue ||
+    !input.analysis.isWithinScope ||
+    !input.analysis.name?.trim() ||
+    !input.analysis.address?.trim()
+  ) {
+    return null;
+  }
+
+  return {
+    source: "facebook",
+    payload: toEnhancementPayload(
+      buildCsvRow(input.scope, input.requestUrl, input.analysis),
+    ),
+    evidence: {
+      source: "facebook",
+      requestUrl: input.requestUrl,
+      capturedPage: input.payload,
+      analysis: input.analysis,
+    },
+  };
+}
+
+export async function replayCuratedEnhancementFromFacebookCapture(input: {
+  url: string;
+  city: string;
+  province: string;
+  sportSlug?: string;
+  model?: string;
+  payload: FacebookCapturedPagePayload;
+}): Promise<CuratedPlaceEnhancementExtraction | null> {
+  if (!process.env.OPENAI_API_KEY) {
+    throw new Error("OPENAI_API_KEY environment variable is not set");
+  }
+
+  const analyzed = await analyzeCapturedFacebookPage({
+    payload: input.payload,
+    city: input.city,
+    province: input.province,
+    sportSlug: input.sportSlug,
+    model: input.model,
+  });
+
+  return buildCuratedEnhancementFromFacebookAnalysis({
+    scope: analyzed.scope,
+    requestUrl: input.url,
+    payload: input.payload,
+    analysis: analyzed.analysis,
+  });
+}
+
+export async function extractCuratedEnhancementFromFacebook(input: {
+  url: string;
+  city: string;
+  province: string;
+  sportSlug?: string;
+  model?: string;
+}): Promise<CuratedPlaceEnhancementExtraction | null> {
+  const scope: ResolvedCuratedDiscoveryScope = {
+    sportSlug: input.sportSlug?.trim() || DEFAULT_OPTIONS.sportSlug,
+    provinceSlug: normalizeLocationSlug(input.province),
+    citySlug: normalizeLocationSlug(input.city),
+    provinceName: input.province,
+    cityName: input.city,
+  };
+  const session = await openPlaywrightSession(buildSessionName(scope));
+
+  try {
+    const payload = await capturePagePayload(session, input.url);
+    return replayCuratedEnhancementFromFacebookCapture({
+      ...input,
+      payload,
+    });
+  } finally {
+    await closePlaywrightSession(session);
+  }
 }
 
 export async function runCuratedFacebookPageCaptureCli(cliArgs?: string[]) {

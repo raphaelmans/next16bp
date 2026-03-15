@@ -12,6 +12,10 @@ import {
 } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
 import {
+  redactPlaceDetailsLocale,
+  redactPlaceLocale,
+} from "@/lib/shared/utils/redact-place-fields";
+import {
   CreatePlaceSchema,
   DeletePlaceSchema,
   GetPlaceByIdSchema,
@@ -27,24 +31,6 @@ import {
   PlacePhotoNotFoundError,
 } from "./errors/place.errors";
 import { makePlaceManagementService } from "./factories/place.factory";
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
-
-function redactPlaceDetailsLocale<
-  T extends { place: { country?: string; timeZone?: string } },
->(
-  details: T,
-): Omit<T, "place"> & { place: Omit<T["place"], "country" | "timeZone"> } {
-  return {
-    ...details,
-    place: redactPlaceLocale(details.place),
-  };
-}
 
 function handlePlaceManagementError(error: unknown): never {
   if (

@@ -3,6 +3,7 @@ import {
   adminRateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
+import { redactPlaceLocale } from "@/lib/shared/utils/redact-place-fields";
 import {
   ApproveClaimRequestSchema,
   GetClaimRequestByIdSchema,
@@ -10,13 +11,6 @@ import {
   RejectClaimRequestSchema,
 } from "../dtos";
 import { makeClaimAdminService } from "../factories/claim-request.factory";
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
 
 export const claimAdminRouter = router({
   /**

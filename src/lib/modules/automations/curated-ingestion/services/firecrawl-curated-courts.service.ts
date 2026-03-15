@@ -28,6 +28,10 @@ import {
   isDirectExecution,
   runCliWithOptionalArgs,
 } from "../shared/cli-runtime";
+import type {
+  CuratedPlaceEnhancementExtraction,
+  CuratedPlaceEnhancementPayload,
+} from "./curated-place-enhancement.service";
 
 interface ScriptOptions {
   startUrl: string;
@@ -1287,6 +1291,98 @@ function buildRowFromExtractedRecord(
     courts: courts.join(";"),
     photo_urls: photoUrls.join(","),
   };
+}
+
+function parseDesiredCourtCount(value: string): number | null {
+  const count = value
+    .split(";")
+    .map((item) => item.trim())
+    .filter((item) => item.length > 0).length;
+  return count > 0 ? count : null;
+}
+
+function toEnhancementPayload(
+  row: CuratedCsvRow,
+  sourceUrl: string,
+): CuratedPlaceEnhancementPayload {
+  return {
+    name: row.name || null,
+    address: row.address || null,
+    websiteUrl: row.website_url || sourceUrl || null,
+    facebookUrl: row.facebook_url || null,
+    instagramUrl: row.instagram_url || null,
+    viberInfo: row.viber_contact || null,
+    otherContactInfo: row.other_contact_info || null,
+    amenities: row.amenities
+      .split(";")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0),
+    photoUrls: row.photo_urls
+      .split(",")
+      .map((item) => item.trim())
+      .filter((item) => item.length > 0),
+    desiredCourtCount: parseDesiredCourtCount(row.courts),
+  };
+}
+
+export function buildCuratedEnhancementFromWebsiteExtract(input: {
+  requestUrl: string;
+  sportSlug?: string;
+  extractItem: JsonObject;
+  sourceUrl?: string;
+}): CuratedPlaceEnhancementExtraction | null {
+  const sportSlug = input.sportSlug?.trim() || DEFAULT_OPTIONS.sportSlug;
+  const extracted = pickExtractedRecord(input.extractItem);
+  const sourceUrl =
+    pickSourceUrl(input.extractItem, extracted) ||
+    input.sourceUrl ||
+    input.requestUrl;
+  const row = buildRowFromExtractedRecord(extracted, sportSlug);
+  if (!row) {
+    return null;
+  }
+
+  return {
+    source: "website",
+    payload: toEnhancementPayload(row, sourceUrl),
+    evidence: {
+      source: "website",
+      requestUrl: input.requestUrl,
+      sourceUrl,
+      extractItem: input.extractItem,
+      extractedRecord: extracted,
+    },
+  };
+}
+
+export async function extractCuratedEnhancementFromWebsite(input: {
+  url: string;
+  sportSlug?: string;
+}): Promise<CuratedPlaceEnhancementExtraction | null> {
+  const apiKey = process.env.FIRECRAWL_API_KEY?.trim();
+  if (!apiKey) {
+    throw new Error("FIRECRAWL_API_KEY environment variable is not set");
+  }
+
+  const options: ScriptOptions = {
+    ...DEFAULT_OPTIONS,
+    sportSlug: input.sportSlug?.trim() || DEFAULT_OPTIONS.sportSlug,
+  };
+  const payload = await runExtract(apiKey, options, [input.url]);
+  const items = collectExtractItems(payload);
+
+  for (const item of items) {
+    const extraction = buildCuratedEnhancementFromWebsiteExtract({
+      requestUrl: input.url,
+      sportSlug: options.sportSlug,
+      extractItem: item,
+    });
+    if (extraction) {
+      return extraction;
+    }
+  }
+
+  return null;
 }
 
 function dedupeRowsWithSource(rows: RowWithSource[]): RowWithSource[] {

@@ -18,6 +18,18 @@ export const placeClaimStatusEnum = pgEnum("claim_status", [
 ]);
 
 /**
+ * Place enhancement status enum
+ * Tracks durable scraper enhancement progress per source.
+ */
+export const placeEnhancementStatusEnum = pgEnum("place_enhancement_status", [
+  "NOT_STARTED",
+  "COMPLETED",
+  "FAILED",
+  "SKIPPED",
+  "REVIEW_REQUIRED",
+]);
+
+/**
  * Reservation status enum
  * Tracks the lifecycle of a reservation
  */

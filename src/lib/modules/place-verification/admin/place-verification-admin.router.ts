@@ -6,6 +6,7 @@ import {
   router,
 } from "@/lib/shared/infra/trpc/trpc";
 import { AppError } from "@/lib/shared/kernel/errors";
+import { redactPlaceLocale } from "@/lib/shared/utils/redact-place-fields";
 import {
   ApprovePlaceVerificationSchema,
   GetPlaceVerificationByIdSchema,
@@ -18,13 +19,6 @@ import {
   PlaceVerificationRequestNotFoundError,
 } from "../errors/place-verification.errors";
 import { makePlaceVerificationAdminService } from "../factories/place-verification.factory";
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
 
 function handleAdminPlaceVerificationError(error: unknown): never {
   if (error instanceof PlaceVerificationRequestNotFoundError) {

@@ -1,7 +1,58 @@
 import type { PlaceDetail } from "@/features/discovery/hooks/place-detail";
-import type { PlaceDetails } from "@/lib/modules/place/services/place-discovery.service";
 
-type PlaceDetailsResponse = PlaceDetails;
+type PlaceDetailsResponse = {
+  place: {
+    id: string;
+    slug: string | null;
+    name: string;
+    address: string;
+    city: string;
+    latitude: string | number | null;
+    longitude: string | number | null;
+    extGPlaceId: string | null;
+    timeZone: string;
+    placeType: PlaceDetail["placeType"];
+    claimStatus: PlaceDetail["claimStatus"];
+  };
+  courts: Array<{
+    court: {
+      id: string;
+      label: string;
+      tierLabel: string | null;
+      isActive: boolean;
+    };
+    sport: {
+      id: string;
+      name: string;
+    };
+  }>;
+  photos: Array<{
+    id: string;
+    url: string;
+  }>;
+  sports: Array<{
+    id: string;
+    name: string;
+    slug: string | null;
+  }>;
+  amenities: Array<{
+    name: string | null;
+  }>;
+  contactDetail: {
+    websiteUrl: string | null;
+    facebookUrl: string | null;
+    instagramUrl: string | null;
+    phoneNumber: string | null;
+    viberInfo: string | null;
+    otherContactInfo: string | null;
+  } | null;
+  verification: {
+    status: string;
+    reservationsEnabled: boolean;
+  } | null;
+  hasPaymentMethods?: boolean | null;
+  organizationLogoUrl?: string | null;
+};
 
 const toFiniteNumber = (value: string | number | null | undefined) => {
   if (value === null || value === undefined) return undefined;

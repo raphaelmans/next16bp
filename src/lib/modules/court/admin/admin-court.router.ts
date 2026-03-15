@@ -5,6 +5,7 @@ import {
   adminRateLimitedProcedure,
   router,
 } from "@/lib/shared/infra/trpc/trpc";
+import { redactPlaceLocale } from "@/lib/shared/utils/redact-place-fields";
 import {
   ActivateCourtSchema,
   AdminCourtDetailSchema,
@@ -20,13 +21,6 @@ import {
   UploadCourtPhotoSchema,
 } from "../dtos";
 import { makeAdminCourtService } from "../factories/court.factory";
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
 
 async function getAdminPlaceRevalidationContext(
   adminUserId: string,

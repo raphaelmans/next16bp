@@ -2,10 +2,7 @@ import "server-only";
 
 import { cache } from "react";
 import { mapPlaceDetailsToPlaceDetail } from "@/features/discovery/place-detail/mappers";
-import type { PlaceDetails } from "@/lib/modules/place/services/place-discovery.service";
 import { publicCaller } from "@/trpc/server";
-
-type PlaceDetailsResponse = PlaceDetails;
 
 const getPlaceDetailsByIdOrSlugUncached = async (placeIdOrSlug: string) =>
   publicCaller.place.getByIdOrSlug({ placeIdOrSlug });
@@ -13,6 +10,10 @@ const getPlaceDetailsByIdOrSlugUncached = async (placeIdOrSlug: string) =>
 const getPlaceDetailsByIdOrSlugCached = cache(
   getPlaceDetailsByIdOrSlugUncached,
 );
+
+type PlaceDetailsResponse = Awaited<
+  ReturnType<typeof getPlaceDetailsByIdOrSlugUncached>
+>;
 
 export type PlaceCoreSectionData = {
   placeDetails: PlaceDetailsResponse;

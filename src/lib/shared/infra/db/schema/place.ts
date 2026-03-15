@@ -13,7 +13,11 @@ import {
 } from "drizzle-orm/pg-core";
 import { createInsertSchema, createSelectSchema } from "drizzle-zod";
 import type { z } from "zod";
-import { placeClaimStatusEnum, placeTypeEnum } from "./enums";
+import {
+  placeClaimStatusEnum,
+  placeEnhancementStatusEnum,
+  placeTypeEnum,
+} from "./enums";
 import { organization } from "./organization";
 
 /**
@@ -43,6 +47,36 @@ export const place = pgTable(
     claimStatus: placeClaimStatusEnum("claim_status")
       .notNull()
       .default("UNCLAIMED"),
+    websiteEnhancementStatus: placeEnhancementStatusEnum(
+      "website_enhancement_status",
+    )
+      .notNull()
+      .default("NOT_STARTED"),
+    websiteEnhancementAttemptedAt: timestamp(
+      "website_enhancement_attempted_at",
+      {
+        withTimezone: true,
+      },
+    ),
+    websiteEnhancedAt: timestamp("website_enhanced_at", {
+      withTimezone: true,
+    }),
+    websiteEnhancementError: text("website_enhancement_error"),
+    facebookEnhancementStatus: placeEnhancementStatusEnum(
+      "facebook_enhancement_status",
+    )
+      .notNull()
+      .default("NOT_STARTED"),
+    facebookEnhancementAttemptedAt: timestamp(
+      "facebook_enhancement_attempted_at",
+      {
+        withTimezone: true,
+      },
+    ),
+    facebookEnhancedAt: timestamp("facebook_enhanced_at", {
+      withTimezone: true,
+    }),
+    facebookEnhancementError: text("facebook_enhancement_error"),
     featuredRank: integer("featured_rank").notNull().default(0),
     provinceRank: integer("province_rank").notNull().default(0),
     isActive: boolean("is_active").notNull().default(true),

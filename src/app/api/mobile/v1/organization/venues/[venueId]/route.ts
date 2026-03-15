@@ -16,30 +16,16 @@ import type {
   ApiErrorResponse,
   ApiResponse,
 } from "@/lib/shared/kernel/response";
+import {
+  redactPlaceDetailsLocale,
+  redactPlaceLocale,
+} from "@/lib/shared/utils/redact-place-fields";
 import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
 type Params = Promise<{ venueId: string }>;
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
-
-function redactPlaceDetailsLocale<
-  T extends { place: { country?: string; timeZone?: string } },
->(
-  details: T,
-): Omit<T, "place"> & { place: Omit<T["place"], "country" | "timeZone"> } {
-  return {
-    ...details,
-    place: redactPlaceLocale(details.place),
-  };
-}
 
 const normalizeMobilePlaceInput = (
   raw: Record<string, unknown>,

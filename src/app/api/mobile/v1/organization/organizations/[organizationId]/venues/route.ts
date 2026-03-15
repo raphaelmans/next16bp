@@ -18,6 +18,8 @@ import type {
   ApiErrorResponse,
   ApiResponse,
 } from "@/lib/shared/kernel/response";
+import type { PlaceInternalFieldKey } from "@/lib/shared/utils/redact-place-fields";
+import { redactPlaceLocale } from "@/lib/shared/utils/redact-place-fields";
 import { wrapResponse } from "@/lib/shared/utils/response";
 
 export const runtime = "nodejs";
@@ -28,16 +30,9 @@ type Params = Promise<{ organizationId: string }>;
 type ListMyPlacesMobileResponse = Array<
   Omit<
     PlaceRecord & { verification: PlaceVerificationRecord | null },
-    "country" | "timeZone"
+    PlaceInternalFieldKey
   >
 >;
-
-function redactPlaceLocale<T extends { country?: string; timeZone?: string }>(
-  place: T,
-): Omit<T, "country" | "timeZone"> {
-  const { country: _country, timeZone: _timeZone, ...rest } = place;
-  return rest;
-}
 
 const normalizeMobilePlaceInput = (
   raw: Record<string, unknown>,
