@@ -19,7 +19,7 @@ export interface ICoachHoursService {
 export class CoachHoursService implements ICoachHoursService {
   constructor(
     private coachHoursRepository: ICoachHoursRepository,
-    private coachRepository: ICoachRepository,
+    private coachRepository: Pick<ICoachRepository, "findByUserId">,
     private transactionManager: TransactionManager,
   ) {}
 

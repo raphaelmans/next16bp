@@ -65,8 +65,8 @@ export function CoachDashboardPage() {
     limit: 5,
   });
 
-  const isSetupComplete = setupStatus.data?.setupCompleted ?? false;
-  const coachName = setupStatus.data?.name ?? "Coach";
+  const isSetupComplete = setupStatus.data?.isSetupComplete ?? false;
+  const coachName = "Coach";
 
   return (
     <div className="space-y-6">

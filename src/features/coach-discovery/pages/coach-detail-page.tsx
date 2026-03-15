@@ -362,7 +362,14 @@ async function CoachDetailPageServerSection({
                   averageRating: details.meta.averageRating,
                   reviewCount: details.meta.reviewCount,
                 }}
-                initialReviews={initialReviews}
+                initialReviews={{
+                  items: initialReviews.items.map((item) => ({
+                    ...item,
+                    createdAt: item.createdAt.toISOString(),
+                    updatedAt: item.updatedAt.toISOString(),
+                  })),
+                  total: initialReviews.total,
+                }}
               />
             </div>
 

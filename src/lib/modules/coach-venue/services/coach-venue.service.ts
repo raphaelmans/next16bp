@@ -88,8 +88,9 @@ export class CoachVenueService implements ICoachVenueService {
       invitedByUserId: ownerUserId,
     });
 
-    logger.info("coach_venue.invited", {
+    logger.info({
       coachVenueId: record.id,
+      event: "coach_venue.invited",
       coachId,
       placeId,
       invitedByUserId: ownerUserId,
@@ -117,8 +118,9 @@ export class CoachVenueService implements ICoachVenueService {
       "ACCEPTED",
     );
 
-    logger.info("coach_venue.accepted", {
+    logger.info({
       coachVenueId,
+      event: "coach_venue.accepted",
       coachId: record.coachId,
       placeId: record.placeId,
     });
@@ -149,8 +151,9 @@ export class CoachVenueService implements ICoachVenueService {
       "DECLINED",
     );
 
-    logger.info("coach_venue.declined", {
+    logger.info({
       coachVenueId,
+      event: "coach_venue.declined",
       coachId: record.coachId,
       placeId: record.placeId,
     });
@@ -192,8 +195,9 @@ export class CoachVenueService implements ICoachVenueService {
       "REMOVED",
     );
 
-    logger.info("coach_venue.removed", {
+    logger.info({
       coachVenueId,
+      event: "coach_venue.removed",
       coachId: record.coachId,
       placeId: record.placeId,
       removedByUserId: userId,
@@ -225,8 +229,9 @@ export class CoachVenueService implements ICoachVenueService {
       "REMOVED",
     );
 
-    logger.info("coach_venue.left", {
+    logger.info({
       coachVenueId,
+      event: "coach_venue.left",
       coachId: record.coachId,
       placeId: record.placeId,
     });

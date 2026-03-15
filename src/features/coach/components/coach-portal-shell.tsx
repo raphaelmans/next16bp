@@ -101,7 +101,6 @@ export function CoachPortalShell({ children }: { children: React.ReactNode }) {
                   isActive
                     ? "border-primary/30 bg-primary/10"
                     : "border-border hover:border-primary/20 hover:bg-accent/40",
-                  item.status === "upcoming" && "opacity-70",
                 );
 
                 return (

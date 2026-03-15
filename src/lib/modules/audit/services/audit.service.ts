@@ -85,11 +85,13 @@ export class AuditService implements IAuditService {
 
     // 2. Check if court owner
     let isOwner = false;
-    const courtResult = await client
-      .select()
-      .from(court)
-      .where(eq(court.id, res.courtId))
-      .limit(1);
+    const courtResult = res.courtId
+      ? await client
+          .select()
+          .from(court)
+          .where(eq(court.id, res.courtId))
+          .limit(1)
+      : [];
 
     if (courtResult[0]?.placeId) {
       const placeResult = await client

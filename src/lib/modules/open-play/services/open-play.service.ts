@@ -606,6 +606,9 @@ export class OpenPlayService implements IOpenPlayService {
         throw new OpenPlayStartsInPastError();
       }
 
+      if (!reservationRow.courtId) {
+        throw new CourtNotFoundError(reservationRow.id);
+      }
       const courtRow = await client
         .select({
           id: court.id,
@@ -766,6 +769,9 @@ export class OpenPlayService implements IOpenPlayService {
 
       // Derive sportId from the first court
       const firstCourtId = groupReservations[0].courtId;
+      if (!firstCourtId) {
+        throw new CourtNotFoundError(input.reservationGroupId);
+      }
       const [courtRow] = await client
         .select({ sportId: court.sportId })
         .from(court)

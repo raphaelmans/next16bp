@@ -20,7 +20,7 @@ export interface ICoachRateRuleService {
 export class CoachRateRuleService implements ICoachRateRuleService {
   constructor(
     private coachRateRuleRepository: ICoachRateRuleRepository,
-    private coachRepository: ICoachRepository,
+    private coachRepository: Pick<ICoachRepository, "findByUserId">,
     private transactionManager: TransactionManager,
   ) {}
 

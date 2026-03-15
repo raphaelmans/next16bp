@@ -60,9 +60,7 @@ export const InsertReservationGroupSchema =
   createInsertSchema(reservationGroup);
 
 export type ReservationGroupRecord = z.infer<typeof ReservationGroupSchema>;
-export type InsertReservationGroup = z.infer<
-  typeof InsertReservationGroupSchema
->;
+export type InsertReservationGroup = typeof reservationGroup.$inferInsert;
 
 /**
  * Reservation table
@@ -155,7 +153,7 @@ export const ReservationSchema = createSelectSchema(reservation);
 export const InsertReservationSchema = createInsertSchema(reservation);
 
 export type ReservationRecord = z.infer<typeof ReservationSchema>;
-export type InsertReservation = z.infer<typeof InsertReservationSchema>;
+export type InsertReservation = typeof reservation.$inferInsert;
 
 /**
  * Payment Proof table
@@ -184,7 +182,7 @@ export const PaymentProofSchema = createSelectSchema(paymentProof);
 export const InsertPaymentProofSchema = createInsertSchema(paymentProof);
 
 export type PaymentProofRecord = z.infer<typeof PaymentProofSchema>;
-export type InsertPaymentProof = z.infer<typeof InsertPaymentProofSchema>;
+export type InsertPaymentProof = typeof paymentProof.$inferInsert;
 
 /**
  * Reservation Event table (Audit Log)
@@ -221,6 +219,4 @@ export const InsertReservationEventSchema =
   createInsertSchema(reservationEvent);
 
 export type ReservationEventRecord = z.infer<typeof ReservationEventSchema>;
-export type InsertReservationEvent = z.infer<
-  typeof InsertReservationEventSchema
->;
+export type InsertReservationEvent = typeof reservationEvent.$inferInsert;

@@ -19,6 +19,7 @@ import { STORAGE_BUCKETS } from "@/lib/modules/storage/dtos";
 import type {
   CoachAddonRateRuleRecord,
   CoachAddonRecord,
+  CoachBlockRecord,
   CoachHoursWindowRecord,
   CoachRateRuleRecord,
   CoachRecord,
@@ -38,29 +39,29 @@ const PROFILE_ID = "profile-1";
 const RESERVATION_ID = "reservation-1";
 
 const toCoachAddonRateRuleRecord = (
-  value: Partial<CoachAddonRateRuleRecord>,
+  value: Partial<CoachAddonRateRuleRecord> = {},
 ): CoachAddonRateRuleRecord => value as CoachAddonRateRuleRecord;
 const toCoachAddonRecord = (
-  value: Partial<CoachAddonRecord>,
+  value: Partial<CoachAddonRecord> = {},
 ): CoachAddonRecord => value as CoachAddonRecord;
 const toCoachHoursWindowRecord = (
-  value: Partial<CoachHoursWindowRecord>,
+  value: Partial<CoachHoursWindowRecord> = {},
 ): CoachHoursWindowRecord => value as CoachHoursWindowRecord;
 const toCoachRateRuleRecord = (
-  value: Partial<CoachRateRuleRecord>,
+  value: Partial<CoachRateRuleRecord> = {},
 ): CoachRateRuleRecord => value as CoachRateRuleRecord;
-const toCoachRecord = (value: Partial<CoachRecord>): CoachRecord =>
+const toCoachRecord = (value: Partial<CoachRecord> = {}): CoachRecord =>
   value as CoachRecord;
 const toPaymentProofRecord = (
-  value: Partial<PaymentProofRecord>,
+  value: Partial<PaymentProofRecord> = {},
 ): PaymentProofRecord => value as PaymentProofRecord;
-const toProfileRecord = (value: Partial<ProfileRecord>): ProfileRecord =>
+const toProfileRecord = (value: Partial<ProfileRecord> = {}): ProfileRecord =>
   value as ProfileRecord;
 const toReservationEventRecord = (
-  value: Partial<ReservationEventRecord>,
+  value: Partial<ReservationEventRecord> = {},
 ): ReservationEventRecord => value as ReservationEventRecord;
 const toReservationRecord = (
-  value: Partial<ReservationRecord>,
+  value: Partial<ReservationRecord> = {},
 ): ReservationRecord => value as ReservationRecord;
 
 const hoursFromNowIso = (hours: number) => {
@@ -71,8 +72,10 @@ const hoursFromNowIso = (hours: number) => {
 
 function createHarness() {
   const reservationRepositoryFns = {
-    findById: vi.fn(async () => null),
-    findOverlappingActiveByCoachIds: vi.fn(async () => []),
+    findById: vi.fn<() => Promise<ReservationRecord | null>>(async () => null),
+    findOverlappingActiveByCoachIds: vi.fn<
+      () => Promise<ReservationRecord[]>
+    >(async () => []),
     create: vi.fn(async (data: Partial<ReservationRecord>) =>
       toReservationRecord({
         id: RESERVATION_ID,
@@ -84,7 +87,9 @@ function createHarness() {
     ),
   };
   const reservationEventRepositoryFns = {
-    findByReservationId: vi.fn(async () => []),
+    findByReservationId: vi.fn<() => Promise<ReservationEventRecord[]>>(
+      async () => [],
+    ),
     create: vi.fn(async () =>
       toReservationEventRecord({
         id: "event-1",
@@ -94,24 +99,32 @@ function createHarness() {
     ),
   };
   const profileRepositoryFns = {
-    findById: vi.fn(async () => null),
+    findById: vi.fn<() => Promise<ProfileRecord | null>>(async () => null),
   };
   const coachRepositoryFns = {
-    findByUserId: vi.fn(async () => null),
-    findById: vi.fn(async () => null),
+    findByUserId: vi.fn<() => Promise<CoachRecord | null>>(async () => null),
+    findById: vi.fn<() => Promise<CoachRecord | null>>(async () => null),
   };
   const coachHoursRepositoryFns = {
-    findByCoachId: vi.fn(async () => []),
+    findByCoachId: vi.fn<() => Promise<CoachHoursWindowRecord[]>>(
+      async () => [],
+    ),
   };
   const coachRateRuleRepositoryFns = {
-    findByCoachId: vi.fn(async () => []),
+    findByCoachId: vi.fn<() => Promise<CoachRateRuleRecord[]>>(async () => []),
   };
   const coachAddonRepositoryFns = {
-    findActiveByCoachIds: vi.fn(async () => []),
-    findRateRulesByAddonIds: vi.fn(async () => []),
+    findActiveByCoachIds: vi.fn<() => Promise<CoachAddonRecord[]>>(
+      async () => [],
+    ),
+    findRateRulesByAddonIds: vi.fn<() => Promise<CoachAddonRateRuleRecord[]>>(
+      async () => [],
+    ),
   };
   const coachBlockRepositoryFns = {
-    findOverlappingByCoachId: vi.fn(async () => []),
+    findOverlappingByCoachId: vi.fn<() => Promise<CoachBlockRecord[]>>(
+      async () => [],
+    ),
   };
   const transactionManagerFns = {
     run: vi.fn(async (callback: (tx: object) => Promise<unknown>) =>
@@ -129,7 +142,9 @@ function createHarness() {
     enqueueCoachBookingCancelled: vi.fn(async () => ({ jobCount: 2 })),
   };
   const paymentProofRepositoryFns = {
-    findByReservationId: vi.fn(async () => null),
+    findByReservationId: vi.fn<() => Promise<PaymentProofRecord | null>>(
+      async () => null,
+    ),
   };
   const storageServiceFns = {
     createSignedUrl: vi.fn(async () => "https://signed.example/proof.jpg"),
@@ -177,9 +192,9 @@ describe("CoachReservationService.createForCoach", () => {
     harness.profileRepositoryFns.findById.mockResolvedValue(
       toProfileRecord({
         id: PROFILE_ID,
-        name: "Player One",
+        displayName: "Player One",
         email: "player@example.com",
-        phone: "+63 900 000 0000",
+        phoneNumber: "+63 900 000 0000",
         userId: "player-user-1",
       }),
     );
@@ -243,9 +258,9 @@ describe("CoachReservationService.createForCoach", () => {
     harness.profileRepositoryFns.findById.mockResolvedValue(
       toProfileRecord({
         id: PROFILE_ID,
-        name: "Player One",
+        displayName: "Player One",
         email: "player@example.com",
-        phone: "+63 900 000 0000",
+        phoneNumber: "+63 900 000 0000",
         userId: "player-user-1",
       }),
     );

@@ -77,6 +77,7 @@ export class ExpireStaleReservationsUseCase
         await this.reservationRepository.findByIdsForUpdate(updatedIds, ctx);
 
       for (const reservation of updatedReservations) {
+        if (!reservation.courtId) continue;
         const court = await this.courtRepository.findById(
           reservation.courtId,
           ctx,

@@ -138,8 +138,12 @@ export function CoachPaymentMethodsManager({
     }
   }, [getPaymentValues, providerOptions, setPaymentValue]);
 
-  const paymentMethods = (paymentMethodsQuery.data?.methods ??
-    []) as CoachPaymentMethodItem[];
+  const paymentMethods: CoachPaymentMethodItem[] = (
+    paymentMethodsQuery.data?.methods ?? []
+  ).map((method, index) => ({
+    ...method,
+    displayOrder: index,
+  }));
   const isSavingPaymentMethod =
     createPaymentMethod.isPending || updatePaymentMethod.isPending;
   const paymentSubmitting = isSavingPaymentMethod || isPaymentSubmitting;

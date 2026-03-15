@@ -129,7 +129,7 @@ export class CoachReservationService implements ICoachReservationService {
   private async getCoachByUserId(userId: string): Promise<CoachRecord> {
     const coach = await this.coachRepository.findByUserId(userId);
     if (!coach) {
-      throw new CoachNotFoundError();
+      throw new CoachNotFoundError(userId);
     }
     return coach;
   }
@@ -325,7 +325,7 @@ export class CoachReservationService implements ICoachReservationService {
     if (!profile) {
       throw new ProfileNotFoundError(profileId);
     }
-    if (!profile.name || !profile.email) {
+    if (!profile.displayName || (!profile.email && !profile.phoneNumber)) {
       throw new IncompleteProfileError();
     }
 
@@ -401,9 +401,9 @@ export class CoachReservationService implements ICoachReservationService {
           pricingBreakdown: pricing.pricingBreakdown,
           status: "CREATED",
           expiresAt,
-          playerNameSnapshot: profile.name,
+          playerNameSnapshot: profile.displayName,
           playerEmailSnapshot: profile.email,
-          playerPhoneSnapshot: profile.phone ?? null,
+          playerPhoneSnapshot: profile.phoneNumber ?? null,
         },
         ctx,
       );
@@ -446,9 +446,9 @@ export class CoachReservationService implements ICoachReservationService {
         endTimeIso: result.endTime.toISOString(),
         totalPriceCents: result.totalPriceCents,
         currency: result.currency,
-        playerName: result.playerNameSnapshot ?? profile.name,
+        playerName: result.playerNameSnapshot ?? profile.displayName,
         playerEmail: result.playerEmailSnapshot ?? profile.email,
-        playerPhone: result.playerPhoneSnapshot ?? profile.phone ?? null,
+        playerPhone: result.playerPhoneSnapshot ?? profile.phoneNumber ?? null,
         expiresAtIso: result.expiresAt?.toISOString() ?? null,
       });
     } catch (error) {

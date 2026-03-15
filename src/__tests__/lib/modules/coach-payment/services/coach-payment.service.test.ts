@@ -176,7 +176,7 @@ describe("CoachPaymentService", () => {
         provider: "GCASH",
         accountName: "Coach Alex",
         accountNumber: "09171234567",
-        instructions: null,
+        instructions: undefined,
       }),
     ).rejects.toBeInstanceOf(CoachPaymentMethodConflictError);
 

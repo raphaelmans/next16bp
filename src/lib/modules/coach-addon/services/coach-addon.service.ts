@@ -31,7 +31,7 @@ export interface ICoachAddonService {
 export class CoachAddonService implements ICoachAddonService {
   constructor(
     private coachAddonRepository: ICoachAddonRepository,
-    private coachRepository: ICoachRepository,
+    private coachRepository: Pick<ICoachRepository, "findByUserId">,
     private transactionManager: TransactionManager,
   ) {}
 

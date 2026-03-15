@@ -12,15 +12,15 @@ import {
   runCliWithOptionalArgs,
 } from "../shared/cli-runtime";
 import {
+  type ResolvedCuratedDiscoveryScope,
   resolveCuratedDiscoveryScopeOrThrow,
   resolveDefaultCuratedDiscoveryScopes,
-  type ResolvedCuratedDiscoveryScope,
 } from "../shared/curated-discovery-scopes";
-import { buildFacebookPageLeadQueries } from "../shared/facebook-query-builder";
 import {
-  scoreFacebookPageLead,
   type FacebookLeadResult,
+  scoreFacebookPageLead,
 } from "../shared/facebook-page-scoring";
+import { buildFacebookPageLeadQueries } from "../shared/facebook-query-builder";
 import {
   canonicalizeLeadUrl,
   normalizeLocationSlug,

@@ -83,8 +83,10 @@ const createReservationRecord = (
 function createHarness() {
   const tx = { txId: "coach-review-tx" };
   const reviewRepository = {
-    findActiveByCoachAndUser: vi.fn(async () => null),
-    findById: vi.fn(async () => null),
+    findActiveByCoachAndUser: vi.fn<() => Promise<CoachReviewRecord | null>>(
+      async () => null,
+    ),
+    findById: vi.fn<() => Promise<CoachReviewRecord | null>>(async () => null),
     upsertActive: vi.fn(async () => createReviewRecord()),
     softRemove: vi.fn(async () => undefined),
     getAggregate: vi.fn(async () => ({
@@ -92,13 +94,30 @@ function createHarness() {
       reviewCount: 2,
       histogram: { 1: 0, 2: 0, 3: 0, 4: 1, 5: 1 },
     })),
-    listActiveByCoach: vi.fn(async () => ({ items: [], total: 0 })),
+    listActiveByCoach: vi.fn<
+      () => Promise<{
+        items: Array<{
+          id: string;
+          coachId: string;
+          authorUserId: string;
+          authorDisplayName: string;
+          authorAvatarUrl: string | null;
+          rating: number;
+          body: string | null;
+          createdAt: Date;
+          updatedAt: Date;
+        }>;
+        total: number;
+      }>
+    >(async () => ({ items: [], total: 0 })),
   };
   const profileRepository = {
-    findByUserId: vi.fn(async () => null),
+    findByUserId: vi.fn<() => Promise<ProfileRecord | null>>(async () => null),
   };
   const reservationRepository = {
-    findPastConfirmedCoachReservationForPlayer: vi.fn(async () => null),
+    findPastConfirmedCoachReservationForPlayer: vi.fn<
+      () => Promise<ReservationRecord | null>
+    >(async () => null),
   };
   const run = vi.fn(async (fn: (txArg: unknown) => Promise<unknown>) => fn(tx));
 

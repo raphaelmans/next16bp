@@ -69,7 +69,7 @@ const toCoachRecord = (value: Partial<CoachRecord> = {}): CoachRecord =>
   }) as CoachRecord;
 
 const toHoursRecord = (
-  value: Partial<CoachHoursWindowRecord>,
+  value: Partial<CoachHoursWindowRecord> = {},
 ): CoachHoursWindowRecord =>
   ({
     id: `hours-${Math.random()}`,
@@ -84,7 +84,7 @@ const toHoursRecord = (
   }) as CoachHoursWindowRecord;
 
 const toRateRuleRecord = (
-  value: Partial<CoachRateRuleRecord>,
+  value: Partial<CoachRateRuleRecord> = {},
 ): CoachRateRuleRecord =>
   ({
     id: `rule-${Math.random()}`,
@@ -131,7 +131,7 @@ const toAddonRateRuleRecord = (
   }) as CoachAddonRateRuleRecord;
 
 const toReservationRecord = (
-  value: Partial<ReservationRecord>,
+  value: Partial<ReservationRecord> = {},
 ): ReservationRecord =>
   ({
     id: TEST_IDS.reservationId,
@@ -159,7 +159,9 @@ const toReservationRecord = (
     ...value,
   }) as ReservationRecord;
 
-const toBlockRecord = (value: Partial<CoachBlockRecord>): CoachBlockRecord =>
+const toBlockRecord = (
+  value: Partial<CoachBlockRecord> = {},
+): CoachBlockRecord =>
   ({
     id: TEST_IDS.blockId,
     coachId: TEST_IDS.coachId,

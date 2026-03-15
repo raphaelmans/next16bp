@@ -1186,6 +1186,9 @@ export class ExternalOpenPlayService implements IExternalOpenPlayService {
       );
 
       const firstCourtId = reservations[0].courtId;
+      if (!firstCourtId) {
+        throw new CourtNotFoundError(external.id);
+      }
       const [courtRow] = await client
         .select({ sportId: court.sportId })
         .from(court)

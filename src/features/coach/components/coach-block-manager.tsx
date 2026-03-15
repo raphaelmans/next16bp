@@ -37,7 +37,15 @@ const BLOCK_TYPE_OPTIONS = [
   { value: "OTHER", label: "Other" },
 ] as const;
 
-function buildDefaultBlockDraft() {
+type BlockTypeValue = (typeof BLOCK_TYPE_OPTIONS)[number]["value"];
+
+function buildDefaultBlockDraft(): {
+  id: string;
+  startTime: string;
+  endTime: string;
+  reason: string;
+  blockType: BlockTypeValue;
+} {
   const now = new Date();
   const start = new Date(now);
   start.setDate(start.getDate() + 1);
@@ -50,7 +58,7 @@ function buildDefaultBlockDraft() {
     startTime: formatDateTimeInputValue(start),
     endTime: formatDateTimeInputValue(end),
     reason: "",
-    blockType: "PERSONAL" as const,
+    blockType: "PERSONAL",
   };
 }
 

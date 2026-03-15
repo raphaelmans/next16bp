@@ -19,15 +19,14 @@ const mockCoachReviewService = {
   removeOwnReview: vi.fn(),
 };
 
-const revalidateSpy = vi.fn(async () => undefined);
+const revalidateSpy = vi.fn(async (_input: unknown) => undefined);
 
 vi.mock("@/lib/modules/coach-review/factories/coach-review.factory", () => ({
   makeCoachReviewService: () => mockCoachReviewService,
 }));
 
 vi.mock("@/lib/shared/infra/cache/revalidate-public-coach-detail", () => ({
-  revalidatePublicCoachDetailPaths: (...args: unknown[]) =>
-    revalidateSpy(...args),
+  revalidatePublicCoachDetailPaths: (input: unknown) => revalidateSpy(input),
 }));
 
 import { coachReviewRouter } from "@/lib/modules/coach-review/coach-review.router";

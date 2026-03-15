@@ -9,6 +9,7 @@ import { parseAsStringLiteral, useQueryState } from "nuqs";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { appRoutes } from "@/common/app-routes";
+import type { PricingBreakdown } from "@/common/pricing-breakdown";
 import {
   formatCurrency,
   formatDateShort,
@@ -173,6 +174,34 @@ export default function ReservationDetailPage({
       ? reservationId
       : undefined;
   }, [isGroupReservation, payableAwaitingItems, reservation, reservationId]);
+
+  if (isCoachReservation && !coachRecord) {
+    return (
+      <Container className="py-6">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              Coach details are unavailable for this reservation.
+            </p>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
+
+  if (!isCoachReservation && (!courtRecord || !placeRecord)) {
+    return (
+      <Container className="py-6">
+        <Card>
+          <CardContent className="py-12 text-center">
+            <p className="text-muted-foreground">
+              Venue details are unavailable for this reservation.
+            </p>
+          </CardContent>
+        </Card>
+      </Container>
+    );
+  }
 
   const groupExpiresInMinutes = useMemo(() => {
     const expiries = payableAwaitingItems
@@ -479,7 +508,12 @@ export default function ReservationDetailPage({
     currency: reservation.currency,
     createdAt: reservation.createdAt,
   };
-  const reservationPricingBreakdown = reservation.pricingBreakdown ?? null;
+  const reservationPricingBreakdown =
+    reservation.pricingBreakdown &&
+    typeof reservation.pricingBreakdown === "object" &&
+    !Array.isArray(reservation.pricingBreakdown)
+      ? (reservation.pricingBreakdown as PricingBreakdown)
+      : null;
   const coachAddonLines =
     isCoachReservation && reservationPricingBreakdown
       ? reservationPricingBreakdown.addons
@@ -557,7 +591,7 @@ export default function ReservationDetailPage({
         <ReservationExpired
           placeId={!isCoachReservation ? placeRecord.id : undefined}
           courtName={
-            isCoachReservation ? `Coach: ${coachRecord.name}` : court.name
+            isCoachReservation ? `Coach: ${coachRecord.name}` : court!.name
           }
           slotDate={slotDate}
           slotTime={slotTime}
@@ -647,7 +681,7 @@ export default function ReservationDetailPage({
                 />
               ) : (
                 <BookingDetailsCard
-                  court={court}
+                  court={court!}
                   timeSlot={transformedTimeSlot}
                   venueHref={venueHref}
                 />
@@ -873,7 +907,7 @@ export default function ReservationDetailPage({
               ) : (
                 <>
                   <BookingDetailsCard
-                    court={court}
+                    court={court!}
                     timeSlot={transformedTimeSlot}
                     venueHref={venueHref}
                   />
@@ -1137,7 +1171,7 @@ export default function ReservationDetailPage({
               status={reservation.status}
               reservationTotalPriceCents={reservation.totalPriceCents}
               reservationCurrency={reservation.currency}
-              court={court}
+              court={court!}
               organization={organization}
               onCancel={() => setShowCancelDialog(true)}
               canCancel={canCancel}

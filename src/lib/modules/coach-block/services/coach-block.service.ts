@@ -25,7 +25,7 @@ export interface ICoachBlockService {
 export class CoachBlockService implements ICoachBlockService {
   constructor(
     private coachBlockRepository: ICoachBlockRepository,
-    private coachRepository: ICoachRepository,
+    private coachRepository: Pick<ICoachRepository, "findByUserId">,
     private transactionManager: TransactionManager,
   ) {}
 

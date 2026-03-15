@@ -40,27 +40,27 @@ const RESERVATION_ID = "reservation-1";
 
 type ReservationServiceDeps = ConstructorParameters<typeof ReservationService>;
 
-const toCourtRecord = (value: Partial<CourtRecord>): CourtRecord =>
+const toCourtRecord = (value: Partial<CourtRecord> = {}): CourtRecord =>
   value as CourtRecord;
-const toPlaceRecord = (value: Partial<PlaceRecord>): PlaceRecord =>
+const toPlaceRecord = (value: Partial<PlaceRecord> = {}): PlaceRecord =>
   value as PlaceRecord;
 const toVerificationRecord = (
-  value: Partial<PlaceVerificationRecord>,
+  value: Partial<PlaceVerificationRecord> = {},
 ): PlaceVerificationRecord => value as PlaceVerificationRecord;
 const toCourtAddonRecord = (
-  value: Partial<CourtAddonRecord>,
+  value: Partial<CourtAddonRecord> = {},
 ): CourtAddonRecord => value as CourtAddonRecord;
 const toPlaceAddonRecord = (
-  value: Partial<PlaceAddonRecord>,
+  value: Partial<PlaceAddonRecord> = {},
 ): PlaceAddonRecord => value as PlaceAddonRecord;
 const toReservationRecord = (
-  value: Partial<ReservationRecord>,
+  value: Partial<ReservationRecord> = {},
 ): ReservationRecord => value as ReservationRecord;
 const toCoachPaymentMethodRecord = (
-  value: Partial<CoachPaymentMethodRecord>,
+  value: Partial<CoachPaymentMethodRecord> = {},
 ): CoachPaymentMethodRecord => value as CoachPaymentMethodRecord;
 const toOrganizationPaymentMethodRecord = (
-  value: Partial<OrganizationPaymentMethodRecord>,
+  value: Partial<OrganizationPaymentMethodRecord> = {},
 ): OrganizationPaymentMethodRecord => value as OrganizationPaymentMethodRecord;
 
 const createHarness = (options?: {
@@ -103,14 +103,16 @@ const createHarness = (options?: {
   });
 
   const reservationRepositoryFns = {
-    findOverlappingActiveByCourtIds: vi.fn(async () => []),
-    findById: vi.fn(async () => null),
+    findOverlappingActiveByCourtIds: vi.fn<() => Promise<ReservationRecord[]>>(
+      async () => [],
+    ),
+    findById: vi.fn<() => Promise<ReservationRecord | null>>(async () => null),
   };
   const reservationEventRepositoryFns = {
     create: vi.fn(async () => undefined),
   };
   const profileRepositoryFns = {
-    findById: vi.fn(async () => null),
+    findById: vi.fn<() => Promise<{ id: string } | null>>(async () => null),
   };
   const coachRepositoryFns = {
     findById: vi.fn(async () => null),
@@ -132,11 +134,17 @@ const createHarness = (options?: {
     ensureForOrganization: vi.fn(async () => null),
   };
   const organizationPaymentMethodRepositoryFns = {
-    findActiveByOrganizationId: vi.fn(async () => []),
-    findByOrganizationId: vi.fn(async () => []),
+    findActiveByOrganizationId: vi.fn<
+      () => Promise<OrganizationPaymentMethodRecord[]>
+    >(async () => []),
+    findByOrganizationId: vi.fn<
+      () => Promise<OrganizationPaymentMethodRecord[]>
+    >(async () => []),
   };
   const coachPaymentMethodRepositoryFns = {
-    findByCoachId: vi.fn(async () => []),
+    findByCoachId: vi.fn<() => Promise<CoachPaymentMethodRecord[]>>(
+      async () => [],
+    ),
   };
   const organizationRepositoryFns = {
     findById: vi.fn(async () => null),
@@ -164,7 +172,7 @@ const createHarness = (options?: {
   const courtPriceOverrideRepositoryFns = {
     findOverlappingByCourtIds: vi.fn(async () => []),
   };
-  const run = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) => fn({}));
+  const run = vi.fn(<T>(fn: (tx: unknown) => Promise<T>) => fn({}));
   const notificationDeliveryServiceFns = {
     enqueueOwnerReservationCreated: vi.fn(async () => undefined),
     enqueueOwnerReservationPaymentMarked: vi.fn(async () => undefined),

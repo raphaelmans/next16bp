@@ -118,7 +118,7 @@ export function FileUpload({
     return (
       <div className={cn("relative", className)}>
         <div className="relative aspect-video w-full overflow-hidden rounded-lg border bg-muted">
-          {/* eslint-disable-next-line @next/next/no-img-element -- blob: URLs are local previews, no optimization needed */}
+          {/* biome-ignore lint/performance/noImgElement: blob and user-provided preview URLs are not compatible with Next image optimization here */}
           <img
             src={preview}
             alt="Preview"

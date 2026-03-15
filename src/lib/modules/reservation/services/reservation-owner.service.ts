@@ -175,6 +175,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     sourceEvent: string,
     ctx?: RequestContext,
   ) {
+    if (!reservation.courtId) return;
     const court = await this.courtRepository.findById(reservation.courtId, ctx);
     if (!court?.placeId) return;
     const place = await this.placeRepository.findById(court.placeId, ctx);
@@ -193,6 +194,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     sourceEvent: string,
     ctx?: RequestContext,
   ) {
+    if (!reservation.courtId) return;
     const court = await this.courtRepository.findById(reservation.courtId, ctx);
     if (!court?.placeId) return;
     const place = await this.placeRepository.findById(court.placeId, ctx);
@@ -257,6 +259,13 @@ export class ReservationOwnerService implements IReservationOwnerService {
       throw new PlaceNotFoundError();
     }
     return placeId;
+  }
+
+  private requireReservationCourtId(courtId: string | null): string {
+    if (!courtId) {
+      throw new CourtNotFoundError("missing-court-id");
+    }
+    return courtId;
   }
 
   /**
@@ -442,7 +451,11 @@ export class ReservationOwnerService implements IReservationOwnerService {
     }
 
     const courtIds = Array.from(
-      new Set(reservations.map((item) => item.courtId)),
+      new Set(
+        reservations.map((item) =>
+          this.requireReservationCourtId(item.courtId),
+        ),
+      ),
     );
     const courts = await Promise.all(
       courtIds.map((courtId) => this.courtRepository.findById(courtId, ctx)),
@@ -532,17 +545,20 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       await this.verifyCourtOwnership(
         userId,
-        reservation.courtId,
+        this.requireReservationCourtId(reservation.courtId),
         "reservation.update_status",
         ctx,
       );
 
-      const court = await this.courtRepository.findById(
+      const reservationCourtId = this.requireReservationCourtId(
         reservation.courtId,
+      );
+      const court = await this.courtRepository.findById(
+        reservationCourtId,
         ctx,
       );
       if (!court) {
-        throw new CourtNotFoundError(reservation.courtId);
+        throw new CourtNotFoundError(reservationCourtId);
       }
       const placeId = this.requireCourtPlaceId(court.placeId);
       const place = await this.placeRepository.findById(placeId, ctx);
@@ -569,7 +585,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       if (reservation.totalPriceCents > 0) {
         const paymentHoldMinutes = await this.getPaymentHoldMinutes(
-          reservation.courtId,
+          reservationCourtId,
           ctx,
         );
         const expiresAt = addMinutes(now, paymentHoldMinutes);
@@ -709,9 +725,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
             throw new ReservationExpiredError(reservation.id);
           }
 
-          const court = courtById.get(reservation.courtId);
+          const reservationCourtId = this.requireReservationCourtId(
+            reservation.courtId,
+          );
+          const court = courtById.get(reservationCourtId);
           if (!court) {
-            throw new CourtNotFoundError(reservation.courtId);
+            throw new CourtNotFoundError(reservationCourtId);
           }
           const placeId = this.requireCourtPlaceId(court.placeId);
           const place = placeById.get(placeId);
@@ -721,7 +740,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
           if (reservation.totalPriceCents > 0) {
             const paymentHoldMinutes = await this.getPaymentHoldMinutes(
-              reservation.courtId,
+              reservationCourtId,
               ctx,
             );
             const expiresAt = addMinutes(now, paymentHoldMinutes);
@@ -781,9 +800,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
             .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
           const representative = sorted[0];
           const latest = sorted[sorted.length - 1] ?? representative;
-          const representativeCourt = courtById.get(representative.courtId);
+          const representativeCourtId = this.requireReservationCourtId(
+            representative.courtId,
+          );
+          const representativeCourt = courtById.get(representativeCourtId);
           if (!representativeCourt) {
-            throw new CourtNotFoundError(representative.courtId);
+            throw new CourtNotFoundError(representativeCourtId);
           }
           const representativePlaceId = this.requireCourtPlaceId(
             representativeCourt.placeId,
@@ -793,18 +815,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
             throw new PlaceNotFoundError(representativePlaceId);
           }
 
-          const itemSummaries = sorted.map((item) => ({
-            reservationId: item.id,
-            courtId: item.courtId,
-            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
-            startTimeIso: item.startTime.toISOString(),
-            endTimeIso: item.endTime.toISOString(),
-            totalPriceCents: item.totalPriceCents,
-            currency: item.currency,
-            expiresAtIso: item.expiresAt
-              ? new Date(item.expiresAt).toISOString()
-              : null,
-          }));
+          const itemSummaries = sorted.map((item) => {
+            const courtId = this.requireReservationCourtId(item.courtId);
+            return {
+              reservationId: item.id,
+              courtId,
+              courtLabel: courtById.get(courtId)?.label ?? "Court",
+              startTimeIso: item.startTime.toISOString(),
+              endTimeIso: item.endTime.toISOString(),
+              totalPriceCents: item.totalPriceCents,
+              currency: item.currency,
+              expiresAtIso: item.expiresAt
+                ? new Date(item.expiresAt).toISOString()
+                : null,
+            };
+          });
           const soonestExpiry = sorted
             .map((item) => item.expiresAt?.getTime() ?? null)
             .filter((value): value is number => value !== null)
@@ -903,17 +928,20 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       await this.verifyCourtOwnership(
         userId,
-        reservation.courtId,
+        this.requireReservationCourtId(reservation.courtId),
         "reservation.update_status",
         ctx,
       );
 
-      const court = await this.courtRepository.findById(
+      const reservationCourtId = this.requireReservationCourtId(
         reservation.courtId,
+      );
+      const court = await this.courtRepository.findById(
+        reservationCourtId,
         ctx,
       );
       if (!court) {
-        throw new CourtNotFoundError(reservation.courtId);
+        throw new CourtNotFoundError(reservationCourtId);
       }
       const placeId = this.requireCourtPlaceId(court.placeId);
       const place = await this.placeRepository.findById(placeId, ctx);
@@ -1021,9 +1049,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
             throw new ReservationExpiredError(reservation.id);
           }
 
-          const court = courtById.get(reservation.courtId);
+          const reservationCourtId = this.requireReservationCourtId(
+            reservation.courtId,
+          );
+          const court = courtById.get(reservationCourtId);
           if (!court) {
-            throw new CourtNotFoundError(reservation.courtId);
+            throw new CourtNotFoundError(reservationCourtId);
           }
           const placeId = this.requireCourtPlaceId(court.placeId);
           const place = placeById.get(placeId);
@@ -1063,9 +1094,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
             .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
           const representative = sorted[0];
           const latest = sorted[sorted.length - 1] ?? representative;
-          const representativeCourt = courtById.get(representative.courtId);
+          const representativeCourtId = this.requireReservationCourtId(
+            representative.courtId,
+          );
+          const representativeCourt = courtById.get(representativeCourtId);
           if (!representativeCourt) {
-            throw new CourtNotFoundError(representative.courtId);
+            throw new CourtNotFoundError(representativeCourtId);
           }
           const representativePlaceId = this.requireCourtPlaceId(
             representativeCourt.placeId,
@@ -1075,18 +1109,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
             throw new PlaceNotFoundError(representativePlaceId);
           }
 
-          const itemSummaries = sorted.map((item) => ({
-            reservationId: item.id,
-            courtId: item.courtId,
-            courtLabel: courtById.get(item.courtId)?.label ?? "Court",
-            startTimeIso: item.startTime.toISOString(),
-            endTimeIso: item.endTime.toISOString(),
-            totalPriceCents: item.totalPriceCents,
-            currency: item.currency,
-            expiresAtIso: item.expiresAt
-              ? new Date(item.expiresAt).toISOString()
-              : null,
-          }));
+          const itemSummaries = sorted.map((item) => {
+            const courtId = this.requireReservationCourtId(item.courtId);
+            return {
+              reservationId: item.id,
+              courtId,
+              courtLabel: courtById.get(courtId)?.label ?? "Court",
+              startTimeIso: item.startTime.toISOString(),
+              endTimeIso: item.endTime.toISOString(),
+              totalPriceCents: item.totalPriceCents,
+              currency: item.currency,
+              expiresAtIso: item.expiresAt
+                ? new Date(item.expiresAt).toISOString()
+                : null,
+            };
+          });
 
           await this.notificationDeliveryService.enqueuePlayerReservationGroupConfirmed(
             {
@@ -1130,17 +1167,20 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       const organizationId = await this.verifyCourtOwnership(
         userId,
-        reservation.courtId,
+        this.requireReservationCourtId(reservation.courtId),
         "reservation.update_status",
         ctx,
       );
 
-      const court = await this.courtRepository.findById(
+      const reservationCourtId = this.requireReservationCourtId(
         reservation.courtId,
+      );
+      const court = await this.courtRepository.findById(
+        reservationCourtId,
         ctx,
       );
       if (!court) {
-        throw new CourtNotFoundError(reservation.courtId);
+        throw new CourtNotFoundError(reservationCourtId);
       }
       const placeId = this.requireCourtPlaceId(court.placeId);
       const place = await this.placeRepository.findById(placeId, ctx);
@@ -1297,17 +1337,20 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       await this.verifyCourtOwnership(
         userId,
-        reservation.courtId,
+        this.requireReservationCourtId(reservation.courtId),
         "reservation.update_status",
         ctx,
       );
 
-      const court = await this.courtRepository.findById(
+      const reservationCourtId = this.requireReservationCourtId(
         reservation.courtId,
+      );
+      const court = await this.courtRepository.findById(
+        reservationCourtId,
         ctx,
       );
       if (!court) {
-        throw new CourtNotFoundError(reservation.courtId);
+        throw new CourtNotFoundError(reservationCourtId);
       }
       const placeId = this.requireCourtPlaceId(court.placeId);
       const place = await this.placeRepository.findById(placeId, ctx);
@@ -1405,9 +1448,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
           );
         }
 
-        const court = courtById.get(reservation.courtId);
+        const reservationCourtId = this.requireReservationCourtId(
+          reservation.courtId,
+        );
+        const court = courtById.get(reservationCourtId);
         if (!court) {
-          throw new CourtNotFoundError(reservation.courtId);
+          throw new CourtNotFoundError(reservationCourtId);
         }
         const placeId = this.requireCourtPlaceId(court.placeId);
         const place = placeById.get(placeId);
@@ -1448,9 +1494,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
           .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
         const representative = sorted[0];
         const latest = sorted[sorted.length - 1] ?? representative;
-        const representativeCourt = courtById.get(representative.courtId);
+        const representativeCourtId = this.requireReservationCourtId(
+          representative.courtId,
+        );
+        const representativeCourt = courtById.get(representativeCourtId);
         if (!representativeCourt) {
-          throw new CourtNotFoundError(representative.courtId);
+          throw new CourtNotFoundError(representativeCourtId);
         }
         const representativePlaceId = this.requireCourtPlaceId(
           representativeCourt.placeId,
@@ -1460,18 +1509,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
           throw new PlaceNotFoundError(representativePlaceId);
         }
 
-        const itemSummaries = sorted.map((item) => ({
-          reservationId: item.id,
-          courtId: item.courtId,
-          courtLabel: courtById.get(item.courtId)?.label ?? "Court",
-          startTimeIso: item.startTime.toISOString(),
-          endTimeIso: item.endTime.toISOString(),
-          totalPriceCents: item.totalPriceCents,
-          currency: item.currency,
-          expiresAtIso: item.expiresAt
-            ? new Date(item.expiresAt).toISOString()
-            : null,
-        }));
+        const itemSummaries = sorted.map((item) => {
+          const courtId = this.requireReservationCourtId(item.courtId);
+          return {
+            reservationId: item.id,
+            courtId,
+            courtLabel: courtById.get(courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          };
+        });
 
         await this.notificationDeliveryService.enqueuePlayerReservationGroupRejected(
           {
@@ -1541,17 +1593,20 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
       await this.verifyCourtOwnership(
         userId,
-        reservation.courtId,
+        this.requireReservationCourtId(reservation.courtId),
         "reservation.update_status",
         ctx,
       );
 
-      const court = await this.courtRepository.findById(
+      const reservationCourtId = this.requireReservationCourtId(
         reservation.courtId,
+      );
+      const court = await this.courtRepository.findById(
+        reservationCourtId,
         ctx,
       );
       if (!court) {
-        throw new CourtNotFoundError(reservation.courtId);
+        throw new CourtNotFoundError(reservationCourtId);
       }
       const placeId = this.requireCourtPlaceId(court.placeId);
       const place = await this.placeRepository.findById(placeId, ctx);
@@ -1653,9 +1708,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
           );
         }
 
-        const court = courtById.get(reservation.courtId);
+        const reservationCourtId = this.requireReservationCourtId(
+          reservation.courtId,
+        );
+        const court = courtById.get(reservationCourtId);
         if (!court) {
-          throw new CourtNotFoundError(reservation.courtId);
+          throw new CourtNotFoundError(reservationCourtId);
         }
 
         const itemUpdated = await this.reservationRepository.update(
@@ -1690,9 +1748,12 @@ export class ReservationOwnerService implements IReservationOwnerService {
           .sort((a, b) => a.startTime.getTime() - b.startTime.getTime());
         const representative = sorted[0];
         const latest = sorted[sorted.length - 1] ?? representative;
-        const representativeCourt = courtById.get(representative.courtId);
+        const representativeCourtId = this.requireReservationCourtId(
+          representative.courtId,
+        );
+        const representativeCourt = courtById.get(representativeCourtId);
         if (!representativeCourt) {
-          throw new CourtNotFoundError(representative.courtId);
+          throw new CourtNotFoundError(representativeCourtId);
         }
         const representativePlaceId = this.requireCourtPlaceId(
           representativeCourt.placeId,
@@ -1702,18 +1763,21 @@ export class ReservationOwnerService implements IReservationOwnerService {
           throw new PlaceNotFoundError(representativePlaceId);
         }
 
-        const itemSummaries = sorted.map((item) => ({
-          reservationId: item.id,
-          courtId: item.courtId,
-          courtLabel: courtById.get(item.courtId)?.label ?? "Court",
-          startTimeIso: item.startTime.toISOString(),
-          endTimeIso: item.endTime.toISOString(),
-          totalPriceCents: item.totalPriceCents,
-          currency: item.currency,
-          expiresAtIso: item.expiresAt
-            ? new Date(item.expiresAt).toISOString()
-            : null,
-        }));
+        const itemSummaries = sorted.map((item) => {
+          const courtId = this.requireReservationCourtId(item.courtId);
+          return {
+            reservationId: item.id,
+            courtId,
+            courtLabel: courtById.get(courtId)?.label ?? "Court",
+            startTimeIso: item.startTime.toISOString(),
+            endTimeIso: item.endTime.toISOString(),
+            totalPriceCents: item.totalPriceCents,
+            currency: item.currency,
+            expiresAtIso: item.expiresAt
+              ? new Date(item.expiresAt).toISOString()
+              : null,
+          };
+        });
 
         await this.notificationDeliveryService.enqueuePlayerReservationGroupCancelledByOwner(
           {
@@ -2241,7 +2305,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
     if (!sourceReservation.groupId) {
       const organizationId = await this.verifyCourtOwnership(
         userId,
-        sourceReservation.courtId,
+        this.requireReservationCourtId(sourceReservation.courtId),
         "reservation.read",
       );
       const [record] =
@@ -2281,7 +2345,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
     const organizationId = await this.verifyCourtOwnership(
       userId,
-      reservations[0].courtId,
+      this.requireReservationCourtId(reservations[0]?.courtId ?? null),
       "reservation.read",
     );
 
@@ -2329,7 +2393,7 @@ export class ReservationOwnerService implements IReservationOwnerService {
 
     await this.verifyCourtOwnership(
       userId,
-      reservations[0].courtId,
+      this.requireReservationCourtId(reservations[0]?.courtId ?? null),
       "reservation.read",
     );
 

@@ -68,9 +68,7 @@ const createCoachRecord = (value: Partial<CoachRecord> = {}): CoachRecord =>
 
 const createHarness = () => {
   const txMarker = { txId: "coach-schedule-pricing-tx" };
-  const run = vi.fn(async (fn: (tx: unknown) => Promise<unknown>) =>
-    fn(txMarker),
-  );
+  const run = vi.fn(<T>(fn: (tx: unknown) => Promise<T>) => fn(txMarker));
 
   const coachRepository = {
     findByUserId: vi.fn(async () => createCoachRecord()),
@@ -421,9 +419,13 @@ describe("Coach schedule/pricing services", () => {
       createdAt: now,
     } satisfies CoachBlockRecord;
     const coachBlockRepository = {
-      findOverlappingByCoachId: vi.fn(async () => []),
-      findByCoachIdInRange: vi.fn(async () => []),
-      findById: vi.fn(async () => null),
+      findOverlappingByCoachId: vi.fn<() => Promise<CoachBlockRecord[]>>(
+        async () => [],
+      ),
+      findByCoachIdInRange: vi.fn<() => Promise<CoachBlockRecord[]>>(
+        async () => [],
+      ),
+      findById: vi.fn<() => Promise<CoachBlockRecord | null>>(async () => null),
       create: vi.fn(async () => createdBlock),
       deleteById: vi.fn(async () => undefined),
     };
@@ -472,15 +474,19 @@ describe("Coach schedule/pricing services", () => {
     const base = createHarness();
     const service = new CoachBlockService(
       {
-        findOverlappingByCoachId: vi.fn(async () => []),
-        findByCoachIdInRange: vi.fn(async () => []),
+        findOverlappingByCoachId: vi.fn<() => Promise<CoachBlockRecord[]>>(
+          async () => [],
+        ),
+        findByCoachIdInRange: vi.fn<() => Promise<CoachBlockRecord[]>>(
+          async () => [],
+        ),
         findById: vi.fn(async () => ({
           id: TEST_IDS.blockId,
           coachId: TEST_IDS.otherCoachId,
           startTime: now,
           endTime: new Date(now.getTime() + 60_000),
           reason: null,
-          blockType: "OTHER",
+          blockType: "OTHER" as const,
           createdAt: now,
         })),
         create: vi.fn(),

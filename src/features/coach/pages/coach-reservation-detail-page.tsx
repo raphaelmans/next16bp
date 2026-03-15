@@ -305,7 +305,7 @@ export function CoachReservationDetailPage({
           <CoachReservationChatSheet
             reservationId={reservationId}
             reservationStatus={status}
-            playerName={reservation.playerNameSnapshot}
+            playerName={reservation.playerNameSnapshot ?? "Player"}
             subtitle={chatSubtitle}
           />
         </CardContent>
@@ -324,11 +324,7 @@ export function CoachReservationDetailPage({
               </dt>
               <dd className="mt-1">
                 {reservation.startTime
-                  ? formatDateTime(
-                      typeof reservation.startTime === "string"
-                        ? reservation.startTime
-                        : reservation.startTime.toISOString(),
-                    )
+                  ? formatDateTime(reservation.startTime)
                   : "—"}
               </dd>
             </div>
@@ -338,11 +334,7 @@ export function CoachReservationDetailPage({
               </dt>
               <dd className="mt-1">
                 {reservation.endTime
-                  ? formatDateTime(
-                      typeof reservation.endTime === "string"
-                        ? reservation.endTime
-                        : reservation.endTime.toISOString(),
-                    )
+                  ? formatDateTime(reservation.endTime)
                   : "—"}
               </dd>
             </div>
@@ -365,11 +357,7 @@ export function CoachReservationDetailPage({
               </dt>
               <dd className="mt-1">
                 {reservation.createdAt
-                  ? formatShortDateTime(
-                      typeof reservation.createdAt === "string"
-                        ? reservation.createdAt
-                        : reservation.createdAt.toISOString(),
-                    )
+                  ? formatShortDateTime(reservation.createdAt)
                   : "—"}
               </dd>
             </div>
@@ -380,9 +368,7 @@ export function CoachReservationDetailPage({
                 </dt>
                 <dd className="mt-1">
                   {formatShortDateTime(
-                    typeof reservation.expiresAt === "string"
-                      ? reservation.expiresAt
-                      : reservation.expiresAt.toISOString(),
+                    reservation.expiresAt,
                   )}
                 </dd>
               </div>
@@ -439,7 +425,17 @@ export function CoachReservationDetailPage({
         </Card>
       )}
 
-      {paymentProof && <PaymentProofDisplay paymentProof={paymentProof} />}
+      {paymentProof && (
+        <PaymentProofDisplay
+          paymentProof={{
+            id: paymentProof.id,
+            referenceNumber: paymentProof.referenceNumber ?? undefined,
+            fileUrl: paymentProof.fileUrl ?? undefined,
+            notes: paymentProof.notes ?? undefined,
+            createdAt: paymentProof.createdAt,
+          }}
+        />
+      )}
 
       {/* Cancellation Reason */}
       {reservation.cancellationReason && (
@@ -480,9 +476,7 @@ export function CoachReservationDetailPage({
                     {event.createdAt && (
                       <p className="text-xs text-muted-foreground">
                         {formatShortDateTime(
-                          typeof event.createdAt === "string"
-                            ? event.createdAt
-                            : event.createdAt.toISOString(),
+                          String(event.createdAt),
                         )}
                       </p>
                     )}

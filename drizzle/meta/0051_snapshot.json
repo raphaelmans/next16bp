@@ -177,12 +177,8 @@
           "name": "availability_change_event_court_id_court_id_fk",
           "tableFrom": "availability_change_event",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -190,12 +186,8 @@
           "name": "availability_change_event_place_id_place_id_fk",
           "tableFrom": "availability_change_event",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -203,12 +195,8 @@
           "name": "availability_change_event_sport_id_sport_id_fk",
           "tableFrom": "availability_change_event",
           "tableTo": "sport",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -444,12 +432,8 @@
           "name": "bookings_import_job_place_id_place_id_fk",
           "tableFrom": "bookings_import_job",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -457,12 +441,8 @@
           "name": "bookings_import_job_organization_id_organization_id_fk",
           "tableFrom": "bookings_import_job",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -471,12 +451,8 @@
           "tableFrom": "bookings_import_job",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -715,12 +691,8 @@
           "name": "bookings_import_row_job_id_bookings_import_job_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "bookings_import_job",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -728,12 +700,8 @@
           "name": "bookings_import_row_source_id_bookings_import_source_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "bookings_import_source",
-          "columnsFrom": [
-            "source_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["source_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -741,12 +709,8 @@
           "name": "bookings_import_row_court_id_court_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -754,12 +718,8 @@
           "name": "bookings_import_row_court_block_id_court_block_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "court_block",
-          "columnsFrom": [
-            "court_block_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_block_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -767,12 +727,8 @@
           "name": "bookings_import_row_replaced_with_reservation_id_reservation_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "replaced_with_reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["replaced_with_reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -780,12 +736,8 @@
           "name": "bookings_import_row_replaced_with_guest_profile_id_guest_profile_id_fk",
           "tableFrom": "bookings_import_row",
           "tableTo": "guest_profile",
-          "columnsFrom": [
-            "replaced_with_guest_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["replaced_with_guest_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -795,10 +747,7 @@
         "uq_bookings_import_row_job_line": {
           "name": "uq_bookings_import_row_job_line",
           "nullsNotDistinct": false,
-          "columns": [
-            "job_id",
-            "line_number"
-          ]
+          "columns": ["job_id", "line_number"]
         }
       },
       "policies": {},
@@ -901,12 +850,8 @@
           "name": "bookings_import_source_job_id_bookings_import_job_id_fk",
           "tableFrom": "bookings_import_source",
           "tableTo": "bookings_import_job",
-          "columnsFrom": [
-            "job_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["job_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -916,10 +861,7 @@
         "uq_bookings_import_source_job_sort": {
           "name": "uq_bookings_import_source_job_sort",
           "nullsNotDistinct": false,
-          "columns": [
-            "job_id",
-            "sort_order"
-          ]
+          "columns": ["job_id", "sort_order"]
         }
       },
       "policies": {},
@@ -1033,12 +975,8 @@
           "tableFrom": "chat_inbox_archive",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1155,12 +1093,8 @@
           "tableFrom": "chat_message",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "sender_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sender_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1231,12 +1165,8 @@
           "tableFrom": "chat_thread_read_position",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1395,12 +1325,8 @@
           "name": "claim_request_place_id_place_id_fk",
           "tableFrom": "claim_request",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1408,12 +1334,8 @@
           "name": "claim_request_organization_id_organization_id_fk",
           "tableFrom": "claim_request",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1422,12 +1344,8 @@
           "tableFrom": "claim_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "requested_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["requested_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1436,12 +1354,8 @@
           "tableFrom": "claim_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "reviewer_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reviewer_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1539,12 +1453,8 @@
           "name": "claim_request_event_claim_request_id_claim_request_id_fk",
           "tableFrom": "claim_request_event",
           "tableTo": "claim_request",
-          "columnsFrom": [
-            "claim_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["claim_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1553,12 +1463,8 @@
           "tableFrom": "claim_request_event",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "triggered_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["triggered_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -1884,12 +1790,8 @@
           "tableFrom": "coach",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -1897,12 +1799,8 @@
           "name": "coach_profile_id_profile_id_fk",
           "tableFrom": "coach",
           "tableTo": "profile",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -1912,16 +1810,12 @@
         "coach_user_id_unique": {
           "name": "coach_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         },
         "coach_profile_id_unique": {
           "name": "coach_profile_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "profile_id"
-          ]
+          "columns": ["profile_id"]
         }
       },
       "policies": {},
@@ -1999,12 +1893,8 @@
           "name": "coach_contact_detail_coach_id_coach_id_fk",
           "tableFrom": "coach_contact_detail",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2014,9 +1904,7 @@
         "coach_contact_detail_coach_id_unique": {
           "name": "coach_contact_detail_coach_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "coach_id"
-          ]
+          "columns": ["coach_id"]
         }
       },
       "policies": {},
@@ -2123,12 +2011,8 @@
           "name": "coach_addon_coach_id_coach_id_fk",
           "tableFrom": "coach_addon",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2221,12 +2105,8 @@
           "name": "coach_addon_rate_rule_addon_id_coach_addon_id_fk",
           "tableFrom": "coach_addon_rate_rule",
           "tableTo": "coach_addon",
-          "columnsFrom": [
-            "addon_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["addon_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2318,12 +2198,8 @@
           "name": "coach_age_group_coach_id_coach_id_fk",
           "tableFrom": "coach_age_group",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2419,12 +2295,8 @@
           "name": "coach_block_coach_id_coach_id_fk",
           "tableFrom": "coach_block",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2489,12 +2361,8 @@
           "name": "coach_certification_coach_id_coach_id_fk",
           "tableFrom": "coach_certification",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2590,12 +2458,8 @@
           "name": "coach_hours_window_coach_id_coach_id_fk",
           "tableFrom": "coach_hours_window",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2751,12 +2615,8 @@
           "name": "coach_payment_method_coach_id_coach_id_fk",
           "tableFrom": "coach_payment_method",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2833,12 +2693,8 @@
           "name": "coach_photo_coach_id_coach_id_fk",
           "tableFrom": "coach_photo",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -2940,12 +2796,8 @@
           "name": "coach_rate_rule_coach_id_coach_id_fk",
           "tableFrom": "coach_rate_rule",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3126,12 +2978,8 @@
           "name": "coach_review_coach_id_coach_id_fk",
           "tableFrom": "coach_review",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3140,12 +2988,8 @@
           "tableFrom": "coach_review",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "author_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3154,12 +2998,8 @@
           "tableFrom": "coach_review",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "removed_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["removed_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3234,12 +3074,8 @@
           "name": "coach_session_duration_coach_id_coach_id_fk",
           "tableFrom": "coach_session_duration",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3315,12 +3151,8 @@
           "name": "coach_session_type_coach_id_coach_id_fk",
           "tableFrom": "coach_session_type",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3391,12 +3223,8 @@
           "name": "coach_skill_level_coach_id_coach_id_fk",
           "tableFrom": "coach_skill_level",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3466,12 +3294,8 @@
           "name": "coach_specialty_coach_id_coach_id_fk",
           "tableFrom": "coach_specialty",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -3556,12 +3380,8 @@
           "name": "coach_sport_coach_id_coach_id_fk",
           "tableFrom": "coach_sport",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3569,12 +3389,8 @@
           "name": "coach_sport_sport_id_sport_id_fk",
           "tableFrom": "coach_sport",
           "tableTo": "sport",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -3714,12 +3530,8 @@
           "name": "coach_venue_coach_id_coach_id_fk",
           "tableFrom": "coach_venue",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3727,12 +3539,8 @@
           "name": "coach_venue_place_id_place_id_fk",
           "tableFrom": "coach_venue",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -3741,12 +3549,8 @@
           "tableFrom": "coach_venue",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invited_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -3896,12 +3700,8 @@
           "tableFrom": "contact_message",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -4042,12 +3842,8 @@
           "name": "court_place_id_place_id_fk",
           "tableFrom": "court",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -4055,12 +3851,8 @@
           "name": "court_sport_id_sport_id_fk",
           "tableFrom": "court",
           "tableTo": "sport",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -4070,10 +3862,7 @@
         "court_place_id_label_unique": {
           "name": "court_place_id_label_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "place_id",
-            "label"
-          ]
+          "columns": ["place_id", "label"]
         }
       },
       "policies": {},
@@ -4201,12 +3990,8 @@
           "name": "court_addon_court_id_court_id_fk",
           "tableFrom": "court_addon",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4306,12 +4091,8 @@
           "name": "court_addon_rate_rule_addon_id_court_addon_id_fk",
           "tableFrom": "court_addon_rate_rule",
           "tableTo": "court_addon",
-          "columnsFrom": [
-            "addon_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["addon_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4456,12 +4237,8 @@
           "name": "court_block_court_id_court_id_fk",
           "tableFrom": "court_block",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4553,12 +4330,8 @@
           "name": "court_hours_window_court_id_court_id_fk",
           "tableFrom": "court_hours_window",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4670,12 +4443,8 @@
           "name": "court_price_override_court_id_court_id_fk",
           "tableFrom": "court_price_override",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4779,12 +4548,8 @@
           "name": "court_rate_rule_court_id_court_id_fk",
           "tableFrom": "court_rate_rule",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -4943,12 +4708,8 @@
           "name": "court_submission_place_id_place_id_fk",
           "tableFrom": "court_submission",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5185,12 +4946,8 @@
           "name": "developer_api_key_integration_id_developer_integration_id_fk",
           "tableFrom": "developer_api_key",
           "tableTo": "developer_integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5199,12 +4956,8 @@
           "tableFrom": "developer_api_key",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -5308,12 +5061,8 @@
           "name": "developer_court_mapping_integration_id_developer_integration_id_fk",
           "tableFrom": "developer_court_mapping",
           "tableTo": "developer_integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5321,12 +5070,8 @@
           "name": "developer_court_mapping_court_id_court_id_fk",
           "tableFrom": "developer_court_mapping",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -5416,12 +5161,8 @@
           "name": "developer_integration_organization_id_organization_id_fk",
           "tableFrom": "developer_integration",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5430,12 +5171,8 @@
           "tableFrom": "developer_integration",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -5586,12 +5323,8 @@
           "name": "developer_unavailability_sync_integration_id_developer_integration_id_fk",
           "tableFrom": "developer_unavailability_sync",
           "tableTo": "developer_integration",
-          "columnsFrom": [
-            "integration_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["integration_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5599,12 +5332,8 @@
           "name": "developer_unavailability_sync_court_id_court_id_fk",
           "tableFrom": "developer_unavailability_sync",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5612,12 +5341,8 @@
           "name": "developer_unavailability_sync_court_block_id_court_block_id_fk",
           "tableFrom": "developer_unavailability_sync",
           "tableTo": "court_block",
-          "columnsFrom": [
-            "court_block_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_block_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -5840,12 +5565,8 @@
           "name": "external_open_play_host_profile_id_profile_id_fk",
           "tableFrom": "external_open_play",
           "tableTo": "profile",
-          "columnsFrom": [
-            "host_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["host_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -5853,12 +5574,8 @@
           "name": "external_open_play_place_id_place_id_fk",
           "tableFrom": "external_open_play",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -5866,12 +5583,8 @@
           "name": "external_open_play_sport_id_sport_id_fk",
           "tableFrom": "external_open_play",
           "tableTo": "sport",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -5879,12 +5592,8 @@
           "name": "external_open_play_promoted_open_play_id_open_play_id_fk",
           "tableFrom": "external_open_play",
           "tableTo": "open_play",
-          "columnsFrom": [
-            "promoted_open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["promoted_open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -5987,12 +5696,8 @@
           "name": "external_open_play_court_external_open_play_id_external_open_play_id_fk",
           "tableFrom": "external_open_play_court",
           "tableTo": "external_open_play",
-          "columnsFrom": [
-            "external_open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["external_open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6153,12 +5858,8 @@
           "name": "external_open_play_participant_external_open_play_id_external_open_play_id_fk",
           "tableFrom": "external_open_play_participant",
           "tableTo": "external_open_play",
-          "columnsFrom": [
-            "external_open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["external_open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6166,12 +5867,8 @@
           "name": "external_open_play_participant_profile_id_profile_id_fk",
           "tableFrom": "external_open_play_participant",
           "tableTo": "profile",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6179,12 +5876,8 @@
           "name": "external_open_play_participant_decided_by_profile_id_profile_id_fk",
           "tableFrom": "external_open_play_participant",
           "tableTo": "profile",
-          "columnsFrom": [
-            "decided_by_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decided_by_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -6282,12 +5975,8 @@
           "name": "external_open_play_report_external_open_play_id_external_open_play_id_fk",
           "tableFrom": "external_open_play_report",
           "tableTo": "external_open_play",
-          "columnsFrom": [
-            "external_open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["external_open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -6295,12 +5984,8 @@
           "name": "external_open_play_report_reporter_profile_id_profile_id_fk",
           "tableFrom": "external_open_play_report",
           "tableTo": "profile",
-          "columnsFrom": [
-            "reporter_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reporter_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6396,12 +6081,8 @@
           "name": "guest_profile_organization_id_organization_id_fk",
           "tableFrom": "guest_profile",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -6507,12 +6188,8 @@
           "tableFrom": "mobile_push_token",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -6731,12 +6408,8 @@
           "name": "notification_delivery_job_organization_id_organization_id_fk",
           "tableFrom": "notification_delivery_job",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -6744,12 +6417,8 @@
           "name": "notification_delivery_job_reservation_id_reservation_id_fk",
           "tableFrom": "notification_delivery_job",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -6757,12 +6426,8 @@
           "name": "notification_delivery_job_place_verification_request_id_place_verification_request_id_fk",
           "tableFrom": "notification_delivery_job",
           "tableTo": "place_verification_request",
-          "columnsFrom": [
-            "place_verification_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_verification_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -7012,12 +6677,8 @@
           "name": "open_play_reservation_id_reservation_id_fk",
           "tableFrom": "open_play",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7025,12 +6686,8 @@
           "name": "open_play_reservation_group_id_reservation_group_id_fk",
           "tableFrom": "open_play",
           "tableTo": "reservation_group",
-          "columnsFrom": [
-            "reservation_group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_group_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7038,12 +6695,8 @@
           "name": "open_play_host_profile_id_profile_id_fk",
           "tableFrom": "open_play",
           "tableTo": "profile",
-          "columnsFrom": [
-            "host_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["host_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7051,12 +6704,8 @@
           "name": "open_play_place_id_place_id_fk",
           "tableFrom": "open_play",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -7064,12 +6713,8 @@
           "name": "open_play_court_id_court_id_fk",
           "tableFrom": "open_play",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         },
@@ -7077,12 +6722,8 @@
           "name": "open_play_sport_id_sport_id_fk",
           "tableFrom": "open_play",
           "tableTo": "sport",
-          "columnsFrom": [
-            "sport_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["sport_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -7092,9 +6733,7 @@
         "open_play_reservation_id_unique": {
           "name": "open_play_reservation_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "reservation_id"
-          ]
+          "columns": ["reservation_id"]
         }
       },
       "policies": {},
@@ -7271,12 +6910,8 @@
           "name": "open_play_participant_open_play_id_open_play_id_fk",
           "tableFrom": "open_play_participant",
           "tableTo": "open_play",
-          "columnsFrom": [
-            "open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7284,12 +6919,8 @@
           "name": "open_play_participant_profile_id_profile_id_fk",
           "tableFrom": "open_play_participant",
           "tableTo": "profile",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7297,12 +6928,8 @@
           "name": "open_play_participant_decided_by_profile_id_profile_id_fk",
           "tableFrom": "open_play_participant",
           "tableTo": "profile",
-          "columnsFrom": [
-            "decided_by_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["decided_by_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -7438,12 +7065,8 @@
           "name": "open_play_chat_thread_open_play_id_open_play_id_fk",
           "tableFrom": "open_play_chat_thread",
           "tableTo": "open_play",
-          "columnsFrom": [
-            "open_play_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["open_play_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7452,12 +7075,8 @@
           "tableFrom": "open_play_chat_thread",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -7467,9 +7086,7 @@
         "open_play_chat_thread_open_play_id_unique": {
           "name": "open_play_chat_thread_open_play_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "open_play_id"
-          ]
+          "columns": ["open_play_id"]
         }
       },
       "policies": {},
@@ -7550,12 +7167,8 @@
           "tableFrom": "organization",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "owner_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["owner_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -7565,9 +7178,7 @@
         "organization_slug_unique": {
           "name": "organization_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -7642,12 +7253,8 @@
           "name": "organization_profile_organization_id_organization_id_fk",
           "tableFrom": "organization_profile",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -7657,9 +7264,7 @@
         "organization_profile_organization_id_unique": {
           "name": "organization_profile_organization_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id"
-          ]
+          "columns": ["organization_id"]
         }
       },
       "policies": {},
@@ -7863,12 +7468,8 @@
           "name": "organization_invitation_organization_id_organization_id_fk",
           "tableFrom": "organization_invitation",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7877,12 +7478,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invited_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -7891,12 +7488,8 @@
           "tableFrom": "organization_invitation",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "accepted_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["accepted_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -8048,12 +7641,8 @@
           "name": "organization_member_organization_id_organization_id_fk",
           "tableFrom": "organization_member",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -8062,12 +7651,8 @@
           "tableFrom": "organization_member",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -8076,12 +7661,8 @@
           "tableFrom": "organization_member",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "invited_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["invited_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -8201,12 +7782,8 @@
           "name": "organization_member_notification_preference_organization_id_organization_id_fk",
           "tableFrom": "organization_member_notification_preference",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -8215,12 +7792,8 @@
           "tableFrom": "organization_member_notification_preference",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -8366,12 +7939,8 @@
           "name": "organization_payment_method_organization_id_organization_id_fk",
           "tableFrom": "organization_payment_method",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -8448,12 +8017,8 @@
           "name": "organization_reservation_policy_organization_id_organization_id_fk",
           "tableFrom": "organization_reservation_policy",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -8463,9 +8028,7 @@
         "organization_reservation_policy_organization_id_unique": {
           "name": "organization_reservation_policy_organization_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "organization_id"
-          ]
+          "columns": ["organization_id"]
         }
       },
       "policies": {},
@@ -8820,12 +8383,8 @@
           "name": "place_organization_id_organization_id_fk",
           "tableFrom": "place",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -8910,12 +8469,8 @@
           "name": "place_contact_detail_place_id_place_id_fk",
           "tableFrom": "place_contact_detail",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -8925,9 +8480,7 @@
         "place_contact_detail_place_id_unique": {
           "name": "place_contact_detail_place_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "place_id"
-          ]
+          "columns": ["place_id"]
         }
       },
       "policies": {},
@@ -9055,12 +8608,8 @@
           "name": "place_addon_place_id_place_id_fk",
           "tableFrom": "place_addon",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9146,12 +8695,8 @@
           "name": "place_addon_rate_rule_addon_id_place_addon_id_fk",
           "tableFrom": "place_addon_rate_rule",
           "tableTo": "place_addon",
-          "columnsFrom": [
-            "addon_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["addon_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9242,12 +8787,8 @@
           "name": "place_amenity_place_id_place_id_fk",
           "tableFrom": "place_amenity",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9257,10 +8798,7 @@
         "place_amenity_place_id_name_unique": {
           "name": "place_amenity_place_id_name_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "place_id",
-            "name"
-          ]
+          "columns": ["place_id", "name"]
         }
       },
       "policies": {},
@@ -9335,12 +8873,8 @@
           "name": "place_bookmark_profile_id_profile_id_fk",
           "tableFrom": "place_bookmark",
           "tableTo": "profile",
-          "columnsFrom": [
-            "profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -9348,12 +8882,8 @@
           "name": "place_bookmark_place_id_place_id_fk",
           "tableFrom": "place_bookmark",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9363,10 +8893,7 @@
         "place_bookmark_profile_id_place_id_unique": {
           "name": "place_bookmark_profile_id_place_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "profile_id",
-            "place_id"
-          ]
+          "columns": ["profile_id", "place_id"]
         }
       },
       "policies": {},
@@ -9506,12 +9033,8 @@
           "name": "place_embedding_place_id_place_id_fk",
           "tableFrom": "place_embedding",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9588,12 +9111,8 @@
           "name": "place_photo_place_id_place_id_fk",
           "tableFrom": "place_photo",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -9753,12 +9272,8 @@
           "name": "place_review_place_id_place_id_fk",
           "tableFrom": "place_review",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -9767,12 +9282,8 @@
           "tableFrom": "place_review",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "author_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -9781,12 +9292,8 @@
           "tableFrom": "place_review",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "removed_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["removed_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -9866,12 +9373,8 @@
           "name": "place_verification_place_id_place_id_fk",
           "tableFrom": "place_verification",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -9880,12 +9383,8 @@
           "tableFrom": "place_verification",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "verified_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["verified_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -10040,12 +9539,8 @@
           "name": "place_verification_request_place_id_place_id_fk",
           "tableFrom": "place_verification_request",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -10053,12 +9548,8 @@
           "name": "place_verification_request_organization_id_organization_id_fk",
           "tableFrom": "place_verification_request",
           "tableTo": "organization",
-          "columnsFrom": [
-            "organization_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["organization_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -10067,12 +9558,8 @@
           "tableFrom": "place_verification_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "requested_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["requested_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -10081,12 +9568,8 @@
           "tableFrom": "place_verification_request",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "reviewer_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reviewer_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -10180,12 +9663,8 @@
           "name": "place_verification_request_document_place_verification_request_id_place_verification_request_id_fk",
           "tableFrom": "place_verification_request_document",
           "tableTo": "place_verification_request",
-          "columnsFrom": [
-            "place_verification_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_verification_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -10283,12 +9762,8 @@
           "name": "place_verification_request_event_place_verification_request_id_place_verification_request_id_fk",
           "tableFrom": "place_verification_request_event",
           "tableTo": "place_verification_request",
-          "columnsFrom": [
-            "place_verification_request_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_verification_request_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -10297,12 +9772,8 @@
           "tableFrom": "place_verification_request_event",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "triggered_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["triggered_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -10392,12 +9863,8 @@
           "tableFrom": "profile",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -10407,9 +9874,7 @@
         "profile_user_id_unique": {
           "name": "profile_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -10528,12 +9993,8 @@
           "tableFrom": "push_subscription",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -10605,12 +10066,8 @@
           "name": "payment_proof_reservation_id_reservation_id_fk",
           "tableFrom": "payment_proof",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -10618,12 +10075,8 @@
           "name": "payment_proof_payment_method_id_organization_payment_method_id_fk",
           "tableFrom": "payment_proof",
           "tableTo": "organization_payment_method",
-          "columnsFrom": [
-            "payment_method_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["payment_method_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -10633,9 +10086,7 @@
         "payment_proof_reservation_id_unique": {
           "name": "payment_proof_reservation_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "reservation_id"
-          ]
+          "columns": ["reservation_id"]
         }
       },
       "policies": {},
@@ -11030,12 +10481,8 @@
           "name": "reservation_court_id_court_id_fk",
           "tableFrom": "reservation",
           "tableTo": "court",
-          "columnsFrom": [
-            "court_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["court_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11043,12 +10490,8 @@
           "name": "reservation_coach_id_coach_id_fk",
           "tableFrom": "reservation",
           "tableTo": "coach",
-          "columnsFrom": [
-            "coach_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["coach_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -11056,12 +10499,8 @@
           "name": "reservation_player_id_profile_id_fk",
           "tableFrom": "reservation",
           "tableTo": "profile",
-          "columnsFrom": [
-            "player_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["player_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11069,12 +10508,8 @@
           "name": "reservation_group_id_reservation_group_id_fk",
           "tableFrom": "reservation",
           "tableTo": "reservation_group",
-          "columnsFrom": [
-            "group_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["group_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         },
@@ -11082,12 +10517,8 @@
           "name": "reservation_guest_profile_id_guest_profile_id_fk",
           "tableFrom": "reservation",
           "tableTo": "guest_profile",
-          "columnsFrom": [
-            "guest_profile_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["guest_profile_id"],
+          "columnsTo": ["id"],
           "onDelete": "restrict",
           "onUpdate": "no action"
         }
@@ -11185,12 +10616,8 @@
           "name": "reservation_event_reservation_id_reservation_id_fk",
           "tableFrom": "reservation_event",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11199,12 +10626,8 @@
           "tableFrom": "reservation_event",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "triggered_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["triggered_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -11337,12 +10760,8 @@
           "name": "reservation_group_place_id_place_id_fk",
           "tableFrom": "reservation_group",
           "tableTo": "place",
-          "columnsFrom": [
-            "place_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["place_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11350,12 +10769,8 @@
           "name": "reservation_group_player_id_profile_id_fk",
           "tableFrom": "reservation_group",
           "tableTo": "profile",
-          "columnsFrom": [
-            "player_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["player_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -11491,12 +10906,8 @@
           "name": "reservation_chat_thread_reservation_id_reservation_id_fk",
           "tableFrom": "reservation_chat_thread",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11505,12 +10916,8 @@
           "tableFrom": "reservation_chat_thread",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "created_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["created_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -11520,9 +10927,7 @@
         "reservation_chat_thread_reservation_id_unique": {
           "name": "reservation_chat_thread_reservation_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "reservation_id"
-          ]
+          "columns": ["reservation_id"]
         }
       },
       "policies": {},
@@ -11636,12 +11041,8 @@
           "name": "reservation_chat_transcript_reservation_id_reservation_id_fk",
           "tableFrom": "reservation_chat_transcript",
           "tableTo": "reservation",
-          "columnsFrom": [
-            "reservation_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["reservation_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -11650,12 +11051,8 @@
           "tableFrom": "reservation_chat_transcript",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "captured_by_user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["captured_by_user_id"],
+          "columnsTo": ["id"],
           "onDelete": "set null",
           "onUpdate": "no action"
         }
@@ -11711,9 +11108,7 @@
         "sport_slug_unique": {
           "name": "sport_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -11865,12 +11260,8 @@
           "tableFrom": "user_notification",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -11944,12 +11335,8 @@
           "tableFrom": "user_preferences",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -11959,9 +11346,7 @@
         "user_preferences_user_id_unique": {
           "name": "user_preferences_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -12028,9 +11413,7 @@
         "users_phone_unique": {
           "name": "users_phone_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "phone"
-          ]
+          "columns": ["phone"]
         }
       },
       "policies": {},
@@ -12083,12 +11466,8 @@
           "tableFrom": "user_roles",
           "tableTo": "users",
           "schemaTo": "auth",
-          "columnsFrom": [
-            "user_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["user_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -12098,9 +11477,7 @@
         "user_roles_user_id_unique": {
           "name": "user_roles_user_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "user_id"
-          ]
+          "columns": ["user_id"]
         }
       },
       "policies": {},
@@ -12112,11 +11489,7 @@
     "public.court_submission_status": {
       "name": "court_submission_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "APPROVED",
-        "REJECTED"
-      ]
+      "values": ["PENDING", "APPROVED", "REJECTED"]
     },
     "public.bookings_import_job_status": {
       "name": "bookings_import_job_status",
@@ -12134,252 +11507,137 @@
     "public.bookings_import_row_status": {
       "name": "bookings_import_row_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "VALID",
-        "ERROR",
-        "WARNING",
-        "COMMITTED",
-        "SKIPPED"
-      ]
+      "values": ["PENDING", "VALID", "ERROR", "WARNING", "COMMITTED", "SKIPPED"]
     },
     "public.bookings_import_source_type": {
       "name": "bookings_import_source_type",
       "schema": "public",
-      "values": [
-        "ics",
-        "csv",
-        "xlsx",
-        "image"
-      ]
+      "values": ["ics", "csv", "xlsx", "image"]
     },
     "public.claim_request_status": {
       "name": "claim_request_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "APPROVED",
-        "REJECTED"
-      ]
+      "values": ["PENDING", "APPROVED", "REJECTED"]
     },
     "public.claim_request_type": {
       "name": "claim_request_type",
       "schema": "public",
-      "values": [
-        "CLAIM",
-        "REMOVAL"
-      ]
+      "values": ["CLAIM", "REMOVAL"]
     },
     "public.coach_age_group_enum": {
       "name": "coach_age_group_enum",
       "schema": "public",
-      "values": [
-        "KIDS",
-        "TEENS",
-        "ADULTS",
-        "SENIORS"
-      ]
+      "values": ["KIDS", "TEENS", "ADULTS", "SENIORS"]
     },
     "public.coach_block_type_enum": {
       "name": "coach_block_type_enum",
       "schema": "public",
-      "values": [
-        "PERSONAL",
-        "EXTERNAL_BOOKING",
-        "OTHER"
-      ]
+      "values": ["PERSONAL", "EXTERNAL_BOOKING", "OTHER"]
     },
     "public.coach_session_type_enum": {
       "name": "coach_session_type_enum",
       "schema": "public",
-      "values": [
-        "PRIVATE",
-        "SEMI_PRIVATE",
-        "GROUP"
-      ]
+      "values": ["PRIVATE", "SEMI_PRIVATE", "GROUP"]
     },
     "public.coach_skill_level_enum": {
       "name": "coach_skill_level_enum",
       "schema": "public",
-      "values": [
-        "BEGINNER",
-        "INTERMEDIATE",
-        "ADVANCED",
-        "COMPETITIVE"
-      ]
+      "values": ["BEGINNER", "INTERMEDIATE", "ADVANCED", "COMPETITIVE"]
     },
     "public.coach_venue_status_enum": {
       "name": "coach_venue_status_enum",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "ACCEPTED",
-        "DECLINED",
-        "REMOVED"
-      ]
+      "values": ["PENDING", "ACCEPTED", "DECLINED", "REMOVED"]
     },
     "public.court_addon_mode": {
       "name": "court_addon_mode",
       "schema": "public",
-      "values": [
-        "OPTIONAL",
-        "AUTO"
-      ]
+      "values": ["OPTIONAL", "AUTO"]
     },
     "public.court_addon_pricing_type": {
       "name": "court_addon_pricing_type",
       "schema": "public",
-      "values": [
-        "HOURLY",
-        "FLAT"
-      ]
+      "values": ["HOURLY", "FLAT"]
     },
     "public.court_block_type": {
       "name": "court_block_type",
       "schema": "public",
-      "values": [
-        "MAINTENANCE",
-        "WALK_IN"
-      ]
+      "values": ["MAINTENANCE", "WALK_IN"]
     },
     "public.default_portal": {
       "name": "default_portal",
       "schema": "public",
-      "values": [
-        "player",
-        "organization"
-      ]
+      "values": ["player", "organization"]
     },
     "public.external_open_play_report_reason": {
       "name": "external_open_play_report_reason",
       "schema": "public",
-      "values": [
-        "FAKE_SLOT",
-        "IMPERSONATION",
-        "SPAM",
-        "SAFETY",
-        "OTHER"
-      ]
+      "values": ["FAKE_SLOT", "IMPERSONATION", "SPAM", "SAFETY", "OTHER"]
     },
     "public.external_open_play_source_platform": {
       "name": "external_open_play_source_platform",
       "schema": "public",
-      "values": [
-        "RECLUB",
-        "OTHER"
-      ]
+      "values": ["RECLUB", "OTHER"]
     },
     "public.external_open_play_status": {
       "name": "external_open_play_status",
       "schema": "public",
-      "values": [
-        "ACTIVE",
-        "CLOSED",
-        "CANCELLED",
-        "PROMOTED",
-        "HIDDEN"
-      ]
+      "values": ["ACTIVE", "CLOSED", "CANCELLED", "PROMOTED", "HIDDEN"]
     },
     "public.mobile_push_token_platform": {
       "name": "mobile_push_token_platform",
       "schema": "public",
-      "values": [
-        "ios",
-        "android"
-      ]
+      "values": ["ios", "android"]
     },
     "public.notification_delivery_channel": {
       "name": "notification_delivery_channel",
       "schema": "public",
-      "values": [
-        "EMAIL",
-        "SMS",
-        "WEB_PUSH",
-        "MOBILE_PUSH"
-      ]
+      "values": ["EMAIL", "SMS", "WEB_PUSH", "MOBILE_PUSH"]
     },
     "public.notification_delivery_job_status": {
       "name": "notification_delivery_job_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "SENDING",
-        "SENT",
-        "FAILED",
-        "SKIPPED"
-      ]
+      "values": ["PENDING", "SENDING", "SENT", "FAILED", "SKIPPED"]
     },
     "public.open_play_join_policy": {
       "name": "open_play_join_policy",
       "schema": "public",
-      "values": [
-        "REQUEST",
-        "AUTO"
-      ]
+      "values": ["REQUEST", "AUTO"]
     },
     "public.open_play_participant_role": {
       "name": "open_play_participant_role",
       "schema": "public",
-      "values": [
-        "HOST",
-        "PLAYER"
-      ]
+      "values": ["HOST", "PLAYER"]
     },
     "public.open_play_participant_status": {
       "name": "open_play_participant_status",
       "schema": "public",
-      "values": [
-        "REQUESTED",
-        "CONFIRMED",
-        "WAITLISTED",
-        "DECLINED",
-        "LEFT"
-      ]
+      "values": ["REQUESTED", "CONFIRMED", "WAITLISTED", "DECLINED", "LEFT"]
     },
     "public.open_play_status": {
       "name": "open_play_status",
       "schema": "public",
-      "values": [
-        "ACTIVE",
-        "CLOSED",
-        "CANCELLED"
-      ]
+      "values": ["ACTIVE", "CLOSED", "CANCELLED"]
     },
     "public.open_play_visibility": {
       "name": "open_play_visibility",
       "schema": "public",
-      "values": [
-        "PUBLIC",
-        "UNLISTED"
-      ]
+      "values": ["PUBLIC", "UNLISTED"]
     },
     "public.organization_invitation_status": {
       "name": "organization_invitation_status",
       "schema": "public",
-      "values": [
-        "PENDING",
-        "ACCEPTED",
-        "DECLINED",
-        "CANCELED",
-        "EXPIRED"
-      ]
+      "values": ["PENDING", "ACCEPTED", "DECLINED", "CANCELED", "EXPIRED"]
     },
     "public.organization_member_role": {
       "name": "organization_member_role",
       "schema": "public",
-      "values": [
-        "OWNER",
-        "MANAGER",
-        "VIEWER"
-      ]
+      "values": ["OWNER", "MANAGER", "VIEWER"]
     },
     "public.organization_member_status": {
       "name": "organization_member_status",
       "schema": "public",
-      "values": [
-        "ACTIVE",
-        "REVOKED"
-      ]
+      "values": ["ACTIVE", "REVOKED"]
     },
     "public.payment_method_provider": {
       "name": "payment_method_provider",
@@ -12402,54 +11660,32 @@
     "public.payment_method_type": {
       "name": "payment_method_type",
       "schema": "public",
-      "values": [
-        "MOBILE_WALLET",
-        "BANK"
-      ]
+      "values": ["MOBILE_WALLET", "BANK"]
     },
     "public.place_addon_mode": {
       "name": "place_addon_mode",
       "schema": "public",
-      "values": [
-        "OPTIONAL",
-        "AUTO"
-      ]
+      "values": ["OPTIONAL", "AUTO"]
     },
     "public.place_addon_pricing_type": {
       "name": "place_addon_pricing_type",
       "schema": "public",
-      "values": [
-        "HOURLY",
-        "FLAT"
-      ]
+      "values": ["HOURLY", "FLAT"]
     },
     "public.claim_status": {
       "name": "claim_status",
       "schema": "public",
-      "values": [
-        "UNCLAIMED",
-        "CLAIM_PENDING",
-        "CLAIMED",
-        "REMOVAL_REQUESTED"
-      ]
+      "values": ["UNCLAIMED", "CLAIM_PENDING", "CLAIMED", "REMOVAL_REQUESTED"]
     },
     "public.place_type": {
       "name": "place_type",
       "schema": "public",
-      "values": [
-        "CURATED",
-        "RESERVABLE"
-      ]
+      "values": ["CURATED", "RESERVABLE"]
     },
     "public.place_verification_status": {
       "name": "place_verification_status",
       "schema": "public",
-      "values": [
-        "UNVERIFIED",
-        "PENDING",
-        "VERIFIED",
-        "REJECTED"
-      ]
+      "values": ["UNVERIFIED", "PENDING", "VERIFIED", "REJECTED"]
     },
     "public.reservation_status": {
       "name": "reservation_status",
@@ -12466,11 +11702,7 @@
     "public.triggered_by_role": {
       "name": "triggered_by_role",
       "schema": "public",
-      "values": [
-        "PLAYER",
-        "OWNER",
-        "SYSTEM"
-      ]
+      "values": ["PLAYER", "OWNER", "SYSTEM"]
     }
   },
   "schemas": {},

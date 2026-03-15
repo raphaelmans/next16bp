@@ -217,6 +217,9 @@ export class ReservationChatService {
       };
     }
 
+    if (!reservation.courtId) {
+      throw new CourtNotFoundError(reservation.id);
+    }
     const court = await this.courtRepository.findById(reservation.courtId, ctx);
     if (!court) {
       throw new CourtNotFoundError(reservation.courtId);

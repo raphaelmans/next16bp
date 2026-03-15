@@ -75,7 +75,7 @@ export default function CoachBookingPage({
   const sessionDurations = React.useMemo(
     () =>
       (coach?.sessionDurations ?? [])
-        .map((d) => d.duration)
+        .map((d) => d.durationMinutes)
         .sort((a, b) => a - b),
     [coach?.sessionDurations],
   );
@@ -323,7 +323,9 @@ export default function CoachBookingPage({
               </div>
               <div className="text-right">
                 <div className="font-semibold">
-                  {formatCurrency(baseRateCents, currency)}
+                  {baseRateCents != null
+                    ? formatCurrency(baseRateCents, currency)
+                    : "Contact coach"}
                 </div>
                 <p className="text-xs text-muted-foreground">per hour</p>
               </div>
@@ -450,9 +452,9 @@ export default function CoachBookingPage({
             <ProfilePreviewCard
               profile={{
                 displayName: profile.displayName,
-                email: profile.email,
-                phone: profile.phoneNumber,
-                avatarUrl: profile.avatarUrl,
+                email: profile.email ?? undefined,
+                phone: profile.phoneNumber ?? undefined,
+                avatarUrl: profile.avatarUrl ?? undefined,
               }}
               isComplete={profileComplete}
               redirectTo={appRoutes.coaches.book(coachSlug)}

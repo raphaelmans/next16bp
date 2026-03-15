@@ -79,6 +79,13 @@ export class CoachService implements ICoachService {
           {
             ...data,
             name: data.name,
+            sportIds: data.sportIds ?? [],
+            certifications: data.certifications ?? [],
+            specialties: data.specialties ?? [],
+            skillLevels: data.skillLevels ?? [],
+            ageGroups: data.ageGroups ?? [],
+            sessionTypes: data.sessionTypes ?? [],
+            sessionDurations: data.sessionDurations ?? [],
           },
           ctx,
         );

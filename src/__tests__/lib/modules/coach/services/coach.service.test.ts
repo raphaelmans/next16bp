@@ -195,7 +195,16 @@ describe("CoachService", () => {
     harness.coachRepository.findByUserId.mockResolvedValue(createCoachRecord());
 
     await expect(
-      harness.service.createCoach(TEST_IDS.userId, { name: "Alex Ace Mentor" }),
+      harness.service.createCoach(TEST_IDS.userId, {
+        name: "Alex Ace Mentor",
+        sportIds: [],
+        certifications: [],
+        specialties: [],
+        skillLevels: [],
+        ageGroups: [],
+        sessionTypes: [],
+        sessionDurations: [],
+      }),
     ).rejects.toBeInstanceOf(CoachAlreadyExistsError);
 
     expect(harness.coachRepository.create).not.toHaveBeenCalled();

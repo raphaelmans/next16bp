@@ -7,6 +7,7 @@ import {
   useFeatureQueryCache,
 } from "@/common/feature-api-hooks";
 import { toast } from "@/common/toast";
+import type { GetCoachReservationsDTO } from "@/lib/modules/reservation/dtos/reservation-coach.dto";
 import { getCoachApi } from "./api";
 
 const coachApi = getCoachApi();
@@ -242,6 +243,7 @@ export function useMutCoachCreateBlock(range: CoachBlockListRange) {
 
   return useFeatureMutation(coachApi.mutCoachBlockCreate, {
     onSuccess: async (_, variables) => {
+      if (!variables) return;
       await invalidateCoachBlocks({
         coachId: variables.coachId,
         ...range,
@@ -255,6 +257,7 @@ export function useMutCoachDeleteBlock(range: CoachBlockListRange) {
 
   return useFeatureMutation(coachApi.mutCoachBlockDelete, {
     onSuccess: async (_, variables) => {
+      if (!variables) return;
       await invalidateCoachBlocks({
         coachId: variables.coachId,
         ...range,
@@ -329,13 +332,7 @@ export function useMutCoachSetAddons(coachId: string) {
 
 // ─── Coach Reservation Hooks ────────────────────────────────────────────────
 
-export function useQueryCoachReservations(filters: {
-  status?: string;
-  statuses?: string[];
-  timeBucket?: "past" | "upcoming";
-  limit?: number;
-  offset?: number;
-}) {
+export function useQueryCoachReservations(filters: GetCoachReservationsDTO) {
   return useFeatureQuery(
     ["reservationCoach", "getForCoach"],
     coachApi.queryReservationCoachGetForCoach,
@@ -405,6 +402,7 @@ export function useMutCoachAcceptReservation() {
   return useFeatureMutation(coachApi.mutReservationCoachAccept, {
     onSuccess: async (_, variables) => {
       toast.success("Reservation accepted");
+      if (!variables) return;
       await invalidateAll(variables.reservationId);
     },
     onError: (error) => {
@@ -419,6 +417,7 @@ export function useMutCoachRejectReservation() {
   return useFeatureMutation(coachApi.mutReservationCoachReject, {
     onSuccess: async (_, variables) => {
       toast.success("Reservation rejected");
+      if (!variables) return;
       await invalidateAll(variables.reservationId);
     },
     onError: (error) => {
@@ -433,6 +432,7 @@ export function useMutCoachConfirmPayment() {
   return useFeatureMutation(coachApi.mutReservationCoachConfirmPayment, {
     onSuccess: async (_, variables) => {
       toast.success("Payment confirmed");
+      if (!variables) return;
       await invalidateAll(variables.reservationId);
     },
     onError: (error) => {
@@ -447,6 +447,7 @@ export function useMutCoachCancelReservation() {
   return useFeatureMutation(coachApi.mutReservationCoachCancel, {
     onSuccess: async (_, variables) => {
       toast.success("Reservation cancelled");
+      if (!variables) return;
       await invalidateAll(variables.reservationId);
     },
     onError: (error) => {
